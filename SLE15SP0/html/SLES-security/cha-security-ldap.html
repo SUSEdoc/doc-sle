@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>LDAP—A Directory Service | Security and Hardening Guide | SUSE Linux Enterprise Server 15</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" /><meta name="generator" content="DAPS 3.0.0 (https://opensuse.github.io/daps) using SUSE XSL Stylesheets 2.0.17 (based on DocBook XSL Stylesheets 1.79.2) - chunked" /><meta name="product-name" content="SUSE Linux Enterprise Server" /><meta name="product-number" content="15" /><meta name="book-title" content="Security and Hardening Guide" /><meta name="chapter-title" content="Chapter 6. LDAP—A Directory Service" /><meta name="description" content="The Lightweight Directory Access Protocol (LDAP) is a protocol designed to access and maintain information directories. LDAP can be used for user and group management, system configuration management, address management, and more. This chapter provides a basic understanding of how LDAP works." /><meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" /><meta name="tracker-type" content="bsc" /><meta name="tracker-bsc-assignee" content="fs@suse.com" /><meta name="tracker-bsc-component" content="Documentation" /><meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15" /><link rel="home" href="index.html" title="SUSE Linux Enterprise Server Documentation" /><link rel="up" href="part-auth.html" title="Part I. Authentication" /><link rel="prev" href="cha-security-auth.html" title="Chapter 5. Setting Up Authentication Clients Using YaST" /><link rel="next" href="cha-security-kerberos.html" title="Chapter 7. Network Authentication with Kerberos" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css"></link>');
+}
+else {
+  document.write('<link rel="stylesheet" type="text/css" href="static/css/fonts-onlylocal.css"></link>');
+}
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css" /></noscript><script src="static/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #FABEBE;"><div id="_header"><div id="_logo"><img src="static/images/logo.png" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Server Documentation"><span class="book-icon">SUSE Linux Enterprise Server Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-auth.html">Authentication</a><span> › </span><a class="crumb" href="cha-security-ldap.html">LDAP—A Directory Service</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">About This Guide</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and Confidentiality</span></a></li><li class="inactive"><a href="cha-common-criteria.html"><span class="number">2 </span><span class="name">Common Criteria</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">3 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">4 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">5 </span><span class="name">Setting Up Authentication Clients Using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">6 </span><span class="name">LDAP—A Directory Service</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">7 </span><span class="name">Network Authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">8 </span><span class="name">Active Directory Support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">9 </span><span class="name">Setting Up a FreeRADIUS Server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local Security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">10 </span><span class="name">Physical Security</span></a></li><li class="inactive"><a href="sec-sec-prot-general-seccheck.html"><span class="number">11 </span><span class="name">Automatic Security Checks with seccheck</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">12 </span><span class="name">Software Management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">13 </span><span class="name">File Management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">14 </span><span class="name">Encrypting Partitions and Files</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">15 </span><span class="name">User Management</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">16 </span><span class="name">Configuring Security Settings with YaST</span></a></li><li class="inactive"><a href="cha-security-policykit.html"><span class="number">17 </span><span class="name">Authorization with PolKit</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">18 </span><span class="name">Access Control Lists in Linux</span></a></li><li class="inactive"><a href="cha-certstore.html"><span class="number">19 </span><span class="name">Certificate Store</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">20 </span><span class="name">Intrusion Detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network Security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">21 </span><span class="name">X Window System and X Authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">22 </span><span class="name">SSH: Secure Network Operations</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">23 </span><span class="name">Masquerading and Firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">24 </span><span class="name">Configuring a VPN Server</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">25 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">26 </span><span class="name">Getting Started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">27 </span><span class="name">Immunizing Programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">28 </span><span class="name">Profile Components and Syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">29 </span><span class="name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">30 </span><span class="name">Building and Managing Profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">31 </span><span class="name">Building Profiles from the Command Line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">32 </span><span class="name">Profiling Your Web Applications Using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">33 </span><span class="name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">34 </span><span class="name">Managing Profiled Applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">35 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">36 </span><span class="name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li class="inactive"><a href="part-selinux.html"><span class="number">V </span><span class="name">SELinux</span></a><ol><li class="inactive"><a href="cha-selinux.html"><span class="number">37 </span><span class="name">Configuring SELinux</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">VI </span><span class="name"><em class="citetitle ">The Linux Audit Framework</em></span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">38 </span><span class="name">Understanding Linux Audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">39 </span><span class="name">Setting Up the Linux Audit Framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">40 </span><span class="name">Introducing an Audit Rule Set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">41 </span><span class="name">Useful Resources</span></a></li></ol></li><li class="inactive"><a href="app-pcidss.html"><span class="number">A </span><span class="name">Achieving PCI DSS Compliance</span></a></li><li class="inactive"><a href="bk06apb.html"><span class="number">B </span><span class="name">GNU Licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 5. Setting Up Authentication Clients Using YaST" href="cha-security-auth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 7. Network Authentication with Kerberos" href="cha-security-kerberos.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #FABEBE;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Server Documentation"><span class="book-icon">SUSE Linux Enterprise Server Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-auth.html">Authentication</a><span> › </span><a class="crumb" href="cha-security-ldap.html">LDAP—A Directory Service</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 5. Setting Up Authentication Clients Using YaST" href="cha-security-auth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 7. Network Authentication with Kerberos" href="cha-security-kerberos.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-security-ldap"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15</span></span></span></div><div><h2 class="title"><span class="number">6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">LDAP—A Directory Service</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>cha-security-ldap</li></ul></div></div><div><div class="abstract"><p>
+    The Lightweight Directory Access Protocol (LDAP) is a protocol
+    designed to access and maintain information directories. LDAP can be
+    used for user and group management, system configuration management,
+    address management, and more. This chapter provides a basic
+    understanding of how LDAP works.
+   </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-tree"><span class="number">6.1 </span><span class="name">Structure of an LDAP Directory Tree</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server-install"><span class="number">6.2 </span><span class="name">Installing the Software for 389 Directory Server</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server"><span class="number">6.3 </span><span class="name">Manually Configuring a 389 Directory Server</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server-yast"><span class="number">6.4 </span><span class="name">Setting Up a 389 Directory Server with YaST</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-data"><span class="number">6.5 </span><span class="name">Manually Administering LDAP Data</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-info"><span class="number">6.6 </span><span class="name">For More Information</span></a></span></dt></dl></div></div><p>
+   Ideally, a central server stores the data in a directory and distributes
+   it to all clients using a well-defined protocol. The structured data allow
+   a wide range of applications to access them. A central repository reduces
+   the necessary administrative effort. The use of an open and standardized
+   protocol such as LDAP ensures that as many client applications as
+   possible can access such information.
+  </p><p>
+   A directory in this context is a type of database optimized for quick and
+   effective reading and searching. The type of data stored in a directory tends
+   to be long lived and changes infrequently. This allows the LDAP service to be
+   optimized for high performance concurrent reads, whereas conventional databases
+   are optimized for accepting a large number of writes to data in a short time.
+  </p><div class="sect1 " id="sec-security-ldap-tree"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Structure of an LDAP Directory Tree</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-tree">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-tree</li></ul></div></div></div></div><p>
+   This section introduces the layout of an LDAP directory tree, and provides
+   the basic terminology used with regard to LDAP. <span class="phrase">If
+    you are familiar with LDAP, read on at <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server" title="6.3. Manually Configuring a 389 Directory Server">Section 6.3, “Manually Configuring a 389 Directory Server”</a>.
+   </span>
+  </p><p>
+   An LDAP directory has a tree structure. All entries (called objects) of
+   the directory have a defined position within this hierarchy. This
+   hierarchy is called the <span class="emphasis"><em>directory information tree</em></span>
+   (DIT). The complete path to the desired entry, which unambiguously
+   identifies it, is called the <span class="emphasis"><em>distinguished name</em></span> or
+   DN. An object in the tree is identified by its <span class="emphasis"><em>relative distinguished
+   name</em></span> (RDN). The distinguished name is built from the RDNs of all
+   entries on the path to the entry.
+  </p><p>
+   The relations within an LDAP directory tree become more evident in the
+   following example, shown in <a class="xref" href="cha-security-ldap.html#fig-ldap-tree" title="Structure of an LDAP Directory">Figure 6.1, “Structure of an LDAP Directory”</a>.
+  </p><div class="figure" id="fig-ldap-tree"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/ldap_tree.png" target="_blank"><img src="images/ldap_tree.png" width="" alt="Structure of an LDAP Directory" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 6.1: </span><span class="name">Structure of an LDAP Directory </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#fig-ldap-tree">#</a></h6></div></div><p>
+   The complete diagram is a fictional directory information tree. The
+   entries on three levels are depicted. Each entry corresponds to one box
+   in the image. The complete, valid <span class="emphasis"><em>distinguished name</em></span>
+   for the fictional employee <code class="systemitem">Geeko
+   Linux</code>, in this case, is <code class="literal">cn=Geeko
+   Linux,ou=doc,dc=example,dc=com</code>. It is composed by adding the
+   RDN <code class="literal">cn=Geeko Linux</code> to the DN of the preceding entry
+   <code class="literal">ou=doc,dc=example,dc=com</code>.
+  </p><p>
+   The types of objects that can be stored in the DIT are globally
+   determined following a <span class="emphasis"><em>Schema</em></span>. The type of an object
+   is determined by the <span class="emphasis"><em>object class</em></span>. The object class
+   determines what attributes the relevant object must or may be assigned.
+   The Schema contains all object classes and attributes which can be used by
+   the LDAP server. Attributes are a structured data type. Their syntax, ordering
+   and other behavior is defined by the Schema. LDAP servers supply a core set of
+   Schemas which can work in a broad variety of environments. If a custom Schema
+   is required, you can upload it to an LDAP server.
+  </p><p>
+   <a class="xref" href="cha-security-ldap.html#tab-ldap-schema" title="Commonly Used Object Classes and Attributes">Table 6.1, “Commonly Used Object Classes and Attributes”</a> offers a small overview of the object
+   classes from <code class="filename">00core.ldif</code> and
+   <code class="filename">06inetorgperson.ldif</code> used in the example, including
+   required attributes (Req. Attr.) and valid attribute values. After installing
+   <code class="systemitem">389-ds</code>, these can be found in
+   <code class="filename">usr/share/dirsrv/schema</code>.
+
+  </p><div class="table" id="tab-ldap-schema"><div class="table-title-wrap"><h6 class="table-title"><span class="number">Table 6.1: </span><span class="name">Commonly Used Object Classes and Attributes </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#tab-ldap-schema">#</a></h6></div><div class="table-contents"><table class="table" summary="Commonly Used Object Classes and Attributes" border="1"><colgroup><col class="c1" /><col class="c2" /><col class="c3" /><col class="c4" /></colgroup><thead><tr><th>
+       <p>
+        Object Class
+       </p>
+      </th><th>
+       <p>
+        Meaning
+       </p>
+      </th><th>
+       <p>
+        Example Entry
+       </p>
+      </th><th>
+       <p>
+        Req. Attr.
+       </p>
+      </th></tr></thead><tbody><tr><td>
+       <p>
+        <code class="literal">domain</code>
+       </p>
+      </td><td>
+       <p>
+        name components of the domain
+       </p>
+      </td><td>
+       <p>
+        example
+       </p>
+      </td><td>
+       <p>
+        displayName
+       </p>
+      </td></tr><tr><td>
+       <p>
+        <code class="literal">organizationalUnit</code>
+       </p>
+      </td><td>
+       <p>
+        organizational unit
+       </p>
+      </td><td>
+       <p>
+        doc
+       </p>
+      </td><td>
+       <p>
+        ou
+       </p>
+      </td></tr><tr><td>
+       <p>
+        <code class="literal">nsPerson</code>
+       </p>
+      </td><td>
+       <p>
+        person-related data for the
+        intranet or Internet
+       </p>
+      </td><td>
+       <p>
+        Geeko Linux
+       </p>
+      </td><td>
+       <p>
+        cn
+       </p>
+      </td></tr></tbody></table></div></div><p>
+   <a class="xref" href="cha-security-ldap.html#aus-ldap-schema-help" title="Excerpt from CN=schema">Example 6.1, “Excerpt from CN=schema”</a> shows an excerpt from a Schema
+   directive with explanations.
+  </p><div class="example" id="aus-ldap-schema-help"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.1: </span><span class="name">Excerpt from CN=schema </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#aus-ldap-schema-help">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">attributetype (1.2.840.113556.1.2.102 NAME 'memberOf' <span id="co-ldap-schema-core-att-type"></span><span class="callout">1</span>
+       DESC 'Group that the entry belongs to' <span id="co-ldap-schema-core-desc"></span><span class="callout">2</span>
+       SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 <span id="co-ldap-schema-core-syntax"></span><span class="callout">3</span>
+       X-ORIGIN 'Netscape Delegated Administrator') <span id="co-ldap-schema-core-xorigin"></span><span class="callout">4</span>
+
+objectclass (2.16.840.1.113730.3.2.333 NAME 'nsPerson' <span id="co-ldap-schema-core-oc"></span><span class="callout">5</span>
+       DESC 'A representation of a person in a directory server' <span id="co-ldap-schema-core-desc-oc"></span><span class="callout">6</span>
+       SUP top STRUCTURAL <span id="co-ldap-schema-core-sup-oc"></span><span class="callout">7</span>
+       MUST ( displayName $ cn ) <span id="co-ldap-schema-core-must-oc"></span><span class="callout">8</span>
+       MAY ( userPassword $ seeAlso $ description $ legalName $ mail \
+             $ preferredLanguage ) <span id="co-ldap-schema-core-may-oc"></span><span class="callout">9</span>
+       X-ORIGIN '389 Directory Server Project’
+  ...</pre></div></div></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-att-type"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     The name of the attribute, its unique <span class="emphasis"><em>object
+     identifier</em></span> (OID, numerical), and the abbreviation of the
+     attribute.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-desc"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     A brief description of the attribute with <code class="literal">DESC</code>. The
+     corresponding RFC, on which the definition is based, may also mentioned
+     here.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-syntax"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+      The type of data that can be held in the attribute. In this case, it is a
+      case-insensitive directory string.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-xorigin"><span class="callout">4</span></a> </p></td><td valign="top" align="left"><p>
+     The source of the schema element (for example, the name of the project).
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-oc"><span class="callout">5</span></a> </p></td><td valign="top" align="left"><p>
+     The definition of the object class <code class="literal">nsPerson</code> begins with
+     an OID and the name of the object class (like the definition of
+     the attribute).
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-desc-oc"><span class="callout">6</span></a> </p></td><td valign="top" align="left"><p>
+     A brief description of the object class.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-sup-oc"><span class="callout">7</span></a> </p></td><td valign="top" align="left"><p>
+     The <code class="literal">SUP top</code> entry indicates that this object class
+     is not subordinate to another object class.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-must-oc"><span class="callout">8</span></a> </p></td><td valign="top" align="left"><p>
+     With <code class="literal">MUST</code> list all attribute types that must be used
+     with an object of the type
+     <code class="literal">nsPerson</code>.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-may-oc"><span class="callout">9</span></a> </p></td><td valign="top" align="left"><p>
+     With <code class="literal">MAY</code> list all attribute types that are optionally
+     permitted with this object class.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-security-ldap-server-install"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Installing the Software for 389 Directory Server</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-install">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-install</li></ul></div></div></div></div><p>
+    The <code class="systemitem">389-ds</code> package contains the 389 Directory Server and the
+    administration tools. If the package is not installed yet, install it with
+    the following command:</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> zypper install 389-ds</pre></div><p>
+     After installation, you can set up the server either manually
+     <span class="phrase">(as described in <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server" title="6.3. Manually Configuring a 389 Directory Server">Section 6.3</a>)</span> or create a
+     very basic setup with YaST <span class="phrase">(as described in
+      <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-yast" title="6.4. Setting Up a 389 Directory Server with YaST">Section 6.4</a>)</span>.
+    </p></div><div class="sect1 " id="sec-security-ldap-server"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Manually Configuring a 389 Directory Server</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server</li></ul></div></div></div></div><p>
+   Setting up the 389 Directory Server takes the following basic steps:
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-instance" title="6.3.1. Creating the 389 Directory Server Instance">Creating the 389 Directory Server Instance</a>
+    </p></li><li class="step "><p>
+     
+      <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-ca" title="6.3.2. Using CA Certificates for TSL">Using CA Certificates for TSL</a>
+    </p></li><li class="step "><p>
+     
+      <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-credentials" title="6.3.3. Configuring Admin Credentials for Remote/Local Access">Configuring Admin Credentials for Remote/Local Access</a>
+    </p></li><li class="step "><p>
+    
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-users" title="6.3.4. Configuring LDAP Users and Groups">Configuring LDAP Users and Groups</a>
+    </p></li><li class="step "><p>
+    
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-sssd" title="6.3.5. Setting Up SSSD">Setting Up SSSD</a>
+    </p></li></ol></div></div><p>
+   
+  </p><p>
+   The 389 Directory Server is controlled by three primary commands:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.8.5.5.7.6.1"><span class="term "><code class="command">dsctl</code></span></dt><dd><p>
+      Manages a local instance and requires <code class="systemitem">root</code> permissions. Requires you
+      to be connected to a terminal which is running the directory server instance.
+      Used for starting, stopping, backing up the database, and more.
+     </p></dd><dt id="id-1.8.5.5.7.6.2"><span class="term "><code class="command">dsconf</code></span></dt><dd><p>
+       The primary tool used for administration and configuration of the server.
+       Manages an instance's configuration via its external interfaces. This allows
+       you to make configuration changes remotely on the instance.
+      </p></dd><dt id="id-1.8.5.5.7.6.3"><span class="term "><code class="command">dsidm</code></span></dt><dd><p>
+       Used for identity management (managing users, groups, passwords etc.).
+       The permissions are granted by access controls, so, for example, users can
+       reset their own password or change details of their own account.
+      </p></dd></dl></div><div class="sect2 " id="sec-security-ldap-server-instance"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.3.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating the 389 Directory Server Instance</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-instance">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-instance</li></ul></div></div></div></div><p>
+     You create the instance with the <code class="command">dscreate</code> command.
+     It can take a configuration file (<code class="filename">*.inf</code>) which
+     defines the instance configuration settings. Alternatively, the command can
+     be run interactively.
+    </p><div id="id-1.8.5.5.7.7.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note: Instance Name</h6><p>
+       If not specified otherwise, the default instance name is
+       <code class="literal">localhost</code>. The instance name cannot
+       be changed after the instance has been created.</p><p>
+      To check the name of an instance you have not created yourself, use
+      the <code class="command">dsctl -l</code> command.</p></div><p>
+     <a class="xref" href="cha-security-ldap.html#ex-ldap-389-ds-inf" title="Basic Instance Configuration File">Example 6.2</a> shows an
+     example configuration file that you can use as a starting point. Alternatively,
+     use <code class="command">dscreate create-template</code> to create a template
+     <code class="filename">*.inf</code> file. The template is commented and pre-filled,
+     so you can adjust its variables to your needs. For more details, see the
+     man page of <code class="command">dscreate</code>.
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      If you want to set up a trial instance, start an editor and save the
+      following as <code class="filename">/tmp/instance.inf</code>:
+     </p><div class="example" id="ex-ldap-389-ds-inf"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.2: </span><span class="name">Basic Instance Configuration File </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#ex-ldap-389-ds-inf">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># /tmp/instance.inf
+[general]
+config_version = 2
+
+[slapd]
+root_password = <em class="replaceable ">YOUR_PASSWORD_FOR_CN=DIRECTORY_MANAGER</em><span id="co-ldap-389-ds-rootpasswd"></span><span class="callout">1</span>
+
+[backend-userroot]
+sample_entries = yes
+suffix = dc=example,dc=com</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-389-ds-rootpasswd"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+         Set the <code class="varname">root_password</code> to the password for
+         the directory server <code class="systemitem">root</code> user. The password is used for LDAP
+         server administration only.
+        </p></td></tr></table></div></div></div></li><li class="step "><p>
+     To create the 389 Directory Server instance from <a class="xref" href="cha-security-ldap.html#ex-ldap-389-ds-inf" title="Basic Instance Configuration File">Example 6.2</a>, run:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dscreate from-file /tmp/instance.inf</pre></div><p>
+     This creates a working LDAP server.
+    </p></li><li class="step "><p>
+     If <code class="command">dscreate</code> should fail, the messages will tell you why.
+     For more details, repeat the command with the <code class="option">-v</code> option:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dscreate -v from-file /tmp/instance.inf</pre></div></li><li class="step "><p>
+     Check the status of the server with:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl localhost status
+instance 'Localhost' is running</pre></div></li><li class="step "><p>
+     In case you want to delete the instance later on:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl localhost remove --do-it</pre></div><p>
+     With this command, you can also remove partially installed or corrupted
+     instances.
+    </p></li></ol></div></div></div><div class="sect2 " id="sec-security-ldap-server-ca"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.3.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using CA Certificates for TSL</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-ca">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-ca</li></ul></div></div></div></div><p>
+  You can manage the CA certificates for 389 Directory Server with the following command
+  line tools: <code class="command">certutil</code>, <code class="command">openssl</code>, and
+  <code class="command">pk12util</code>.
+ </p><p>
+  For testing purposes, you can create a self-signed certificate with
+  <code class="command">dscreate</code>. Find the certificate at
+  <code class="filename">/etc/dirsrv/slapd-localhost/ca.crt</code>. For remote administration,
+  copy the certificate to a readable location. For production environments,
+  contact a CA authority of your organization's choice and request a server
+  certificate, a client certificate, and a root certificate.
+ </p><p>
+ Make sure to meet the following requirements before executing the procedure below:
+ </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+    You have a server certificate and a private key to use for the TSL connection.
+   </p></li><li class="listitem "><p>
+    You have set up an NSS (Network Security Services) database (for example,
+    with the <code class="command">certutil</code> command).
+   </p></li></ul></div><div class="procedure "><div class="procedure-contents"><p>
+  Before you can import an existing private key and certificate into the NSS
+  (Network Security Services) database, you need to create a bundle of the
+  private key and the server certificate. This results in a <code class="filename">*.p12</code>
+  file.
+  </p><div id="id-1.8.5.5.7.8.6.2" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.png" /><h6>Important: <code class="filename">*.p12</code> File and Friendly Name</h6><p>
+   When creating the PKCS12 bundle, you must encode a <span class="quote">“<span class="quote ">friendly name</span>”</span>
+   in the <code class="filename">*.p12</code> file.
+  </p><p>
+   Make sure to use <code class="literal">Server-Cert</code> as friendly name. Otherwise
+   the TLS connection will fail, because the 389 Directory Server searches for this exact string.
+  </p><p>
+   As soon as you have imported the <code class="filename">*.p12</code> file in the NSS
+   database, the friendly name cannot be changed any more.
+  </p></div><ol class="procedure" type="1"><li class="step "><p>
+   To create the PKCS12 bundle with the required friendly name:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>openssl pkcs12 -export -in <em class="replaceable ">SERVER.crt</em> \
+  -inkey <em class="replaceable ">SERVER.key</em> -out <em class="replaceable ">SERVER.p12</em> \
+  -name Server-Cert</pre></div><p>
+   Replace <em class="replaceable ">SERVER.crt</em> with the server certificate
+   and <em class="replaceable ">SERVER.key</em> with the private key to be bundled.
+   With <code class="option">-out</code>, specify the name of the <code class="filename">*.p12</code>
+   file. Use <code class="option">-name</code> to set the friendly name to use,
+   <code class="literal">Server-Cert</code>.
+  </p></li><li class="step "><p>
+   After you have created the required <em class="replaceable ">SERVER.p12</em> file,
+   import the file into your NSS database:
+  </p><div class="verbatim-wrap"><pre class="screen">pk12util -i <em class="replaceable ">SERVER.p12</em> -d <em class="replaceable ">PATH_TO_NSS_DB</em></pre></div></li></ol></div></div></div><div class="sect2 " id="sec-security-ldap-server-credentials"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.3.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring Admin Credentials for Remote/Local Access</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-credentials">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-credentials</li></ul></div></div></div></div><p>
+    For remote or local administration of the 389 Directory Server, you can create a
+    <code class="filename">.dsrc</code> configuration file in your home directory. This
+    saves you typing your user name and connection details with every command.
+    <a class="xref" href="cha-security-ldap.html#ex-security-ldap-server-credentials-remote" title="A .dsrc File for Remote Administration">Example 6.3</a> shows an example  configuration file for remote
+    administration, whereas <a class="xref" href="cha-security-ldap.html#ex-security-ldap-server-credentials-local" title="A .dsrc File for Local Administration">Example 6.4</a> shows one for local administration.
+   </p><div class="example" id="ex-security-ldap-server-credentials-remote"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.3: </span><span class="name">A <code class="filename">.dsrc</code> File for Remote Administration </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#ex-security-ldap-server-credentials-remote">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># cat ~/.dsrc
+[localhost]
+uri = ldaps://<em class="replaceable ">REMOTE_URI</em> <span id="co-ldap-server-dsrc-remote-localhost"></span><span class="callout">1</span>
+basedn = dc=example,dc=com
+binddn = cn=Directory Manager
+tls_cacertdir = PATH_TO_CERTDIR <span id="co-ldap-server-dsrc-remote-cert"></span><span class="callout">2</span></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-server-dsrc-remote-localhost"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+      Needs to point to the LDAP server instance. If not specified otherwise,
+      the default instance name is <code class="literal">localhost</code>.
+     </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-server-dsrc-remote-cert"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+      Path to the certificate, at a readable location or on the client machine, from
+      which you use the <code class="command">ds*</code> commands.
+     </p></td></tr></table></div></div></div><p>
+   If you want to administer the instance on the same host where the 389 Directory Server runs,
+   use the configuration file in <a class="xref" href="cha-security-ldap.html#ex-security-ldap-server-credentials-local" title="A .dsrc File for Local Administration">Example 6.4</a>.
+  </p><div class="example" id="ex-security-ldap-server-credentials-local"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.4: </span><span class="name">A <code class="filename">.dsrc</code> File for Local Administration </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#ex-security-ldap-server-credentials-local">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># cat ~/.dsrc
+[localhost]
+# Note that '/' is replaced with '%%2f'.
+uri = ldapi://%%2fvar%%2frun%%2fslapd-localhost.socket <span id="co-ldap-server-dsrc-remote-ldapi"></span><span class="callout">1</span>
+basedn = dc=example,dc=com
+binddn = cn=Directory Manager</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-server-dsrc-remote-ldapi"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+        When using <code class="literal">ldapi</code>
+       on the server where the 389 Directory Server instance is running, your UID/GID will be
+       detected. If it is <code class="literal">0/0</code> (which means you are logged
+       in as <code class="systemitem">root</code> user), the <code class="literal">ldapi</code> binds the local
+       <code class="systemitem">root</code> as the directory server root dn (<code class="literal">cn=Directory Manager</code>)
+       of the instance. This allows local administration of the server, but also
+       allows you to set a machine-generated password for <code class="literal">cn=Directory
+       Manager</code> that no human knows. Whoever has administrator rights
+       on the server hosting the 389 Directory Server instance can access the instance as
+       <code class="literal">cn=Directory Manager</code>.
+      </p></td></tr></table></div></div></div></div><div class="sect2 " id="sec-security-ldap-server-users"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.3.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring LDAP Users and Groups</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-users">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-users</li></ul></div></div></div></div><p>
+    Users and groups can be created and managed with the <code class="command">dsidm</code>
+    command. It either runs interactively or you can use it with arguments from
+    the command line.
+   </p><p>
+   In the following example, we add two users, <code class="systemitem">wilber</code> and <code class="systemitem">geeko</code>,
+   by specifying their data via command-line arguments.
+  </p><div class="procedure " id="pro-security-ldap-server-users"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 6.1: </span><span class="name">Creating LDAP Users </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#pro-security-ldap-server-users">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+    Create the user <code class="systemitem">wilber</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> <code class="command">dsidm</code> localhost user create --uid <code class="systemitem">wilber</code> \
+  --cn <code class="systemitem">wilber</code> --displayName 'Wilber Fox' --uidNumber 1000 --gidNumber 1000 \
+  --homeDirectory /home/<code class="systemitem">wilber</code></pre></div></li><li class="step "><p>
+     To look up a user's <code class="literal">distinguished name</code> (fully qualified
+     name to the directory object, which is guaranteed unique):
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm localhost user get <code class="systemitem">wilber</code>
+dn: uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com
+[...]</pre></div><p>
+     The system prompts you for the directory server <code class="systemitem">root</code> user password
+     (unless you configured remote or local access as described in <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-credentials" title="6.3.3. Configuring Admin Credentials for Remote/Local Access">Section 6.3.3, “Configuring Admin Credentials for Remote/Local Access”</a>).
+    </p><p>
+     You need the distinguished name for actions such as changing the password
+     for a user.
+    </p></li><li class="step "><p>
+     To set or change the password for <code class="systemitem">wilber</code>:
+    </p><ol type="a" class="substeps "><li class="step "><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm localhost account reset_password \
+  uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com</pre></div><p>
+        The system prompts you for the directory server <code class="systemitem">root</code> user password
+        (unless you configured remote or local access as described in <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-credentials" title="6.3.3. Configuring Admin Credentials for Remote/Local Access">Section 6.3.3, “Configuring Admin Credentials for Remote/Local Access”</a>).
+       </p></li><li class="step "><p>
+        Enter the new password for <code class="systemitem">wilber</code> twice.
+       </p><p>
+        If the action was successful, you get the following message:
+       </p><div class="verbatim-wrap"><pre class="screen">reset password for uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com</pre></div></li></ol></li><li class="step "><p>Create the user <code class="systemitem">geeko</code>:</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> <code class="command">dsidm</code> localhost user create --uid \
+  --cn <code class="systemitem">geeko</code> --displayName 'Suzanne Geeko' \
+  --uidNumber 1001 --gidNumber 1001 --homeDirectory /home/<code class="systemitem">geeko</code></pre></div></li></ol></div></div><div class="procedure " id="pro-security-ldap-server-groups"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 6.2: </span><span class="name">Creating LDAP Groups and Assigning Users to Them </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#pro-security-ldap-server-groups">#</a></h6></div><div class="procedure-contents"><p>
+    In the following, we create a group, <code class="systemitem">server_admins</code>, and assign the user
+    <code class="systemitem">wilber</code> to this group.</p><ol class="procedure" type="1"><li class="step "><p>
+     Create the group:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm localhost group create</pre></div><p>
+     You will be prompted for a group name:
+    </p><div class="verbatim-wrap"><pre class="screen">Enter value for cn :</pre></div></li><li class="step "><p>
+     Enter the name for the group, for example: <code class="literal">server_admins</code>.
+    </p></li><li class="step "><p>
+     Add the user <code class="systemitem">wilber</code> to the group:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm localhost group add_member server_admins uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com
+added member: uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com</pre></div></li><li class="step "><p>
+     Verify if authentication works:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> ldapwhoami -H ldaps://localhost -D \
+  uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com -W -x</pre></div><p>
+     If you are prompted for the LDAP password of <code class="systemitem">wilber</code>, authentication works.
+    </p><p>
+     If the command fails with the following error, you are probably using a
+     self-signed certificate:
+    </p><div class="verbatim-wrap"><pre class="screen">ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)</pre></div><p>
+     In that case, edit <code class="filename">/etc/openldap/ldap.conf</code> and add the
+     path to the certificate. For example:
+    </p><div class="verbatim-wrap"><pre class="screen">TLS_CACERT /etc/dirsrv/slapd-localhost/ca.crt</pre></div><p>
+     Alternatively, include the path to the certificate in the
+     <code class="filename">whoami</code> command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> LDAPTLS_CACERT=/etc/dirsrv/slapd-localhost/ca.crt \
+  ldapwhoami -H ldaps://localhost -D \
+  uid=<code class="systemitem">wilber</code>,ou=people,dc=example,dc=com -W -x</pre></div></li></ol></div></div></div><div class="sect2 " id="sec-security-ldap-server-sssd"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.3.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Setting Up SSSD</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-sssd">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-sssd</li></ul></div></div></div></div><p>
+   SSSD (System Security Services Daemon) is a daemon that communicates with
+   remote identity providers and allows <code class="literal">pam</code> and
+   <code class="literal">nsswitch</code> to consume that data. SSSD can have multiple
+   back-ends, cache users and groups and provides features like SSH key
+   distributions.
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>On a separate server, install the <code class="systemitem">sssd</code> package:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> zypper in sssd</pre></div></li><li class="step "><p>
+     Disable and stop the <code class="systemitem">nscd</code> daemon
+     because it conflicts with <code class="systemitem">sssd</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl disable nscd &amp;&amp; systemctl stop nscd</pre></div></li><li class="step "><p>
+     Create the SSSD configuration and restrict the login to the members of the group <code class="systemitem">server_admins</code> that we created in <a class="xref" href="cha-security-ldap.html#pro-security-ldap-server-groups" title="Creating LDAP Groups and Assigning Users to Them">Procedure 6.2</a>:
+    </p><div id="id-1.8.5.5.7.11.3.3.2" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.png" /><h6>Tip</h6><p>
+      The <code class="literal">memberOf</code> plugin needs to be enabled, so that
+      clients can log in and authorise.
+     </p></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm localhost client_config sssd.conf server_admins</pre></div></li><li class="step "><p>
+     Review the output and paste (or redirect) it to <code class="filename">/etc/sssd/sssd.conf</code>.
+     If required, edit the configuration file according to your needs.
+    </p></li><li class="step "><p>
+     To configure the certificates on your client, copy <code class="filename">ca.crt</code>
+     from the LDAP server to your client:</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> mkdir -p /etc/openldap/certs
+cp [...]&gt;/ca.crt /etc/openldap/certs/
+/usr/bin/c_rehash /etc/openldap/certs</pre></div></li><li class="step "><p>
+     Enable and start SSSD:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl enable sssd
+systemctl start sssd</pre></div></li><li class="step "><p>
+     To make sure SSSD is part of PAM and NSS, follow the instructions in sections <em class="citetitle ">Configure PAM
+      (SUSE)</em> and <em class="citetitle ">Configure NSS (SUSE)</em> at <a class="link" href="https://www.port389.org/docs/389ds/howto/howto-sssd.html" target="_blank">https://www.port389.org/docs/389ds/howto/howto-sssd.html</a>.
+    </p></li><li class="step "><p>
+     Verify if the client can provide the details for user <code class="systemitem">wilber</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> id <code class="systemitem">wilber</code>
+    uid=1000(<code class="systemitem">wilber</code>) gid=100(users) groups=100(users)</pre></div><p>
+     If everything is set up correctly, <code class="systemitem">wilber</code> can access the 389 Directory Server
+     instance via SSH to the machine where you have installed and configured
+     SSSD. However, <code class="systemitem">geeko</code> will fail to do so, because <code class="systemitem">geeko</code>
+     does not belong to the group <code class="literal">server_admins</code> that we have
+     configured in <a class="xref" href="cha-security-ldap.html#pro-security-ldap-server-groups" title="Creating LDAP Groups and Assigning Users to Them">Procedure 6.2</a>.
+    </p></li></ol></div></div></div></div><div class="sect1 " id="sec-security-ldap-server-yast"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Setting Up a 389 Directory Server with YaST</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-yast">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-yast</li></ul></div></div></div></div><p>
+   You can use YaST to quickly create a very basic setup of the 389 Directory Server.
+  </p><div class="sect2 " id="sec-security-ldap-server-yast-create"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating an 389 Directory Server Instance with YaST</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-yast-create">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-yast-create</li></ul></div></div></div></div><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+    In YaST, click <span class="guimenu ">Network Services</span> › <span class="guimenu ">Create New Directory Server</span>. Alternatively, start the module from command line with
+   <code class="command">yast2 ldap-server</code>.
+   </p><p>
+    In the window that opens, you need to fill in all mandatory text fields.
+   </p></li><li class="step "><p>
+    Enter the <span class="guimenu ">Fully qualified domain name</span> of the 389 Directory Server.
+    It must be resolvable from the host.
+   </p></li><li class="step "><p>
+    In <span class="guimenu ">Directory server instance name</span>, enter a local name for
+    the LDAP server instance.</p><div id="id-1.8.5.5.8.3.2.3.2" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note: Instance Name</h6><p>
+     The instance name <span class="emphasis"><em>cannot</em></span> be changed after the instance
+     has been created. If you plan for only one LDAP server, use the default
+     instance name <code class="literal">localhost</code>. However, if you plan to host
+     multiple LDAP servers, use meaningful names for the individual instances.
+    </p></div></li><li class="step "><p>
+   In <span class="guimenu ">Directory suffix</span>, enter the base domain name of the LDAP
+   tree. It is your domain name split by component. For example,
+   <code class="literal">example.com</code> becomes <code class="literal">dc=example,dc=com</code>.
+   </p></li><li class="step "><p>
+    In the mandatory security options, enter the password for the directory manager
+    (LDAP's root/admin account) and repeat the password in the next step. The
+    password must be at least 8 characters long.
+   </p></li><li class="step "><p>
+      To run 389 Directory Server with a CA certificate, specify both of the following options:
+     </p><ol type="a" class="substeps "><li class="step "><p>
+        Enter the path to the <span class="guimenu ">Server TLS certificate authority in PEM
+        format</span>, with which the server certificates have been signed.
+        
+       </p></li><li class="step "><p>
+        Enter the path to the <span class="guimenu ">Server TLS certificate and key in PKCS12
+        format with friendly name "Server-Cert"</span>. The
+        <code class="filename">*.p12</code> file contains the server's private key and
+        certificate. These must have been signed by the CA in PEM format that you
+        have specified above. The <span class="guimenu ">friendly name</span> must be
+        <code class="literal">Server-Cert</code>, see <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-ca" title="6.3.2. Using CA Certificates for TSL">Section 6.3.2, “Using CA Certificates for TSL”</a>
+        for details.
+        
+       </p><p>
+        If you do not specify a CA certificate here, a self-signed certificate
+        will be created automatically. After the instance has been created,
+        find the related files in
+        <code class="filename">/etc/dirsrv/slapd-<em class="replaceable ">INSTANCENAME</em></code>.
+       </p></li></ol></li><li class="step "><p>
+    If you are ready to create the instance, click <span class="guimenu ">OK</span>.
+   </p><div class="informalfigure"><div class="mediaobject"><a xmlns="" href="images/yast2-ldap-server.png" target="_blank"><img src="images/yast2-ldap-server.png" width="" /></a></div></div><p>YaST displays a message whether the creation was successful and where
+    to find the log files.
+   </p></li></ol></div></div><p>
+  The setup with YaST provides only a very basic configuration of the 389 Directory Server.
+  To fine-tune more settings, see <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server" title="6.3. Manually Configuring a 389 Directory Server">Section 6.3, “Manually Configuring a 389 Directory Server”</a>
+  or the documentation mentioned in <a class="xref" href="cha-security-ldap.html#sec-security-ldap-info" title="6.6. For More Information">Section 6.6, “For More Information”</a>.
+ </p></div><div class="sect2 " id="sec-security-ldap-yast-client"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring an LDAP Client with YaST</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-yast-client">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-yast-client</li></ul></div></div></div></div><p>
+   YaST includes the module <span class="guimenu ">LDAP and Kerberos Client</span>
+   that helps define authentication scenarios involving either LDAP or Kerberos.
+  </p><p>
+   It can also be used to join Kerberos and LDAP separately. However, in
+   many such cases, using this module may not be the first choice, such as
+   for joining Active Directory (which uses a combination of LDAP and Kerberos). For
+   more information, see <a class="xref" href="cha-security-auth.html#sec-security-auth-yast-client" title="5.1. Configuring an Authentication Client with YaST">Section 5.1, “Configuring an Authentication Client with YaST”</a>.
+  </p><p>
+   Start the module by selecting
+   <span class="guimenu ">Network Services</span> › <span class="guimenu ">LDAP and
+   Kerberos Client</span>.
+  </p><div class="figure" id="fig-yast2-ldapkerberos-ldap"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/yast2_auth_client_config.png" target="_blank"><img src="images/yast2_auth_client_config.png" width="" alt="LDAP and Kerberos Client Window" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 6.2: </span><span class="name"><span class="guimenu ">LDAP and Kerberos Client</span> Window </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#fig-yast2-ldapkerberos-ldap">#</a></h6></div></div><p>
+   To configure an LDAP client, follow the procedure below:
+  </p><div class="procedure " id="pro-security-auth-ldap"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     In the window <span class="guimenu ">LDAP and Kerberos Client</span>, click
+     <span class="guimenu ">Change Settings</span>.
+    </p><p>
+     Make sure that the tab <span class="guimenu ">Use a Directory as Identity Provider
+     (LDAP)</span> is chosen.
+    </p><div class="informalfigure"><div class="mediaobject"><a xmlns="" href="images/yast2_auth_client_ldap.png" target="_blank"><img src="images/yast2_auth_client_ldap.png" width="" /></a></div></div></li><li class="step "><p>
+     
+     Specify one or more LDAP server URLs or host names under
+     <span class="guimenu ">Enter LDAP server locations</span>. For security reasons, we
+     recommend to use <code class="literal">LDAPS://</code> URLs only. When specifying
+     multiple addresses, separate them with spaces.
+    </p></li><li class="step "><p>
+     Specify the appropriate LDAP distinguished name (DN) under
+     <span class="guimenu ">DN of Search Base</span>. For example, a valid entry could
+     be <code class="literal">dc=example,dc=com</code>.
+    </p></li><li class="step "><p>
+     If your LDAP server supports TLS encryption, choose the appropriate
+     security option under <span class="guimenu ">Secure LDAP Connection</span>.
+    </p><p>
+     To first ask the server whether it supports TLS encryption and be able
+     to downgrade to an unencrypted connection if it does not, use
+     <span class="guimenu ">Secure Communication via StartTLS</span>.
+    </p></li><li class="step "><p>
+     Activate other options as necessary:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+       You can <span class="guimenu ">Allow users to authenticate via LDAP</span> and
+       <span class="guimenu ">Automatically Create Home Directories</span> on the local
+       computer for them.
+      </p></li><li class="listitem "><p>
+       If you want to cache LDAP entries locally, use <span class="guimenu ">Cache LDAP Entries
+        For Faster Response</span>.
+      </p><div id="id-1.8.5.5.8.4.7.5.2.2.2" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.png" /><h6>Warning: Potential Security Risk with Caching</h6><p>
+        Using the cache incurs security risks, depending on the mechanism used.
+       </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.8.5.5.8.4.7.5.2.2.2.3.1"><span class="term ">nscd</span></dt><dd><p>
+           If you define an authorization rule (for example, members of group
+           <code class="literal">admin</code> can log in), and you remove a user from that
+           group, the client cache will not see that change until the cache expires
+           or refreshes. So a user whose account has been revoked can still log in
+           for a period of time later.
+          </p></dd><dt id="id-1.8.5.5.8.4.7.5.2.2.2.3.2"><span class="term ">sssd</span></dt><dd><p>
+           This caching mechanism constantly checks if group memberships are still
+           valid. Thus the cache risk only exists if the <code class="literal">sssd</code>
+           daemon is disconnected from the LDAP server for any reason.
+          </p></dd></dl></div></div></li><li class="listitem "><p>
+       Specify the types of data that should be used from the LDAP source,
+       such as
+       <span class="guimenu ">Users</span> and <span class="guimenu ">Groups</span>,
+       <span class="guimenu ">Super-User Commands</span>, and <span class="guimenu ">Network Disk
+       Locations</span> (network-shared drives that can be automatically
+       mounted on request).
+      </p></li><li class="listitem "><p>
+       Specify the distinguished name (DN) and password of the user under
+       whose name you want to bind to the LDAP directory in <span class="guimenu ">DN of
+       Bind User</span> and <span class="guimenu ">Password of the Bind User</span>.
+      </p><p>
+       Otherwise, if the server supports it, you can also leave both text
+       boxes empty to bind anonymously to the server.
+      </p><div id="id-1.8.5.5.8.4.7.5.2.4.3" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.png" /><h6>Warning: Authentication Without Encryption</h6><p>
+        When using authentication without enabling transport encryption
+        using TLS or StartTLS, the password will be transmitted in the clear.
+       </p></div></li></ul></div><p>
+     Under <span class="guimenu ">Extended Options</span>, you can additionally
+     configure timeouts for BIND operations.
+    </p></li><li class="step "><p>
+     To check whether the LDAP connection works, click
+     <span class="guimenu ">Test Connection</span>.
+    </p></li><li class="step "><p>
+     To leave the dialog, click <span class="guimenu ">OK</span>. Then wait for the
+     setup to complete.
+    </p><p>
+     Finally, click <span class="guimenu ">Finish</span>.
+    </p></li></ol></div></div></div></div><div class="sect1 " id="sec-security-ldap-data"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Manually Administering LDAP Data</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-data">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-data</li></ul></div></div></div></div><p>
+    The command line tools provided by the <code class="systemitem">openldap2-client</code>
+    package (like <code class="command">ldapsearch</code> or <code class="command">ldapmodify</code>)
+    can be used for administration of data in the LDAP directory. However, they
+    are low-level tools and hard to use. For details about their use, refer to
+    the respective man pages and documentation.
+   </p></div><div class="sect1 " id="sec-security-ldap-info"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">For More Information</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-info">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-info</li></ul></div></div></div></div><p>
+   For more information about 389 Directory Server, see the upstream documentation,
+   available at <a class="link" href="https://www.port389.org/docs/389ds/documentation.html" target="_blank">https://www.port389.org/docs/389ds/documentation.html</a>.
+  </p></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-security-kerberos.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 7 </span>Network Authentication with Kerberos</span></a><a class="nav-link" href="cha-security-auth.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 5 </span>Setting Up Authentication Clients Using YaST</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2021 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>389 LDAP Directory Server | Security and Hardening Guide | SUSE Linux Enterprise Desktop 15 SP3</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" /><meta name="generator" content="DAPS 3.1.2 (https://opensuse.github.io/daps) using SUSE XSL Stylesheets 2.81.0 (based on DocBook XSL Stylesheets 1.79.2) - chunked" /><meta name="product-name" content="SUSE Linux Enterprise Desktop" /><meta name="product-number" content="15 SP3" /><meta name="book-title" content="Security and Hardening Guide" /><meta name="chapter-title" content="Chapter 6. 389 LDAP Directory Server" /><meta name="description" content="The Lightweight Directory Access Protocol (LDAP) is a protocol designed to access and maintain information directories. LDAP can be used for tasks such as user and group management, system configuration management, and address management. In SUSE Linux Enterprise Desktop 15.3 the LDAP service is provided by the 389 Directory Server, replacing OpenLDAP." /><meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" /><meta name="tracker-type" content="bsc" /><meta name="tracker-bsc-assignee" content="fs@suse.com" /><meta name="tracker-bsc-component" content="Documentation" /><meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP3" /><link rel="home" href="index.html" title="SUSE Linux Enterprise Desktop Documentation" /><link rel="up" href="part-auth.html" title="Part I. Authentication" /><link rel="prev" href="cha-security-auth.html" title="Chapter 5. Setting up authentication clients using YaST" /><link rel="next" href="cha-security-kerberos.html" title="Chapter 7. Network authentication with Kerberos" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css" /></noscript><script src="static/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #FABEBE;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-auth.html">Authentication</a><span> › </span><a class="crumb" href="cha-security-ldap.html">389 LDAP Directory Server</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and confidentiality</span></a></li><li class="inactive"><a href="cha-common-criteria.html"><span class="number">2 </span><span class="name">Common criteria</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">3 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">4 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">5 </span><span class="name">Setting up authentication clients using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">6 </span><span class="name">389 LDAP Directory Server</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">7 </span><span class="name">Network authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">8 </span><span class="name">Active Directory support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">9 </span><span class="name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">10 </span><span class="name">Physical security</span></a></li><li class="inactive"><a href="sec-sec-prot-general-seccheck.html"><span class="number">11 </span><span class="name">Automatic security checks with seccheck</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">12 </span><span class="name">Software management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">13 </span><span class="name">File management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">14 </span><span class="name">Encrypting partitions and files</span></a></li><li class="inactive"><a href="cha-configure-cryptctl.html"><span class="number">15 </span><span class="name">Storage encryption for hosted applications with cryptctl</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">16 </span><span class="name">User management</span></a></li><li class="inactive"><a href="cha-spectre.html"><span class="number">17 </span><span class="name">Spectre/Meltdown checker</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">18 </span><span class="name">Configuring security settings with YaST</span></a></li><li class="inactive"><a href="cha-security-policykit.html"><span class="number">19 </span><span class="name">Authorization with PolKit</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">20 </span><span class="name">Access control lists in Linux</span></a></li><li class="inactive"><a href="cha-certstore.html"><span class="number">21 </span><span class="name">Certificate store</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">22 </span><span class="name">Intrusion detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">23 </span><span class="name">X window system and X authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">24 </span><span class="name">SSH: secure network operations</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">25 </span><span class="name">Masquerading and firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">26 </span><span class="name">Configuring a VPN server</span></a></li><li class="inactive"><a href="cha-security-xca.html"><span class="number">27 </span><span class="name">Managing a PKI with XCA, X certificate and key manager</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">28 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">29 </span><span class="name">Getting started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">30 </span><span class="name">Immunizing programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">31 </span><span class="name">Profile components and syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">32 </span><span class="name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">33 </span><span class="name">Building and managing profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">34 </span><span class="name">Building profiles from the command line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">35 </span><span class="name">Profiling your web applications using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">36 </span><span class="name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">37 </span><span class="name">Managing profiled applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">38 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">39 </span><span class="name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">V </span><span class="name"><em class="citetitle ">The Linux Audit Framework</em></span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">40 </span><span class="name">Understanding Linux audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">41 </span><span class="name">Setting up the Linux audit framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">42 </span><span class="name">Introducing an audit rule set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">43 </span><span class="name">Useful resources</span></a></li></ol></li><li class="inactive"><a href="bk05apa.html"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 5. Setting up authentication clients using YaST" href="cha-security-auth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 7. Network authentication with Kerberos" href="cha-security-kerberos.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #FABEBE;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-auth.html">Authentication</a><span> › </span><a class="crumb" href="cha-security-ldap.html">389 LDAP Directory Server</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 5. Setting up authentication clients using YaST" href="cha-security-auth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 7. Network authentication with Kerberos" href="cha-security-kerberos.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-security-ldap"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><h2 class="title"><span class="number">6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">389 LDAP Directory Server</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>cha-security-ldap</li></ul></div></div><div><div class="abstract"><p>
+    The Lightweight Directory Access Protocol (LDAP) is a protocol
+    designed to access and maintain information directories. LDAP can be
+    used for tasks such as user and group management, system configuration 
+    management, and address management. In <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> 15.3 the
+    LDAP service is provided by the 389 Directory Server, replacing OpenLDAP.    
+   </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-tree"><span class="number">6.1 </span><span class="name">Structure of an LDAP directory tree</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server-install"><span class="number">6.2 </span><span class="name">Installing 389 Directory Server</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-firewall"><span class="number">6.3 </span><span class="name">Firewall configuration</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server-users"><span class="number">6.4 </span><span class="name">Managing LDAP users and groups</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server-sssd"><span class="number">6.5 </span><span class="name">Setting up SSSD</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-modules"><span class="number">6.6 </span><span class="name">Managing Modules</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-migrate"><span class="number">6.7 </span><span class="name">Migrating to 389 Directory Server from OpenLDAP</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-server-ca"><span class="number">6.8 </span><span class="name">Using CA certificates for TLS</span></a></span></dt><dt><span class="sect1"><a href="cha-security-ldap.html#sec-security-ldap-info"><span class="number">6.9 </span><span class="name">More information</span></a></span></dt></dl></div></div><p>
+   Ideally, a central server stores the data in a directory and distributes
+   it to all clients using a well-defined protocol. The structured data allow
+   a wide range of applications to access them. A central repository reduces
+   the necessary administrative effort. The use of an open and standardized
+   protocol such as LDAP ensures that as many client applications as
+   possible can access such information.
+  </p><p>
+   A directory in this context is a type of database optimized for quick and
+   effective reading and searching. The type of data stored in a directory tends
+   to be long lived and changes infrequently. This allows the LDAP service to be
+   optimized for high performance concurrent reads, whereas conventional databases
+   are optimized for accepting many writes to data in a short time.
+  </p><div class="sect1 " id="sec-security-ldap-tree"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Structure of an LDAP directory tree</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-tree">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_directory_tree.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_directory_tree.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-tree</li></ul></div></div></div></div><p>
+   This section introduces the layout of an LDAP directory tree, and provides
+   the basic terminology used with regard to LDAP. 
+  </p><p>
+   An LDAP directory has a tree structure. All entries (called objects) of
+   the directory have a defined position within this hierarchy. This
+   hierarchy is called the <span class="emphasis"><em>directory information tree</em></span>
+   (DIT). The complete path to the desired entry, which unambiguously
+   identifies it, is called the <span class="emphasis"><em>distinguished name</em></span> or
+   DN. An object in the tree is identified by its <span class="emphasis"><em>relative distinguished
+   name</em></span> (RDN). The distinguished name is built from the RDNs of all
+   entries on the path to the entry.
+  </p><p>
+   The relations within an LDAP directory tree become more evident in the
+   following example, shown in <a class="xref" href="cha-security-ldap.html#fig-ldap-tree" title="Structure of an LDAP directory">Figure 6.1, “Structure of an LDAP directory”</a>.
+  </p><div class="figure" id="fig-ldap-tree"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/ldap_tree.png" target="_blank"><img src="images/ldap_tree.png" width="" alt="Structure of an LDAP directory" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 6.1: </span><span class="name">Structure of an LDAP directory </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#fig-ldap-tree">#</a></h6></div></div><p>
+   The complete diagram is a fictional directory information tree. The
+   entries on three levels are depicted. Each entry corresponds to one box
+   in the image. The complete, valid <span class="emphasis"><em>distinguished name</em></span>
+   for the fictional employee <code class="systemitem">Geeko
+   Linux</code>, in this case, is <code class="literal">cn=Geeko
+   Linux,ou=doc,dc=example,dc=com</code>. It is composed by adding the
+   RDN <code class="literal">cn=Geeko Linux</code> to the DN of the preceding entry
+   <code class="literal">ou=doc,dc=example,dc=com</code>.
+  </p><p>
+   The types of objects that can be stored in the DIT are globally
+   determined following a <span class="emphasis"><em>Schema</em></span>. The type of an object
+   is determined by the <span class="emphasis"><em>object class</em></span>. The object class
+   determines what attributes the relevant object must or may be assigned.
+   The Schema contains all object classes and attributes which can be used by
+   the LDAP server. Attributes are a structured data type. Their syntax, ordering
+   and other behavior is defined by the Schema. LDAP servers supply a core set of
+   Schemas which can work in a broad variety of environments. If a custom Schema
+   is required, you can upload it to an LDAP server.
+  </p><p>
+   <a class="xref" href="cha-security-ldap.html#tab-ldap-schema" title="Commonly used object classes and attributes">Table 6.1, “Commonly used object classes and attributes”</a> offers a small overview of the object
+   classes from <code class="filename">00core.ldif</code> and
+   <code class="filename">06inetorgperson.ldif</code> used in the example, including
+   required attributes (Req. Attr.) and valid attribute values. After installing
+   <code class="systemitem">389-ds</code>, these can be found in
+   <code class="filename">usr/share/dirsrv/schema</code>.
+
+  </p><div class="table" id="tab-ldap-schema"><div class="table-title-wrap"><h6 class="table-title"><span class="number">Table 6.1: </span><span class="name">Commonly used object classes and attributes </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#tab-ldap-schema">#</a></h6></div><div class="table-contents"><table class="table" summary="Commonly used object classes and attributes" border="1"><colgroup><col class="c1" /><col class="c2" /><col class="c3" /><col class="c4" /></colgroup><thead><tr><th>
+       <p>
+        Object Class
+       </p>
+      </th><th>
+       <p>
+        Meaning
+       </p>
+      </th><th>
+       <p>
+        Example Entry
+       </p>
+      </th><th>
+       <p>
+        Req. Attr.
+       </p>
+      </th></tr></thead><tbody><tr><td>
+       <p>
+        <code class="literal">domain</code>
+       </p>
+      </td><td>
+       <p>
+        name components of the domain
+       </p>
+      </td><td>
+       <p>
+        example
+       </p>
+      </td><td>
+       <p>
+        displayName
+       </p>
+      </td></tr><tr><td>
+       <p>
+        <code class="literal">organizationalUnit</code>
+       </p>
+      </td><td>
+       <p>
+        organizational unit
+       </p>
+      </td><td>
+       <p>
+        doc
+       </p>
+      </td><td>
+       <p>
+        ou
+       </p>
+      </td></tr><tr><td>
+       <p>
+        <code class="literal">nsPerson</code>
+       </p>
+      </td><td>
+       <p>
+        person-related data for the
+        intranet or Internet
+       </p>
+      </td><td>
+       <p>
+        Geeko Linux
+       </p>
+      </td><td>
+       <p>
+        cn
+       </p>
+      </td></tr></tbody></table></div></div><p>
+   <a class="xref" href="cha-security-ldap.html#aus-ldap-schema-help" title="Excerpt from CN=schema">Example 6.1, “Excerpt from CN=schema”</a> shows an excerpt from a Schema
+   directive with explanations.
+  </p><div class="example" id="aus-ldap-schema-help"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.1: </span><span class="name">Excerpt from CN=schema </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#aus-ldap-schema-help">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">attributetype (1.2.840.113556.1.2.102 NAME 'memberOf' <span id="co-ldap-schema-core-att-type"></span><span class="callout">1</span>
+       DESC 'Group that the entry belongs to' <span id="co-ldap-schema-core-desc"></span><span class="callout">2</span>
+       SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 <span id="co-ldap-schema-core-syntax"></span><span class="callout">3</span>
+       X-ORIGIN 'Netscape Delegated Administrator') <span id="co-ldap-schema-core-xorigin"></span><span class="callout">4</span>
+
+objectclass (2.16.840.1.113730.3.2.333 NAME 'nsPerson' <span id="co-ldap-schema-core-oc"></span><span class="callout">5</span>
+       DESC 'A representation of a person in a directory server' <span id="co-ldap-schema-core-desc-oc"></span><span class="callout">6</span>
+       SUP top STRUCTURAL <span id="co-ldap-schema-core-sup-oc"></span><span class="callout">7</span>
+       MUST ( displayName $ cn ) <span id="co-ldap-schema-core-must-oc"></span><span class="callout">8</span>
+       MAY ( userPassword $ seeAlso $ description $ legalName $ mail \
+             $ preferredLanguage ) <span id="co-ldap-schema-core-may-oc"></span><span class="callout">9</span>
+       X-ORIGIN '389 Directory Server Project'
+  ...</pre></div></div></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-att-type"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     The name of the attribute, its unique <span class="emphasis"><em>object
+     identifier</em></span> (OID, numerical), and the abbreviation of the
+     attribute.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-desc"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     A brief description of the attribute with <code class="literal">DESC</code>. The
+     corresponding RFC, on which the definition is based, may also mentioned
+     here.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-syntax"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+      The type of data that can be held in the attribute. In this case, it is a
+      case-insensitive directory string.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-xorigin"><span class="callout">4</span></a> </p></td><td valign="top" align="left"><p>
+     The source of the schema element (for example, the name of the project).
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-oc"><span class="callout">5</span></a> </p></td><td valign="top" align="left"><p>
+     The definition of the object class <code class="literal">nsPerson</code> begins with
+     an OID and the name of the object class (like the definition of
+     the attribute).
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-desc-oc"><span class="callout">6</span></a> </p></td><td valign="top" align="left"><p>
+     A brief description of the object class.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-sup-oc"><span class="callout">7</span></a> </p></td><td valign="top" align="left"><p>
+     The <code class="literal">SUP top</code> entry indicates that this object class
+     is not subordinate to another object class.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-must-oc"><span class="callout">8</span></a> </p></td><td valign="top" align="left"><p>
+     With <code class="literal">MUST</code> list all attribute types that must be used
+     with an object of the type
+     <code class="literal">nsPerson</code>.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-schema-core-may-oc"><span class="callout">9</span></a> </p></td><td valign="top" align="left"><p>
+     With <code class="literal">MAY</code> list all attribute types that are optionally
+     permitted with this object class.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-security-ldap-server-install"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Installing 389 Directory Server</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-install">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_install.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_install.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-install</li></ul></div></div></div></div><p>
+    Install it with the following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> zypper install 389-ds</pre></div><p>
+      This installs the <span class="package ">389-ds</span> and 
+      <span class="package ">lib389</span> packages. After installation, set up the        
+      server 
+           
+    </p><div class="sect2 " id="sec-security-ldap-server"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.2.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Setting up a new 389 Directory Server instance</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_install.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_install.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server</li></ul></div></div></div></div><p>
+      You will use the <code class="command">dscreate</code> command to create new
+      389 Directory Server instances, and the <code class="command">dsctl</code> command to cleanly
+      remove them.
+  </p><p>
+      There are two ways to configure and create a new instance: from a custom
+      configuration file, and from an auto-generated template file.
+      You may use the auto-generated template without changes for a test instance,
+      though for a production system you must carefully review it and make 
+      necessary changes.
+  </p><p>
+      Then you will set up administration credentials, manage users and groups,
+      and configure identity services.
+  </p><p>
+      Follow these steps to set up a simple instance for testing and development, 
+      populated with a small set of sample entries.
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-instance" title="6.2.2. Creating a 389 Directory Server instance with a custom configuration file">Creating a 389 Directory Server instance with a custom configuration file</a>
+    </p></li><li class="step "><p>
+     
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-template" title="6.2.3. Creating a 389 Directory Server instance from a template">Creating a 389 Directory Server instance from a template</a>
+    </p></li><li class="step "><p>
+     
+      <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-credentials" title="6.2.5. Configuring admin credentials for local administration">Configuring admin credentials for local administration</a>
+    </p></li><li class="step "><p>
+    
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-users" title="6.4. Managing LDAP users and groups">Managing LDAP users and groups</a>
+    </p></li><li class="step "><p>
+    
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-sssd" title="6.5. Setting up SSSD">Setting up SSSD</a>
+    </p></li><li class="step "><p>
+       
+       <a class="xref" href="cha-security-ldap.html#sec-security-ldap-modules" title="6.6. Managing Modules">Managing Modules</a>
+     </p></li><li class="step "><p>
+       
+      <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-ca" title="6.8. Using CA certificates for TLS">Using CA certificates for TLS</a>
+     </p></li></ol></div></div><p>
+   
+  </p><p>
+   The 389 Directory Server is controlled by three primary commands:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.5.5.6.5.9.1"><span class="term "><code class="command">dsctl</code></span></dt><dd><p>
+      Manages a local instance and requires <code class="systemitem">root</code> permissions. Requires you
+      to be connected to a terminal which is running the directory server instance.
+      Used for starting, stopping, backing up the database, and more.
+     </p></dd><dt id="id-1.7.5.5.6.5.9.2"><span class="term "><code class="command">dsconf</code></span></dt><dd><p>
+       The primary tool used for administration and configuration of the server.
+       Manages an instance's configuration via its external interfaces. This allows
+       you to make configuration changes remotely on the instance.
+      </p></dd><dt id="id-1.7.5.5.6.5.9.3"><span class="term "><code class="command">dsidm</code></span></dt><dd><p>
+       Used for identity management (managing users, groups, passwords etc.).
+       The permissions are granted by access controls, so, for example, users can
+       reset their own password or change details of their own account.
+      </p></dd></dl></div></div><div class="sect2 " id="sec-security-ldap-server-instance"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.2.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating a 389 Directory Server instance with a custom configuration file</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-instance">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_install.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_install.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-instance</li></ul></div></div></div></div><p>
+     You may create a new 389 Directory Server instance from a simple custom configuration
+     file. This file must be in the INF format, and you may name it anything you
+     like.
+    </p><p>
+       The default instance name is <code class="literal">localhost</code>. The instance 
+       name cannot be changed after it has been created. It is better
+       to create your own instance name, rather than using the default, to avoid 
+       confusion and to enable a better understanding of how it all works.
+    </p><p>
+     <a class="xref" href="cha-security-ldap.html#ex-ldap-389-ds-inf" title="Minimal 389 Directory Server instance configuration file">Example 6.2</a> shows an
+     example configuration file that you can use to create a new 389 Directory Server instance.
+     You may copy and use this file, though be sure to create your own password.
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Copy the following example file, <code class="filename">ldap1.inf</code>, to 
+      your home directory:
+     </p><div class="example" id="ex-ldap-389-ds-inf"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.2: </span><span class="name">Minimal 389 Directory Server instance configuration file </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#ex-ldap-389-ds-inf">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># <em class="replaceable ">ldap1.inf</em>
+        
+[general]
+config_version = 2 <span id="co-ldap-389-ds-config-version"></span><span class="callout">1</span>
+
+[slapd]
+root_password = <em class="replaceable ">password</em><span id="co-ldap-389-ds-rootpasswd"></span><span class="callout">2</span>
+self_sign_cert = True <span id="co-ldap-389-ds-cert"></span><span class="callout">3</span>
+instance_name = <em class="replaceable ">ldap1</em>
+
+[backend-userroot]
+sample_entries = yes <span id="co-ldap-389-ds-sample-entries"></span><span class="callout">4</span>
+suffix = <em class="replaceable ">dc=ldap1,dc=com</em></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-389-ds-config-version"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+         This line is required, indicating that this is a version 2 setup INF
+         file.
+        </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-389-ds-rootpasswd"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+         Create a <code class="varname">root_password</code> for
+         the ldap user <code class="literal">cn=Directory Manager</code>. This user is for
+         connecting (binding) to the directory.
+        </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-389-ds-cert"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+         Create self-signed server certificates in 
+         <code class="filename">/etc/dirsrv/slapd-<em class="replaceable ">instance-name</em></code>.
+        </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-389-ds-sample-entries"><span class="callout">4</span></a> </p></td><td valign="top" align="left"><p>
+         Populate the new instance with sample user and group entries.
+        </p></td></tr></table></div></div></div></li><li class="step "><p>
+     To create the 389 Directory Server instance from <a class="xref" href="cha-security-ldap.html#ex-ldap-389-ds-inf" title="Minimal 389 Directory Server instance configuration file">Example 6.2</a>, run the following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dscreate -v from-file <em class="replaceable ">ldap1.inf</em> | tee <em class="replaceable ">ldap1-output.txt</em></pre></div><p>
+     This shows all activity during the instance creation, stores all the messages in
+     <code class="filename">ldap1-output.txt</code>, and creates a working 
+     LDAP server in about a minute. The verbose output contains a lot of useful
+     information. If you do not want to save it then delete the 
+     <code class="literal">| tee <em class="replaceable ">ldap1-output.txt</em></code>
+     portion of the command.
+    </p></li><li class="step "><p>
+     If the <code class="command">dscreate</code> command should fail, the messages will 
+     tell you why. After correcting any issues remove the instance 
+     (see <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-remove" title="Step 5">Step 5</a>) and create a
+     new instance.    
+    </p></li><li class="step "><p>
+     A successful installation reports "<code class="literal">Completed installation for 
+       <em class="replaceable ">ldap1</em></code>". Check the status of your
+     new server:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> status
+Instance "ldap1" is running</pre></div></li><li class="step " id="sec-security-ldap-server-remove"><p>
+     The following commands are for cleanly removing the instance. The first 
+     command performs a dry-run and does not remove the instance. When are you 
+     sure you want to remove it, use the second command with the
+     <code class="command">--do-it</code> option:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> remove
+Not removing: if you are sure, add --do-it
+
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> remove --do-it</pre></div><p>
+     This command also removes partially-installed or corrupted instances. You 
+     may reliably create and remove instances as much as you want.
+    </p></li></ol></div></div><p>
+    If you forget the name of your instance, use <code class="command">dsctl</code> to 
+    list all instances:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>/usr/sbin/dsctl -l
+slapd-ldap1</pre></div></div><div class="sect2 " id="sec-security-ldap-server-template"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.2.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating a 389 Directory Server instance from a template</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-template">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_install.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_install.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-template</li></ul></div></div></div></div><p>
+       You may auto-create a template for a new 389 Directory Server instance with the
+       <code class="command">dscreate</code> command. This creates a template that you
+       may use without making any changes, and you may change it to suit your own
+       requirements. All of the defaults are documented in the template file,
+       and commented out. To make changes, uncomment the default and enter your
+       own value. All options are well-documented.
+   </p><p>
+       The following example prints the template to stdout:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>dscreate create-template</pre></div><p>
+       This is good for a quick review of the template, but you must create a
+       file to use in creating your new 389 Directory Server instance. You may name this file
+       anything you want:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>dscreate create-template <em class="replaceable ">ldap1-template.txt</em></pre></div><p>
+       This is a snippet from the new file:
+   </p><div class="verbatim-wrap"><pre class="screen"># full_machine_name (str)
+# Description: Sets the fully qualified hostname (FQDN) of this system. When 
+# installing this instance with GSSAPI authentication behind a load balancer, set 
+# this parameter to the FQDN of the load balancer and, additionally, set 
+# "strict_host_checking" to "false".
+# Default value: ldapserver1.test.net
+;full_machine_name = ldapserver1.test.net
+
+# selinux (bool)
+# Description: Enables SELinux detection and integration during the installation 
+# of this instance. If set to "True", dscreate auto-detects whether SELinux is 
+# enabled. Set this parameter only to "False" in a development environment.
+# Default value: True 
+;selinux = True</pre></div><p>
+    You see how it automatically configures the defaults from your existing
+    environment. Use this file with no changes to create a new instance:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dscreate from-file <em class="replaceable ">ldap1-template.txt</em></pre></div><p>
+       This creates a new instance named <code class="literal">localhost</code>, and 
+       automatically starts it after creation:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">localhost</em> status
+Instance "localhost" is running</pre></div><p>
+        The default values create a fully-operational instance, but there are
+        some values you might want to change.
+    </p><p>
+        The instance name cannot be changed after it has been created. It is 
+        better to create your own instance name, rather than using the default, 
+        to avoid confusion and to enable a better understanding of how it all 
+        works. To do this, uncomment the 
+        <code class="literal">;instance_name = localhost</code> line and change
+        <code class="literal">localhost</code> to your chosen name. In the following
+        examples the instance name is <em class="replaceable ">ldap1</em>.
+    </p><p>
+        Another useful change is to populate your new instance with sample
+        users and groups. Uncomment <code class="literal">;sample_entries = no</code> and
+        change <code class="literal">no</code> to <code class="literal">yes</code>.
+    </p><p>
+        Set your own password by uncommenting <code class="literal">;root_password</code>,
+        and replacing the default password with your own.
+    </p><p>
+        The template does not create a default suffix, so you should
+        configure your own on the <code class="literal">suffix</code> line, like 
+        this example:
+    </p><div class="verbatim-wrap"><pre class="screen">suffix = <em class="replaceable ">dc=ldap1,dc=com</em></pre></div><p>
+       You may cleanly remove any instance and start over with 
+       <code class="command">dsctl</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> remove --do-it</pre></div></div><div class="sect2 " id="sec-security-ldap-server-stop-start"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.2.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Stopping and Starting 389 Directory Server</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-stop-start">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_install.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_install.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-stop-start</li></ul></div></div></div></div><p>
+         Use <code class="systemitem">systemd</code> to manage your 389 Directory Server instance. Get the
+         status of your server:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>systemctl status --no-pager --full <em class="replaceable ">dirsrv@ldap1.service</em>       
+   ● dirsrv@ldap1.service - 389 Directory Server ldap1.
+     Loaded: loaded (/usr/lib/systemd/system/dirsrv@.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2021-03-11 08:55:28 PST; 2h 7min ago
+    Process: 4451 ExecStartPre=/usr/lib/dirsrv/ds_systemd_ask_password_acl /etc/dirsrv/slapd-ldap1/dse.ldif (code=exited, status=0/SUCCESS)
+   Main PID: 4456 (ns-slapd)
+     Status: "slapd started: Ready to process requests"
+      Tasks: 26
+     CGroup: /system.slice/system-dirsrv.slice/dirsrv@ldap1.service
+             └─4456 /usr/sbin/ns-slapd -D /etc/dirsrv/slapd-ldap1 -i /run/dirsrv/slapd-ldap1.pid</pre></div><p>
+       Start and stop your server:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl start <em class="replaceable ">dirsrv@ldap1.service</em>
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl stop <em class="replaceable ">dirsrv@ldap1.service</em></pre></div><p>
+       See <span class="intraxref">Book “<em class="citetitle ">Administration Guide</em>”, Chapter 15 “The <code class="systemitem">systemd</code> daemon”</span> for more information on using 
+       <code class="command">systemctl</code>.
+   </p><p>
+       The <code class="command">dsctl</code> command also starts and stops your server:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> status
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> stop
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> restart
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsctl <em class="replaceable ">ldap1</em> start</pre></div></div><div class="sect2 " id="sec-security-ldap-server-credentials"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.2.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring admin credentials for local administration</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-credentials">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_install.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_install.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-credentials</li></ul></div></div></div></div><p>
+    For local administration of the 389 Directory Server, you can create a
+    <code class="filename">.dsrc</code> configuration file in the <code class="filename">/root</code>
+    directory, allowing root and sudo users to administer the server without
+    typing connection details with every command. 
+    <a class="xref" href="cha-security-ldap.html#ex-security-ldap-server-credentials-local" title="A .dsrc file for local administration">Example 6.3</a> 
+    shows an example for local administration on the server, using 
+    <em class="replaceable ">ldap1</em> and <em class="replaceable ">com</em> for 
+    the base DN.
+   </p><p>
+     After creating your <code class="filename">/root/.dsrc</code> file, try a few
+     administration commands, such as creating new users (see 
+     <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-users" title="6.4. Managing LDAP users and groups">Section 6.4, “Managing LDAP users and groups”</a>).
+   </p><div class="example" id="ex-security-ldap-server-credentials-local"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 6.3: </span><span class="name">A <code class="filename">.dsrc</code> file for local administration </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#ex-security-ldap-server-credentials-local">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># /root/.dsrc file for administering the ldap1 instance
+         
+[<em class="replaceable ">ldap1</em>] <span id="co-ldap-server-dsrc-instance-name"></span><span class="callout">1</span>
+
+uri = ldapi://<em class="replaceable ">%%2fvar%%2frun%%2fslapd-ldap1.socket</em> <span id="co-ldap-server-dsrc-remote-ldapi"></span><span class="callout">2</span>
+basedn = <em class="replaceable ">dc=ldap1,dc=com</em>
+binddn = cn=Directory Manager</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-server-dsrc-instance-name"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+        This must specify your exact instance name.
+      </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-ldap-server-dsrc-remote-ldapi"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+        <code class="literal">ldapi</code> detects the UID and GID of the user attempting 
+        to log in to the server. If the UID/GID are <code class="literal">0/0</code> or
+        <code class="literal">dirsrv:dirsrv</code>, <code class="literal">ldapi</code> binds the user 
+        as the directory server root dn, which is 
+        <code class="literal">cn=Directory Manager</code>.
+      </p><p>
+        In the URI the slashes are replaced with <code class="literal">%%2f</code>, so
+        in this example the path is 
+        <code class="filename">/var/run/slapd-ldap1.socket</code>.
+      </p></td></tr></table></div></div></div></div></div><div class="sect1 " id="sec-security-ldap-firewall"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Firewall configuration</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-firewall">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_firewall.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_firewall.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-firewall</li></ul></div></div></div></div><p>
+      The default TCP ports for 389 Directory Server are 389 and 636. TCP 389 is for unencrypted 
+      connections, and STARTTLS. 636 is for encrypted connections over TLS.
+  </p><p>
+      <code class="systemitem">firewalld</code> is the default firewall manager for SUSE Linux Enterprise. The following rules
+      activate the <code class="literal">ldap</code> and <code class="literal">ldaps</code> firewall
+      services:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> firewall-cmd --add-service=ldap --zone=<em class="replaceable ">internal</em>
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> firewall-cmd --add-service=ldaps --zone=<em class="replaceable ">internal</em>
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> firewall-cmd --runtime-to-permanent</pre></div><p>
+      Replace the zone with the appropriate zone for your server. See
+      <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-ca" title="6.8. Using CA certificates for TLS">Section 6.8, “Using CA certificates for TLS”</a> for information on securing
+          your connections with TLS, and 
+          <a class="xref" href="cha-security-firewall.html#sec-security-firewall-fw" title="25.3. Firewalling basics">Section 25.3, “Firewalling basics”</a> to learn about <code class="systemitem">firewalld</code>.
+  </p></div><div class="sect1 " id="sec-security-ldap-server-users"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Managing LDAP users and groups</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-users">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_users.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_users.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-users</li></ul></div></div></div></div><p>
+    Users and groups are created and managed with the <code class="command">dsidm</code>
+    command. It runs interactively, or you can run it on the command line, and
+    enter all options in a single command. 
+   </p><p>
+     List your existing users and groups:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> user list
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> group list</pre></div><p>
+       List all information on a single user:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> user get <em class="replaceable ">username</em></pre></div><p>
+       List all information on a single group:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> group get <em class="replaceable ">groupname</em></pre></div><p>
+     List members of a group:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> group members <em class="replaceable ">demo_group</em></pre></div><p>
+   In the following example we add two users, <code class="systemitem">wilber</code> and <code class="systemitem">geeko</code>,
+   by specifying their data via command-line arguments. The example server 
+   instance is named <em class="replaceable ">ldap1</em>, and the instance's suffix is 
+   <em class="replaceable ">dc=ldap1,dc=com</em>.
+   </p><div class="procedure " id="pro-security-ldap-server-users"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 6.1: </span><span class="name">Creating LDAP users </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#pro-security-ldap-server-users">#</a></h6></div><div class="procedure-contents"><p>
+     LDAP users are your users that already exist. They should have Linux 
+     system accounts, with Linux logins and home directories. Adding them to
+     your LDAP server provides central user management for your network. You 
+     need to enter accurate user data, which you can obtain by accessing 
+     the computers that hold their accounts, and running the 
+     <code class="command">id</code> command, like this example for Wilber Fox:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>id geeko
+uid=1001(wilber) gid=101(users) groups=101(users)</pre></div><ol class="procedure" type="1"><li class="step "><p>
+    Create the LDAP user <code class="systemitem">wilber</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> <code class="command">dsidm</code> <em class="replaceable ">ldap1</em> user create --uid wilber \
+  --cn wilber --displayName 'Wilber Fox' --uidNumber 1001 --gidNumber 101 \
+  --homeDirectory /home/wilber</pre></div></li><li class="step "><p>
+     Verify by looking up your new user's 
+     <code class="literal">distinguished name</code> (fully qualified
+     name to the directory object, which is guaranteed unique):
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> user get wilber
+dn: uid=wilber,ou=people,dc=ldap1,dc=com
+[...]</pre></div><p>
+     You need the distinguished name for actions such as changing the 
+     password for a user.
+    </p></li><li class="step "><p>
+     Create a password for new user <code class="systemitem">wilber</code>:
+    </p><ol type="a" class="substeps "><li class="step "><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> account reset_password \
+  uid=wilber,ou=people,dc=ldap1,dc=com</pre></div></li><li class="step "><p>
+        Enter the new password for <code class="systemitem">wilber</code> twice.
+       </p><p>
+        If the action was successful, you get the following message:
+       </p><div class="verbatim-wrap"><pre class="screen">reset password for uid=wilber,ou=people,dc=ldap1,dc=com</pre></div><p>
+         Use the same command to change an existing password.
+       </p></li></ol></li><li class="step "><p>Create the user <code class="systemitem">geeko</code>:</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> <code class="command">dsidm</code> <em class="replaceable ">ldap1</em> user create --uid geeko\
+  --cn geeko --displayName 'Suzanne Geeko' \
+  --uidNumber 1002 --gidNumber 102 --homeDirectory /home/<code class="systemitem">geeko</code>
+  
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> account reset_password \
+  uid=<code class="systemitem">geeko</code>,ou=people,dc=ldap1,dc=com</pre></div></li><li class="step "><p>
+     Verify that the user's password works:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>ldapwhoami -D uid=geeko,ou=people,dc=ldap1,dc=com -W
+Enter LDAP Password: 
+dn: uid=geeko,ou=people,dc=ldap1,dc=com</pre></div></li></ol></div></div><p>
+     The following example deletes the user <code class="systemitem">wilber</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> <code class="command">dsidm</code> <em class="replaceable ">ldap1</em> user delete 
+   Enter dn to delete : <em class="replaceable ">uid=wilber,ou=people,dc=ldap1,dc=com</em>
+   Deleting nsUserAccount uid=wilber,ou=people,dc=ldap1,dc=com :
+   Type 'Yes I am sure' to continue: Yes I am sure
+   Successfully deleted uid=wilber,ou=people,dc=ldap1,dc=com</pre></div><div class="procedure " id="pro-security-ldap-server-groups"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 6.2: </span><span class="name">Creating LDAP groups and assigning users to them </span><a title="Permalink" class="permalink" href="cha-security-ldap.html#pro-security-ldap-server-groups">#</a></h6></div><div class="procedure-contents"><p>
+    In the following examples, we create a group, 
+    <em class="replaceable ">server_admins</em>, and assign the user 
+    <code class="systemitem">wilber</code> to this group. The example server instance is named 
+    <code class="literal">ldap1</code>, and the instance's suffix is 
+    <code class="literal">dc=ldap1,dc=com</code>.
+    </p><ol class="procedure" type="1"><li class="step "><p>
+     Create the group:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> group create</pre></div><p>
+     You will be prompted for a group name. Enter your chosen group name:
+    </p><div class="verbatim-wrap"><pre class="screen">Enter value for cn : <em class="replaceable ">server_admins</em></pre></div></li><li class="step "><p>
+     Add the user <code class="systemitem">wilber</code> to the group:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm <em class="replaceable ">ldap1</em> group add_member <em class="replaceable ">server_admins</em> uid=wilber,ou=people,<em class="replaceable ">dc=ldap1,dc=com</em>
+added member: uid=wilber,ou=people,<em class="replaceable ">dc=ldap1,dc=com</em></pre></div></li></ol></div></div></div><div class="sect1 " id="sec-security-ldap-server-sssd"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Setting up SSSD</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-sssd">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_sssd.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_sssd.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-sssd</li></ul></div></div></div></div><p>
+   SSSD (System Security Services Daemon) is a daemon that communicates with
+   remote identity providers and allows <code class="literal">pam</code> and
+   <code class="literal">nsswitch</code> to consume that data. SSSD can have multiple
+   back-ends, cache users and groups and provides features like SSH key
+   distributions.
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>On a separate server, install the <code class="systemitem">sssd</code> and <code class="systemitem">sssd-ldap</code> packages:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> zypper in sssd sssd-ldap</pre></div></li><li class="step "><p>
+     Disable and stop the <code class="systemitem">nscd</code> daemon
+     because it conflicts with <code class="systemitem">sssd</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl disable nscd &amp;&amp; systemctl stop nscd</pre></div></li><li class="step "><p>
+     Create the SSSD configuration and restrict the login to the members of the group <code class="systemitem">server_admins</code> that we created in <a class="xref" href="cha-security-ldap.html#pro-security-ldap-server-groups" title="Creating LDAP groups and assigning users to them">Procedure 6.2</a>:
+    </p><div id="id-1.7.5.5.9.3.3.2" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip</h6><p>
+      The <code class="literal">memberOf</code> plugin needs to be enabled, so that
+      clients can log in and authorise (see <a class="xref" href="cha-security-ldap.html#sec-security-ldap-modules" title="6.6. Managing Modules">Section 6.6, “Managing Modules”</a>.
+     </p></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsidm localhost client_config sssd.conf server_admins</pre></div></li><li class="step "><p>
+     Review the output and paste (or redirect) it to <code class="filename">/etc/sssd/sssd.conf</code>.
+     If required, edit the configuration file according to your needs.
+    </p></li><li class="step "><p>
+     To configure the certificates on your client, copy <code class="filename">ca.crt</code>
+     from the LDAP server to your client:</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> mkdir -p /etc/openldap/certs
+cp [...]&gt;/ca.crt /etc/openldap/certs/
+/usr/bin/c_rehash /etc/openldap/certs</pre></div></li><li class="step "><p>
+     Enable and start SSSD:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl enable sssd
+systemctl start sssd</pre></div></li><li class="step "><p>
+     To make sure SSSD is part of PAM and NSS, follow the instructions in sections 
+      <em class="citetitle ">Configure PAM (SUSE)</em> and 
+      <em class="citetitle ">Configure NSS (SUSE)</em> at 
+      <a class="link" href="https://www.port389.org/docs/389ds/howto/howto-sssd.html" target="_blank">https://www.port389.org/docs/389ds/howto/howto-sssd.html</a>.
+    </p></li><li class="step "><p>
+     Your user must have their own SSH key pair, and SSH access to your SSSD server. 
+     If everything is set up correctly, <code class="systemitem">wilber</code> can access the 389 Directory Server
+     instance via SSH to the machine where you have installed and configured
+     SSSD. However, <code class="systemitem">geeko</code> will fail to do so, because <code class="systemitem">geeko</code>
+     does not belong to the group <code class="literal">server_admins</code> that we have
+     configured in <a class="xref" href="cha-security-ldap.html#pro-security-ldap-server-groups" title="Creating LDAP groups and assigning users to them">Procedure 6.2</a>.
+    </p></li></ol></div></div></div><div class="sect1 " id="sec-security-ldap-modules"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Managing Modules</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-modules">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_modules.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_modules.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-modules</li></ul></div></div></div></div><p>
+    Use the following command to list all available modules, enabled and 
+    disabled:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsconf -D "cn=Directory Manager" ldap//:<em class="replaceable ">ldapserver1</em> plugin list
+    Enter password for cn=Directory Manager on ldap://<em class="replaceable ">ldapserver1</em>: 
+7-bit check
+Account Policy Plugin
+Account Usability Plugin
+ACL Plugin
+ACL preoperation
+[...]</pre></div><p>
+    For example, this is how to enable the MemberOf plugin referenced in 
+    <a class="xref" href="cha-security-ldap.html#sec-security-ldap-server-sssd" title="6.5. Setting up SSSD">Section 6.5, “Setting up SSSD”</a>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsconf -D "cn=Directory Manager" ldap://<em class="replaceable ">ldapserver1</em> plugin memberof enable</pre></div><p>
+    Note that the plugin names are case-sensitive, and are different from how 
+    they appear when you list them. After enabling a plugin, it is necessary 
+    to restart the server. To avoid having to restart the server, set the  
+    <code class="literal">nsslapd-dynamic-plugins</code> parameter to 
+    <code class="literal">on</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> dsconf -D "cn=Directory Manager" ldap://<em class="replaceable ">ldapserver1</em> config replace nsslapd-dynamic-plugins=on
+  Enter password for cn=Directory Manager on ldap://<em class="replaceable ">ldapserver1</em>: 
+Successfully replaced "nsslapd-dynamic-plugins"</pre></div></div><div class="sect1 " id="sec-security-ldap-migrate"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Migrating to 389 Directory Server from OpenLDAP</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-migrate">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_migrate_test.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_migrate_test.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-migrate</li></ul></div></div></div></div><p>OpenLDAP is deprecated and no longer supported as of SUSE Linux Enterprise 
+     15.3, replaced by 389 Directory Server. SUSE provides the 
+     <code class="command">openldap_to_ds</code> utility to assist migration, included 
+     in the <span class="package ">389 Directory Server</span> package.
+   </p><p>
+     The <code class="command">openldap_to_ds</code> utility is designed to automate as 
+     much of the migration as possible. However, every LDAP deployment is 
+     different, and it is not possible to write a tool that satisfies all 
+     situations. It is likely there will be some manual steps to perform, and
+     you should test your migration procedure thoroughly before attempting a 
+     production migration.
+   </p><div class="sect2 " id="sec-security-ldap-migrate-test"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.7.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Testing Migration from OpenLDAP</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-migrate-test">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_migrate_test.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_migrate_test.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-migrate-test</li></ul></div></div></div></div><p>
+     There are enough differences between OpenLDAP and 389 Directory Server that 
+     migration will probably involve repeated testing and adjustments.
+     It can be helpful to do a quick migration test to get an idea of what 
+     steps will be necessary for a successful migration.     
+   </p><p>
+     Prerequisites:
+   </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+        A running 389 Directory Server instance.
+     </p></li><li class="listitem "><p>
+       An OpenLDAP <code class="filename">slapd</code> configuration file or directory 
+       in dynamic ldif format.
+     </p></li><li class="listitem "><p>
+        An ldif file backup of your OpenLDAP database.
+     </p></li></ul></div><p>
+     If your slapd configuration is not in dynamic ldif format, create a 
+     dynamic copy with <code class="command">slaptest</code>. Create the 
+     <code class="filename">slapd.d</code> directory, then run the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> slaptest -f /etc/openldap/slapd.conf -F /root/slapd.d</pre></div><p>
+       This results in something similar to the following example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> ls  slapd.d/*
+slapd.d/cn=config.ldif
+
+slapd.d/cn=config:
+cn=module{0}.ldif  cn=schema.ldif                 olcDatabase={0}config.ldif
+cn=schema          olcDatabase={-1}frontend.ldif  olcDatabase={1}mdb.ldif</pre></div><p>
+     Create one ldif file per suffix. In the following examples the suffix
+     is <em class="replaceable ">dc=ldap1,dc=com</em>. If you are using the 
+     <code class="filename">/etc/openldap/slapd.conf</code>
+     format, use the following command to create the ldif backup file:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> slapcat -f /etc/openldap/slapd.conf -b <em class="replaceable ">dc=ldap1,dc=com</em> -l /root/<em class="replaceable ">ldap1-com</em>.ldif</pre></div><p>
+     For the <code class="filename">/etc/openldap/slapd.d</code> format use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> slapcat -f /etc/openldap/slapd.conf -b <em class="replaceable ">dc=ldap1,dc=com</em> -l /root/<em class="replaceable ">ldap1-com</em>.ldif</pre></div><p>
+     Use <code class="command">openldap_to_ds</code> to analyse the configuration and 
+     files, and show a migration plan without changing anything:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> openldap_to_ds <em class="replaceable ">ldap1</em> /root/slapd.d <em class="replaceable ">ldap1-com</em>.ldif</pre></div><p>
+     This performs a dry-run and does not change anything. The output looks
+     like this:
+   </p><div class="verbatim-wrap"><pre class="screen">Examining OpenLDAP Configuration ...
+Completed OpenLDAP Configuration Parsing.
+Examining Ldifs ...
+Completed Ldif Metadata Parsing.
+The following migration steps will be performed:
+ * Schema Skip Unsupported Attribute -&gt; otherMailbox (0.9.2342.19200300.100.1.22)
+ * Schema Skip Unsupported Attribute -&gt; dSAQuality (0.9.2342.19200300.100.1.49)
+ * Schema Skip Unsupported Attribute -&gt; singleLevelQuality (0.9.2342.19200300.100.1.50)
+ * Schema Skip Unsupported Attribute -&gt; subtreeMinimumQuality (0.9.2342.19200300.100.1.51)
+ * Schema Skip Unsupported Attribute -&gt; subtreeMaximumQuality (0.9.2342.19200300.100.1.52)
+ * Schema Create Attribute -&gt; suseDefaultBase (SUSE.YaST.ModuleConfig.Attr:2)
+ * Schema Create Attribute -&gt; suseNextUniqueId (SUSE.YaST.ModuleConfig.Attr:3)
+[...]
+ * Schema Create ObjectClass -&gt; suseDhcpConfiguration (SUSE.YaST.ModuleConfig.OC:10)
+ * Schema Create ObjectClass -&gt; suseMailConfiguration (SUSE.YaST.ModuleConfig.OC:11)
+ * Database Reindex -&gt; dc=example,dc=com
+ * Database Import Ldif -&gt; dc=example,dc=com from example.ldif - excluding entry attributes = [{'structuralobjectclass', 'entrycsn'}]
+No actions taken. To apply migration plan, use '--confirm'</pre></div><p>
+     The following example performs the migration, and the output looks 
+     different from the dry-run:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> openldap_to_ds <em class="replaceable ">ldap1</em> /root/slapd.d <em class="replaceable ">ldap1-com</em>.ldif --confirm
+Starting Migration ... This may take some time ...
+migration: 1 / 40 complete ...
+migration: 2 / 40 complete ...
+migration: 3 / 40 complete ...
+[...]
+Index task index_all_05252021_120216 completed successfully
+post: 39 / 40 complete ...
+post: 40 / 40 complete ...
+🎉 Migration complete!
+----------------------
+You should now review your instance configuration and data:
+ * [ ] - Create/Migrate Database Access Controls (ACI)
+ * [ ] - Enable and Verify TLS (LDAPS) Operation
+ * [ ] - Schedule Automatic Backups
+ * [ ] - Verify Accounts Can Bind Correctly
+ * [ ] - Review Schema Inconistent ObjectClass -&gt; pilotOrganization (0.9.2342.19200300.100.4.20)
+ * [ ] - Review Database Imported Content is Correct -&gt; dc=ldap1,dc=com</pre></div><p>
+     When the migration is complete, <code class="command">openldap_to_ds</code>
+     creates a checklists of post-migration tasks that must be completed.
+     It is a best practice to document all of your post-migration steps,
+     so that you can reproduce them in your post-production procedures.
+     Then test clients and application integrations to the migrated 389 Directory Server
+     instance.
+   </p><div id="id-1.7.5.5.11.4.20" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: Develop a Rollback Plan</h6><p>
+       It is essential to develop a rollback plan in case of any failures. 
+       This plan should define a successful migration, the tests to determine 
+       what worked and what needs to be fixed, which steps are critical, what 
+       can be deferred until later, how to decide when to undo any changes, 
+       how to undo them with minimal disruption, what other teams need to be involved.
+     </p></div><p>
+     Due to the variability of deployments, it is difficult to provide
+     a recipe for a successful production migration. Once you have
+     thoroughly tested the migration process and verified that you will
+     get good results, there are some general steps that will help.
+   </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+        Lower all hostname/DNS TTLs to 5 minutes 48 hours before the change, to allow a fast rollback to your existing OpenLDAP deployment.
+      </p></li><li class="listitem "><p>
+        Pause all data synchronization and incoming data processes, so that data in the OpenLDAP environment is not changing during the migration process.
+      </p></li><li class="listitem "><p>
+        Have all 389 Directory Server hosts ready for deployment before the migration.
+      </p></li><li class="listitem "><p>
+        Have your test migration documentation readily available.
+      </p></li></ul></div></div><div class="sect2 " id="sec-security-ldap-migrate-plan"><div class="titlepage"><div><div><h3 class="title"><span class="number">6.7.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Planning your migration</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-migrate-plan">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_migrate_test.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_migrate_test.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-migrate-plan</li></ul></div></div></div></div><p>
+   As OpenLDAP is a "box of parts" and highly customisable, it is not possible
+   to prescribe a one size fits all migration. It is necessary to assess your
+   current environment and configuration with OpenLDAP and other integrations.
+   This includes, and is not limited to:
+  </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+     Replication topology.
+    </p></li><li class="listitem "><p>
+     High availability and load balancer configurations.
+    </p></li><li class="listitem "><p>
+     External data flows (IGA, HR, AD, etc.).
+    </p></li><li class="listitem "><p>
+     Configured overlays (plugins in 389 Directory Server).
+    </p></li><li class="listitem "><p>
+     Client configuration and expected server features.
+    </p></li><li class="listitem "><p>
+     Customized schema.
+    </p></li><li class="listitem "><p>
+     TLS configuration.
+    </p></li></ul></div><p>
+   Plan what your 389 Directory Server deployment will look like in the end. This includes
+   the same list, except replace overlays with plugins. Once you have assessed
+   your current environment, and planned what your 389 Directory Server environment will
+   look like, you can then form a migration plan. It is recommended you build
+   the 389 Directory Server environment in parallel to your OpenLDAP environment to allow
+   you to switch between them.
+  </p><p>
+   Migrating from OpenLDAP to 389 Directory Server is a one-way migration. There are enough
+   differences between the two that they cannot interoperate, and there is not
+   a migration path from 389 Directory Server to OpenLDAP. The following table highlights
+   the major similarities and differences.
+  </p><div class="informaltable"><table class="informaltable" border="1"><colgroup><col /><col /><col /><col /></colgroup><thead><tr><th>Feature</th><th>OpenLDAP</th><th>389 Directory Server</th><th>Compatible</th></tr></thead><tbody><tr><td>Two-way replication</td><td>SyncREPL</td><td>389-specific system</td><td>No</td></tr><tr><td>MemberOf</td><td>Overlay</td><td>Plugin</td><td>Yes, simple configs only</td></tr><tr><td>External Auth</td><td>Proxy</td><td>-</td><td>No</td></tr><tr><td>Active Directory Synchronisation</td><td>-</td><td>Winsync Plugin</td><td>No</td></tr><tr><td>Inbuilt Schema</td><td>OLDAP Schemas</td><td>389 Schemas</td><td>Yes, supported by migration tool</td></tr><tr><td>Custom Schema</td><td>OLDAP Schemas</td><td>389 Schemas</td><td>Yes, supported by migration tool</td></tr><tr><td>Database Import</td><td>LDIF</td><td>LDIF</td><td>Yes, supported by migration tool</td></tr><tr><td>Password hashes</td><td>Varies</td><td>Varies</td><td>Yes, all formats supported excluding Argon2</td></tr><tr><td>OpenLDAP to 389 Directory Server replication</td><td>-</td><td>-</td><td>No mechanism to replicate to 389 is possible</td></tr><tr><td>Time-based one-time password(TOTP)</td><td>TOTP overlay</td><td>-</td><td>No, may be supported in the future</td></tr><tr><td>EntryUUID</td><td>Part of OpenLDAP</td><td>Plugin</td><td>Yes</td></tr></tbody></table></div></div></div><div class="sect1 " id="sec-security-ldap-server-ca"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.8 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using CA certificates for TLS</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-server-ca">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap_ca.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-server-ca</li></ul></div></div></div></div><p>
+  You can manage the CA certificates for 389 Directory Server with the following command
+  line tools: <code class="command">certutil</code>, <code class="command">openssl</code>, and
+  <code class="command">pk12util</code>.
+ </p><p>
+  For testing purposes, you can create a self-signed certificate with
+  <code class="command">dscreate</code>. Find the certificate at
+  <code class="filename">/etc/dirsrv/slapd-localhost/ca.crt</code>. For remote administration,
+  copy the certificate to a readable location. For production environments,
+  contact a CA authority of your organization's choice and request a server
+  certificate, a client certificate, and a root certificate.
+ </p><p>
+ Make sure to meet the following requirements before executing the procedure below:
+ </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+    You have a server certificate and a private key to use for the TLS connection.
+   </p></li><li class="listitem "><p>
+    You have set up an NSS (Network Security Services) database (for example,
+    with the <code class="command">certutil</code> command).
+   </p></li></ul></div><div class="procedure "><div class="procedure-contents"><p>
+  Before you can import an existing private key and certificate into the NSS
+  (Network Security Services) database, you need to create a bundle of the
+  private key and the server certificate. This results in a <code class="filename">*.p12</code>
+  file.
+  </p><div id="id-1.7.5.5.12.6.2" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: <code class="filename">*.p12</code> file and friendly name</h6><p>
+   When creating the PKCS12 bundle, you must encode a friendly name
+   in the <code class="filename">*.p12</code> file.
+  </p><p>
+   Make sure to use <code class="literal">Server-Cert</code> as the friendly name. Otherwise
+   the TLS connection will fail, because the 389 Directory Server searches for this exact string.
+  </p><p>
+    Keep in mind that the friendly name cannot be changed after you
+    import the <code class="filename">*.p12</code> file into the NSS
+    database.
+  </p></div><ol class="procedure" type="1"><li class="step "><p>
+   Use the following command to create the PKCS12 bundle with the required friendly name:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>openssl pkcs12 -export -in <em class="replaceable ">SERVER.crt</em> \
+  -inkey <em class="replaceable ">SERVER.key</em> -out <em class="replaceable ">SERVER.p12</em> \
+  -name Server-Cert</pre></div><p>
+   Replace <em class="replaceable ">SERVER.crt</em> with the server certificate
+   and <em class="replaceable ">SERVER.key</em> with the private key to be bundled.
+   With <code class="option">-out</code>, specify the name of the <code class="filename">*.p12</code>
+   file. Use <code class="option">-name</code> to set the friendly name to use:
+   <code class="literal">Server-Cert</code>.
+  </p></li><li class="step "><p>
+     Before you can import the file into the NSS database, you need to
+     obtain its password. To do this, use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen">pk12util -i <em class="replaceable ">PATH_TO_SERVER.p12</em> -d sql:PATH_TO_NSS_DB -n Server-cert -W <em class="replaceable ">SERVER.p12_PASSWORD</em></pre></div><p>
+     You can then find the password in the
+     <code class="filename">pwdfile.txt</code> file in the
+     <em class="replaceable ">PATH_TO_NSS_DB</em> directory.
+   </p></li><li class="step "><p>
+   Now import the <em class="replaceable ">SERVER.p12</em> file
+   into your NSS database:
+  </p><div class="verbatim-wrap"><pre class="screen">pk12util -i <em class="replaceable ">SERVER.p12</em> -d <em class="replaceable ">PATH_TO_NSS_DB</em></pre></div></li></ol></div></div></div><div class="sect1 " id="sec-security-ldap-info"><div class="titlepage"><div><div><h2 class="title"><span class="number">6.9 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">More information</span> <a title="Permalink" class="permalink" href="cha-security-ldap.html#sec-security-ldap-info">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_ldap.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ldap.xml</li><li><span class="ds-label">ID: </span>sec-security-ldap-info</li></ul></div></div></div></div><p>
+   For more information about 389 Directory Server, see the upstream documentation,
+   available at <a class="link" href="https://www.port389.org/docs/389ds/documentation.html" target="_blank">https://www.port389.org/docs/389ds/documentation.html</a>.
+  </p></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-security-kerberos.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 7 </span>Network authentication with Kerberos</span></a><a class="nav-link" href="cha-security-auth.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 5 </span>Setting up authentication clients using YaST</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2021 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

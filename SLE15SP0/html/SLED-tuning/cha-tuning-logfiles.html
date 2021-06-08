@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Analyzing and Managing System Log Files | System Analysis and Tuning Guide | SUSE Linux Enterprise Desktop 15</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" /><meta name="generator" content="DAPS 3.0.0 (https://opensuse.github.io/daps) using SUSE XSL Stylesheets 2.0.17 (based on DocBook XSL Stylesheets 1.79.2) - chunked" /><meta name="product-name" content="SUSE Linux Enterprise Desktop" /><meta name="product-number" content="15" /><meta name="book-title" content="System Analysis and Tuning Guide" /><meta name="chapter-title" content="Chapter 3. Analyzing and Managing System Log Files" /><meta name="description" content="System log file analysis is one of the most important tasks when analyzing the system. In fact, looking at the system log files should be the first thing to do when maintaining or troubleshooting a system. SUSE Linux Enterprise Desktop automatically logs almost everything that happens on the system …" /><meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" /><meta name="tracker-type" content="bsc" /><meta name="tracker-bsc-assignee" content="fs@suse.com" /><meta name="tracker-bsc-component" content="Documentation" /><meta name="tracker-bsc-product" content="SUSE Linux Enterprise Desktop 15" /><link rel="home" href="index.html" title="SUSE Linux Enterprise Desktop Documentation" /><link rel="up" href="part-tuning-monitoring.html" title="Part II. System Monitoring" /><link rel="prev" href="cha-util.html" title="Chapter 2. System Monitoring Utilities" /><link rel="next" href="part-tuning-kerneltrace.html" title="Part III. Kernel Monitoring" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css"></link>');
+}
+else {
+  document.write('<link rel="stylesheet" type="text/css" href="static/css/fonts-onlylocal.css"></link>');
+}
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css" /></noscript><script src="static/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #FABEBE;"><div id="_header"><div id="_logo"><img src="static/images/logo.png" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-sle-tuning.html">System Analysis and Tuning Guide</a><span> › </span><a class="crumb" href="part-tuning-monitoring.html">System Monitoring</a><span> › </span><a class="crumb" href="cha-tuning-logfiles.html">Analyzing and Managing System Log Files</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>System Analysis and Tuning Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-tuning.html"><span class="number"> </span><span class="name">About This Guide</span></a></li><li class="inactive"><a href="part-tuning-basics.html"><span class="number">I </span><span class="name">Basics</span></a><ol><li class="inactive"><a href="cha-tuning-basics.html"><span class="number">1 </span><span class="name">General Notes on System Tuning</span></a></li></ol></li><li class="inactive"><a href="part-tuning-monitoring.html"><span class="number">II </span><span class="name">System Monitoring</span></a><ol><li class="inactive"><a href="cha-util.html"><span class="number">2 </span><span class="name">System Monitoring Utilities</span></a></li><li class="inactive"><a href="cha-tuning-logfiles.html"><span class="number">3 </span><span class="name">Analyzing and Managing System Log Files</span></a></li></ol></li><li class="inactive"><a href="part-tuning-kerneltrace.html"><span class="number">III </span><span class="name">Kernel Monitoring</span></a><ol><li class="inactive"><a href="cha-tuning-systemtap.html"><span class="number">4 </span><span class="name">SystemTap—Filtering and Analyzing System Data</span></a></li><li class="inactive"><a href="cha-tuning-kprobes.html"><span class="number">5 </span><span class="name">Kernel Probes</span></a></li><li class="inactive"><a href="cha-perf.html"><span class="number">6 </span><span class="name">Hardware-Based Performance Monitoring with Perf</span></a></li><li class="inactive"><a href="cha-tuning-oprofile.html"><span class="number">7 </span><span class="name">OProfile—System-Wide Profiler</span></a></li></ol></li><li class="inactive"><a href="part-tuning-resources.html"><span class="number">IV </span><span class="name">Resource Management</span></a><ol><li class="inactive"><a href="cha-tuning-resources.html"><span class="number">8 </span><span class="name">General System Resource Management</span></a></li><li class="inactive"><a href="cha-tuning-cgroups.html"><span class="number">9 </span><span class="name">Kernel Control Groups</span></a></li><li class="inactive"><a href="cha-tuning-numactl.html"><span class="number">10 </span><span class="name">Automatic Non-Uniform Memory Access (NUMA) Balancing</span></a></li><li class="inactive"><a href="cha-tuning-power.html"><span class="number">11 </span><span class="name">Power Management</span></a></li></ol></li><li class="inactive"><a href="part-tuning-kernel.html"><span class="number">V </span><span class="name">Kernel Tuning</span></a><ol><li class="inactive"><a href="cha-tuning-io.html"><span class="number">12 </span><span class="name">Tuning I/O Performance</span></a></li><li class="inactive"><a href="cha-tuning-taskscheduler.html"><span class="number">13 </span><span class="name">Tuning the Task Scheduler</span></a></li><li class="inactive"><a href="cha-tuning-memory.html"><span class="number">14 </span><span class="name">Tuning the Memory Management Subsystem</span></a></li><li class="inactive"><a href="cha-tuning-network.html"><span class="number">15 </span><span class="name">Tuning the Network</span></a></li></ol></li><li class="inactive"><a href="part-tuning-dumps.html"><span class="number">VI </span><span class="name">Handling System Dumps</span></a><ol><li class="inactive"><a href="cha-tuning-tracing.html"><span class="number">16 </span><span class="name">Tracing Tools</span></a></li><li class="inactive"><a href="cha-tuning-kexec.html"><span class="number">17 </span><span class="name">Kexec and Kdump</span></a></li><li class="inactive"><a href="cha-tuning-systemd-coredump.html"><span class="number">18 </span><span class="name">Using <code class="systemitem">systemd-coredump</code> to Debug Application Crashes</span></a></li></ol></li><li class="inactive"><a href="part-tuning-ptp.html"><span class="number">VII </span><span class="name">Synchronized Clocks with Precision Time Protocol</span></a><ol><li class="inactive"><a href="cha-tuning-ptp.html"><span class="number">19 </span><span class="name">Precision Time Protocol</span></a></li></ol></li><li class="inactive"><a href="bk06apa.html"><span class="number">A </span><span class="name">GNU Licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 2. System Monitoring Utilities" href="cha-util.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Part III. Kernel Monitoring" href="part-tuning-kerneltrace.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #FABEBE;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-sle-tuning.html">System Analysis and Tuning Guide</a><span> › </span><a class="crumb" href="part-tuning-monitoring.html">System Monitoring</a><span> › </span><a class="crumb" href="cha-tuning-logfiles.html">Analyzing and Managing System Log Files</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 2. System Monitoring Utilities" href="cha-util.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Part III. Kernel Monitoring" href="part-tuning-kerneltrace.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-tuning-logfiles"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15</span></span></span></div><div><h2 class="title"><span class="number">3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Analyzing and Managing System Log Files</span> <a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/tuning_logfiles.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_logfiles.xml</li><li><span class="ds-label">ID: </span>cha-tuning-logfiles</li></ul></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-tuning-logfiles.html#sec-tuning-logfiles-logs"><span class="number">3.1 </span><span class="name">System Log Files in <code class="filename">/var/log/</code></span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-logfiles.html#sec-tuning-logfiles-view"><span class="number">3.2 </span><span class="name">Viewing and Parsing Log Files</span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-logfiles.html#sec-tuning-logfiles-logrotate"><span class="number">3.3 </span><span class="name">Managing Log Files with <code class="command">logrotate</code></span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-logfiles.html#sec-tuning-logfiles-logwatch"><span class="number">3.4 </span><span class="name">Monitoring Log Files with <code class="command">logwatch</code></span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-logfiles.html#sec-tuning-logfiles-logger"><span class="number">3.5 </span><span class="name">Using <code class="command">logger</code> to Make System Log Entries</span></a></span></dt></dl></div></div><p>
+  System log file analysis is one of the most important tasks when analyzing
+  the system. In fact, looking at the system log files should be the first
+  thing to do when maintaining or troubleshooting a system. <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>
+  automatically logs almost everything that happens on the system in detail.
+  Since the move to <code class="systemitem">systemd</code>, kernel messages and messages of system
+  services registered with <code class="systemitem">systemd</code> are logged in <code class="systemitem">systemd</code> journal
+  (see <span class="intraxref">Book “<em class="citetitle ">Administration Guide</em>”, Chapter 17 “<code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> Journal”</span>). Other log files (mainly those of
+  system applications) are written in plain text and can be easily read
+  using an editor or pager. It is also possible to parse them using scripts.
+  This allows you to filter their content.
+ </p><div class="sect1 " id="sec-tuning-logfiles-logs"><div class="titlepage"><div><div><h2 class="title"><span class="number">3.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">System Log Files in <code class="filename">/var/log/</code></span> <a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#sec-tuning-logfiles-logs">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/tuning_logfiles.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_logfiles.xml</li><li><span class="ds-label">ID: </span>sec-tuning-logfiles-logs</li></ul></div></div></div></div><p>
+   System log files are always located under the
+   <code class="filename">/var/log</code> directory. The following list presents an
+   overview of all system log files from <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> present after a
+   default installation. Depending on your installation scope,
+   <code class="filename">/var/log</code> also contains log files from other services
+   and applications not listed here. Some files and directories described
+   below are <span class="quote">“<span class="quote ">placeholders</span>”</span> and are only used, when the
+   corresponding application is installed. Most log files are only visible
+   for the user <code class="systemitem">root</code>.
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.8.4.3.4.3.1"><span class="term "><code class="filename">apparmor/</code>
+    </span></dt><dd><p>
+      <span class="phrase">AppArmor</span> log files. For more information about <span class="phrase">AppArmor</span>, see
+      <span class="intraxref">Book “<em class="citetitle ">Security and Hardening Guide</em>”</span>.
+     </p></dd><dt id="id-1.8.4.3.4.3.2"><span class="term "><code class="filename">audit/</code>
+    </span></dt><dd><p>
+      Logs from the audit framework. See <span class="intraxref">Book “<em class="citetitle ">Security and Hardening Guide</em>”</span> for
+      details.
+     </p></dd><dt id="id-1.8.4.3.4.3.3"><span class="term "><code class="filename">ConsoleKit/</code>
+    </span></dt><dd><p>
+      Logs of the <code class="systemitem">ConsoleKit</code> daemon
+      (daemon for tracking what users are logged in and how they interact
+      with the computer).
+     </p></dd><dt id="id-1.8.4.3.4.3.4"><span class="term "><code class="filename">cups/</code>
+    </span></dt><dd><p>
+      Access and error logs of the Common Unix Printing System
+      (<code class="systemitem">cups</code>).
+     </p></dd><dt id="id-1.8.4.3.4.3.5"><span class="term "><code class="filename">firewall</code>
+    </span></dt><dd><p>
+      Firewall logs.
+     </p></dd><dt id="id-1.8.4.3.4.3.6"><span class="term "><code class="filename">gdm/</code>
+    </span></dt><dd><p>
+      Log files from the GNOME display manager.
+     </p></dd><dt id="id-1.8.4.3.4.3.7"><span class="term "><code class="filename">krb5/</code>
+    </span></dt><dd><p>
+      Log files from the Kerberos network authentication system.
+     </p></dd><dt id="id-1.8.4.3.4.3.8"><span class="term "><code class="filename">lastlog</code>
+    </span></dt><dd><p>
+      A database containing information on the last login of each user. Use
+      the command <code class="command">lastlog</code> to view. See <code class="command">man 8
+      lastlog</code> for more information.
+     </p></dd><dt id="id-1.8.4.3.4.3.9"><span class="term "><code class="filename">localmessages</code>
+    </span></dt><dd><p>
+      Log messages of some boot scripts, for example the log of the DHCP
+      client.
+     </p></dd><dt id="id-1.8.4.3.4.3.10"><span class="term "><code class="filename">mail*</code>
+    </span></dt><dd><p>
+      Mail server (<code class="systemitem">postfix</code>,
+      <code class="systemitem">sendmail</code>) logs.
+     </p></dd><dt id="id-1.8.4.3.4.3.11"><span class="term "><code class="filename">messages</code>
+    </span></dt><dd><p>
+      This is the default place where all kernel and system log messages go
+      and should be the first place (along with
+      <code class="filename">/var/log/warn</code>) to look at in case of problems.
+     </p></dd><dt id="id-1.8.4.3.4.3.12"><span class="term "><code class="filename">NetworkManager</code>
+    </span></dt><dd><p>
+      NetworkManager log files.
+     </p></dd><dt id="id-1.8.4.3.4.3.13"><span class="term "><code class="filename">news/</code>
+    </span></dt><dd><p>
+      Log messages from a news server.
+     </p></dd><dt id="id-1.8.4.3.4.3.14"><span class="term "><code class="filename">chrony/</code>
+    </span></dt><dd><p>
+      Logs from the Network Time Protocol daemon
+      (<code class="systemitem">chrony</code>).
+     </p></dd><dt id="id-1.8.4.3.4.3.15"><span class="term "><code class="filename">pk_backend_zypp*</code>
+    </span></dt><dd><p>
+      PackageKit (with <code class="systemitem">libzypp</code>
+      back-end) log files.
+     </p></dd><dt id="id-1.8.4.3.4.3.16"><span class="term "><code class="filename">samba/</code>
+    </span></dt><dd><p>
+      Log files from Samba, the Windows SMB/CIFS file server.
+     </p></dd><dt id="id-1.8.4.3.4.3.17"><span class="term "><code class="filename">warn</code>
+    </span></dt><dd><p>
+      Log of all system warnings and errors. This should be the first place
+      (along with the output of the <code class="systemitem">systemd</code> journal) to look in case of
+      problems.
+     </p></dd><dt id="id-1.8.4.3.4.3.18"><span class="term "><code class="filename">wtmp</code>
+    </span></dt><dd><p>
+      Database of all login/logout activities,
+      
+      and remote connections. Use the command <code class="command">last</code> to
+      view. See <code class="command">man 1 last</code> for more information.
+     </p></dd><dt id="id-1.8.4.3.4.3.19"><span class="term "><code class="filename">Xorg.0.log</code>
+    </span></dt><dd><p>
+      X.Org start-up log file. Refer to this in case you have
+      problems starting X.Org. Copies from previous X.Org
+      starts are numbered Xorg.<em class="replaceable ">?</em>.log.
+     </p></dd><dt id="id-1.8.4.3.4.3.20"><span class="term "><code class="filename">YaST2/</code>
+    </span></dt><dd><p>
+      All YaST log files.
+     </p></dd><dt id="id-1.8.4.3.4.3.21"><span class="term "><code class="filename">zypp/</code>
+    </span></dt><dd><p>
+      <code class="systemitem">libzypp</code> log files. Refer to
+      these files for the package installation history.
+     </p></dd><dt id="id-1.8.4.3.4.3.22"><span class="term "><code class="filename">zypper.log</code>
+    </span></dt><dd><p>
+      Logs from the command line installer <code class="command">zypper</code>.
+     </p></dd></dl></div></div><div class="sect1 " id="sec-tuning-logfiles-view"><div class="titlepage"><div><div><h2 class="title"><span class="number">3.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Viewing and Parsing Log Files</span> <a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#sec-tuning-logfiles-view">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/tuning_logfiles.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_logfiles.xml</li><li><span class="ds-label">ID: </span>sec-tuning-logfiles-view</li></ul></div></div></div></div><p>
+   To view log files, you can use any text editor. There is also a simple
+   YaST module for viewing the system log available in the YaST
+   control center under <span class="guimenu ">Miscellaneous</span> › <span class="guimenu ">System Log</span>.
+  </p><p>
+   For viewing log files in a text console, use the commands
+   <code class="command">less</code> or <code class="command">more</code>. Use
+   <code class="command">head</code> and <code class="command">tail</code> to view the beginning
+   or end of a log file. To view entries appended to a log file in real-time
+   use <code class="command">tail</code> <code class="option">-f</code>. For information about
+   how to use these tools, see their man pages.
+  </p><p>
+   To search for strings or regular expressions in log files use
+   <code class="command">grep</code>. <code class="command">awk</code> is useful for parsing and
+   rewriting log files.
+  </p></div><div class="sect1 " id="sec-tuning-logfiles-logrotate"><div class="titlepage"><div><div><h2 class="title"><span class="number">3.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Managing Log Files with <code class="command">logrotate</code></span> <a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#sec-tuning-logfiles-logrotate">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/tuning_logfiles.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_logfiles.xml</li><li><span class="ds-label">ID: </span>sec-tuning-logfiles-logrotate</li></ul></div></div></div></div><p>
+   Log files under <code class="filename">/var/log</code> grow on a daily basis and
+   quickly become very large. <code class="command">logrotate</code> is a tool that
+   helps you manage log files and their growth. It allows automatic
+   rotation, removal, compression, and mailing of log files. Log files can
+   be handled periodically (daily, weekly, or monthly) or when exceeding a
+   particular size.
+  </p><p>
+   <code class="command">logrotate</code> is usually run daily by <code class="systemitem">systemd</code>,
+   and thus usually modifies log files only once a day. However, exceptions
+   occur when a log file is modified because of its size, if
+   <code class="command">logrotate</code> is run multiple times a day, or if
+   <code class="option">--force</code> is enabled.  Use
+   <code class="filename">/var/lib/misc/logrotate.status</code> to find out when a
+   particular file was last rotated.
+  </p><p>
+   The main configuration file of <code class="command">logrotate</code> is
+   <code class="filename">/etc/logrotate.conf</code>. System packages and
+   programs that produce log files (for example,
+   <code class="systemitem">apache2</code>) put their own
+   configuration files in the <code class="filename">/etc/logrotate.d/</code>
+   directory. The content of <code class="filename">/etc/logrotate.d/</code> is
+   included via <code class="filename">/etc/logrotate.conf</code>.
+  </p><div class="complex-example"><div class="example" id="ex-tuning-logfiles-logrotate-config"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 3.1: </span><span class="name">Example for <code class="filename">/etc/logrotate.conf</code> </span><a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#ex-tuning-logfiles-logrotate-config">#</a></h6></div><div class="example-contents"><p>
+    
+   </p><div class="verbatim-wrap"><pre class="screen"># see "man logrotate" for details
+# rotate log files weekly
+weekly
+
+# keep 4 weeks worth of backlogs
+rotate 4
+
+# create new (empty) log files after rotating old ones
+create
+
+# use date as a suffix of the rotated file
+dateext
+
+# uncomment this if you want your log files compressed
+#compress
+
+# comment these to switch compression to use gzip or another
+# compression scheme
+compresscmd /usr/bin/bzip2
+uncompresscmd /usr/bin/bunzip2
+
+# RPM packages drop log rotation information into this directory
+include /etc/logrotate.d</pre></div></div></div></div><div id="id-1.8.4.3.6.6" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.png" /><h6>Important: Avoid Permission Conflicts</h6><p>
+    The <code class="systemitem">create</code> option pays heed to the modes and
+    ownerships of files specified in <code class="filename">/etc/permissions*</code>.
+    If you modify these settings, make sure no conflicts arise.
+   </p></div></div><div class="sect1 " id="sec-tuning-logfiles-logwatch"><div class="titlepage"><div><div><h2 class="title"><span class="number">3.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Monitoring Log Files with <code class="command">logwatch</code></span> <a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#sec-tuning-logfiles-logwatch">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/tuning_logfiles.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_logfiles.xml</li><li><span class="ds-label">ID: </span>sec-tuning-logfiles-logwatch</li></ul></div></div></div></div><p>
+   <code class="command">logwatch</code> is a customizable, pluggable log-monitoring
+   script. It parses system logs, extracts the important information and
+   presents them in a human readable manner. To use
+   <code class="command">logwatch</code>, install the
+   <code class="systemitem">logwatch</code> package.
+  </p><p>
+   <code class="command">logwatch</code> can either be used at the command line to
+   generate on-the-fly reports, or via <code class="systemitem">cron</code> to regularly create custom
+   reports. Reports can either be printed on the screen, saved to a file, or
+   be mailed to a specified address. The latter is especially useful when
+   automatically generating reports via <code class="systemitem">cron</code>.
+  </p><p>
+   On the command line, you can tell <code class="command">logwatch</code> for which
+   service and time span to generate a report and how much detail should be
+   included:
+  </p><div class="verbatim-wrap"><pre class="screen"># Detailed report on all kernel messages from yesterday
+logwatch --service kernel --detail High --range Yesterday --print
+
+# Low detail report on all sshd events recorded (incl. archived logs)
+logwatch --service sshd --detail Low --range All --archives --print
+
+# Mail a report on all smartd messages from May 5th to May 7th to root@localhost
+logwatch --service smartd --range 'between 5/5/2005 and 5/7/2005' \
+--mailto root@localhost --print</pre></div><p>
+   The <code class="option">--range</code> option has got a complex syntax—see
+   <code class="command">logwatch</code> <code class="option">--range help</code> for details. A
+   list of all services that can be queried is available with the following
+   command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>ls /usr/share/logwatch/default.conf/services/ | sed 's/\.conf//g'</pre></div><p>
+   <code class="command">logwatch</code> can be customized to great detail. However,
+   the default configuration should usually be sufficient. The default
+   configuration files are located under
+   <code class="filename">/usr/share/logwatch/default.conf/</code>. Never change them
+   because they would get overwritten again with the next update. Rather
+   place custom configuration in <code class="filename">/etc/logwatch/conf/</code>
+   (you may use the default configuration file as a template, though). A
+   detailed HOWTO on customizing <code class="command">logwatch</code> is available at
+   <code class="filename">/usr/share/doc/packages/logwatch/HOWTO-Customize-LogWatch</code>.
+   The following configuration files exist:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.8.4.3.7.9.1"><span class="term "><code class="filename">logwatch.conf</code>
+    </span></dt><dd><p>
+      The main configuration file. The default version is extensively
+      commented. Each configuration option can be overwritten on the command
+      line.
+     </p></dd><dt id="id-1.8.4.3.7.9.2"><span class="term "><code class="filename">ignore.conf</code>
+    </span></dt><dd><p>
+      Filter for all lines that should globally be ignored by
+      <code class="command">logwatch</code>.
+     </p></dd><dt id="id-1.8.4.3.7.9.3"><span class="term "><code class="filename">services/*.conf</code>
+    </span></dt><dd><p>
+      The service directory holds configuration files for each service you
+      can generate a report for.
+     </p></dd><dt id="id-1.8.4.3.7.9.4"><span class="term "><code class="filename">logfiles/*.conf</code>
+    </span></dt><dd><p>
+      Specifications on which log files should be parsed for each service.
+     </p></dd></dl></div></div><div class="sect1 " id="sec-tuning-logfiles-logger"><div class="titlepage"><div><div><h2 class="title"><span class="number">3.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using <code class="command">logger</code> to Make System Log Entries</span> <a title="Permalink" class="permalink" href="cha-tuning-logfiles.html#sec-tuning-logfiles-logger">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/tuning_logfiles.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_logfiles.xml</li><li><span class="ds-label">ID: </span>sec-tuning-logfiles-logger</li></ul></div></div></div></div><p>
+   <code class="command">logger</code> is a tool for making entries in the system log.
+   It provides a shell command interface to the rsyslogd system log module.
+   For example, the following line outputs its message in
+   <code class="filename">/var/log/messages</code> or directly in the journal (if no
+   logging facility is running):
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>logger -t Test "This message comes from $USER"</pre></div><p>
+   Depending on the current user and host name, the log contains a line
+   similar to this:
+  </p><div class="verbatim-wrap"><pre class="screen">Sep 28 13:09:31 venus Test: This message comes from tux</pre></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="part-tuning-kerneltrace.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Part III </span>Kernel Monitoring</span></a><a class="nav-link" href="cha-util.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 2 </span>System Monitoring Utilities</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2021 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

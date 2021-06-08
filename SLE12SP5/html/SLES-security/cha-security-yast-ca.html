@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Managing X.509 Certification | Security Guide | SUSE Linux Enterprise Server 12 SP5</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" /><meta name="generator" content="DAPS 3.0.0 (https://opensuse.github.io/daps) using SUSE XSL Stylesheets 2.0.17 (based on DocBook XSL Stylesheets 1.79.2) - chunked" /><meta name="product-name" content="SUSE Linux Enterprise Server" /><meta name="product-number" content="12 SP5" /><meta name="book-title" content="Security Guide" /><meta name="chapter-title" content="Chapter 18. Managing X.509 Certification" /><meta name="description" content="An increasing number of authentication mechanisms are based on cryptographic procedures. Digital certificates that assign cryptographic keys to their owners play an important role in this context. These certificates are used for communication and can also be found, for example, on company ID cards. The generation and administration of certificates is mostly handled by official institutions that offer this as a commercial service. In some cases, however, it may make sense to carry out these tasks yourself. For example, if a company does not want to pass personal data to third parties." /><meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" /><meta name="tracker-type" content="bsc" /><meta name="tracker-bsc-assignee" content="fs@suse.com" /><meta name="tracker-bsc-component" content="Documentation" /><meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5" /><link rel="home" href="index.html" title="SUSE Linux Enterprise Server Documentation" /><link rel="up" href="part-network-security.html" title="Part III. Network Security" /><link rel="prev" href="cha-security-vpnserver.html" title="Chapter 17. Configuring a VPN Server" /><link rel="next" href="part-apparmor.html" title="Part IV. Confining Privileges with AppArmor" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css"></link>');
+}
+else {
+  document.write('<link rel="stylesheet" type="text/css" href="static/css/fonts-onlylocal.css"></link>');
+}
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css" /></noscript><script src="static/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #FABEBE;"><div id="_header"><div id="_logo"><img src="static/images/logo.png" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Server Documentation"><span class="book-icon">SUSE Linux Enterprise Server Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security Guide</a><span> › </span><a class="crumb" href="part-network-security.html">Network Security</a><span> › </span><a class="crumb" href="cha-security-yast-ca.html">Managing X.509 Certification</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">About This Guide</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and Confidentiality</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">2 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">3 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">4 </span><span class="name">Setting Up Authentication Servers and Clients Using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">5 </span><span class="name">LDAP—A Directory Service</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">6 </span><span class="name">Network Authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">7 </span><span class="name">Active Directory Support</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local Security</span></a><ol><li class="inactive"><a href="cha-spectre.html"><span class="number">8 </span><span class="name">Spectre/Meltdown Checker</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">9 </span><span class="name">Configuring Security Settings with YaST</span></a></li><li class="inactive"><a href="cha-security-policykit.html"><span class="number">10 </span><span class="name">Authorization with PolKit</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">11 </span><span class="name">Access Control Lists in Linux</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">12 </span><span class="name">Encrypting Partitions and Files</span></a></li><li class="inactive"><a href="cha-certstore.html"><span class="number">13 </span><span class="name">Certificate Store</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">14 </span><span class="name">Intrusion Detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network Security</span></a><ol><li class="inactive"><a href="cha-ssh.html"><span class="number">15 </span><span class="name">SSH: Secure Network Operations</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">16 </span><span class="name">Masquerading and Firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">17 </span><span class="name">Configuring a VPN Server</span></a></li><li class="inactive"><a href="cha-security-yast-ca.html"><span class="number">18 </span><span class="name">Managing X.509 Certification</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">19 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">20 </span><span class="name">Getting Started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">21 </span><span class="name">Immunizing Programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">22 </span><span class="name">Profile Components and Syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">23 </span><span class="name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">24 </span><span class="name">Building and Managing Profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">25 </span><span class="name">Building Profiles from the Command Line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">26 </span><span class="name">Profiling Your Web Applications Using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">27 </span><span class="name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">28 </span><span class="name">Managing Profiled Applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">29 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">30 </span><span class="name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li class="inactive"><a href="bk05pt05.html"><span class="number">V </span><span class="name">SELinux</span></a><ol><li class="inactive"><a href="cha-selinux.html"><span class="number">31 </span><span class="name">Configuring SELinux</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">VI </span><span class="name"><em class="citetitle ">The Linux Audit Framework</em></span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">32 </span><span class="name">Understanding Linux Audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">33 </span><span class="name">Setting Up the Linux Audit Framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">34 </span><span class="name">Introducing an Audit Rule Set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">35 </span><span class="name">Useful Resources</span></a></li></ol></li><li class="inactive"><a href="app-pcidss.html"><span class="number">A </span><span class="name">Achieving PCI DSS Compliance</span></a></li><li class="inactive"><a href="bk05apb.html"><span class="number">B </span><span class="name">GNU Licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 17. Configuring a VPN Server" href="cha-security-vpnserver.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Part IV. Confining Privileges with AppArmor" href="part-apparmor.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #FABEBE;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Server Documentation"><span class="book-icon">SUSE Linux Enterprise Server Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security Guide</a><span> › </span><a class="crumb" href="part-network-security.html">Network Security</a><span> › </span><a class="crumb" href="cha-security-yast-ca.html">Managing X.509 Certification</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 17. Configuring a VPN Server" href="cha-security-vpnserver.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Part IV. Confining Privileges with AppArmor" href="part-apparmor.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-security-yast-ca"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber "><span class="productnumber">12 SP5</span></span></div><div><h2 class="title"><span class="number">18 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Managing X.509 Certification</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>cha-security-yast-ca</li></ul></div></div><div><div class="abstract"><p>
+    An increasing number of authentication mechanisms are based on
+    cryptographic procedures. Digital certificates that assign cryptographic
+    keys to their owners play an important role in this context. These
+    certificates are used for communication and can also be found, for
+    example, on company ID cards. The generation and administration of
+    certificates is mostly handled by official institutions that offer this
+    as a commercial service. In some cases, however, it may make sense to
+    carry out these tasks yourself. For example, if a company does not want
+    to pass personal data to third parties.
+   </p><p>
+    YaST provides two modules for certification, which offer basic
+    management functions for digital X.509 certificates. The following
+    sections explain the basics of digital certification and how to use
+    YaST to create and administer certificates of this type.
+   </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-security-yast-ca.html#sec-security-yast-ca-intro"><span class="number">18.1 </span><span class="name">The Principles of Digital Certification</span></a></span></dt><dt><span class="sect1"><a href="cha-security-yast-ca.html#sec-security-yast-ca-module"><span class="number">18.2 </span><span class="name">YaST Modules for CA Management</span></a></span></dt></dl></div></div><a id="id-1.7.6.6.3" class="indexterm"></a><a id="id-1.7.6.6.4" class="indexterm"></a><div class="sect1 " id="sec-security-yast-ca-intro"><div class="titlepage"><div><div><h2 class="title"><span class="number">18.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">The Principles of Digital Certification</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-intro">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-intro</li></ul></div></div></div></div><a id="id-1.7.6.6.5.2" class="indexterm"></a><p>
+   Digital certification uses cryptographic processes to encrypt and protect
+   data from access by unauthorized people. The user data is encrypted using
+   a second data record, or <span class="emphasis"><em>key</em></span>. The key is applied to
+   the user data in a mathematical process, producing an altered data record
+   in which the original content can no longer be identified. Asymmetrical
+   encryption is now in general use (<span class="emphasis"><em>public key
+   method</em></span>). Keys always occur in pairs:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.6.6.5.4.1"><span class="term ">Private Key</span></dt><dd><p>
+      The private key must be kept safely by the key owner. Accidental
+      publication of the private key compromises the key pair and renders it
+      useless.
+     </p></dd><dt id="id-1.7.6.6.5.4.2"><span class="term ">Public Key</span></dt><dd><p>
+      The key owner circulates the public key for use by third parties.
+     </p></dd></dl></div><div class="sect2 " id="sec-security-yast-ca-intro-keyauth"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.1.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Key Authenticity</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-intro-keyauth">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-intro-keyauth</li></ul></div></div></div></div><p>
+    Because the public key process is in widespread use, there are many
+    public keys in circulation. Successful use of this system requires that
+    every user be sure that a public key actually belongs to the assumed
+    owner. The assignment of users to public keys is confirmed by
+    trustworthy organizations with public key certificates. Such
+    certificates contain the name of the key owner, the corresponding public
+    key, and the electronic signature of the person issuing the certificate.
+   </p><p>
+    Trustworthy organizations that issue and sign public key certificates
+    are usually part of a certification infrastructure.  This is
+    responsible for the other aspects of certificate management, such as
+    publication, withdrawal, and renewal of certificates. An infrastructure
+    of this kind is generally called a <span class="emphasis"><em>public key
+    infrastructure</em></span> or <span class="emphasis"><em>PKI</em></span>. One familiar PKI
+    is the <span class="emphasis"><em>OpenPGP</em></span> standard in which users publish
+    their certificates themselves without central authorization points.
+    These certificates become trustworthy when signed by other parties in
+    the <span class="quote">“<span class="quote ">web of trust.</span>”</span>
+   </p><p>
+    The <span class="emphasis"><em>X.509 Public Key Infrastructure</em></span> (PKIX) is an
+    alternative model defined by the <span class="emphasis"><em>IETF</em></span> (Internet
+    Engineering Task Force) that serves as a model for almost all
+    publicly-used PKIs today. In this model, authentication is made by
+    <span class="emphasis"><em>certificate authorities</em></span> (CA) in a hierarchical tree
+    structure. The root of the tree is the root CA, which certifies all
+    sub-CAs. The lowest level of sub-CAs issue user certificates. The user
+    certificates are trustworthy by certification that can be traced to the
+    root CA.
+   </p><p>
+    The security of such a PKI depends on the trustworthiness of the CA
+    certificates. To make certification practices clear to PKI customers,
+    the PKI operator defines a <span class="emphasis"><em>certification practice
+    statement</em></span> (CPS) that defines the procedures for certificate
+    management. This should ensure that the PKI only issues trustworthy
+    certificates.
+   </p></div><div class="sect2 " id="sec-security-yast-ca-intro-x509"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.1.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">X.509 Certificates</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-intro-x509">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-intro-x509</li></ul></div></div></div></div><a id="id-1.7.6.6.5.6.2" class="indexterm"></a><p>
+    An X.509 certificate is a data structure with several fixed fields and,
+    optionally, additional extensions. The fixed fields mainly contain the
+    name of the key owner, the public key, and the data relating to the
+    issuing CA (name and signature). For security reasons, a certificate
+    should only have a limited period of validity, so a field is also
+    provided for this date. The CA guarantees the validity of the
+    certificate in the specified period. The CPS usually requires the PKI
+    (the issuing CA) to create and distribute a new certificate before
+    expiration.
+   </p><p>
+    The extensions can contain any additional information. An application is
+    only required to be able to evaluate an extension if it is identified as
+    <span class="emphasis"><em>critical</em></span>. If an application does not recognize a
+    critical extension, it must reject the certificate. Some extensions are
+    only useful for a specific application, such as signature or encryption.
+   </p><p>
+    <a class="xref" href="cha-security-yast-ca.html#tab-yast-ca-intro-x509" title="X.509v3 Certificate">Table 18.1</a>
+    shows the fields of a basic X.509 certificate in version 3.
+   </p><div class="table" id="tab-yast-ca-intro-x509"><div class="table-title-wrap"><h6 class="table-title"><span class="number">Table 18.1: </span><span class="name">X.509v3 Certificate </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#tab-yast-ca-intro-x509">#</a></h6></div><div class="table-contents"><table class="table" summary="X.509v3 Certificate" border="1"><colgroup><col /><col /></colgroup><thead><tr><th>
+        <p>
+         Field
+        </p>
+       </th><th>
+        <p>
+         Content
+        </p>
+       </th></tr></thead><tbody><tr><td>
+        <p>
+         Version
+        </p>
+       </td><td>
+        <p>
+         The version of the certificate, for example, v3
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Serial Number
+        </p>
+       </td><td>
+        <p>
+         Unique certificate ID (an integer)
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Signature
+        </p>
+       </td><td>
+        <p>
+         The ID of the algorithm used to sign the certificate
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Issuer
+        </p>
+       </td><td>
+        <p>
+         Unique name (DN) of the issuing authority (CA)
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Validity
+        </p>
+       </td><td>
+        <p>
+         Period of validity
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Subject
+        </p>
+       </td><td>
+        <p>
+         Unique name (DN) of the owner
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Subject Public Key Info
+        </p>
+       </td><td>
+        <p>
+         Public key of the owner and the ID of the algorithm
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Issuer Unique ID
+        </p>
+       </td><td>
+        <p>
+         Unique ID of the issuing CA (optional)
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Subject Unique ID
+        </p>
+       </td><td>
+        <p>
+         Unique ID of the owner (optional)
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Extensions
+        </p>
+       </td><td>
+        <p>
+         Optional additional information, such as <span class="quote">“<span class="quote ">KeyUsage</span>”</span> or
+         <span class="quote">“<span class="quote ">BasicConstraints</span>”</span>
+        </p>
+       </td></tr></tbody></table></div></div></div><div class="sect2 " id="sec-security-yast-ca-intro-crl"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.1.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Blocking X.509 Certificates</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-intro-crl">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-intro-crl</li></ul></div></div></div></div><a id="id-1.7.6.6.5.7.2" class="indexterm"></a><p>
+    If a certificate becomes untrustworthy before it has expired, it must be
+    blocked immediately. This can become necessary if, for example, the
+    private key has accidentally been made public. Blocking certificates is
+    especially important if the private key belongs to a CA rather than a
+    user certificate. In this case, all user certificates issued by the
+    relevant CA must be blocked immediately. If a certificate is blocked,
+    the PKI (the responsible CA) must make this information available to all
+    those involved using a <span class="emphasis"><em>certificate revocation list</em></span>
+    (CRL).
+   </p><p>
+    These lists are supplied by the CA to public CRL distribution points
+    (CDPs) at regular intervals. The CDP can optionally be named as an
+    extension in the certificate, so a checker can fetch a current CRL for
+    validation purposes. One way to do this is the <span class="emphasis"><em>online
+    certificate status protocol</em></span> (OCSP). The authenticity of the
+    CRLs is ensured with the signature of the issuing CA.
+    <a class="xref" href="cha-security-yast-ca.html#tab-yast-ca-intro-crl" title="X.509 Certificate Revocation List (CRL)">Table 18.2</a>
+    shows the basic parts of a X.509 CRL.
+   </p><div class="table" id="tab-yast-ca-intro-crl"><div class="table-title-wrap"><h6 class="table-title"><span class="number">Table 18.2: </span><span class="name">X.509 Certificate Revocation List (CRL) </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#tab-yast-ca-intro-crl">#</a></h6></div><div class="table-contents"><table class="table" summary="X.509 Certificate Revocation List (CRL)" border="1"><colgroup><col /><col /></colgroup><thead><tr><th>
+        <p>
+         Field
+        </p>
+       </th><th>
+        <p>
+         Content
+        </p>
+       </th></tr></thead><tbody><tr><td>
+        <p>
+         Version
+        </p>
+       </td><td>
+        <p>
+         The version of the CRL, such as v2
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Signature
+        </p>
+       </td><td>
+        <p>
+         The ID of the algorithm used to sign the CRL
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Issuer
+        </p>
+       </td><td>
+        <p>
+         Unique name (DN) of the publisher of the CRL (usually the issuing
+         CA)
+        </p>
+       </td></tr><tr><td>
+        <p>
+         This Update
+        </p>
+       </td><td>
+        <p>
+         Time of publication (date, time) of this CRL
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Next Update
+        </p>
+       </td><td>
+        <p>
+         Time of publication (date, time) of the next CRL
+        </p>
+       </td></tr><tr><td>
+        <p>
+         List of revoked certificates
+        </p>
+       </td><td>
+        <p>
+         Every entry contains the serial number of the certificate, the time
+         of revocation, and optional extensions (CRL entry extensions)
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Extensions
+        </p>
+       </td><td>
+        <p>
+         Optional CRL extensions
+        </p>
+       </td></tr></tbody></table></div></div></div><div class="sect2 " id="sec-security-yast-ca-intro-repository"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.1.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Repository for Certificates and CRLs</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-intro-repository">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-intro-repository</li></ul></div></div></div></div><a id="id-1.7.6.6.5.8.2" class="indexterm"></a><p>
+    The certificates and CRLs for a CA must be made publicly accessible using
+    a <span class="emphasis"><em>repository</em></span>. Because the signature protects the
+    certificates and CRLs from being forged, the repository itself does not
+    need to be secured in a special way. Instead, it tries to grant the
+    simplest and fastest access possible. For this reason, certificates are
+    often provided on an LDAP or HTTP server. Find explanations about LDAP in
+    <a class="xref" href="cha-security-ldap.html" title="Chapter 5. LDAP—A Directory Service">Chapter 5, <em>LDAP—A Directory Service</em></a>.
+    <span class="intraxref">Book “<em class="citetitle ">Administration Guide</em>”, Chapter 33 “The Apache HTTP Server”</span> contains information about the HTTP server.
+   </p></div><div class="sect2 " id="sec-security-yast-ca-intro-ldap"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.1.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Proprietary PKI</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-intro-ldap">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-intro-ldap</li></ul></div></div></div></div><a id="id-1.7.6.6.5.9.2" class="indexterm"></a><p>
+    YaST contains modules for the basic management of X.509
+    certificates. This mainly involves the creation of CAs, sub-CAs, and
+    their certificates. The services of a PKI go far beyond simply creating
+    and distributing certificates and CRLs. The operation of a PKI requires
+    a well-conceived administrative infrastructure allowing continuous
+    update of certificates and CRLs. This infrastructure is provided by
+    commercial PKI products and can also be partly automated. YaST
+    provides tools for creating and distributing CAs and certificates, but
+    cannot currently offer this background infrastructure. To set up a small
+    PKI, you can use the available YaST modules. However, you should
+    use commercial products to set up an <span class="quote">“<span class="quote ">official</span>”</span> or
+    commercial PKI.
+   </p></div></div><div class="sect1 " id="sec-security-yast-ca-module"><div class="titlepage"><div><div><h2 class="title"><span class="number">18.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">YaST Modules for CA Management</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module</li></ul></div></div></div></div><a id="id-1.7.6.6.6.2" class="indexterm"></a><p>
+   YaST provides two modules for basic CA management. The primary
+   management tasks with these modules are explained here.
+  </p><div class="sect2 " id="sec-security-yast-ca-module-rootca"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating a Root CA</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-rootca">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-rootca</li></ul></div></div></div></div><a id="id-1.7.6.6.6.4.2" class="indexterm"></a><p>
+    <span class="phrase">After a default installation, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+    contains already a root CA named YaST_Default_CA. Use this module to
+    create additional root CAs.</span> The first step when setting up a
+    PKI is to create a root CA. Do the following:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and go to <span class="guimenu ">Security and
+      Users</span> › <span class="guimenu ">CA Management</span>.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Create Root CA</span>.
+     </p></li><li class="step "><p>
+      Enter the basic data for the CA in the first dialog, shown in
+      <a class="xref" href="cha-security-yast-ca.html#fig-yast-ca-ca-basic" title="YaST CA Module—Basic Data for a Root CA">Figure 18.1</a>.
+      The text boxes have the following meanings:
+     </p><div class="figure" id="fig-yast-ca-ca-basic"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/yast2_ca_basic.png" target="_blank"><img src="images/yast2_ca_basic.png" width="" alt="YaST CA Module—Basic Data for a Root CA" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 18.1: </span><span class="name">YaST CA Module—Basic Data for a Root CA </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#fig-yast-ca-ca-basic">#</a></h6></div></div><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.6.6.6.4.4.3.3.1"><span class="term "><span class="guimenu ">CA Name</span>
+       </span></dt><dd><p>
+         Enter the technical name of the CA. Directory names, among other
+         things, are derived from this name, which is why only the
+         characters listed in the help can be used. The technical name is
+         also displayed in the overview when the module is started.
+        </p></dd><dt id="id-1.7.6.6.6.4.4.3.3.2"><span class="term "><span class="guimenu ">Common Name</span>
+       </span></dt><dd><p>
+         Enter the name for use in referring to the CA.
+        </p></dd><dt id="id-1.7.6.6.6.4.4.3.3.3"><span class="term "><span class="guimenu ">E-Mail Addresses</span>
+       </span></dt><dd><p>
+         Several e-mail addresses can be entered that can be seen by the CA
+         user. This can be helpful for inquiries.
+        </p></dd><dt id="id-1.7.6.6.6.4.4.3.3.4"><span class="term "><span class="guimenu ">Country</span>
+       </span></dt><dd><p>
+         Select the country where the CA is operated.
+        </p></dd><dt id="id-1.7.6.6.6.4.4.3.3.5"><span class="term "><span class="guimenu ">Organization</span>, <span class="guimenu ">Organizational Unit</span>,
+         <span class="guimenu ">Locality</span>, <span class="guimenu ">State</span>
+       </span></dt><dd><p>
+         Optional values
+        </p></dd></dl></div><p>
+      Proceed with <span class="guimenu ">Next</span>.
+     </p></li><li class="step "><p>
+      Enter a password in the second dialog. This password is always
+      required when using the CA—when creating a sub-CA or
+      generating certificates. The text boxes have the following meaning:
+     </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.6.6.6.4.4.4.2.1"><span class="term "><span class="guimenu ">Key Length</span>
+       </span></dt><dd><p>
+         <span class="guimenu ">Key Length</span> contains a meaningful default and
+         does not generally need to be changed unless an application cannot
+         deal with this key length. The higher the number the more secure
+         your password is.
+        </p></dd><dt id="id-1.7.6.6.6.4.4.4.2.2"><span class="term "><span class="guimenu ">Valid Period (days)</span>
+       </span></dt><dd><p>
+         The <span class="guimenu ">Valid Period</span> in the case of a CA defaults to
+         3650 days (roughly ten years). This long period makes sense because
+         the replacement of a deleted CA involves an enormous administrative
+         effort.
+        </p></dd></dl></div><p>
+      Clicking <span class="guimenu ">Advanced Options</span> opens a dialog for
+      setting different attributes from the X.509 extensions
+      (<a class="xref" href="cha-security-yast-ca.html#fig-yast-ca-extensions" title="YaST CA Module—Extended Settings">Figure 18.4, “YaST CA Module—Extended Settings”</a>). These values have rational
+      default settings and should only be changed if you are really sure of
+      what you are doing. Proceed with <span class="guimenu ">Next</span>.
+     </p></li><li class="step "><p>
+      Review the summary. YaST displays the current settings for
+      confirmation. Click <span class="guimenu ">Create</span>. The root CA is created
+      then appears in the overview.
+     </p></li></ol></div></div><div id="id-1.7.6.6.6.4.5" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.png" /><h6>Tip</h6><p>
+     In general, it is best not to allow user certificates to be issued by
+     the root CA. It is better to create at least one sub-CA and create the
+     user certificates from there. This has the advantage that the root CA
+     can be kept isolated and secure, for example, on an isolated computer
+     on secure premises. This makes it very difficult to attack the root CA.
+    </p></div></div><div class="sect2 " id="sec-security-yast-ca-module-changepw"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing Password</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-changepw">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-changepw</li></ul></div></div></div></div><p>
+    If you need to change your password for your CA, proceed as follows:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open the CA module.
+     </p></li><li class="step "><p>
+      Select the required root CA and click <span class="guimenu ">Enter CA</span>.
+     </p></li><li class="step "><p>
+      Enter the password if you entered a CA the first time. YaST
+      displays the CA key information in the <span class="guimenu ">Description</span>
+      tab (see
+      <a class="xref" href="cha-security-yast-ca.html#fig-yast-ca-usage" title="YaST CA Module—Using a CA">Figure 18.2</a>).
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Advanced</span> and select <span class="guimenu ">Change CA
+      Password</span>. A dialog opens.
+     </p></li><li class="step "><p>
+      Enter the old and the new password.
+     </p></li><li class="step "><p>
+      Finish with <span class="guimenu ">OK</span>
+     </p></li></ol></div></div></div><div class="sect2 " id="sec-security-yast-ca-module-subca"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating or Revoking a Sub-CA</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-subca">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-subca</li></ul></div></div></div></div><a id="id-1.7.6.6.6.6.2" class="indexterm"></a><p>
+    A sub-CA is created in the same way as a root CA.
+   </p><div id="id-1.7.6.6.6.6.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note</h6><p>
+     The validity period for a sub-CA must be fully within the validity
+     period of the <span class="quote">“<span class="quote ">parent</span>”</span> CA. A sub-CA is always created
+     after the <span class="quote">“<span class="quote ">parent</span>”</span> CA, therefore, the default value leads
+     to an error message. To avoid this, enter a permissible value for the
+     period of validity.
+    </p></div><p>
+    Do the following:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open the CA module.
+     </p></li><li class="step "><p>
+      Select the required root CA and click <span class="guimenu ">Enter CA</span>.
+     </p></li><li class="step "><p>
+      Enter the password if you are entering a CA for the first time.
+      YaST displays the CA key information in the tab
+      <span class="guimenu ">Description</span> (see
+      <a class="xref" href="cha-security-yast-ca.html#fig-yast-ca-usage" title="YaST CA Module—Using a CA">Figure 18.2</a>).
+     </p><div class="figure" id="fig-yast-ca-usage"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/yast2_ca_usage.png" target="_blank"><img src="images/yast2_ca_usage.png" width="" alt="YaST CA Module—Using a CA" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 18.2: </span><span class="name">YaST CA Module—Using a CA </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#fig-yast-ca-usage">#</a></h6></div></div></li><li class="step "><p>
+      Click <span class="guimenu ">Advanced</span> and select <span class="guimenu ">Create
+      SubCA</span>. This opens the same dialog as for creating a root CA.
+     </p></li><li class="step "><p>
+      Proceed as described in
+      <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-rootca" title="18.2.1. Creating a Root CA">Section 18.2.1, “Creating a Root CA”</a>.
+     </p><p>
+      It is possible to use one password for all your CAs. Enable
+      <span class="guimenu ">Use CA Password as Certificate Password</span> to give
+      your sub-CAs the same password as your root CA. This helps to reduce
+      the amount of passwords for your CAs.
+     </p><div id="id-1.7.6.6.6.6.6.5.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note: Check your Valid Period</h6><p>
+       Take into account that the valid period must be lower than the valid
+       period in the root CA.
+      </p></div></li><li class="step "><p>
+      Select the <span class="guimenu ">Certificates</span> tab. Reset compromised or
+      otherwise unwanted sub-CAs here, using <span class="guimenu ">Revoke</span>.
+      Revocation alone is not enough to deactivate a sub-CA. You must also
+      publish revoked sub-CAs in a CRL. The creation of CRLs is described in
+      <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-crl" title="18.2.6. Creating Certificate Revocation Lists (CRLs)">Section 18.2.6, “Creating Certificate Revocation Lists (CRLs)”</a>.
+     </p></li><li class="step "><p>
+      Finish with <span class="guimenu ">OK</span>.
+     </p></li></ol></div></div></div><div class="sect2 " id="sec-security-yast-ca-module-clientserver"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating or Revoking User Certificates</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-clientserver">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-clientserver</li></ul></div></div></div></div><a id="id-1.7.6.6.6.7.2" class="indexterm"></a><p>
+    Creating client and server certificates is very similar to creating CAs
+    in <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-rootca" title="18.2.1. Creating a Root CA">Section 18.2.1, “Creating a Root CA”</a>. The same
+    principles apply here. In certificates intended for e-mail signature,
+    the e-mail address of the sender (the private key owner) should be
+    contained in the certificate to enable the e-mail program to assign the
+    correct certificate.
+   </p><p>
+    For certificate assignment during encryption, it is necessary for the
+    e-mail address of the recipient (the public key owner) to be included in
+    the certificate. In the case of server and client certificates, the host
+    name of the server must be entered in the <span class="guimenu ">Common Name</span>
+    field. The default validity period for certificates is 365 days.
+   </p><p>
+    To create client and server certificates, do the following:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open the CA module.
+     </p></li><li class="step "><p>
+      Select the required root CA and click <span class="guimenu ">Enter CA</span>.
+     </p></li><li class="step "><p>
+      Enter the password if you are entering a CA for the first time.
+      YaST displays the CA key information in the
+      <span class="guimenu ">Description</span> tab.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Certificates</span> (see
+      <a class="xref" href="cha-security-yast-ca.html#fig-yast-ca-cert" title="Certificates of a CA">Figure 18.3</a>).
+     </p><div class="figure" id="fig-yast-ca-cert"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/yast2_ca_cert.png" target="_blank"><img src="images/yast2_ca_cert.png" width="" alt="Certificates of a CA" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 18.3: </span><span class="name">Certificates of a CA </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#fig-yast-ca-cert">#</a></h6></div></div></li><li class="step "><p>
+      Click <span class="guimenu ">Add</span> › <span class="guimenu ">Add Server
+      Certificate</span> and create a server certificate.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Add</span> › <span class="guimenu ">Add Client
+      Certificate</span> and create a client certificate.
+      Do not forget to enter an e-mail address.
+     </p></li><li class="step "><p>
+      Finish with <span class="guimenu ">OK</span>
+     </p></li></ol></div></div><p>
+    To revoke compromised or otherwise unwanted certificates, do the
+    following:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open the CA module.
+     </p></li><li class="step "><p>
+      Select the required root CA and click <span class="guimenu ">Enter CA</span>.
+     </p></li><li class="step "><p>
+      Enter the password if you are entering a CA for the first time.
+      YaST displays the CA key information in the
+      <span class="guimenu ">Description</span> tab.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Certificates</span> (see
+      <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-subca" title="18.2.3. Creating or Revoking a Sub-CA">Section 18.2.3, “Creating or Revoking a Sub-CA”</a>).
+     </p></li><li class="step "><p>
+      Select the certificate to revoke and click <span class="guimenu ">Revoke</span>.
+     </p></li><li class="step "><p>
+      Choose a reason to revoke this certificate.
+     </p></li><li class="step "><p>
+      Finish with <span class="guimenu ">OK</span>.
+     </p></li></ol></div></div><div id="id-1.7.6.6.6.7.9" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note</h6><p>
+     Revocation alone is not enough to deactivate a certificate. Also
+     publish revoked certificates in a CRL.
+     <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-crl" title="18.2.6. Creating Certificate Revocation Lists (CRLs)">Section 18.2.6, “Creating Certificate Revocation Lists (CRLs)”</a> explains how to
+     create CRLs. Revoked certificates can be completely removed after
+     publication in a CRL with <span class="guimenu ">Delete</span>.
+    </p></div></div><div class="sect2 " id="sec-security-yast-ca-module-defaults"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing Default Values</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-defaults">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-defaults</li></ul></div></div></div></div><a id="id-1.7.6.6.6.8.2" class="indexterm"></a><p>
+    The previous sections explained how to create sub-CAs, client
+    certificates, and server certificates. Special settings are used in the
+    extensions of the X.509 certificate. These settings have been given
+    rational defaults for every certificate type and do not normally need to
+    be changed. However, it may be that you have special requirements for
+    these extensions. In this case, it may make sense to adjust the
+    defaults. Otherwise, start from scratch every time you create a
+    certificate.
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open the CA module.
+     </p></li><li class="step "><p>
+      Enter the required root CA, as described in
+      <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-subca" title="18.2.3. Creating or Revoking a Sub-CA">Section 18.2.3, “Creating or Revoking a Sub-CA”</a>.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Advanced</span> › <span class="guimenu ">Edit
+      Default</span>.
+     </p></li><li class="step "><p>
+      Choose type of certificate to change and proceed with
+      <span class="guimenu ">Next</span>.
+     </p></li><li class="step "><p>
+      The dialog for changing the defaults as shown in
+      <a class="xref" href="cha-security-yast-ca.html#fig-yast-ca-extensions" title="YaST CA Module—Extended Settings">Figure 18.4, “YaST CA Module—Extended Settings”</a> opens.
+     </p><div class="figure" id="fig-yast-ca-extensions"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/yast2_ca_extensions.png" target="_blank"><img src="images/yast2_ca_extensions.png" width="" alt="YaST CA Module—Extended Settings" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 18.4: </span><span class="name">YaST CA Module—Extended Settings </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#fig-yast-ca-extensions">#</a></h6></div></div></li><li class="step "><p>
+      Change the associated value on the right side and set or delete the
+      critical setting with <span class="guimenu ">critical</span>.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Next</span> to see a short summary.
+     </p></li><li class="step "><p>
+      Finish your changes with <span class="guimenu ">Save</span>.
+     </p></li></ol></div></div><div id="id-1.7.6.6.6.8.5" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note</h6><p>
+     All changes to the defaults only affect objects created after this
+     point. Already-existing CAs and certificates remain unchanged.
+    </p></div></div><div class="sect2 " id="sec-security-yast-ca-module-crl"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Creating Certificate Revocation Lists (CRLs)</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-crl">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-crl</li></ul></div></div></div></div><a id="id-1.7.6.6.6.9.2" class="indexterm"></a><p>
+    If compromised or otherwise unwanted certificates need to be excluded
+    from further use, they must first be revoked. The procedure for this is
+    explained in <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-subca" title="18.2.3. Creating or Revoking a Sub-CA">Section 18.2.3, “Creating or Revoking a Sub-CA”</a> (for
+    sub-CAs) and <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-clientserver" title="18.2.4. Creating or Revoking User Certificates">Section 18.2.4, “Creating or Revoking User Certificates”</a>
+    (for user certificates). After this, a CRL must be created and published
+    with this information.
+   </p><p>
+    The system maintains only one CRL for each CA. To create or update this
+    CRL, do the following:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open the CA module.
+     </p></li><li class="step "><p>
+      Enter the required CA, as described in
+      <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-subca" title="18.2.3. Creating or Revoking a Sub-CA">Section 18.2.3, “Creating or Revoking a Sub-CA”</a>.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">CRL</span>. The dialog that opens displays a summary
+      of the last CRL of this CA.
+     </p></li><li class="step "><p>
+      Create a new CRL with <span class="guimenu ">Generate CRL</span> if you have
+      revoked new sub-CAs or certificates since its creation.
+     </p></li><li class="step "><p>
+      Specify the period of validity for the new CRL (default: 30 days).
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">OK</span> to create and display the CRL. Afterward,
+      you must publish this CRL.
+     </p></li></ol></div></div><div id="id-1.7.6.6.6.9.6" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note</h6><p>
+     Applications that evaluate CRLs reject every certificate if the CRL is
+     not available or has expired. As a PKI provider, it is your duty always
+     to create and publish a new CRL before the current CRL expires (period
+     of validity). YaST does not provide a function for automating this
+     procedure.
+    </p></div></div><div class="sect2 " id="sec-security-yast-ca-module-exportldap"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Exporting CA Objects to LDAP</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-exportldap">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-exportldap</li></ul></div></div></div></div><a id="id-1.7.6.6.6.10.2" class="indexterm"></a><p>
+    The executing computer should be configured with the YaST LDAP
+    client for LDAP export. This provides LDAP server information at runtime
+    that can be used when completing dialog fields. Otherwise (although
+    export may be possible), all LDAP data must be entered manually. You
+    must always enter several passwords (see
+    <a class="xref" href="cha-security-yast-ca.html#tab-yast-ca-ldap-password" title="Passwords during LDAP Export">Table 18.3, “Passwords during LDAP Export”</a>).
+   </p><div class="table" id="tab-yast-ca-ldap-password"><div class="table-title-wrap"><h6 class="table-title"><span class="number">Table 18.3: </span><span class="name">Passwords during LDAP Export </span><a title="Permalink" class="permalink" href="cha-security-yast-ca.html#tab-yast-ca-ldap-password">#</a></h6></div><div class="table-contents"><table class="table" summary="Passwords during LDAP Export" border="1"><colgroup><col /><col /></colgroup><thead><tr><th>
+        <p>
+         Password
+        </p>
+       </th><th>
+        <p>
+         Meaning
+        </p>
+       </th></tr></thead><tbody><tr><td>
+        <p>
+         LDAP Password
+        </p>
+       </td><td>
+        <p>
+         Authorizes the user to make entries in the LDAP tree.
+        </p>
+       </td></tr><tr><td>
+        <p>
+         Certificate Password
+        </p>
+       </td><td>
+        <p>
+         Authorizes the user to export the certificate.
+        </p>
+       </td></tr><tr><td>
+        <p>
+         New Certificate Password
+        </p>
+       </td><td>
+        <p>
+         The PKCS12 format is used during LDAP export. This format forces
+         the assignment of a new password for the exported certificate.
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    Certificates, CAs, and CRLs can be exported to LDAP.
+   </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.6.6.6.10.6.1"><span class="term ">Exporting a CA to LDAP</span></dt><dd><p>
+       To export a CA, enter the CA as described in
+       <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-subca" title="18.2.3. Creating or Revoking a Sub-CA">Section 18.2.3, “Creating or Revoking a Sub-CA”</a>. Select
+       <span class="guimenu ">Extended</span> › <span class="guimenu ">Export to
+       LDAP</span> in the subsequent dialog, which opens the
+       dialog for entering LDAP data. If your system has been configured
+       with the YaST LDAP client, the fields are already partly
+       completed. Otherwise, enter all the data manually. Entries are made
+       in LDAP in a separate tree with the attribute
+       <span class="quote">“<span class="quote ">caCertificate</span>”</span>.
+      </p></dd><dt id="id-1.7.6.6.6.10.6.2"><span class="term ">Exporting a Certificate to LDAP</span></dt><dd><p>
+       Enter the CA containing the certificate to export then select
+       <span class="guimenu ">Certificates</span>. Select the required certificate from
+       the certificate list in the upper part of the dialog and select
+       <span class="guimenu ">Export</span> › <span class="guimenu ">Export to
+       LDAP</span>. The LDAP data is entered here in the
+       same way as for CAs. The certificate is saved with the corresponding
+       user object in the LDAP tree with the attributes
+       <span class="quote">“<span class="quote ">userCertificate</span>”</span> (PEM format) and
+       <span class="quote">“<span class="quote ">userPKCS12</span>”</span> (PKCS12 format).
+      </p></dd><dt id="id-1.7.6.6.6.10.6.3"><span class="term ">Exporting a CRL to LDAP</span></dt><dd><p>
+       Enter the CA containing the CRL to export and select
+       <span class="guimenu ">CRL</span>. If desired, create a new CRL and click
+       <span class="guimenu ">Export</span>. The dialog that opens displays the export
+       parameters. You can export the CRL for this CA either once or in
+       periodical time intervals. Activate the export by selecting
+       <span class="guimenu ">Export to LDAP</span> and enter the respective LDAP data.
+       To do this at regular intervals, select the <span class="guimenu ">Repeated
+       Recreation and Export</span> radio button and change the interval,
+       if appropriate.
+      </p></dd></dl></div></div><div class="sect2 " id="sec-security-yast-ca-module-exportfile"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.8 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Exporting CA Objects as a File</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-exportfile">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-exportfile</li></ul></div></div></div></div><a id="id-1.7.6.6.6.11.2" class="indexterm"></a><p>
+    If you have set up a repository on the computer for administering CAs,
+    you can use this option to create the CA objects directly as a file at
+    the correct location. Different output formats are available, such as
+    PEM, DER, and PKCS12. In the case of PEM, it is also possible to choose
+    whether a certificate should be exported with or without key and whether
+    the key should be encrypted. In the case of PKCS12, it is also possible
+    to export the certification path.
+   </p><p>
+    Export a file in the same way for certificates, CAs as with LDAP,
+    described in <a class="xref" href="cha-security-yast-ca.html#sec-security-yast-ca-module-exportldap" title="18.2.7. Exporting CA Objects to LDAP">Section 18.2.7, “Exporting CA Objects to LDAP”</a>,
+    except you should select <span class="guimenu ">Export as File</span> instead of
+    <span class="guimenu ">Export to LDAP</span>. This then takes you to a dialog for
+    selecting the required output format and entering the password and file
+    name. The certificate is stored at the required location after clicking
+    <span class="guimenu ">OK</span>.
+   </p><p>
+    For CRLs click <span class="guimenu ">Export</span>, select <span class="guimenu ">Export to
+    file</span>, choose the export format (PEM or DER) and enter the
+    path. Proceed with <span class="guimenu ">OK</span> to save it to the respective
+    location.
+   </p><div id="id-1.7.6.6.6.11.6" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.png" /><h6>Tip</h6><p>
+     You can select any storage location in the file system. This option can
+     also be used to save CA objects on a transport medium, such as a flash
+     disk. The <code class="filename">/media</code> directory generally holds any
+     type of drive except the hard disk of your system.
+    </p></div></div><div class="sect2 " id="sec-security-yast-ca-module-import"><div class="titlepage"><div><div><h3 class="title"><span class="number">18.2.9 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Importing Common Server Certificates</span> <a title="Permalink" class="permalink" href="cha-security-yast-ca.html#sec-security-yast-ca-module-import">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_yast2_ca.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_yast2_ca.xml</li><li><span class="ds-label">ID: </span>sec-security-yast-ca-module-import</li></ul></div></div></div></div><a id="id-1.7.6.6.6.12.2" class="indexterm"></a><p>
+    If you have exported a server certificate with YaST to your media
+    on an isolated CA management computer, you can import this certificate
+    on a server as a <span class="emphasis"><em>common server certificate</em></span>. Do this
+    during installation or at a later point with YaST.
+   </p><div id="id-1.7.6.6.6.12.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.png" /><h6>Note</h6><p>
+     You need one of the PKCS12 formats to import your certificate
+     successfully.
+    </p></div><p>
+    The general server certificate is stored in
+    <code class="command">/etc/ssl/servercerts</code> and can be used there by any
+    CA-supported service. When this certificate expires, it can easily be
+    replaced using the same mechanisms. To get things functioning with the
+    replaced certificate, restart the participating services.
+   </p><div id="id-1.7.6.6.6.12.6" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.png" /><h6>Tip</h6><p>
+     If you select <span class="guimenu ">Import</span> here, you can select the source
+     in the file system. This option can also be used to import certificates
+     from removable media, such as a flash disk.
+    </p></div><p>
+    To import a common server certificate, do the following:
+   </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      Start YaST and open <span class="guimenu ">Common Server Certificate</span>
+      under <span class="guimenu ">Security and Users</span>
+     </p></li><li class="step "><p>
+      View the data for the current certificate in the description field
+      after YaST has been started.
+     </p></li><li class="step "><p>
+      Select <span class="guimenu ">Import</span> and the certificate file.
+     </p></li><li class="step "><p>
+      Enter the password and click <span class="guimenu ">Next</span>. The certificate
+      is imported then displayed in the description field.
+     </p></li><li class="step "><p>
+      Close YaST with <span class="guimenu ">Finish</span>.
+     </p></li></ol></div></div></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="part-apparmor.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Part IV </span>Confining Privileges with <span class="phrase">AppArmor</span></span></a><a class="nav-link" href="cha-security-vpnserver.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 17 </span>Configuring a VPN Server</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2021 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

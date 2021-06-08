@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Automatic Security Checks with seccheck | Security and Hardening Guide | SUSE Linux Enterprise Desktop 15</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" /><meta name="generator" content="DAPS 3.0.0 (https://opensuse.github.io/daps) using SUSE XSL Stylesheets 2.0.17 (based on DocBook XSL Stylesheets 1.79.2) - chunked" /><meta name="product-name" content="SUSE Linux Enterprise Desktop" /><meta name="product-number" content="15" /><meta name="book-title" content="Security and Hardening Guide" /><meta name="chapter-title" content="Chapter 11. Automatic Security Checks with seccheck" /><meta name="description" content="The seccheck SUSE Security Checker is a set of shell scripts designed to automatically check the local security of a system on a regular schedule, and emails reports to the root user, or any user as configured by the administrator." /><meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" /><meta name="tracker-type" content="bsc" /><meta name="tracker-bsc-assignee" content="fs@suse.com" /><meta name="tracker-bsc-component" content="Documentation" /><meta name="tracker-bsc-product" content="SUSE Linux Enterprise Desktop 15" /><link rel="home" href="index.html" title="SUSE Linux Enterprise Desktop Documentation" /><link rel="up" href="part-local-security.html" title="Part II. Local Security" /><link rel="prev" href="cha-physical-security.html" title="Chapter 10. Physical Security" /><link rel="next" href="sec-sec-software-management.html" title="Chapter 12. Software Management" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css"></link>');
+}
+else {
+  document.write('<link rel="stylesheet" type="text/css" href="static/css/fonts-onlylocal.css"></link>');
+}
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css" /></noscript><script src="static/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #FABEBE;"><div id="_header"><div id="_logo"><img src="static/images/logo.png" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-local-security.html">Local Security</a><span> › </span><a class="crumb" href="sec-sec-prot-general-seccheck.html">Automatic Security Checks with seccheck</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">About This Guide</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and Confidentiality</span></a></li><li class="inactive"><a href="cha-common-criteria.html"><span class="number">2 </span><span class="name">Common Criteria</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">3 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">4 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">5 </span><span class="name">Setting Up Authentication Clients Using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">6 </span><span class="name">LDAP—A Directory Service</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">7 </span><span class="name">Network Authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">8 </span><span class="name">Active Directory Support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">9 </span><span class="name">Setting Up a FreeRADIUS Server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local Security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">10 </span><span class="name">Physical Security</span></a></li><li class="inactive"><a href="sec-sec-prot-general-seccheck.html"><span class="number">11 </span><span class="name">Automatic Security Checks with seccheck</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">12 </span><span class="name">Software Management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">13 </span><span class="name">File Management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">14 </span><span class="name">Encrypting Partitions and Files</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">15 </span><span class="name">User Management</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">16 </span><span class="name">Configuring Security Settings with YaST</span></a></li><li class="inactive"><a href="cha-security-policykit.html"><span class="number">17 </span><span class="name">Authorization with PolKit</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">18 </span><span class="name">Access Control Lists in Linux</span></a></li><li class="inactive"><a href="cha-certstore.html"><span class="number">19 </span><span class="name">Certificate Store</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">20 </span><span class="name">Intrusion Detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network Security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">21 </span><span class="name">X Window System and X Authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">22 </span><span class="name">SSH: Secure Network Operations</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">23 </span><span class="name">Masquerading and Firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">24 </span><span class="name">Configuring a VPN Server</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">25 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">26 </span><span class="name">Getting Started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">27 </span><span class="name">Immunizing Programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">28 </span><span class="name">Profile Components and Syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">29 </span><span class="name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">30 </span><span class="name">Building and Managing Profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">31 </span><span class="name">Building Profiles from the Command Line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">32 </span><span class="name">Profiling Your Web Applications Using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">33 </span><span class="name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">34 </span><span class="name">Managing Profiled Applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">35 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">36 </span><span class="name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">V </span><span class="name"><em class="citetitle ">The Linux Audit Framework</em></span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">37 </span><span class="name">Understanding Linux Audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">38 </span><span class="name">Setting Up the Linux Audit Framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">39 </span><span class="name">Introducing an Audit Rule Set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">40 </span><span class="name">Useful Resources</span></a></li></ol></li><li class="inactive"><a href="bk05apa.html"><span class="number">A </span><span class="name">GNU Licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 10. Physical Security" href="cha-physical-security.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 12. Software Management" href="sec-sec-software-management.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #FABEBE;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-local-security.html">Local Security</a><span> › </span><a class="crumb" href="sec-sec-prot-general-seccheck.html">Automatic Security Checks with seccheck</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 10. Physical Security" href="cha-physical-security.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 12. Software Management" href="sec-sec-software-management.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="sec-sec-prot-general-seccheck"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15</span></span></span></div><div><h2 class="title"><span class="number">11 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Automatic Security Checks with seccheck</span> <a title="Permalink" class="permalink" href="sec-sec-prot-general-seccheck.html#">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/seccheck.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>seccheck.xml</li><li><span class="ds-label">ID: </span>sec-sec-prot-general-seccheck</li></ul></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="sec-sec-prot-general-seccheck.html#sec-seccheck-timers"><span class="number">11.1 </span><span class="name">Seccheck Timers</span></a></span></dt><dt><span class="sect1"><a href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-enable"><span class="number">11.2 </span><span class="name">Enabling Seccheck Timers</span></a></span></dt><dt><span class="sect1"><a href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-config"><span class="number">11.3 </span><span class="name">Daily, Weekly, and Monthly Checks</span></a></span></dt><dt><span class="sect1"><a href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-autologout"><span class="number">11.4 </span><span class="name">Automatic Logout</span></a></span></dt></dl></div></div><p>
+    The <code class="command">seccheck</code> SUSE Security Checker is a set of
+    shell scripts designed to automatically check the local security of a system
+    on a regular schedule, and emails reports to the root user, or any user
+    as configured by the administrator. 
+   </p><p>
+    If <span class="package ">seccheck</span> is not installed on your system, install it with 
+    <code class="command">sudo zypper in seccheck</code>. These scripts are controlled by <code class="systemitem">systemd</code> 
+    timers, which are not enabled by default, but must be enabled by the administrator.
+   </p><div class="sect1 " id="sec-seccheck-timers"><div class="titlepage"><div><div><h2 class="title"><span class="number">11.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Seccheck Timers</span> <a title="Permalink" class="permalink" href="sec-sec-prot-general-seccheck.html#sec-seccheck-timers">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/seccheck.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>seccheck.xml</li><li><span class="ds-label">ID: </span>sec-seccheck-timers</li></ul></div></div></div></div><p>
+        There are four <code class="command">seccheck</code> timers:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+                /usr/lib/systemd/system/seccheck-daily.timer
+            </p></li><li class="listitem "><p>
+                /usr/lib/systemd/system/seccheck-monthly.timer
+            </p></li><li class="listitem "><p>
+                /usr/lib/systemd/system/seccheck-weekly.timer
+            </p></li><li class="listitem "><p>
+                /usr/lib/systemd/system/seccheck-autologout.timer
+            </p></li></ul></div><p>
+       <code class="literal">seccheck-daily.timer</code>, 
+       <code class="literal">seccheck-monthly.timer</code>, and
+       <code class="literal">seccheck-weekly.timer</code> run multiple checks as 
+       described in <a class="xref" href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-config" title="11.3. Daily, Weekly, and Monthly Checks">Section 11.3, “Daily, Weekly, and Monthly Checks”</a>.
+       <code class="literal">seccheck-autologout.timer</code> 
+       logs out inactive users, see 
+       <a class="xref" href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-autologout" title="11.4. Automatic Logout">Section 11.4, “Automatic Logout”</a>.
+   </p><p> 
+      You can change the recipient of the seccheck mails from root to
+      any user in
+     <code class="filename">/etc/sysconfig/seccheck</code>. 
+     The following example changes
+     it to an admin user named <code class="literal">firewall</code>:
+    </p><div class="verbatim-wrap"><pre class="screen">SECCHK_USER="firewall"</pre></div></div><div class="sect1 " id="sec-sec-prot-general-seccheck-enable"><div class="titlepage"><div><div><h2 class="title"><span class="number">11.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Enabling Seccheck Timers</span> <a title="Permalink" class="permalink" href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-enable">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/seccheck.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>seccheck.xml</li><li><span class="ds-label">ID: </span>sec-sec-prot-general-seccheck-enable</li></ul></div></div></div></div><p>
+       Manage your timers with <code class="command">systemctl</code>, just like any other
+       systemd timer. The following example enables and starts 
+       <code class="literal">seccheck-daily.timer</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl enable --now seccheck-daily.timer</pre></div><p>
+       List all active timers:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl list-timers</pre></div><p>
+       List all enabled timers, active and inactive:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl list-timers --all</pre></div></div><div class="sect1 " id="sec-sec-prot-general-seccheck-config"><div class="titlepage"><div><div><h2 class="title"><span class="number">11.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Daily, Weekly, and Monthly Checks</span> <a title="Permalink" class="permalink" href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-config">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/seccheck.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>seccheck.xml</li><li><span class="ds-label">ID: </span>sec-sec-prot-general-seccheck-config</li></ul></div></div></div></div><p>
+     <code class="command">seccheck</code> performs the following daily checks:
+    </p><div class="informaltable"><table class="informaltable" border="1"><colgroup><col class="c1" /><col class="c2" /></colgroup><tbody><tr><td>
+         <p>
+          <code class="filename">/etc/passwd</code> check
+         </p>
+        </td><td>
+         <p>
+          length/number/contents of fields, accounts with same UID accounts
+          with UID/GID of 0 or 1 beside root and bin
+         </p>
+        </td></tr><tr><td>
+         <p>
+          <code class="filename">/etc/shadow</code> check
+         </p>
+        </td><td>
+         <p>
+          length/number/contents of fields, accounts with no password
+         </p>
+        </td></tr><tr><td>
+         <p>
+          <code class="filename">/etc/group</code> check
+         </p>
+        </td><td>
+         <p>
+          length/number/contents of fields
+         </p>
+        </td></tr><tr><td>
+         <p>
+          user root checks
+         </p>
+        </td><td>
+         <p>
+          secure umask and <code class="envar">PATH</code>
+         </p>
+        </td></tr><tr><td>
+         <p>
+          <code class="filename">/etc/ftpusers</code>
+         </p>
+        </td><td>
+         <p>
+          checks if important system users are put there
+         </p>
+        </td></tr><tr><td>
+         <p>
+          <code class="filename">/etc/aliases</code>
+         </p>
+        </td><td>
+         <p>
+          checks for mail aliases which execute programs
+         </p>
+        </td></tr><tr><td>
+         <p>
+          <code class="filename">.rhosts</code> check
+         </p>
+        </td><td>
+         <p>
+          checks if users' <code class="filename">.rhosts</code> file contain + signs
+         </p>
+        </td></tr><tr><td>
+         <p>
+          home directory
+         </p>
+        </td><td>
+         <p>
+          checks if home directories are writable or owned by someone else
+         </p>
+        </td></tr><tr><td>
+         <p>
+          dot-files check
+         </p>
+        </td><td>
+         <p>
+          checks many dot-files in the home directories if they are writable
+          or owned by someone else
+         </p>
+        </td></tr><tr><td>
+         <p>
+          mailbox check
+         </p>
+        </td><td>
+         <p>
+          checks if user mailboxes are owned by user and are readable
+         </p>
+        </td></tr><tr><td>
+         <p>
+          NFS export check
+         </p>
+        </td><td>
+         <p>
+          exports should not be exported globally
+         </p>
+        </td></tr><tr><td>
+         <p>
+          NFS import check
+         </p>
+        </td><td>
+         <p>
+          NFS mounts should have the <code class="option">nosuid</code> option set
+         </p>
+        </td></tr><tr><td>
+         <p>
+          promisc check
+         </p>
+        </td><td>
+         <p>
+          checks if network cards are in promiscuous mode
+         </p>
+        </td></tr><tr><td>
+         <p>
+          list modules
+         </p>
+        </td><td>
+         <p>
+          lists loaded modules
+         </p>
+        </td></tr><tr><td>
+         <p>
+          list sockets
+         </p>
+        </td><td>
+         <p>
+          lists open ports
+         </p>
+        </td></tr></tbody></table></div><p>
+       The following table lists the weekly checks:
+   </p><div class="informaltable"><table class="informaltable" border="1"><colgroup><col class="c1" /><col class="c2" /></colgroup><tbody><tr><td>
+         <p>
+          password check
+         </p>
+        </td><td>
+         <p>
+          runs <code class="command">john</code> to crack the password file, user will
+          receive an e-mail notice to change their password
+         </p>
+        </td></tr><tr><td>
+         <p>
+          RPM md5 check
+         </p>
+        </td><td>
+         <p>
+          checks for changed files via RPM's MD5 checksum feature
+         </p>
+        </td></tr><tr><td>
+         <p>
+          suid/sgid check
+         </p>
+        </td><td>
+         <p>
+          lists all suid and sgid files
+         </p>
+        </td></tr><tr><td>
+         <p>
+          exec group write
+         </p>
+        </td><td>
+         <p>
+          lists all executables which are group/world-writable
+         </p>
+        </td></tr><tr><td>
+         <p>
+          writable check
+         </p>
+        </td><td>
+         <p>
+          lists all files which are world-writable (including executables)
+         </p>
+        </td></tr><tr><td>
+         <p>
+          device check
+         </p>
+        </td><td>
+         <p>
+          lists all devices
+         </p>
+        </td></tr></tbody></table></div><div id="id-1.7.6.3.7.6" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.png" /><h6>Important: Auditing Passwords with <code class="command">john</code></h6><p>
+      To enable password auditing, it is necessary to first install the
+      package <span class="package ">john</span>, the John the Ripper fast password
+      cracker. The package is available on the openSUSE Build Service at
+      <a class="link" href="https://build.opensuse.org/package/show/security/john" target="_blank">https://build.opensuse.org/package/show/security/john</a>.
+     </p></div><p>
+     The monthly check prints a complete report, and the daily and weekly checks 
+     print diffs.
+    </p></div><div class="sect1 " id="sec-sec-prot-general-seccheck-autologout"><div class="titlepage"><div><div><h2 class="title"><span class="number">11.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Automatic Logout</span> <a title="Permalink" class="permalink" href="sec-sec-prot-general-seccheck.html#sec-sec-prot-general-seccheck-autologout">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP0/xml/seccheck.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>seccheck.xml</li><li><span class="ds-label">ID: </span>sec-sec-prot-general-seccheck-autologout</li></ul></div></div></div></div><p>
+     The <code class="systemitem">seccheck-autologout.timer</code> timer runs every 10 minutes, 
+     checks both remote and local terminal sessions for inactivity, and terminates them if
+     an idle time is exceeded.
+    </p><p>
+     Configure your desired timeouts in
+     <code class="filename">/etc/security/autologout.conf</code> file. Parameters
+     include default idle and logout delay times, and the configuration for
+     limiting maximum idle times specific to users, groups, TTY devices and
+     SSH sessions. <code class="filename">/etc/security/autologout.conf</code> includes 
+     several configuration examples.
+    </p></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="sec-sec-software-management.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 12 </span>Software Management</span></a><a class="nav-link" href="cha-physical-security.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 10 </span>Physical Security</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2021 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>
