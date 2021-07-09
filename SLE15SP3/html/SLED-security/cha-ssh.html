@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>SSH: secure network operations | Security and Hardening Guide | SUSE Linux Enterprise Desktop 15 SP3</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" /><meta name="generator" content="DAPS 3.2.0 (https://opensuse.github.io/daps) using SUSE XSL Stylesheets 2.81.0 (based on DocBook XSL Stylesheets 1.79.2) - chunked" /><meta name="product-name" content="SUSE Linux Enterprise Desktop" /><meta name="product-number" content="15 SP3" /><meta name="book-title" content="Security and Hardening Guide" /><meta name="chapter-title" content="Chapter 24. SSH: secure network operations" /><meta name="description" content="In networked environments, it is often necessary to access hosts from a remote location. If a user sends login and password strings for authentication purposes as plain text, they could be intercepted and misused to gain access to that user account. This would open all the user's files to an attacker and the illegal account could be used to obtain administrator or root access, or to penetrate other systems. In the past, remote connections were established with telnet, rsh or rlogin, which offered no guards against eavesdropping in the form of encryption or other security mechanisms. There are other unprotected communication channels, like the traditional FTP protocol and some remote copying programs like rcp." /><meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" /><meta name="tracker-type" content="bsc" /><meta name="tracker-bsc-assignee" content="fs@suse.com" /><meta name="tracker-bsc-component" content="Documentation" /><meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP3" /><link rel="home" href="index.html" title="SUSE Linux Enterprise Desktop Documentation" /><link rel="up" href="part-network-security.html" title="Part III. Network security" /><link rel="prev" href="cha-xauth.html" title="Chapter 23. X Window System and X authentication" /><link rel="next" href="cha-security-firewall.html" title="Chapter 25. Masquerading and firewalls" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://static.opensuse.org/fonts/fonts.css" /></noscript><script src="static/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-network-security.html">Network security</a><span> › </span><a class="crumb" href="cha-ssh.html">SSH: secure network operations</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and confidentiality</span></a></li><li class="inactive"><a href="cha-common-criteria.html"><span class="number">2 </span><span class="name">Common Criteria</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">3 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">4 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">5 </span><span class="name">Setting up authentication clients using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">6 </span><span class="name">389 LDAP Directory Server</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">7 </span><span class="name">Network authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">8 </span><span class="name">Active Directory support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">9 </span><span class="name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">10 </span><span class="name">Physical security</span></a></li><li class="inactive"><a href="sec-sec-prot-general-seccheck.html"><span class="number">11 </span><span class="name">Automatic security checks with seccheck</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">12 </span><span class="name">Software management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">13 </span><span class="name">File management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">14 </span><span class="name">Encrypting partitions and files</span></a></li><li class="inactive"><a href="cha-configure-cryptctl.html"><span class="number">15 </span><span class="name">Storage encryption for hosted applications with cryptctl</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">16 </span><span class="name">User management</span></a></li><li class="inactive"><a href="cha-spectre.html"><span class="number">17 </span><span class="name">Spectre/Meltdown checker</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">18 </span><span class="name">Configuring security settings with YaST</span></a></li><li class="inactive"><a href="cha-security-policykit.html"><span class="number">19 </span><span class="name">Authorization with PolKit</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">20 </span><span class="name">Access control lists in Linux</span></a></li><li class="inactive"><a href="cha-certstore.html"><span class="number">21 </span><span class="name">Certificate store</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">22 </span><span class="name">Intrusion detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">23 </span><span class="name">X Window System and X authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">24 </span><span class="name">SSH: secure network operations</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">25 </span><span class="name">Masquerading and firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">26 </span><span class="name">Configuring a VPN server</span></a></li><li class="inactive"><a href="cha-security-xca.html"><span class="number">27 </span><span class="name">Managing a PKI with XCA, X certificate and key manager</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">28 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">29 </span><span class="name">Getting started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">30 </span><span class="name">Immunizing programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">31 </span><span class="name">Profile components and syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">32 </span><span class="name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">33 </span><span class="name">Building and managing profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">34 </span><span class="name">Building profiles from the command line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">35 </span><span class="name">Profiling your Web applications using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">36 </span><span class="name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">37 </span><span class="name">Managing profiled applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">38 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">39 </span><span class="name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">V </span><span class="name"><em class="citetitle ">The Linux Audit Framework</em></span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">40 </span><span class="name">Understanding Linux audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">41 </span><span class="name">Setting up the Linux audit framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">42 </span><span class="name">Introducing an audit rule set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">43 </span><span class="name">Useful resources</span></a></li></ol></li><li class="inactive"><a href="bk05apa.html"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 23. X Window System and X authentication" href="cha-xauth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 25. Masquerading and firewalls" href="cha-security-firewall.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="SUSE Linux Enterprise Desktop Documentation"><span class="book-icon">SUSE Linux Enterprise Desktop Documentation</span></a><span> › </span><a class="crumb" href="book-security.html">Security and Hardening Guide</a><span> › </span><a class="crumb" href="part-network-security.html">Network security</a><span> › </span><a class="crumb" href="cha-ssh.html">SSH: secure network operations</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 23. X Window System and X authentication" href="cha-xauth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 25. Masquerading and firewalls" href="cha-security-firewall.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-ssh"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><h2 class="title"><span class="number">24 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">SSH: secure network operations</span> <a title="Permalink" class="permalink" href="cha-ssh.html#">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>cha-ssh</li></ul></div></div><div><div class="abstract"><p>
+    In networked environments, it is often necessary to access hosts from a
+    remote location. If a user sends login and password strings for
+    authentication purposes as plain text, they could be intercepted and
+    misused to gain access to that user account. This would open all the user's files to an attacker
+    and the illegal account could be used to obtain administrator or
+    <code class="systemitem">root</code> access, or to penetrate
+    other systems. In the past, remote connections were established with
+    <code class="command">telnet</code>, <code class="command">rsh</code> or
+    <code class="command">rlogin</code>, which offered no guards against eavesdropping
+    in the form of encryption or other security mechanisms. There are other
+    unprotected communication channels, like the traditional FTP protocol
+    and some remote copying programs like <code class="command">rcp</code>.
+   </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-programm"><span class="number">24.1 </span><span class="name"><code class="command">ssh</code>—secure shell</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-copy"><span class="number">24.2 </span><span class="name"><code class="command">scp</code>—secure copy</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-sftp"><span class="number">24.3 </span><span class="name"><code class="command">sftp</code>—secure file transfer</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-sshdserver"><span class="number">24.4 </span><span class="name">The SSH daemon (<code class="systemitem">sshd</code>)</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-authentic"><span class="number">24.5 </span><span class="name">SSH authentication mechanisms</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-port-forwarding"><span class="number">24.6 </span><span class="name">Port forwarding</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-ssh-publickey"><span class="number">24.7 </span><span class="name">Adding and removing public keys on an installed system</span></a></span></dt><dt><span class="sect1"><a href="cha-ssh.html#sec-security-ssh-moreinfo"><span class="number">24.8 </span><span class="name">More information</span></a></span></dt></dl></div></div><p>
+  The SSH suite provides the necessary protection by encrypting the
+  authentication strings (usually a login name and a password) and all the
+  other data exchanged between the hosts. With SSH, the data flow could
+  still be recorded by a third party, but the contents are encrypted and
+  cannot be reverted to plain text unless the encryption key is known. So
+  SSH enables secure communication over insecure networks, such as the
+  Internet. The SSH implementation coming with <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> is OpenSSH.
+ </p><p>
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> installs the OpenSSH package by default providing the
+  commands <code class="command">ssh</code>, <code class="command">scp</code>, and
+  <code class="command">sftp</code>. In the default configuration, remote access of a
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> system is only possible with the OpenSSH utilities, and
+  only if the <code class="systemitem">sshd</code> is running and
+  the firewall permits access.
+ </p><p>
+  SSH on <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> uses cryptographic hardware acceleration
+  if available. As a result, the transfer of large quantities of data
+  through an SSH connection is considerably faster than without
+  cryptographic hardware. As an additional benefit, the CPU will see a
+  significant reduction in load.
+ </p><div class="sect1 " id="sec-ssh-programm"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">ssh</code>—secure shell</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-programm">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-programm</li></ul></div></div></div></div><p>
+   With <code class="command">ssh</code> it is possible to log in to remote
+   systems and to work interactively. To log in to the host
+   <code class="literal">sun</code> as user <code class="systemitem">tux</code> enter one of
+   the following commands:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>ssh tux@sun
+<code class="prompt user">tux &gt; </code>ssh -l tux sun</pre></div><p>
+   If the user name is the same on both machines, you can omit it. Using
+   <code class="command">ssh sun</code> is sufficient. The remote host
+   prompts for the remote user's password. After a successful
+   authentication, you can work on the remote command line or use
+   interactive applications, such as YaST in text mode.
+  </p><p>
+   Furthermore, <code class="command">ssh</code> offers the possibility to run
+   non-interactive commands on remote systems using <code class="command">ssh</code>
+   <em class="replaceable ">HOST</em> <em class="replaceable ">COMMAND</em>.
+   <em class="replaceable ">COMMAND</em> needs to be properly quoted. Multiple
+   commands can be concatenated as on a local shell.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>ssh root@sun "dmesg -T | tail -n 25"
+<code class="prompt user">tux &gt; </code>ssh root@sun "cat /etc/issue &amp;&amp; uptime"</pre></div><div class="sect2 " id="sec-ssh-programm-x"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.1.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Starting X applications on a remote host</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-programm-x">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-programm-x</li></ul></div></div></div></div><p>
+    SSH also simplifies the use of remote X applications. If you run
+    <code class="command">ssh</code> with the <code class="option">-X</code> option, the
+    <code class="envar">DISPLAY</code> variable is automatically set on the remote
+    machine and all X output is exported to the local machine over the
+    existing SSH connection. At the same time, X applications started
+    remotely cannot be intercepted by unauthorized individuals.
+   </p></div><div class="sect2 " id="sec-ssh-programm-forwarding"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.1.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Agent forwarding</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-programm-forwarding">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-programm-forwarding</li></ul></div></div></div></div><p>
+    By adding the <code class="option">-A</code> option, the ssh-agent authentication
+    mechanism is carried over to the next machine. This way, you can work
+    from different machines without having to enter a password, but only if
+    you have distributed your public key to the destination hosts and
+    properly saved it there. Refer to
+    <a class="xref" href="cha-ssh.html#sec-ssh-authentic-key-copy" title="24.5.2. Copying an SSH key">Section 24.5.2, “Copying an SSH key”</a> for details.
+   </p><p>
+    This mechanism is deactivated in the default settings, but can be
+    permanently activated at any time in the system-wide configuration file
+    <code class="filename">/etc/ssh/sshd_config</code> by setting
+    <code class="literal">AllowAgentForwarding yes</code>.
+   </p></div></div><div class="sect1 " id="sec-ssh-copy"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">scp</code>—secure copy</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-copy">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-copy</li></ul></div></div></div></div><p>
+   <code class="command">scp</code> copies files to or from a remote machine.  If
+   the user name on jupiter is different than the user name on
+   sun, specify the latter using the
+   <code class="option"><em class="replaceable ">USER_NAME</em>@host</code> format. If
+   the file should be copied into a directory other than the remote
+   user's home directory, specify it as
+   sun:<em class="replaceable ">DIRECTORY</em>. The following
+   examples show how to copy a file from a local to a remote machine and
+   vice versa.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>scp ~/MyLetter.tex tux@sun:/tmp <span id="co-scp-local-remote"></span><span class="callout">1</span>
+<code class="prompt user">tux &gt; </code>scp tux@sun:/tmp/MyLetter.tex ~ <span id="co-scp-remote-local"></span><span class="callout">2</span></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-scp-local-remote"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>local to remote</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-scp-remote-local"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>remote to local</p></td></tr></table></div><div id="id-1.7.7.4.7.5" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: The <code class="option">-l</code> option</h6><p>
+    With the <code class="command">ssh</code> command, the option
+    <code class="option">-l</code> can be used to specify a remote user (as an
+    alternative to the
+    <code class="option"><em class="replaceable ">USER_NAME</em>@host</code>
+    format). With <code class="command">scp</code> the option <code class="option">-l</code>
+    is used to limit the bandwidth consumed by <code class="command">scp</code>.
+   </p></div><p>
+   After the correct password is entered, <code class="command">scp</code> starts the
+   data transfer. It displays a progress bar and the time remaining for each
+   file that is copied. Suppress all output with the <code class="option">-q</code>
+   option.
+  </p><p>
+   <code class="command">scp</code> also provides a recursive copying feature for
+   entire directories. The command
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>scp -r src/ sun:backup/</pre></div><p>
+   copies the entire contents of the directory <code class="filename">src</code>
+   including all subdirectories to the <code class="filename">~/backup</code>
+   directory on the host sun. If this subdirectory does not
+   exist, it is created automatically.
+  </p><p>
+   The <code class="option">-p</code> option tells <code class="command">scp</code> to leave the
+   time stamp of files unchanged. <code class="option">-C</code> compresses the data
+   transfer. This minimizes the data volume to transfer, but creates a
+   heavier burden on the processors of both machines.
+  </p></div><div class="sect1 " id="sec-ssh-sftp"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">sftp</code>—secure file transfer</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sftp">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-sftp</li></ul></div></div></div></div><div class="sect2 " id="sec-ssh-sftp-using"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.3.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using <code class="command">sftp</code></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sftp-using">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-sftp-using</li></ul></div></div></div></div><p>
+   If you want to copy several files from or to different locations,
+   <code class="command">sftp</code> is a convenient alternative to
+   <code class="command">scp</code>. It opens a shell with a set of commands similar
+   to a regular FTP shell. Type <code class="command">help</code> at the sftp-prompt
+   to get a list of available commands. More details are available from the
+   <code class="command">sftp</code> man page.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>sftp sun
+Enter passphrase for key '/home/tux/.ssh/id_rsa':
+Connected to sun.
+sftp&gt; help
+Available commands:
+bye                                Quit sftp
+cd path                            Change remote directory to 'path'
+[...]</pre></div></div><div class="sect2 " id="sec-ssh-sftp-perms"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.3.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Setting permissions for file uploads</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sftp-perms">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-sftp-perms</li></ul></div></div></div></div><p>
+    As with a regular FTP server, a user cannot only download,
+        but also upload files to a remote machine running an SFTP server
+        by using the <code class="command">put</code> command. By default the
+        files will be uploaded to the remote host with the same
+        permissions as on the local host. There are two options to
+        automatically alter these permissions:
+   </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.7.4.8.3.3.1"><span class="term ">Setting a umask</span></dt><dd><p>
+       A umask works as a filter against the permissions of the original
+       file on the local host. It can only withdraw permissions:
+      </p><div class="table" id="id-1.7.7.4.8.3.3.1.2.2"><div class="table-title-wrap"><h6 class="table-title"><span class="number">Table 24.1: </span><span class="name"> </span><a title="Permalink" class="permalink" href="cha-ssh.html#id-1.7.7.4.8.3.3.1.2.2">#</a></h6></div><div class="table-contents"><table class="table" summary="" border="1"><colgroup><col class="1" /><col class="2" /><col class="3" /></colgroup><thead><tr><th>
+           <p>
+            permissions original
+           </p>
+          </th><th>
+           <p>
+            umask
+           </p>
+          </th><th>
+           <p>
+            permissions uploaded
+           </p>
+          </th></tr></thead><tbody><tr><td>
+           <p>
+            0666
+           </p>
+          </td><td>
+           <p>
+            0002
+           </p>
+          </td><td>
+           <p>
+            0664
+           </p>
+          </td></tr><tr><td>
+           <p>
+            0600
+           </p>
+          </td><td>
+           <p>
+            0002
+           </p>
+          </td><td>
+           <p>
+            0600
+           </p>
+          </td></tr><tr><td>
+           <p>
+            0775
+           </p>
+          </td><td>
+           <p>
+            0025
+           </p>
+          </td><td>
+           <p>
+            0750
+           </p>
+          </td></tr></tbody></table></div></div><p>
+       To apply a umask on an SFTP server, edit the file
+       <code class="filename">/etc/ssh/sshd_configuration</code>. Search for the line
+       beginning with <code class="literal">Subsystem sftp</code> and add the
+       <code class="option">-u</code> parameter with the desired setting, for example:
+      </p><div class="verbatim-wrap"><pre class="screen">Subsystem sftp /usr/lib/ssh/sftp-server -u 0002</pre></div></dd><dt id="id-1.7.7.4.8.3.3.2"><span class="term ">Explicitly setting the permissions</span></dt><dd><p>
+       Explicitly setting the permissions sets the same permissions for all
+       files uploaded via SFTP. Specify a three-digit pattern such as
+       <code class="literal">600</code>, <code class="literal">644</code>, or
+       <code class="literal">755</code> with <code class="option">-u</code>. When both
+       <code class="option">-m</code> and <code class="option">-u</code> are specified,
+       <code class="literal">-u</code> is ignored.
+      </p><p>
+       To apply explicit permissions for uploaded files on an SFTP server,
+       edit the file <code class="filename">/etc/ssh/sshd_configuration</code>.
+       Search for the line beginning with <code class="literal">Subsystem sftp</code>
+       and add the <code class="option">-m</code> parameter with the desired setting,
+       for example:
+      </p><div class="verbatim-wrap"><pre class="screen">Subsystem sftp /usr/lib/ssh/sftp-server -m 600</pre></div></dd></dl></div></div></div><div class="sect1 " id="sec-ssh-sshdserver"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">The SSH daemon (<code class="systemitem">sshd</code>)</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sshdserver">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-sshdserver</li></ul></div></div></div></div><p>
+   To work with the SSH client programs <code class="command">ssh</code> and
+   <code class="command">scp</code>, a server (the SSH daemon) must be running in the
+   background, listening for connections on <code class="literal">TCP/IP port
+   22</code>. The daemon generates three key pairs when starting for the
+   first time. Each key pair consists of a private and a public key.
+   Therefore, this procedure is called public key-based. To
+   guarantee the security of the communication via SSH, access to the
+   private key files must be restricted to the system administrator. The
+   file permissions are set accordingly by the default installation. The
+   private keys are only required locally by the SSH daemon and must not be
+   given to anyone else. The public key components (recognizable by the name
+   extension <code class="filename">.pub</code>) are sent to the client requesting
+   the connection. They are readable for all users.
+  </p><p>
+   A connection is initiated by the SSH client. The waiting SSH daemon and
+   the requesting SSH client exchange identification data to compare the
+   protocol and software versions, and to prevent connections through the
+   wrong port. Because a child process of the original SSH daemon replies to
+   the request, several SSH connections can be made simultaneously.
+  </p><p>
+   For the communication between SSH server and SSH client, OpenSSH supports
+   versions 1 and 2 of the SSH protocol. Version 2 of the
+   SSH protocol is used by default. Override this to use version 1
+   of protocol with the <code class="option">-1</code> option.
+  </p><p>
+   When using version 1 of SSH, the server sends its public host key
+   and a server key, which is regenerated by the SSH daemon every hour. Both
+   allow the SSH client to encrypt a freely chosen session key, which is
+   sent to the SSH server. The SSH client also tells the server which
+   encryption method (cipher) to use. Version 2 of the SSH protocol
+   does not require a server key. Both sides use an algorithm according to
+   Diffie-Hellman to exchange their keys.
+  </p><p>
+   The private host and server keys are absolutely required to decrypt the
+   session key and cannot be derived from the public parts. Only the
+   contacted SSH daemon can decrypt the session key using its private keys.
+   This initial connection phase can be watched closely by turning on
+   verbose debugging using the <code class="option">-v</code> option of the SSH client.
+  </p><div id="id-1.7.7.4.9.7" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Viewing the SSH daemon log file</h6><p>
+    To watch the log entries from the <code class="systemitem">sshd</code> use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> journalctl -u sshd</pre></div></div><div class="sect2 " id="id-1.7.7.4.9.8"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Maintaining SSH keys</span> <a title="Permalink" class="permalink" href="cha-ssh.html#id-1.7.7.4.9.8">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span><span class="ds-message">no ID found</span></li></ul></div></div></div></div><p>
+   It is recommended to back up the private and public keys stored in
+   <code class="filename">/etc/ssh/</code> in a secure, external location. In this
+   way, key modifications can be detected or the old ones can be used again
+   after having installed a new system.
+  </p><div id="id-1.7.7.4.9.8.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Existing SSH host keys</h6><p>
+    If you install <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> on a machine with existing Linux
+    installations, the installation routine automatically imports the SSH
+    host key with the most recent access time from an existing installation.
+   </p></div><p>
+   When establishing a secure connection with a remote host for the first
+   time, the client stores all public host keys in
+   <code class="filename">~/.ssh/known_hosts</code>. This prevents any
+   man-in-the-middle attacks—attempts by foreign SSH servers to use
+   spoofed names and IP addresses. Such attacks are detected either by a
+   host key that is not included in <code class="filename">~/.ssh/known_hosts</code>,
+   or by the server's inability to decrypt the session key in the absence of
+   an appropriate private counterpart.
+  </p><p>
+   If the public keys of a host have changed (that needs to be verified
+   before connecting to such a server), the offending keys can be
+   removed with <code class="command">ssh-keygen -r
+   <em class="replaceable ">HOSTNAME</em></code>.
+  </p></div><div class="sect2 " id="sec-ssh-sshdserver-rotating"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Rotating host keys</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sshdserver-rotating">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-sshdserver-rotating</li></ul></div></div></div></div><p>
+    As of version 6.8, OpenSSH comes with a protocol extension that
+    supports host key rotation.  It makes sense to replace keys, if you
+    are still using weak keys such as 1024-bit RSA keys.  It is strongly
+    recommended to replace such a key and go for 2048-bit DSA keys or
+    something even better.  The client will then use the
+    <span class="quote">“<span class="quote ">best</span>”</span> host key.
+   </p><div id="id-1.7.7.4.9.9.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Restarting sshd</h6><p>
+     After installing new host keys on the server, restart sshd.
+    </p></div><p>
+    This protocol extension can
+    inform a client of all the new host keys on the server, if the user
+    initiates a connection with <code class="command">ssh</code>.  Then, the
+    software on the client updates
+    <code class="filename">~/.ssh/known_hosts</code>, and the user is not
+    required to accept new keys of previously known and trusted hosts
+    manually.  The local <code class="filename">known_hosts</code> file will
+    contain all the host keys of the remote hosts, in addition to the
+    one that authenticated the host during this session.
+   </p><p>
+    Once the administrator of the server knows that all the clients have
+    fetched the new keys, they can remove the old keys. The protocol
+    extension ensures that the obsolete keys will be removed from the
+    client's configuration, too. The key removal occurs while initiating
+    an <code class="command">ssh</code> session.
+   </p><p>
+    For more information, see:
+   </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+      <a class="link" href="http://blog.djm.net.au/2015/02/key-rotation-in-openssh-68.html" target="_blank">http://blog.djm.net.au/2015/02/key-rotation-in-openssh-68.html</a>
+     </p></li><li class="listitem "><p>
+      <a class="link" href="http://heise.de/-2540907" target="_blank">http://heise.de/-2540907</a>
+      (<span xml:lang="de" class="quote" lang="de">„<span xml:lang="de" class="quote " lang="de">Endlich neue Schlüssel für SSH-Server,</span>“</span> German only)
+     </p></li></ul></div></div></div><div class="sect1 " id="sec-ssh-authentic"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">SSH authentication mechanisms</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-authentic</li></ul></div></div></div></div><p>
+   In its simplest form, authentication is done by entering the user's
+   password just as if logging in locally. However, having to memorize
+   passwords of several users on remote machines is inefficient. What is
+   more, these passwords may change. On the other hand—when
+   granting <code class="systemitem">root</code> access—an administrator needs to be able
+   to quickly revoke such a permission without having to change the
+   <code class="systemitem">root</code> password.
+  </p><p>
+   To accomplish a login that does not require to enter the remote
+   user's password, SSH uses another key pair, which needs to be generated
+   by the user. It consists of a public (<code class="filename">id_rsa.pub</code> or
+   <code class="filename">id_dsa.pub</code>) and a private key
+   (<code class="filename">id_rsa</code> or <code class="filename">id_dsa</code>).
+  </p><p>
+   To be able to log in without having to specify the remote user's
+   password, the public key of the <span class="quote">“<span class="quote ">SSH user</span>”</span> must be
+   in <code class="filename">~/.ssh/authorized_keys</code>. This approach also
+   ensures that the remote user has got full control: adding the key
+   requires the remote user's password and removing the key revokes the
+   permission to log in from remote.
+  </p><p>
+   For maximum security such a key should be protected by a passphrase which
+   needs to be entered every time you use <code class="command">ssh</code>,
+   <code class="command">scp</code>, or <code class="command">sftp</code>. Contrary to the
+   simple authentication, this passphrase is independent from the remote
+   user and therefore always the same.
+  </p><p>
+   An alternative to the key-based authentication described above, SSH also
+   offers a host-based authentication. With host-based authentication, users
+   on a trusted host can log in to another host on which this feature is
+   enabled using the same user name. <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> is set up for using
+   key-based authentication, covering setting up host-based authentication
+   on <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> is beyond the scope of this manual.
+  </p><div id="id-1.7.7.4.10.7" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: File permissions for host-based authentication</h6><p>
+    If the host-based authentication is to be used, the file
+    <code class="filename">/usr/lib/ssh/ssh-keysign</code> should
+    have the setuid bit set, which is not the default setting in
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>. In such case, set the file permissions manually. You
+    should use <code class="filename">/etc/permissions.local</code> for this purpose,
+    to make sure that the setuid bit is preserved after security updates of
+    <span class="package ">openssh</span>.
+   </p></div><div class="sect2 " id="sec-ssh-authentic-gen-key"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.5.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Generating an SSH key</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-gen-key">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-authentic-gen-key</li></ul></div></div></div></div><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      To generate a key with default parameters (RSA, 2048 bits), enter the
+      command <code class="command">ssh-keygen</code>.
+     </p></li><li class="step "><p>
+      Accept the default location to store the key
+      (<code class="filename">~/.ssh/id_rsa</code>) by pressing
+      <span class="keycap">Enter</span> (strongly recommended) or enter an
+      alternative location.
+     </p></li><li class="step "><p>
+      Enter a passphrase consisting of 10 to 30 characters. The same rules
+      as for creating safe passwords apply. It is strongly advised to
+      refrain from specifying no passphrase.
+     </p></li></ol></div></div><p>
+    You should make absolutely sure that the private key is not accessible
+    by anyone other than yourself (always set its permissions to
+    <code class="literal">0600</code>). The private key must never fall into the hands
+    of another person.
+   </p><p>
+    To change the password of an existing key pair, use the command
+    <code class="command">ssh-keygen -p</code>.
+   </p></div><div class="sect2 " id="sec-ssh-authentic-key-copy"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.5.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Copying an SSH key</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-key-copy">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-authentic-key-copy</li></ul></div></div></div></div><p>
+    To copy a public SSH key to <code class="filename">~/.ssh/authorized_keys</code>
+    of a user on a remote machine, use the command
+    <code class="command">ssh-copy-id</code>. To copy your personal key
+    stored under <code class="filename">~/.ssh/id_rsa.pub</code> you may use the
+    short form. To copy DSA keys or keys of other users, you need
+    to specify the path:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="prompt user">~/.ssh/id_rsa.pub</code>
+ssh-copy-id -i tux@sun
+
+<code class="prompt user">tux &gt; </code><code class="prompt user">~/.ssh/id_dsa.pub</code>
+ssh-copy-id -i ~/.ssh/id_dsa.pub  tux@sun
+
+<code class="prompt user">tux &gt; </code><code class="prompt user">~notme/.ssh/id_rsa.pub</code>
+ssh-copy-id -i ~notme/.ssh/id_rsa.pub  tux@sun</pre></div><p>
+    To successfully copy the key, you need to enter the remote
+    user's password. To remove an existing key, manually edit
+    <code class="filename">~/.ssh/authorized_keys</code>.
+   </p></div><div class="sect2 " id="sec-ssh-authentic-agent"><div class="titlepage"><div><div><h3 class="title"><span class="number">24.5.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using the <code class="command">ssh-agent</code></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-agent">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-authentic-agent</li></ul></div></div></div></div><p>
+    When doing lots of secure shell operations it is cumbersome to type the
+    SSH passphrase for each such operation. Therefore, the SSH package
+    provides another tool, <code class="command">ssh-agent</code>, which retains the
+    private keys for the duration of an X or terminal session. All other
+    windows or programs are started as clients to the
+    <code class="command">ssh-agent</code>. By starting the agent, a set of
+    environment variables is set, which will be used by
+    <code class="command">ssh</code>, <code class="command">scp</code>, or
+    <code class="command">sftp</code> to locate the agent for automatic login. See
+    the <code class="command">ssh-agent</code> man page for details.
+   </p><p>
+    After the <code class="command">ssh-agent</code> is started, you need to add your
+    keys by using <code class="command">ssh-add</code>. It will prompt for the
+    passphrase. After the password has been provided once, you can use the
+    secure shell commands within the running session without having to
+    authenticate again.
+   </p><div class="sect3 " id="sec-ssh-authentic-agent-x"><div class="titlepage"><div><div><h4 class="title"><span class="number">24.5.3.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using <code class="command">ssh-agent</code> in an X session</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-agent-x">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-authentic-agent-x</li></ul></div></div></div></div><p>
+     On <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>, the <code class="command">ssh-agent</code> is automatically
+     started by the GNOME display manager. To also invoke
+     <code class="command">ssh-add</code> to add your keys to the agent at the
+     beginning of an X session, do the following:
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+       Log in as the desired user and check whether the file
+       <code class="filename">~/.xinitrc</code> exists.
+      </p></li><li class="step "><p>
+       If it does not exist, use an existing template or copy it from
+       <code class="filename">/etc/skel</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">if [ -f ~/.xinitrc.template ]; then mv ~/.xinitrc.template ~/.xinitrc; \
+else cp /etc/skel/.xinitrc.template ~/.xinitrc; fi</pre></div></li><li class="step "><p>
+       If you have copied the template, search for the following lines and
+       uncomment them. If <code class="filename">~/.xinitrc</code> already existed,
+       add the following lines (without comment signs).
+      </p><div class="verbatim-wrap"><pre class="screen"># if test -S "$SSH_AUTH_SOCK" -a -x "$SSH_ASKPASS"; then
+#       ssh-add &lt; /dev/null
+# fi</pre></div></li><li class="step "><p>
+       When starting a new X session, you will be prompted for your SSH
+       passphrase.
+      </p></li></ol></div></div></div><div class="sect3 " id="sec-ssh-authentic-agent-terminal"><div class="titlepage"><div><div><h4 class="title"><span class="number">24.5.3.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using <code class="command">ssh-agent</code> in a terminal session</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-agent-terminal">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-authentic-agent-terminal</li></ul></div></div></div></div><p>
+     In a terminal session you need to manually start the
+     <code class="command">ssh-agent</code> and then call <code class="command">ssh-add</code>
+     afterward. There are two ways to start the agent. The first example
+     given below starts a new Bash shell on top of your existing shell. The
+     second example starts the agent in the existing shell and modifies the
+     environment as needed.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>ssh-agent -s /bin/bash
+eval $(ssh-agent)</pre></div><p>
+     After the agent has been started, run <code class="command">ssh-add</code> to
+     provide the agent with your keys.
+    </p></div></div></div><div class="sect1 " id="sec-ssh-port-forwarding"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Port forwarding</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-port-forwarding">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-port-forwarding</li></ul></div></div></div></div><p>
+   <code class="command">ssh</code> can also be used to redirect TCP/IP connections.
+   This feature, also called <code class="literal">SSH tunneling</code>, redirects TCP
+   connections to a certain port to another machine via an encrypted
+   channel.
+  </p><p>
+   With the following command, any connection directed to jupiter port 25
+   (SMTP) is redirected to the SMTP port on sun. This is
+   especially useful for those using SMTP servers without SMTP-AUTH or
+   POP-before-SMTP features. From any arbitrary location connected to a
+   network, e-mail can be transferred to the <span class="quote">“<span class="quote ">home</span>”</span> mail server
+   for delivery.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>ssh -L 25:sun:25 jupiter</pre></div><p>
+   Similarly, all POP3 requests (port 110) on jupiter can be
+   forwarded to the POP3 port of sun with this command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>ssh -L 110:sun:110 jupiter</pre></div><p>
+   Both commands must be executed as <code class="systemitem">root</code>, because the connection
+   is made to privileged local ports. E-mail is sent and retrieved by
+   normal users in an existing SSH connection. The SMTP and POP3 host
+   must be set to <code class="literal">localhost</code> for this to
+   work. Additional information can be found in the manual pages for
+   each of the programs described above and in the OpenSSH package
+   documentation under
+   <code class="filename">/usr/share/doc/packages/openssh</code>.
+  </p></div><div class="sect1 " id="sec-ssh-publickey"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding and removing public keys on an installed system</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-publickey">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-ssh-publickey</li></ul></div></div></div></div><p>
+   In some environments, it is convenient or necessary to log in over SSH.
+   As such, the user needs to provide a public SSH key. To add or remove
+   an SSH key, proceed as follows:
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>Open YaST.</p></li><li class="step "><p>
+      Under <span class="guimenu ">Security and Users</span>, open the
+     <span class="guimenu ">User and Group Management</span> module.
+    </p></li><li class="step "><p>
+     Select the user you want to change and press <span class="guimenu ">Edit</span>.
+    </p></li><li class="step "><p>
+     Switch to the <span class="guimenu ">SSH Public Key</span> tab.
+    </p></li><li class="step "><p>
+     Add or remove your public key(s). If you add a public SSH key, look
+     for the file extension <code class="filename">.pub</code>.
+    </p></li><li class="step "><p>Confirm with <span class="guimenu ">Ok</span>.</p></li></ol></div></div><p>
+   Your public SSH key is saved in <code class="filename">~/.ssh/authorized_keys</code>.
+  </p></div><div class="sect1 " id="sec-security-ssh-moreinfo"><div class="titlepage"><div><div><h2 class="title"><span class="number">24.8 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">More information</span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-security-ssh-moreinfo">#</a><a class="report-bug" target="_blank" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_ssh.xml</li><li><span class="ds-label">ID: </span>sec-security-ssh-moreinfo</li></ul></div></div></div></div><div class="variablelist "><dl class="variablelist"><dt id="id-1.7.7.4.13.3.1"><span class="term "><a class="link" href="https://www.openssh.com" target="_blank">https://www.openssh.com</a>
+    </span></dt><dd><p>
+      The home page of OpenSSH
+     </p></dd><dt id="id-1.7.7.4.13.3.2"><span class="term "><a class="link" href="https://en.wikibooks.org/wiki/OpenSSH" target="_blank">https://en.wikibooks.org/wiki/OpenSSH</a>
+    </span></dt><dd><p>
+      The OpenSSH Wikibook
+     </p></dd><dt id="id-1.7.7.4.13.3.3"><span class="term "><code class="command">man sshd</code>
+    </span></dt><dd><p>
+      The man page of the OpenSSH daemon
+     </p></dd><dt id="id-1.7.7.4.13.3.4"><span class="term "><code class="command">man ssh_config</code>
+    </span></dt><dd><p>
+      The man page of the OpenSSH SSH client configuration files
+     </p></dd><dt id="id-1.7.7.4.13.3.5"><span class="term "><code class="command">man scp</code>
+    , </span><span class="term "><code class="command">man sftp</code>
+    , </span><span class="term "><code class="command">man slogin</code>
+    , </span><span class="term "><code class="command">man ssh</code>
+    , </span><span class="term "><code class="command">man ssh-add</code>
+    , </span><span class="term "><code class="command">man ssh-agent</code>
+    , </span><span class="term "><code class="command">man ssh-copy-id</code>
+    , </span><span class="term "><code class="command">man ssh-keyconvert</code>
+    , </span><span class="term "><code class="command">man ssh-keygen</code>
+    , </span><span class="term "><code class="command">man ssh-keyscan</code>
+    </span></dt><dd><p>
+      Man pages of several binary files to securely copy files
+      (<code class="command">scp</code>, <code class="command">sftp</code>), to log in
+      (<code class="command">slogin</code>, <code class="command">ssh</code>), and to manage
+      keys.
+     </p></dd><dt id="id-1.7.7.4.13.3.6"><span class="term ">
+     <code class="filename">/usr/share/doc/packages/openssh/README.SUSE</code>
+    , </span><span class="term ">
+     <code class="filename">/usr/share/doc/packages/openssh/README.FIPS</code>
+    </span></dt><dd><p>
+      SUSE package specific documentation; changes in defaults with respect to
+      upstream, notes on FIPS mode etc.
+     </p></dd></dl></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-security-firewall.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 25 </span>Masquerading and firewalls</span></a><a class="nav-link" href="cha-xauth.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 23 </span>X Window System and X authentication</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2021 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>
