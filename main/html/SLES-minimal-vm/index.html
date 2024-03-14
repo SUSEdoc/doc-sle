@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | SLES Minimal VM Quick Start</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="SLES Minimal VM Quick Start | SLES 15 SP6"/>
+<meta name="description" content="The following document provides an overview of SLES Mi…"/>
+<meta name="product-name" content="SLES Minimal VM"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="SLES Minimal VM Quick Start"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="taroth@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="SLES Minimal VM Quick Start | SLES 15 SP6"/>
+<meta property="og:description" content="The following document provides an overview of SLES Minimal VM (formerly known as JeOS) and describes the setup procedure."/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SLES Minimal VM Quick Start | SLES 15 SP6"/>
+<meta name="twitter:description" content="The following document provides an overview of SLES Minimal VM (formerly known as JeOS) and describes the setup procedure."/>
+<link rel="prev" href="article-virtualization-best-practices.html" title="Virtualization Best Practices"/><link rel="next" href="article-kubevirt.html" title="Using KubeVirt on SUSE Linux Enterprise"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">SLES Minimal VM Quick Start</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">SLES Minimal VM Quick Start</div> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="article" id="article-minimal-vm" data-id-title="SLES Minimal VM Quick Start"><div class="titlepage"><div><div class="big-version-info"><span class="productname">SLES Minimal VM</span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><h1 class="title">SLES Minimal VM Quick Start</h1></div><div class="date"><span class="imprint-label">Publication Date: </span>
+    March 14, 2024
+
+   </div><div><div class="abstract"><p>
+    The following document provides an overview of SLES Minimal VM (formerly known
+    as JeOS) and describes the setup procedure.
+   </p></div></div></div></div><section class="sect1" id="sec-introduction" data-id-title="Introduction"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1 </span><span class="title-name">Introduction</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-introduction">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SLES Minimal VM refers to a minimal customizable
+   operating system that is tailored for a specific usage scenario: a container
+   host, a virtual machine guest, an appliance base, or a small server image.
+   SLES Minimal VM acts as a foundation for building systems for use in a data center,
+   creating desired virtual application images or appliances. You can choose
+   what packages and components to install based on a specific use case. To
+   that end, SLES Minimal VM provides access to all regular software repositories.
+  </p><p>
+   If you already have SUSE Linux Enterprise Server certification, you are automatically certified for
+   SLES Minimal VM, as it is derived from the same code base. SLES Minimal VM allows you to
+   reduce the operating system to the packages essential for the specific usage
+   scenario. This minimizes the number of packages and patches that need to be
+   managed and applied. By removing unnecessary packages, you also reduce the
+   number of potential vulnerabilities, thus making the resulting system more
+   secure. Reducing the system's footprint also results in lower resource
+   consumption and improved performance.
+  </p><p>
+   SLES Minimal VM is delivered as preconfigured and ready-to-run virtual machine
+   images. The system comes with the <code class="systemitem">JeOS Firstboot</code>
+   wizard for configuring system locales and the <code class="systemitem">root</code> password during the first
+   boot. SLES Minimal VM ships with the SSH server enabled and excluded from the
+   firewall configuration. The supplied KIWI NG templates make it possible to
+   create customized SLES Minimal VM images.
+  </p><p>
+   SLES Minimal VM provides ready-to-deploy server images on the AMD64/Intel 64 architecture
+   for the following usage scenarios:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     KVM/Xen with HVM
+    </p></li><li class="listitem"><p>
+     Xen Paravirtualized
+    </p></li><li class="listitem"><p>
+     Microsoft Hyper-V
+    </p></li><li class="listitem"><p>
+     VMware
+    </p></li><li class="listitem"><p>
+     OpenStack Cloud
+    </p></li></ul></div><section class="sect2" id="sec-system-requirements" data-id-title="System requirements"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.1 </span><span class="title-name">System requirements</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-system-requirements">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The minimum SLES Minimal VM system requirements are similar to SUSE Linux Enterprise Server. For more
+    information, refer to <span class="intraxref">Book “Deployment Guide”, Chapter 2 “Installation on AMD64 and Intel 64”, Section 2.1 “Hardware requirements”</span>.
+   </p></section><section class="sect2" id="sec-minvm-sles-diff" data-id-title="Differences between SLES Minimal VM and SUSE Linux Enterprise Server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2 </span><span class="title-name">Differences between SLES Minimal VM and SUSE Linux Enterprise Server</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-minvm-sles-diff">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    There are several significant differences between SLES Minimal VM and SUSE Linux Enterprise Server.
+   </p><div class="variablelist" id="vl-minvm-sles-diff" data-id-title="Differences between SLES Minimal VM and SUSE Linux Enterprise Server"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Differences between SLES Minimal VM and SUSE Linux Enterprise Server </span></span><a title="Permalink" class="permalink" href="article-minimal-vm.html#vl-minvm-sles-diff">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.13.5.2.8.3.2"><span class="term">JeOS Firstboot</span></dt><dd><p>
+       SLES Minimal VM comes with the <span class="package">JeOS Firstboot</span> tool, which can
+       be used to configure basic settings during the first boot. This includes
+       keyboard layout and language, time zone, and <code class="systemitem">root</code> password.
+      </p><p>
+       The default network configuration is set to use DHCP, and the system
+       automatically creates a Btrfs snapshot of the initial configuration.
+      </p></dd><dt id="id-1.13.5.2.8.3.3"><span class="term"><span class="package">kernel-default-base</span></span></dt><dd><p>
+       Because of size constraints, SLES Minimal VM images use the
+       <span class="package">kernel-default-base</span> as the default kernel. Since the
+       kernel does not contain drivers for bare metal, this allows for a
+       smaller footprint.
+      </p><p>
+       If a specific usage scenario requires any of the omitted modules,
+       install the <span class="package">kernel-default</span> package to get a full tree
+       of the kernel modules. This is the same kernel used by a regular SUSE Linux Enterprise Server
+       installation.
+      </p></dd><dt id="id-1.13.5.2.8.3.4"><span class="term">No repositories by default</span></dt><dd><p>
+       When installing a SUSE Linux Enterprise Server from the installation media, the system
+       automatically sets the installation media as the default offline
+       channel.
+      </p><p>
+       SLES Minimal VM has no channel by default, and you need to register your system to
+       access online channels. Refer to <span class="intraxref">Book “Deployment Guide”, Chapter 10 “Registering SUSE Linux Enterprise and managing modules/extensions”, Section 10.3.2 “Registering with SUSEConnect”</span> for further information.
+      </p><div id="id-1.13.5.2.8.3.4.2.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+      The <span class="package">JeOS Firstboot</span>, <span class="package">jeos-licenses</span> and <span class="package">live-langset-data</span> packages receive updates only if the Development Tools Module is enabled. However, these packages are not essential for running SLES Minimal VM instances, so they can be removed or left untouched.
+      </p></div></dd><dt id="id-1.13.5.2.8.3.5"><span class="term">Zypper configuration</span></dt><dd><p>
+       SLES Minimal VM is a slimmed-down version of SUSE Linux Enterprise Server. The reduction in size is
+       achieved in part by enabling the following two options in
+       <code class="filename">/etc/zypp/zypp.conf</code>:
+       <code class="literal">rpm.install.excludedocs = yes</code> (excludes all files
+       marked as documentation from being installed by default) and
+       <code class="literal">solver.onlyRequires = true</code> (disables installation of
+       suggested and recommended packages by default).
+      </p></dd><dt id="id-1.13.5.2.8.3.6"><span class="term">Base packages</span></dt><dd><p>
+       SLES Minimal VM images are built using the KIWI NG tool. KIWI NG's configuration
+       files, called templates, explicitly list packages that must be included
+       in the images. Keep in mind that these base packages pull their
+       dependencies during the image building process. Therefore, the list of
+       preinstalled packages in an image usually contains more packages than
+       the list of base packages.
+      </p><p>
+       The KIWI NG configuration files used to create the official SLES Minimal VM images
+       are available from the openSUSE Build Service at
+       <a class="link" href="https://build.opensuse.org/package/view_file/SUSE:SLE-15-SP4:GA/kiwi-templates-Minimal/Minimal.kiwi?expand=1" target="_blank">https://build.opensuse.org/</a>.
+      </p><div id="id-1.13.5.2.8.3.6.2.3" data-id-title="Specific host tools packages" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Specific host tools packages</div><p>
+        Each SLES Minimal VM flavor contains certain host tools packages. Refer to
+        the specific flavors section in the documentation for further
+        information.
+       </p></div></dd><dt id="id-1.13.5.2.8.3.7"><span class="term">Disk layout</span></dt><dd><p>
+       Unlike SUSE Linux Enterprise Server, which calculates the disk layout during installation,
+       SLES Minimal VM features the following fixed virtual image partitioning scheme:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         2 MB BIOS boot
+        </p></li><li class="listitem"><p>
+         33 MB EFI system
+        </p></li><li class="listitem"><p>
+         24 GB Linux file system
+        </p></li></ul></div><p>
+       To get additional disk space, you can either extend the existing disk
+       from the virtual host or add a secondary disk to the virtual machine. If
+       you choose the latter option, you must partition and format it manually.
+      </p></dd><dt id="id-1.13.5.2.8.3.8"><span class="term">systemd-coredump disabled</span></dt><dd><p>
+       Due to the limited amount of memory and disk space available by default
+       on SLES Minimal VM images, systemd-coredump is disabled by default on SLES Minimal VM images.
+       To collect application core dumps necessary for troubleshooting, follow
+       these steps:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         Install the <span class="package">systemd-coredump</span> package, which
+         contains <code class="filename">/usr/lib/sysctl.d/50-coredump.conf</code>
+        </p></li><li class="listitem"><p>
+         To apply the configuration changes to your system, reboot or use the
+         <code class="command">sysctl --system</code> command.
+        </p></li></ul></div><p>
+       For further information, refer to
+       <a class="link" href="https://documentation.suse.com/sles/html/SLES-all/cha-tuning-systemd-coredump.html" target="_blank">https://documentation.suse.com/sles/html/SLES-all/cha-tuning-systemd-coredump.html</a>.
+      </p></dd></dl></div></section></section><section class="sect1" id="sec-available-image-flavors" data-id-title="Available image flavors"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2 </span><span class="title-name">Available image flavors</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-available-image-flavors">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Ready-to-use SLES Minimal VM images are available for the x86_64 architecture only.
+   You can download SLES Minimal VM for the following deployment targets:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Fully Virtual SLES Minimal VM for KVM and Xen (FV/HVM)
+    </p></li><li class="listitem"><p>
+     SLES Minimal VM for VMware
+    </p></li><li class="listitem"><p>
+     SLES Minimal VM for Microsoft Hyper-V
+    </p></li><li class="listitem"><p>
+     SLES Minimal VM for OpenStack
+    </p></li><li class="listitem"><p>
+     Paravirtual SLES Minimal VM for Xen (PV)
+    </p></li></ul></div><div id="id-1.13.5.3.4" data-id-title="Supported virtualization hosts (hypervisors)" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Supported virtualization hosts (hypervisors)</div><p>
+    SLES Minimal VM can run as a virtualization guest on the same virtualization hosts
+    (hypervisors) as SUSE Linux Enterprise Server.
+   </p></div><section class="sect2" id="sec-openstack-cloud" data-id-title="SLES Minimal VM Image for OpenStack Cloud"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.1 </span><span class="title-name">SLES Minimal VM Image for OpenStack Cloud</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-openstack-cloud">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    SLES Minimal VM for OpenStack Cloud is an image designed specifically for use in an
+    OpenStack environment.
+   </p><p>
+    Instead of the <span class="package">JeOS Firstboot</span> tool, SLES Minimal VM for OpenStack
+    Cloud uses
+    <a class="link" href="https://cloudinit.readthedocs.io/en/latest/#" target="_blank">cloud-init</a>
+    for configuring the image. The image also uses the XFS file system and the
+    following kernel configuration:
+   </p><div class="verbatim-wrap"><pre class="screen">"plymouth.enable=0 console=ttyS0,115200 console=tty0 net.ifnames=0"</pre></div><p>
+    This means that the image ships without packages required by
+    <span class="package">JeOS Firstboot</span> and Btrfs.
+   </p><p>
+    SLES Minimal VM for OpenStack Cloud includes several OpenStack-related packages,
+    such as <span class="package">cloud-init</span>,
+    <span class="package">cloud-init-config-suse</span>, and <span class="package">xfsprogs</span>.
+   </p><section class="sect3" id="sec-cloud-init-intro" data-id-title="cloud-init basics"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">2.1.1 </span><span class="title-name"><code class="command">cloud-init</code> basics</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-cloud-init-intro">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     <code class="command">cloud-init</code> automatically applies custom configuration
+     to running instances. The tool features a wide range of configuration
+     modules, and it can execute specific commands in the image during the boot
+     phase.
+    </p><p>
+     The default configuration for cloud-init is part of the
+     <span class="package">cloud-init-config-suse</span> package, and it is located in
+     the <code class="filename">/etc/cloud/cloud.cfg</code> directory.
+    </p></section><section class="sect3" id="sec-cloud-init-config-examples" data-id-title="cloud-init configuration examples"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">2.1.2 </span><span class="title-name">cloud-init configuration examples</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-cloud-init-config-examples">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By default, cloud-init does not set a root password. Instead, it creates a user account called <code class="systemitem">sles</code> that acts as the default user and has sudo rights. Use the following example to create passwords for both users.
+    </p><div class="example" id="cloud-init-passwd" data-id-title="Add passwords"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 1: </span><span class="title-name">Add passwords </span></span><a title="Permalink" class="permalink" href="article-minimal-vm.html#cloud-init-passwd">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#cloud-config
+chpasswd:
+  list: |
+    root:$6$SalTsaLt$miA./Q1i1mKR0sYicn/yAzNHP6y32JjOdVIn5agAiaEKaSaZdC3X6CVTW2d/xslQfevCc20teWLurq12x8mbe1
+    sles:$6$SalTsaLt$.cuqsgjNGxHJZSLmVqkI/j9.kWIiUQHqjlRswbHjTw9hIXdPomgey2DHzmp6Ho6wgqIKz3ufbOIKdQCnQHPSA1
+  expire: False</pre></div></div></div><p>
+     To create the SHA-512 hashes used in the example, run the command:
+     <code class="command">openssl passwd -6 -salt SalTsaLt
+     <em class="replaceable">PASSWORD</em></code>.
+    </p><div id="id-1.13.5.3.5.8.5" data-id-title="User passwords" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: User passwords</div><p>
+      To avoid potential security risks, do not use passwords in production
+      environments. Even when using hashed passwords, you are exposed to
+      dictionary attacks. For better security, use SSH authentication instead
+      of passwords.
+     </p></div><p>
+     When creating users, keep in mind that logging in with a password is
+     disabled by default, and that the newly created users do not have sudo
+     rights.
+    </p><p>
+     The following examples show configurations for creating various users.
+    </p><div class="example" id="cloud-init-user1" data-id-title="New user with password and sudo"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 2: </span><span class="title-name">New user with password and sudo </span></span><a title="Permalink" class="permalink" href="article-minimal-vm.html#cloud-init-user1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#cloud-config
+users:
+  - default
+  - name: <em class="replaceable">USER</em>
+    shell: /bin/bash
+    groups: users
+    # lock_passwd: Disable password login. Defaults to true
+    lock_passwd: false
+    passwd: $6$SalTsaLt$.cuqsgjNGxHJZSLmVqkI/j9.kWIiUQHqjlRswbHjTw9hIXdPomgey2DHzmp6Ho6wgqIKz3ufbOIKdQCnQHPSA1
+    sudo: ALL=(ALL) NOPASSWD:ALL</pre></div></div></div><div class="example" id="cloud-init-user2" data-id-title="New user with SSH keys and sudo"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3: </span><span class="title-name">New user with SSH keys and sudo </span></span><a title="Permalink" class="permalink" href="article-minimal-vm.html#cloud-init-user2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#cloud-config
+users:
+  - name: <em class="replaceable">USER</em>
+    shell: /bin/bash
+    groups: users
+    ssh_import_id: None
+    lock_passwd: true
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - <em class="replaceable">SSH_PUBLIC_KEY_1</em>
+      - <em class="replaceable">SSH_PUBLIC_KEY_2</em></pre></div></div></div><p>
+     To connect and register with the SUMA, RMT, or SUSEConnect, use the
+     <code class="literal">runcmd</code> module to run the desired commands, for example:
+    </p><div class="verbatim-wrap"><pre class="screen">#cloud-config
+runcmd:
+  - SUSEConnect -r <em class="replaceable">REGISTRATION_CODE</em> -e <em class="replaceable">EMAIL_ADDRESS</em></pre></div><p>
+     For further information, see
+     <a class="link" href="https://documentation.suse.com/sles/html/SLES-all/cha-register-sle.html" target="_blank">https://documentation.suse.com/sles/html/SLES-all/cha-register-sle.html</a>.
+    </p><p>
+     For RMT, the configuration is as follows:
+    </p><div class="verbatim-wrap"><pre class="screen">#cloud-config
+runcmd:
+  - curl http://<em class="replaceable">RMT_SERVER</em>/tools/rmt-client-setup \ --output rmt-client-setup
+  - sh rmt-client-setup https://<em class="replaceable">RMT_SERVER/</em></pre></div><p>
+     For further information, see
+     <a class="link" href="https://documentation.suse.com/sles/html/SLES-all/cha-rmt-client.html" target="_blank">https://documentation.suse.com/sles/html/SLES-all/cha-rmt-client.html</a>.
+    </p><p>
+     For SUMA, the configuration is as follows:
+    </p><div class="verbatim-wrap"><pre class="screen">#cloud-config
+runcmd:
+  - curl -O http://suma01/pub/bootstrap/bootstrap.sh
+  - /bin/bash bootstrap.sh</pre></div><p>
+     For further information, see
+     <a class="link" href="https://documentation.suse.com/external-tree/en-us/suma/4.0/suse-manager/client-configuration/registration-bootstrap.html" target="_blank">https://documentation.suse.com/external-tree/en-us/suma/4.0/suse-manager/client-configuration/registration-bootstrap.html</a>.
+    </p><p>
+     Finally, the following example shows a configuration that installs a
+     package and starts a service during the first boot.
+    </p><div class="verbatim-wrap"><pre class="screen">#cloud-config
+packages:
+  - qemu-guest-agent
+runcmd:
+  - systemctl enable qemu-guest-agent.service
+  - systemctl start --no-block qemu-guest-agent.service</pre></div></section></section><section class="sect2" id="sec-kvmxen-xen" data-id-title="KVM/Xen and Xen flavor"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.2 </span><span class="title-name">KVM/Xen and Xen flavor</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-kvmxen-xen">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The SLES Minimal VM image for KVM/Xen and Xen ships with the following
+    packages:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      xen-tools-domU
+     </p></li><li class="listitem"><p>
+      grub2-x86_64-xen
+     </p></li><li class="listitem"><p>
+      xen-libs
+     </p></li></ul></div></section><section class="sect2" id="sec-ms-hyperv" data-id-title="Microsoft Hyper-V flavor"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.3 </span><span class="title-name">Microsoft Hyper-V flavor</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-ms-hyperv">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The SLES Minimal VM image for Microsoft Hyper-V ships with <span class="package">hyper-v</span>.
+   </p></section><section class="sect2" id="sec-vmware" data-id-title="VMware flavor"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.4 </span><span class="title-name">VMware flavor</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-vmware">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The SLES Minimal VM image for VMware ships with <span class="package">open-vm-tools</span>.
+   </p></section></section><section class="sect1" id="sec-minvm-kvm" data-id-title="Installing and running SLES Minimal VM on KVM"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">Installing and running SLES Minimal VM on KVM</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-minvm-kvm">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Provided you have KVM installed on your local machine, you can use a
+   ready-made SLES Minimal VM image to create a virtual machine. This allows you to
+   experiment with SLES Minimal VM safely.
+  </p><p>
+   Download a 60-day trial SLES Minimal VM image for KVM at
+   <a class="link" href="https://www.suse.com/products/server/jeos/" target="_blank">https://www.suse.com/products/server/jeos/</a>.
+  </p><p>
+   Refer to the following procedure to create a SLES Minimal VM virtual machine in
+   KVM.
+  </p><div class="procedure" id="id-1.13.5.4.5" data-id-title="Creating a SLES Minimal VM virtual machine"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 12: </span><span class="title-name">Creating a SLES Minimal VM virtual machine </span></span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.4.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Launch Virtual Machine Manager and choose
+     <span class="guimenu">File</span> › <span class="guimenu">New Virtual
+     Machine</span>.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Import existing disk image</span> and click
+     <span class="guimenu">Forward</span>.
+    </p></li><li class="step"><p>
+     Click the <span class="guimenu">Browse</span> button next to the <span class="guimenu">Provide
+     the existing storage path</span> field.
+    </p></li><li class="step"><p>
+     Click the <span class="guimenu">Add Pool</span> button, and in the <span class="guimenu">Create
+     Storage Volume</span> dialog box, give the new pool a name, and select
+     <span class="guimenu">dir: Filesystem Directory</span> from the
+     <span class="guimenu">Type</span> drop-down list. Leave the <span class="guimenu">Target Path</span> option at its default value. Click <span class="guimenu">Finish</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/minvm_add_pool.png"><img src="images/minvm_add_pool.png" width="80%" alt="Add a new storage pool" title="Add a new storage pool"/></a></div></div></li><li class="step"><p>
+     Select the created storage pool, click the <span class="guimenu">Browse Local</span> button, and select the SLES Minimal VM qcow2
+     image. Specify the correct operating system in the <span class="guimenu">Choose the operating system you are installing</span> field, and click <span class="guimenu">Forward</span>.
+    </p></li><li class="step"><p>
+     When prompted, set the RAM value to 1024, and the number of CPUs to 1.
+     Click <span class="guimenu">Forward</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/minvm_ram_cpu.png"><img src="images/minvm_ram_cpu.png" width="80%" alt="Specify RAM and CPU settings" title="Specify RAM and CPU settings"/></a></div></div></li><li class="step"><p>
+     Give the new virtual machine a name (for example, <code class="literal">Minimal
+     VM</code>) and click <span class="guimenu">Finish</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/minvm_finish.png"><img src="images/minvm_finish.png" width="80%" alt="SLES Minimal VM virtual machine configuration" title="SLES Minimal VM virtual machine configuration"/></a></div></div></li><li class="step"><p>
+     If prompted to start the virtual network, click <span class="guimenu">Yes</span>.
+    </p></li></ol></div></div><p>
+   After the system is booted, JeOS Firstboot guides you through the initial
+   system setup.
+  </p><div class="procedure" id="pro-rpi-firstboot-minvm"><div class="procedure-contents"><div id="id-1.13.5.4.7.1" data-id-title="Change locale" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Change locale</div><p>
+     The SLES Minimal VM image comes with the <code class="literal">en_US</code> locale only. You
+     can install and select the desired system locale after the setup is
+     completed by installing the <span class="package">glibc-locale</span> package and
+     running the <code class="command">localectl set-locale
+     LANG=<em class="replaceable">LOCALE</em></code> command (replace
+     <em class="replaceable">LOCALE</em> with the desired language locale, for
+     example, <code class="literal">de_DE.UTF-8</code>).
+    </p></div><ol class="procedure" type="1"><li class="step"><p>
+     As the first step, you are prompted to select the appropriate keyboard
+     layout using the keyboard selection dialog.
+    </p></li><li class="step"><p>
+     Next, read and accept the License Agreement. You cannot proceed without
+     accepting the license agreement.
+    </p></li><li class="step"><p>
+     Specify the desired time zone.
+    </p></li><li class="step"><p>
+     When prompted, specify and confirm the desired root password.
+    </p></li><li class="step"><p>
+     As the last step, you are instructed to register your system. If you only
+     plan to test SLES Minimal VM, you can skip registration.
+    </p></li><li class="step"><p>
+     After the initial configuration is completed, you can log in to the system
+     as <code class="literal">root</code>, using the password you specified during the
+     setup procedure.
+    </p></li></ol></div></div><div id="id-1.13.5.4.8" data-id-title="Installing product patches after first boot" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Installing product patches after first boot</div><p>
+    After SLES Minimal VM has been successfully installed and registered, we highly
+    recommend to install the latest available online updates.
+   </p></div></section><section class="sect1" id="sec-minvm-kvm-combustion" data-id-title="Using Combustion with SLES Minimal VM"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4 </span><span class="title-name">Using Combustion with SLES Minimal VM</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#sec-minvm-kvm-combustion">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_minimal-vm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+SLES Minimal VM comes with the Combustion configuration tool that makes it possible to configure the system on first boot using a dedicated script file. Using Combustion instead of JeOS Firstboot allows you to automatically apply identical configuration to multiple SLES Minimal VM instances.
+  </p><p> 
+    To trigger the Combustion tool in KVM, use the <code class="command">qemu</code> command with the <em class="parameter">fw_cfg</em> parameter that specifies the location of the <code class="filename">script</code> file.
+  </p><p>
+    To see how this works in practice, you can use a simple Combustion script that automatically adds the <code class="systemitem">root</code> user to the SLES Minimal VM instance running in QEMU.
+  </p><p>
+      First, generate a hash of the desired <code class="systemitem">root</code> password. This can be done using the <code class="command">openssl passwd -6</code> command. Add the following instruction to the <code class="filename">script</code> file (replace the example hash with the generated one):
+     </p><div class="verbatim-wrap"><pre class="screen">echo 'root:$5$.wn2BZHlEJ5R3B1C$TAHEchlU.h2tvfOpOki54NaHpGYKwdNhjaBuSpDotD7' | chpasswd -e</pre></div><p>
+    Run a new virtual machine based on SLES Minimal VM in QEMU using the following command (replace <em class="replaceable">IMAGE</em> and <em class="replaceable">SCRIPT</em> with the path name of the <code class="filename">.qcow2</code> image and the <code class="filename">script</code> file):
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>qemu-system-x86_64 \
+  -enable-kvm \
+  -m 1G \
+  -smp 1 \
+  -drive if=virtio,format=qcow2,file=<em class="replaceable">IMAGE</em>.qcow2 \
+  -nographic \
+  -netdev user,id=net0,hostfwd=tcp::2222-:22 \
+  -device virtio-net-pci,netdev=net0 \
+  -fw_cfg name=opt/org.opensuse.combustion/script,file=<em class="replaceable">SCRIPT</em></pre></div><p>
+    Keep in mind that when Combustion is running, it does not provide any feedback or output. The only indication that the configuration has been performed correctly is the fact that the system does not launch JeOS Firstboot tool, and you can log in to the system as <code class="systemitem">root</code> using the password you generated earlier.
+  </p></section><section class="sect1" id="id-1.13.5.6" data-id-title="Legal notice"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5 </span><span class="title-name">Legal notice</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.6">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_copyright_quick.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Copyright© 2006–
+2024
+
+  SUSE LLC and contributors. All rights reserved.
+ </p><p>
+  Permission is granted to copy, distribute and/or modify this document under
+  the terms of the GNU Free Documentation License, Version 1.2 or (at your
+  option) version 1.3; with the Invariant Section being this copyright notice
+  and license. A copy of the license version 1.2 is included in the section
+  entitled <span class="quote">“<span class="quote">GNU Free Documentation License</span>”</span>.
+ </p><p>
+  For SUSE trademarks, see
+  <a class="link" href="https://www.suse.com/company/legal/" target="_blank">https://www.suse.com/company/legal/</a>. All other
+  third-party trademarks are the property of their respective owners. Trademark
+  symbols (®, ™ etc.) denote trademarks of SUSE and its affiliates.
+  Asterisks (*) denote third-party trademarks.
+ </p><p>
+  All information found in this book has been compiled with utmost attention to
+  detail. However, this does not guarantee complete accuracy. Neither SUSE LLC,
+  its affiliates, the authors, nor the translators shall be held liable for
+  possible errors or the consequences thereof.
+ </p></section><section class="sect1" id="id-1.13.5.7" data-id-title="GNU Free Documentation License"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6 </span><span class="title-name">GNU Free Documentation License</span></span> <a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc. 51 Franklin St,
+  Fifth Floor, Boston, MA 02110-1301 USA. Everyone is permitted to copy and
+  distribute verbatim copies of this license document, but changing it is not
+  allowed.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.4"><span class="name">
+    0. PREAMBLE
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.4">#</a></h5></div><p>
+  The purpose of this License is to make a manual, textbook, or other
+  functional and useful document "free" in the sense of freedom: to assure
+  everyone the effective freedom to copy and redistribute it, with or without
+  modifying it, either commercially or non-commercially. Secondarily, this
+  License preserves for the author and publisher a way to get credit for their
+  work, while not being considered responsible for modifications made by
+  others.
+ </p><p>
+  This License is a kind of "copyleft", which means that derivative works of
+  the document must themselves be free in the same sense. It complements the
+  GNU General Public License, which is a copyleft license designed for free
+  software.
+ </p><p>
+  We have designed this License to use it for manuals for free software,
+  because free software needs free documentation: a free program should come
+  with manuals providing the same freedoms that the software does. But this
+  License is not limited to software manuals; it can be used for any textual
+  work, regardless of subject matter or whether it is published as a printed
+  book. We recommend this License principally for works whose purpose is
+  instruction or reference.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.8"><span class="name">
+    1. APPLICABILITY AND DEFINITIONS
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.8">#</a></h5></div><p>
+  This License applies to any manual or other work, in any medium, that
+  contains a notice placed by the copyright holder saying it can be distributed
+  under the terms of this License. Such a notice grants a world-wide,
+  royalty-free license, unlimited in duration, to use that work under the
+  conditions stated herein. The "Document", below, refers to any such manual or
+  work. Any member of the public is a licensee, and is addressed as "you". You
+  accept the license if you copy, modify or distribute the work in a way
+  requiring permission under copyright law.
+ </p><p>
+  A "Modified Version" of the Document means any work containing the Document
+  or a portion of it, either copied verbatim, or with modifications and/or
+  translated into another language.
+ </p><p>
+  A "Secondary Section" is a named appendix or a front-matter section of the
+  Document that deals exclusively with the relationship of the publishers or
+  authors of the Document to the Document's overall subject (or to related
+  matters) and contains nothing that could fall directly within that overall
+  subject. (Thus, if the Document is in part a textbook of mathematics, a
+  Secondary Section may not explain any mathematics.) The relationship could be
+  a matter of historical connection with the subject or with related matters,
+  or of legal, commercial, philosophical, ethical or political position
+  regarding them.
+ </p><p>
+  The "Invariant Sections" are certain Secondary Sections whose titles are
+  designated, as being those of Invariant Sections, in the notice that says
+  that the Document is released under this License. If a section does not fit
+  the above definition of Secondary then it is not allowed to be designated as
+  Invariant. The Document may contain zero Invariant Sections. If the Document
+  does not identify any Invariant Sections then there are none.
+ </p><p>
+  The "Cover Texts" are certain short passages of text that are listed, as
+  Front-Cover Texts or Back-Cover Texts, in the notice that says that the
+  Document is released under this License. A Front-Cover Text may be at most 5
+  words, and a Back-Cover Text may be at most 25 words.
+ </p><p>
+  A "Transparent" copy of the Document means a machine-readable copy,
+  represented in a format whose specification is available to the general
+  public, that is suitable for revising the document straightforwardly with
+  generic text editors or (for images composed of pixels) generic paint
+  programs or (for drawings) some widely available drawing editor, and that is
+  suitable for input to text formatters or for automatic translation to a
+  variety of formats suitable for input to text formatters. A copy made in an
+  otherwise Transparent file format whose markup, or absence of markup, has
+  been arranged to thwart or discourage subsequent modification by readers is
+  not Transparent. An image format is not Transparent if used for any
+  substantial amount of text. A copy that is not "Transparent" is called
+  "Opaque".
+ </p><p>
+  Examples of suitable formats for Transparent copies include plain ASCII
+  without markup, Texinfo input format, LaTeX input format, SGML or XML using a
+  publicly available DTD, and standard-conforming simple HTML, PostScript or
+  PDF designed for human modification. Examples of transparent image formats
+  include PNG, XCF and JPG. Opaque formats include proprietary formats that can
+  be read and edited only by proprietary word processors, SGML or XML for which
+  the DTD and/or processing tools are not generally available, and the
+  machine-generated HTML, PostScript or PDF produced by some word processors
+  for output purposes only.
+ </p><p>
+  The "Title Page" means, for a printed book, the title page itself, plus such
+  following pages as are needed to hold, legibly, the material this License
+  requires to appear in the title page. For works in formats which do not have
+  any title page as such, "Title Page" means the text near the most prominent
+  appearance of the work's title, preceding the beginning of the body of the
+  text.
+ </p><p>
+  A section "Entitled XYZ" means a named subunit of the Document whose title
+  either is precisely XYZ or contains XYZ in parentheses following text that
+  translates XYZ in another language. (Here XYZ stands for a specific section
+  name mentioned below, such as "Acknowledgements", "Dedications",
+  "Endorsements", or "History".) To "Preserve the Title" of such a section when
+  you modify the Document means that it remains a section "Entitled XYZ"
+  according to this definition.
+ </p><p>
+  The Document may include Warranty Disclaimers next to the notice which states
+  that this License applies to the Document. These Warranty Disclaimers are
+  considered to be included by reference in this License, but only as regards
+  disclaiming warranties: any other implication that these Warranty Disclaimers
+  may have is void and has no effect on the meaning of this License.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.19"><span class="name">
+    2. VERBATIM COPYING
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.19">#</a></h5></div><p>
+  You may copy and distribute the Document in any medium, either commercially
+  or non-commercially, provided that this License, the copyright notices, and
+  the license notice saying this License applies to the Document are reproduced
+  in all copies, and that you add no other conditions whatsoever to those of
+  this License. You may not use technical measures to obstruct or control the
+  reading or further copying of the copies you make or distribute. However, you
+  may accept compensation in exchange for copies. If you distribute a large
+  enough number of copies you must also follow the conditions in section 3.
+ </p><p>
+  You may also lend copies, under the same conditions stated above, and you may
+  publicly display copies.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.22"><span class="name">
+    3. COPYING IN QUANTITY
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.22">#</a></h5></div><p>
+  If you publish printed copies (or copies in media that commonly have printed
+  covers) of the Document, numbering more than 100, and the Document's license
+  notice requires Cover Texts, you must enclose the copies in covers that
+  carry, clearly and legibly, all these Cover Texts: Front-Cover Texts on the
+  front cover, and Back-Cover Texts on the back cover. Both covers must also
+  clearly and legibly identify you as the publisher of these copies. The front
+  cover must present the full title with all words of the title equally
+  prominent and visible. You may add other material on the covers in addition.
+  Copying with changes limited to the covers, as long as they preserve the
+  title of the Document and satisfy these conditions, can be treated as
+  verbatim copying in other respects.
+ </p><p>
+  If the required texts for either cover are too voluminous to fit legibly, you
+  should put the first ones listed (as many as fit reasonably) on the actual
+  cover, and continue the rest onto adjacent pages.
+ </p><p>
+  If you publish or distribute Opaque copies of the Document numbering more
+  than 100, you must either include a machine-readable Transparent copy along
+  with each Opaque copy, or state in or with each Opaque copy a
+  computer-network location from which the general network-using public has
+  access to download using public-standard network protocols a complete
+  Transparent copy of the Document, free of added material. If you use the
+  latter option, you must take reasonably prudent steps, when you begin
+  distribution of Opaque copies in quantity, to ensure that this Transparent
+  copy will remain thus accessible at the stated location until at least one
+  year after the last time you distribute an Opaque copy (directly or through
+  your agents or retailers) of that edition to the public.
+ </p><p>
+  It is requested, but not required, that you contact the authors of the
+  Document well before redistributing any large number of copies, to give them
+  a chance to provide you with an updated version of the Document.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.27"><span class="name">
+    4. MODIFICATIONS
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.27">#</a></h5></div><p>
+  You may copy and distribute a Modified Version of the Document under the
+  conditions of sections 2 and 3 above, provided that you release the Modified
+  Version under precisely this License, with the Modified Version filling the
+  role of the Document, thus licensing distribution and modification of the
+  Modified Version to whoever possesses a copy of it. In addition, you must do
+  these things in the Modified Version:
+ </p><div class="orderedlist"><ol class="orderedlist" type="A"><li class="listitem"><p>
+    Use in the Title Page (and on the covers, if any) a title distinct from
+    that of the Document, and from those of previous versions (which should, if
+    there were any, be listed in the History section of the Document). You may
+    use the same title as a previous version if the original publisher of that
+    version gives permission.
+   </p></li><li class="listitem"><p>
+    List on the Title Page, as authors, one or more persons or entities
+    responsible for authorship of the modifications in the Modified Version,
+    together with at least five of the principal authors of the Document (all
+    of its principal authors, if it has fewer than five), unless they release
+    you from this requirement.
+   </p></li><li class="listitem"><p>
+    State on the Title page the name of the publisher of the Modified Version,
+    as the publisher.
+   </p></li><li class="listitem"><p>
+    Preserve all the copyright notices of the Document.
+   </p></li><li class="listitem"><p>
+    Add an appropriate copyright notice for your modifications adjacent to the
+    other copyright notices.
+   </p></li><li class="listitem"><p>
+    Include, immediately after the copyright notices, a license notice giving
+    the public permission to use the Modified Version under the terms of this
+    License, in the form shown in the Addendum below.
+   </p></li><li class="listitem"><p>
+    Preserve in that license notice the full lists of Invariant Sections and
+    required Cover Texts given in the Document's license notice.
+   </p></li><li class="listitem"><p>
+    Include an unaltered copy of this License.
+   </p></li><li class="listitem"><p>
+    Preserve the section Entitled "History", Preserve its Title, and add to it
+    an item stating at least the title, year, new authors, and publisher of the
+    Modified Version as given on the Title Page. If there is no section
+    Entitled "History" in the Document, create one stating the title, year,
+    authors, and publisher of the Document as given on its Title Page, then add
+    an item describing the Modified Version as stated in the previous sentence.
+   </p></li><li class="listitem"><p>
+    Preserve the network location, if any, given in the Document for public
+    access to a Transparent copy of the Document, and likewise the network
+    locations given in the Document for previous versions it was based on.
+    These may be placed in the "History" section. You may omit a network
+    location for a work that was published at least four years before the
+    Document itself, or if the original publisher of the version it refers to
+    gives permission.
+   </p></li><li class="listitem"><p>
+    For any section Entitled "Acknowledgements" or "Dedications", Preserve the
+    Title of the section, and preserve in the section all the substance and
+    tone of each of the contributor acknowledgements and/or dedications given
+    therein.
+   </p></li><li class="listitem"><p>
+    Preserve all the Invariant Sections of the Document, unaltered in their
+    text and in their titles. Section numbers or the equivalent are not
+    considered part of the section titles.
+   </p></li><li class="listitem"><p>
+    Delete any section Entitled "Endorsements". Such a section may not be
+    included in the Modified Version.
+   </p></li><li class="listitem"><p>
+    Do not retitle any existing section to be Entitled "Endorsements" or to
+    conflict in title with any Invariant Section.
+   </p></li><li class="listitem"><p>
+    Preserve any Warranty Disclaimers.
+   </p></li></ol></div><p>
+  If the Modified Version includes new front-matter sections or appendices that
+  qualify as Secondary Sections and contain no material copied from the
+  Document, you may at your option designate some or all of these sections as
+  invariant. To do this, add their titles to the list of Invariant Sections in
+  the Modified Version's license notice. These titles must be distinct from any
+  other section titles.
+ </p><p>
+  You may add a section Entitled "Endorsements", provided it contains nothing
+  but endorsements of your Modified Version by various parties--for example,
+  statements of peer review or that the text has been approved by an
+  organization as the authoritative definition of a standard.
+ </p><p>
+  You may add a passage of up to five words as a Front-Cover Text, and a
+  passage of up to 25 words as a Back-Cover Text, to the end of the list of
+  Cover Texts in the Modified Version. Only one passage of Front-Cover Text and
+  one of Back-Cover Text may be added by (or through arrangements made by) any
+  one entity. If the Document already includes a cover text for the same cover,
+  previously added by you or by arrangement made by the same entity you are
+  acting on behalf of, you may not add another; but you may replace the old
+  one, on explicit permission from the previous publisher that added the old
+  one.
+ </p><p>
+  The author(s) and publisher(s) of the Document do not by this License give
+  permission to use their names for publicity for or to assert or imply
+  endorsement of any Modified Version.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.34"><span class="name">
+    5. COMBINING DOCUMENTS
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.34">#</a></h5></div><p>
+  You may combine the Document with other documents released under this
+  License, under the terms defined in section 4 above for modified versions,
+  provided that you include in the combination all of the Invariant Sections of
+  all of the original documents, unmodified, and list them all as Invariant
+  Sections of your combined work in its license notice, and that you preserve
+  all their Warranty Disclaimers.
+ </p><p>
+  The combined work need only contain one copy of this License, and multiple
+  identical Invariant Sections may be replaced with a single copy. If there are
+  multiple Invariant Sections with the same name but different contents, make
+  the title of each such section unique by adding at the end of it, in
+  parentheses, the name of the original author or publisher of that section if
+  known, or else a unique number. Make the same adjustment to the section
+  titles in the list of Invariant Sections in the license notice of the
+  combined work.
+ </p><p>
+  In the combination, you must combine any sections Entitled "History" in the
+  various original documents, forming one section Entitled "History"; likewise
+  combine any sections Entitled "Acknowledgements", and any sections Entitled
+  "Dedications". You must delete all sections Entitled "Endorsements".
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.38"><span class="name">
+    6. COLLECTIONS OF DOCUMENTS
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.38">#</a></h5></div><p>
+  You may make a collection consisting of the Document and other documents
+  released under this License, and replace the individual copies of this
+  License in the various documents with a single copy that is included in the
+  collection, provided that you follow the rules of this License for verbatim
+  copying of each of the documents in all other respects.
+ </p><p>
+  You may extract a single document from such a collection, and distribute it
+  individually under this License, provided you insert a copy of this License
+  into the extracted document, and follow this License in all other respects
+  regarding verbatim copying of that document.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.41"><span class="name">
+    7. AGGREGATION WITH INDEPENDENT WORKS
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.41">#</a></h5></div><p>
+  A compilation of the Document or its derivatives with other separate and
+  independent documents or works, in or on a volume of a storage or
+  distribution medium, is called an "aggregate" if the copyright resulting from
+  the compilation is not used to limit the legal rights of the compilation's
+  users beyond what the individual works permit. When the Document is included
+  in an aggregate, this License does not apply to the other works in the
+  aggregate which are not themselves derivative works of the Document.
+ </p><p>
+  If the Cover Text requirement of section 3 is applicable to these copies of
+  the Document, then if the Document is less than one half of the entire
+  aggregate, the Document's Cover Texts may be placed on covers that bracket
+  the Document within the aggregate, or the electronic equivalent of covers if
+  the Document is in electronic form. Otherwise they must appear on printed
+  covers that bracket the whole aggregate.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.44"><span class="name">
+    8. TRANSLATION
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.44">#</a></h5></div><p>
+  Translation is considered a kind of modification, so you may distribute
+  translations of the Document under the terms of section 4. Replacing
+  Invariant Sections with translations requires special permission from their
+  copyright holders, but you may include translations of some or all Invariant
+  Sections in addition to the original versions of these Invariant Sections.
+  You may include a translation of this License, and all the license notices in
+  the Document, and any Warranty Disclaimers, provided that you also include
+  the original English version of this License and the original versions of
+  those notices and disclaimers. In case of a disagreement between the
+  translation and the original version of this License or a notice or
+  disclaimer, the original version will prevail.
+ </p><p>
+  If a section in the Document is Entitled "Acknowledgements", "Dedications",
+  or "History", the requirement (section 4) to Preserve its Title (section 1)
+  will typically require changing the actual title.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.47"><span class="name">
+    9. TERMINATION
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.47">#</a></h5></div><p>
+  You may not copy, modify, sublicense, or distribute the Document except as
+  expressly provided for under this License. Any other attempt to copy, modify,
+  sublicense or distribute the Document is void, and will automatically
+  terminate your rights under this License. However, parties who have received
+  copies, or rights, from you under this License will not have their licenses
+  terminated so long as such parties remain in full compliance.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.49"><span class="name">
+    10. FUTURE REVISIONS OF THIS LICENSE
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.49">#</a></h5></div><p>
+  The Free Software Foundation may publish new, revised versions of the GNU
+  Free Documentation License from time to time. Such new versions will be
+  similar in spirit to the present version, but may differ in detail to address
+  new problems or concerns. See
+  <a class="link" href="https://www.gnu.org/copyleft/" target="_blank">https://www.gnu.org/copyleft/</a>.
+ </p><p>
+  Each version of the License is given a distinguishing version number. If the
+  Document specifies that a particular numbered version of this License "or any
+  later version" applies to it, you have the option of following the terms and
+  conditions either of that specified version or of any later version that has
+  been published (not as a draft) by the Free Software Foundation. If the
+  Document does not specify a version number of this License, you may choose
+  any version ever published (not as a draft) by the Free Software Foundation.
+ </p><div class="sect4 bridgehead"><h5 class="title legal" id="id-1.13.5.7.52"><span class="name">
+    ADDENDUM: How to use this License for your documents
+  </span><a title="Permalink" class="permalink" href="article-minimal-vm.html#id-1.13.5.7.52">#</a></h5></div><div class="verbatim-wrap"><pre class="screen">Copyright (c) YEAR YOUR NAME.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled “GNU
+Free Documentation License”.</pre></div><p>
+  If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
+  replace the “with...Texts.” line with this:
+ </p><div class="verbatim-wrap"><pre class="screen">with the Invariant Sections being LIST THEIR TITLES, with the
+Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.</pre></div><p>
+  If you have Invariant Sections without Cover Texts, or some other combination
+  of the three, merge those two alternatives to suit the situation.
+ </p><p>
+  If your document contains nontrivial examples of program code, we recommend
+  releasing these examples in parallel under your choice of free software
+  license, such as the GNU General Public License, to permit their use in free
+  software.
+ </p></section></section></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="article-minimal-vm.html#sec-introduction"><span class="title-number">1 </span><span class="title-name">Introduction</span></a></span><ul><li><span class="sect2"><a href="article-minimal-vm.html#sec-system-requirements"><span class="title-number">1.1 </span><span class="title-name">System requirements</span></a></span></li><li><span class="sect2"><a href="article-minimal-vm.html#sec-minvm-sles-diff"><span class="title-number">1.2 </span><span class="title-name">Differences between SLES Minimal VM and SUSE Linux Enterprise Server</span></a></span></li></ul></li><li><span class="sect1"><a href="article-minimal-vm.html#sec-available-image-flavors"><span class="title-number">2 </span><span class="title-name">Available image flavors</span></a></span><ul><li><span class="sect2"><a href="article-minimal-vm.html#sec-openstack-cloud"><span class="title-number">2.1 </span><span class="title-name">SLES Minimal VM Image for OpenStack Cloud</span></a></span></li><li><span class="sect2"><a href="article-minimal-vm.html#sec-kvmxen-xen"><span class="title-number">2.2 </span><span class="title-name">KVM/Xen and Xen flavor</span></a></span></li><li><span class="sect2"><a href="article-minimal-vm.html#sec-ms-hyperv"><span class="title-number">2.3 </span><span class="title-name">Microsoft Hyper-V flavor</span></a></span></li><li><span class="sect2"><a href="article-minimal-vm.html#sec-vmware"><span class="title-number">2.4 </span><span class="title-name">VMware flavor</span></a></span></li></ul></li><li><span class="sect1"><a href="article-minimal-vm.html#sec-minvm-kvm"><span class="title-number">3 </span><span class="title-name">Installing and running SLES Minimal VM on KVM</span></a></span></li><li><span class="sect1"><a href="article-minimal-vm.html#sec-minvm-kvm-combustion"><span class="title-number">4 </span><span class="title-name">Using Combustion with SLES Minimal VM</span></a></span></li><li><span class="sect1"><a href="article-minimal-vm.html#id-1.13.5.6"><span class="title-number">5 </span><span class="title-name">Legal notice</span></a></span></li><li><span class="sect1"><a href="article-minimal-vm.html#id-1.13.5.7"><span class="title-number">6 </span><span class="title-name">GNU Free Documentation License</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

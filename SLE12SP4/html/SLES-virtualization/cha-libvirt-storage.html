@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP4 | Virtualization Guide | Managing Storage</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Managing Storage | SLES 12 SP4"/>
+<meta name="description" content="When managing a VM Guest on the VM Host Server itself,…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP4"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 12. Managing Storage"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Managing Storage | SLES 12 SP4"/>
+<meta property="og:description" content="When managing a VM Guest on the VM Host Server itself, you can access the complete file system of the VM Host Server to atta…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Managing Storage | SLES 12 SP4"/>
+<meta name="twitter:description" content="When managing a VM Guest on the VM Host Server itself, you can access the complete file system of the VM Host Server to atta…"/>
+<link rel="prev" href="cha-libvirt-connect.html" title="Chapter 11. Connecting and Authorizing"/><link rel="next" href="cha-libvirt-networks.html" title="Chapter 13. Managing Networks"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-libvirt.html">Managing Virtual Machines with libvirt</a><span> / </span><a class="crumb" href="cha-libvirt-storage.html">Managing Storage</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-containers-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to Linux Containers</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Supported Guests, Hosts and Features</span></a></li></ol></li><li class="active"><a href="part-virt-libvirt.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">9 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">10 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">11 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" you-are-here"><span class="title-number">12 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">13 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">15 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">16 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">17 </span><span class="title-name">libguestfs</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">18 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">19 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">20 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">21 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">23 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">24 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">25 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">26 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">27 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">28 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">29 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">30 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">31 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">32 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Tool Stacks and Libvirt framework</span></a></li><li><a href="app-virt-docupdates.html" class=" "><span class="title-number">D </span><span class="title-name">Documentation Updates</span></a></li><li><a href="bk10ape.html" class=" "><span class="title-number">E </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-libvirt-storage" data-id-title="Managing Storage"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">12 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">12 </span><span class="title-name">Managing Storage</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  When managing a VM Guest on the VM Host Server itself, you can access the complete
+  file system of the VM Host Server to attach or create virtual hard disks or to
+  attach existing images to the VM Guest. However, this is not possible when
+  managing VM Guests from a remote host. For this reason, <code class="systemitem">libvirt</code> supports
+  so called <span class="quote">“<span class="quote">Storage Pools</span>”</span>, which can be accessed from remote
+  machines.
+ </p><div id="id-1.12.4.6.4" data-id-title="CD/DVD ISO images" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: CD/DVD ISO images</div><p>
+   To be able to access CD/DVD ISO images on the VM Host Server from remote, they
+   also need to be placed in a storage pool.
+  </p></div><p>
+  <code class="systemitem">libvirt</code> knows two different types of storage: volumes and pools.
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.6.1"><span class="term">Storage Volume</span></dt><dd><p>
+     A storage volume is a storage device that can be assigned to a
+     guest—a virtual disk or a CD/DVD/floppy image. Physically (on the
+     VM Host Server) it can be a block device (a partition, a logical volume, etc.)
+     or a file.
+    </p></dd><dt id="id-1.12.4.6.6.2"><span class="term">Storage Pool</span></dt><dd><p>
+     A storage pool is a storage resource on the VM Host Server that can be used for
+     storing volumes, similar to network storage for a desktop machine.
+     Physically it can be one of the following types:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.6.2.2.2.1"><span class="term">File System Directory (<span class="guimenu">dir</span>)</span></dt><dd><p>
+        A directory for hosting image files. The files can be either one of the
+        supported disk formats (raw, qcow2, or qed), or ISO images.
+       </p></dd><dt id="id-1.12.4.6.6.2.2.2.2"><span class="term">Physical Disk Device (<span class="guimenu">disk</span>)</span></dt><dd><p>
+        Use a complete physical disk as storage. A partition is created for
+        each volume that is added to the pool.
+       </p></dd><dt id="id-1.12.4.6.6.2.2.2.3"><span class="term">Pre-Formatted Block Device (<span class="guimenu">fs</span>)</span></dt><dd><p>
+        Specify a partition to be used in the same way as a file system
+        directory pool (a directory for hosting image files). The only
+        difference to using a file system directory is that <code class="systemitem">libvirt</code> takes
+        care of mounting the device.
+       </p></dd><dt id="id-1.12.4.6.6.2.2.2.4"><span class="term">iSCSI Target (iscsi)</span></dt><dd><p>
+        Set up a pool on an iSCSI target. You need to have been logged in to
+        the volume once before, to use it with <code class="systemitem">libvirt</code>. Use the YaST
+        <span class="guimenu">iSCSI Initiator</span> to detect and log in to a
+        volume<span class="phrase">, see <span class="intraxref">Book “Storage Administration Guide”</span> for
+        details</span>. Volume creation on iSCSI pools is not supported,
+        instead each existing Logical Unit Number (LUN) represents a volume.
+        Each volume/LUN also needs a valid (empty) partition table or disk
+        label before you can use it. If missing, use <code class="command">fdisk</code>
+        to add it:
+       </p><div class="verbatim-wrap"><pre class="screen">~ # fdisk -cu /dev/disk/by-path/ip-192.168.2.100:3260-iscsi-iqn.2010-10.com.example:[...]-lun-2
+Device contains neither a valid DOS partition table, nor Sun, SGI
+or OSF disklabel
+Building a new DOS disklabel with disk identifier 0xc15cdc4e.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.</pre></div></dd><dt id="id-1.12.4.6.6.2.2.2.5"><span class="term">LVM Volume Group (logical)</span></dt><dd><p>
+        Use an LVM volume group as a pool. You may either use a predefined
+        volume group, or create a group by specifying the devices to use.
+        Storage volumes are created as partitions on the volume.
+       </p><div id="id-1.12.4.6.6.2.2.2.5.2.2" data-id-title="Deleting the LVM-Based Pool" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Deleting the LVM-Based Pool</div><p>
+         When the LVM-based pool is deleted in the Storage Manager, the volume
+         group is deleted as well. This results in a non-recoverable loss of
+         all data stored on the pool!
+        </p></div></dd><dt id="id-1.12.4.6.6.2.2.2.6"><span class="term">Multipath Devices (<span class="guimenu">mpath</span>)</span></dt><dd><p>
+        At the moment, multipathing support is limited to assigning existing
+        devices to the guests. Volume creation or configuring multipathing from
+        within <code class="systemitem">libvirt</code> is not supported.
+       </p></dd><dt id="id-1.12.4.6.6.2.2.2.7"><span class="term">Network Exported Directory (<span class="guimenu">netfs</span>)</span></dt><dd><p>
+        Specify a network directory to be used in the same way as a file system
+        directory pool (a directory for hosting image files). The only
+        difference to using a file system directory is that <code class="systemitem">libvirt</code> takes
+        care of mounting the directory. Supported protocols are NFS and
+        GlusterFS.
+       </p></dd><dt id="id-1.12.4.6.6.2.2.2.8"><span class="term">SCSI Host Adapter (<span class="guimenu">scsi</span>)</span></dt><dd><p>
+        Use an SCSI host adapter in almost the same way as an iSCSI target. We
+        recommend to use a device name from
+        <code class="filename">/dev/disk/by-*</code> rather than
+        <code class="filename">/dev/sd<em class="replaceable">X</em></code>. The
+        latter can change (for example, when adding or removing hard disks).
+        Volume creation on iSCSI pools is not supported. Instead, each existing
+        LUN (Logical Unit Number) represents a volume.
+       </p></dd></dl></div></dd></dl></div><div id="id-1.12.4.6.7" data-id-title="Security Considerations" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Security Considerations</div><p>
+   To avoid data loss or data corruption, do not attempt to use resources such
+   as LVM volume groups, iSCSI targets, etc., that are also used to build
+   storage pools on the VM Host Server. There is no need to connect to these
+   resources from the VM Host Server or to mount them on the VM Host Server—<code class="systemitem">libvirt</code>
+   takes care of this.
+  </p><p>
+   Do not mount partitions on the VM Host Server by label. Under certain
+   circumstances it is possible that a partition is labeled from within a
+   VM Guest with a name already existing on the VM Host Server.
+  </p></div><section class="sect1" id="sec-libvirt-storage-vmm" data-id-title="Managing Storage with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.1 </span><span class="title-name">Managing Storage with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-vmm">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Virtual Machine Manager provides a graphical interface—the Storage Manager—to
+   manage storage volumes and pools. To access it, either right-click a
+   connection and choose <span class="guimenu">Details</span>, or highlight a connection
+   and choose <span class="guimenu">Edit</span> › <span class="guimenu">Connection
+   Details</span>. Select the <span class="guimenu">Storage</span> tab.
+  </p><div class="informalfigure"><div class="mediaobject"><a href="images/virt_virt-manager_storage.png"><img src="images/virt_virt-manager_storage.png" width="60%" alt="Virtual Machine Manager Storage Manager" title="Virtual Machine Manager Storage Manager"/></a></div></div><section class="sect2" id="sec-libvirt-storage-vmm-addpool" data-id-title="Adding a Storage Pool"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.1 </span><span class="title-name">Adding a Storage Pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-vmm-addpool">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To add a storage pool, proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Click <span class="guimenu">Add</span> in the bottom left corner. The dialog
+      <span class="guimenu">Add a New Storage Pool</span> appears.
+     </p></li><li class="step"><p>
+      Provide a <span class="guimenu">Name</span> for the pool (consisting of
+      alphanumeric characters and <code class="literal">_-.</code>) and select a
+      <span class="guimenu">Type</span>. Proceed with <span class="guimenu">Forward</span>.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/virt_virt-manager_storage_add.png"><img src="images/virt_virt-manager_storage_add.png" width="60%" alt="Adding a new storage pool" title="Adding a new storage pool"/></a></div></div></li><li class="step"><p>
+      Specify the required details in the following window. The data that needs
+      to be entered depends on the type of pool you are creating:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.8.4.3.3.2.1"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">dir</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: Specify an existing directory.
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.2"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">disk</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: The directory that hosts the
+           devices. The default value <code class="filename">/dev</code> should usually
+           fit.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Format</span>: Format of the device's partition table.
+           Using <span class="guimenu">auto</span> should usually work. If not, get the
+           required format by running the command <code class="command">parted</code>
+           <code class="option">-l</code> on the VM Host Server.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Source Path</span>: Path to the device. It is
+           recommended to use a device name from
+           <code class="filename">/dev/disk/by-*</code> rather than the simple
+           <code class="filename">/dev/sd<em class="replaceable">X</em></code>, since the
+           latter can change (for example, when adding or removing hard disks).
+           You need to specify the path that resembles the whole disk, not a
+           partition on the disk (if existing).
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Build Pool</span>: Activating this option formats the
+           device. Use with care—all data on the device will be lost!
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.3"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">fs</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: Mount point on the VM Host Server file
+           system.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Format: </span> File system format of the device. The
+           default value <code class="literal">auto</code> should work.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Source Path</span>: Path to the device file. It is
+           recommended to use a device name from
+           <code class="filename">/dev/disk/by-*</code> rather than
+           <code class="filename">/dev/sd<em class="replaceable">X</em></code>, because
+           the latter can change (for example, when adding or removing hard
+           disks).
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.4"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">iscsi</span>
+       </span></dt><dd><p>
+         Get the necessary data by running the following command on the
+         VM Host Server:
+        </p><div class="verbatim-wrap"><pre class="screen">iscsiadm --mode node</pre></div><p>
+         It will return a list of iSCSI volumes with the following format. The
+         elements in bold text are required:
+        </p><div class="verbatim-wrap"><pre class="screen"><span class="bold"><strong>IP_ADDRESS</strong></span>:PORT,TPGT <span class="bold"><strong>TARGET_NAME_(IQN)</strong></span></pre></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: The directory containing the device
+           file. Use <code class="literal">/dev/disk/by-path</code> (default) or
+           <code class="literal">/dev/disk/by-id</code>.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Host Name</span>: Host name or IP address of the iSCSI
+           server.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Source Path</span>: The iSCSI target name (IQN).
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.5"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">logical</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: In case you use an existing volume
+           group, specify the existing device path. When building a new LVM
+           volume group, specify a device name in the <code class="filename">/dev</code>
+           directory that does not already exist.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Source Path</span>: Leave empty when using an existing
+           volume group. When creating a new one, specify its devices here.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Build Pool</span>: Only activate when creating a new
+           volume group.
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.6"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">mpath</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: Support for multipathing is
+           currently limited to making all multipath devices available.
+           Therefore, specify an arbitrary string here that will then be
+           ignored. The path is required, otherwise the XML parser will fail.
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.7"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">netfs</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: Mount point on the VM Host Server file
+           system.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Host Name</span>: IP address or host name of the server
+           exporting the network file system.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Source Path</span>: Directory on the server that is
+           being exported.
+          </p></li></ul></div></dd><dt id="id-1.12.4.6.8.4.3.3.2.8"><span class="term"><span class="bold"><strong>Type</strong></span><span class="guimenu">scsi</span>
+       </span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+           <span class="guimenu">Target Path</span>: The directory containing the device
+           file. Use <code class="literal">/dev/disk/by-path</code> (default) or
+           <code class="literal">/dev/disk/by-id</code>.
+          </p></li><li class="listitem"><p>
+           <span class="guimenu">Source Path</span>: Name of the SCSI adapter.
+          </p></li></ul></div></dd></dl></div><div id="id-1.12.4.6.8.4.3.3.3" data-id-title="File Browsing" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: File Browsing</div><p>
+       Using the file browser by clicking <span class="guimenu">Browse</span> is not
+       possible when operating from remote.
+      </p></div></li><li class="step"><p>
+      Click <span class="guimenu">Finish</span> to add the storage pool.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-libvirt-storage-vmm-manage" data-id-title="Managing Storage Pools"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.2 </span><span class="title-name">Managing Storage Pools</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-vmm-manage">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Virtual Machine Manager's Storage Manager lets you create or delete volumes in a pool. You
+    may also temporarily deactivate or permanently delete existing storage
+    pools. Changing the basic configuration of a pool is currently not
+    supported by SUSE.
+   </p><section class="sect3" id="sec-libvirt-storage-vmm-manage-pool" data-id-title="Starting, Stopping and Deleting Pools"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.2.1 </span><span class="title-name">Starting, Stopping and Deleting Pools</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-vmm-manage-pool">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The purpose of storage pools is to provide block devices located on the
+     VM Host Server that can be added to a VM Guest when managing it from remote. To
+     make a pool temporarily inaccessible from remote, click
+     <span class="guimenu">Stop</span> in the bottom left corner of the Storage Manager.
+     Stopped pools are marked with <span class="guimenu">State: Inactive</span> and are
+     grayed out in the list pane. By default, a newly created pool will be
+     automatically started <span class="guimenu">On Boot</span> of the VM Host Server.
+    </p><p>
+     To start an inactive pool and make it available from remote again, click
+     <span class="guimenu">Start</span> in the bottom left corner of the Storage Manager.
+    </p><div id="id-1.12.4.6.8.5.3.4" data-id-title="A Pools State Does not Affect Attached Volumes" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: A Pool's State Does not Affect Attached Volumes</div><p>
+      Volumes from a pool attached to VM Guests are always available,
+      regardless of the pool's state (<span class="guimenu">Active</span> (stopped) or
+      <span class="guimenu">Inactive</span> (started)). The state of the pool solely
+      affects the ability to attach volumes to a VM Guest via remote
+      management.
+     </p></div><p>
+     To permanently make a pool inaccessible, click <span class="guimenu">Delete</span>
+     in the bottom left corner of the Storage Manager. You may only delete
+     inactive pools. Deleting a pool does not physically erase its contents on
+     VM Host Server—it only deletes the pool configuration. However, you need
+     to be extra careful when deleting pools, especially when deleting LVM
+     volume group-based tools:
+    </p><div id="deleting-storage-pools" data-id-title="Deleting Storage Pools" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Deleting Storage Pools</div><p>
+      Deleting storage pools based on <span class="emphasis"><em>local</em></span> file system
+      directories, local partitions or disks has no effect on the availability
+      of volumes from these pools currently attached to VM Guests.
+     </p><p>
+      Volumes located in pools of type iSCSI, SCSI, LVM group or Network
+      Exported Directory will become inaccessible from the VM Guest if the
+      pool is deleted. Although the volumes themselves will not be deleted, the
+      VM Host Server will no longer have access to the resources.
+     </p><p>
+      Volumes on iSCSI/SCSI targets or Network Exported Directory will become
+      accessible again when creating an adequate new pool or when
+      mounting/accessing these resources directly from the host system.
+     </p><p>
+      When deleting an LVM group-based storage pool, the LVM group definition
+      will be erased and the LVM group will no longer exist on the host system.
+      The configuration is not recoverable and all volumes from this pool are
+      lost.
+     </p></div></section><section class="sect3" id="sec-libvirt-storage-vmm-manage-volume-add" data-id-title="Adding Volumes to a Storage Pool"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.2.2 </span><span class="title-name">Adding Volumes to a Storage Pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-vmm-manage-volume-add">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Virtual Machine Manager lets you create volumes in all storage pools, except in pools of
+     types Multipath, iSCSI, or SCSI. A volume in these pools is equivalent to
+     a LUN and cannot be changed from within <code class="systemitem">libvirt</code>.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       A new volume can either be created using the Storage Manager or while
+       adding a new storage device to a VM Guest. In either case, select a
+       storage pool from the left panel, then click <span class="guimenu">Create new
+       volume</span>.
+      </p></li><li class="step"><p>
+       Specify a <span class="guimenu">Name</span> for the image and choose an image
+       format.
+      </p><p>
+       Note that SUSE currently only supports <code class="literal">raw</code>,
+       <code class="literal">qcow2</code>, or <code class="literal">qed</code> images. The latter
+       option is not available on LVM group-based pools.
+      </p><p>
+       Next to <span class="guimenu">Max Capacity</span>, specify the amount maximum size
+       that the disk image is allowed to reach. Unless you are working with a
+       <code class="literal">qcow2</code> image, you can also set an amount for
+       <span class="guimenu">Allocation</span> that should be allocated initially. If
+       both values differ, a sparse image file will be created which grows on
+       demand.
+      </p><p>
+       For <code class="literal">qcow2</code> images, you can use a <span class="guimenu">Backing
+       Store</span> (also called <span class="quote">“<span class="quote">backing file</span>”</span>) which
+       constitutes a base image. The newly created <code class="literal">qcow2</code>
+       image will then only record the changes that are made to the base image.
+      </p></li><li class="step"><p>
+       Start the volume creation by clicking <span class="guimenu">Finish</span>.
+      </p></li></ol></div></div></section><section class="sect3" id="sec-libvirt-storage-vmm-manage-volume-delete" data-id-title="Deleting Volumes From a Storage Pool"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.2.3 </span><span class="title-name">Deleting Volumes From a Storage Pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-vmm-manage-volume-delete">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Deleting a volume can only be done from the Storage Manager, by selecting
+     a volume and clicking <span class="guimenu">Delete Volume</span>. Confirm with
+     <span class="guimenu">Yes</span>.
+    </p><div id="id-1.12.4.6.8.5.5.3" data-id-title="Volumes Can Be Deleted Even While in Use" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Volumes Can Be Deleted Even While in Use</div><p>
+      Volumes can be deleted even if they are currently used in an active or
+      inactive VM Guest. There is no way to recover a deleted volume.
+     </p><p>
+      Whether a volume is used by a VM Guest is indicated in the <span class="guimenu">Used
+      By</span> column in the Storage Manager.
+     </p></div></section></section></section><section class="sect1" id="sec-libvirt-storage-virsh" data-id-title="Managing Storage with virsh"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.2 </span><span class="title-name">Managing Storage with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Managing storage from the command line is also possible by using
+   <code class="command">virsh</code>. However, creating storage pools is currently not
+   supported by SUSE. Therefore, this section is restricted to documenting
+   functions like starting, stopping and deleting pools and volume management.
+  </p><p>
+   A list of all <code class="command">virsh</code> subcommands for managing pools and
+   volumes is available by running <code class="command">virsh help pool</code> and
+   <code class="command">virsh help volume</code>, respectively.
+  </p><section class="sect2" id="sec-libvirt-storage-virsh-list-pools" data-id-title="Listing Pools and Volumes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.1 </span><span class="title-name">Listing Pools and Volumes</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-list-pools">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    List all pools currently active by executing the following command. To also
+    list inactive pools, add the option <code class="option">--all</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">virsh pool-list --details</pre></div><p>
+    Details about a specific pool can be obtained with the
+    <code class="literal">pool-info</code> subcommand:
+   </p><div class="verbatim-wrap"><pre class="screen">virsh pool-info <em class="replaceable">POOL</em></pre></div><p>
+    Volumes can only be listed per pool by default. To list all volumes from a
+    pool, enter the following command.
+   </p><div class="verbatim-wrap"><pre class="screen">virsh vol-list --details <em class="replaceable">POOL</em></pre></div><p>
+    At the moment <code class="command">virsh</code> offers no tools to show whether a
+    volume is used by a guest or not. The following procedure describes a way
+    to list volumes from all pools that are currently used by a VM Guest.
+   </p><div class="procedure" id="pro-libvirt-storage-virsh-list-vols" data-id-title="Listing all Storage Volumes Currently Used on a VM Host Server"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 12.1: </span><span class="title-name">Listing all Storage Volumes Currently Used on a VM Host Server </span></span><a title="Permalink" class="permalink" href="cha-libvirt-storage.html#pro-libvirt-storage-virsh-list-vols">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Create an XSLT style sheet by saving the following content to a file, for
+      example, ~/libvirt/guest_storage_list.xsl:
+     </p><div class="verbatim-wrap"><pre class="screen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="text"/&gt;
+  &lt;xsl:template match="text()"/&gt;
+  &lt;xsl:strip-space elements="*"/&gt;
+  &lt;xsl:template match="disk"&gt;
+    &lt;xsl:text&gt;  &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="(source/@file|source/@dev|source/@dir)[1]"/&gt;
+    &lt;xsl:text&gt;&amp;#10;&lt;/xsl:text&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre></div></li><li class="step"><p>
+      Run the following commands in a shell. It is assumed that the guest's XML
+      definitions are all stored in the default location
+      (<code class="filename">/etc/libvirt/qemu</code>). <code class="command">xsltproc</code> is
+      provided by the package
+      <code class="systemitem">libxslt</code>.
+     </p><div class="verbatim-wrap"><pre class="screen">SSHEET="$HOME/libvirt/guest_storage_list.xsl"
+cd /etc/libvirt/qemu
+for FILE in *.xml; do
+  basename $FILE .xml
+  xsltproc $SSHEET $FILE
+done</pre></div></li></ol></div></div></section><section class="sect2" id="sec-libvirt-storage-virsh-start-pools" data-id-title="Starting, Stopping and Deleting Pools"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.2 </span><span class="title-name">Starting, Stopping and Deleting Pools</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-start-pools">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Use the <code class="command">virsh</code> pool subcommands to start, stop or delete
+    a pool. Replace <em class="replaceable">POOL</em> with the pool's name or its
+    UUID in the following examples:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.9.5.3.1"><span class="term">Stopping a Pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen">virsh pool-destroy <em class="replaceable">POOL</em></pre></div><div id="id-1.12.4.6.9.5.3.1.2.2" data-id-title="A Pools State Does not Affect Attached Volumes" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: A Pool's State Does not Affect Attached Volumes</div><p>
+        Volumes from a pool attached to VM Guests are always available,
+        regardless of the pool's state (<span class="guimenu">Active</span> (stopped) or
+        <span class="guimenu">Inactive</span> (started)). The state of the pool solely
+        affects the ability to attach volumes to a VM Guest via remote
+        management.
+       </p></div></dd><dt id="id-1.12.4.6.9.5.3.2"><span class="term">Deleting a Pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen">virsh pool-delete <em class="replaceable">POOL</em></pre></div><div id="id-1.12.4.6.9.5.3.2.2.2" data-id-title="Deleting Storage Pools" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Deleting Storage Pools</div><p>
+        See <a class="xref" href="cha-libvirt-storage.html#deleting-storage-pools" title="Warning: Deleting Storage Pools">Warning: Deleting Storage Pools</a>
+       </p></div></dd><dt id="id-1.12.4.6.9.5.3.3"><span class="term">Starting a Pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen">virsh pool-start <em class="replaceable">POOL</em></pre></div></dd><dt id="id-1.12.4.6.9.5.3.4"><span class="term">Enable Autostarting a Pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen">virsh pool-autostart <em class="replaceable">POOL</em></pre></div><p>
+       Only pools that are marked to autostart will automatically be started if
+       the VM Host Server reboots.
+      </p></dd><dt id="id-1.12.4.6.9.5.3.5"><span class="term">Disable Autostarting a Pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen">virsh pool-autostart <em class="replaceable">POOL</em> --disable</pre></div></dd></dl></div></section><section class="sect2" id="sec-libvirt-storage-virsh-add-volumes" data-id-title="Adding Volumes to a Storage Pool"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.3 </span><span class="title-name">Adding Volumes to a Storage Pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-add-volumes">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">virsh</code> offers two ways to add volumes to storage pools:
+    either from an XML definition with <code class="literal">vol-create</code> and
+    <code class="literal">vol-create-from</code> or via command line arguments with
+    <code class="literal">vol-create-as</code>. The first two methods are currently not
+    supported by SUSE, therefore this section focuses on the subcommand
+    <code class="literal">vol-create-as</code>.
+   </p><p>
+    To add a volume to an existing pool, enter the following command:
+   </p><div class="verbatim-wrap"><pre class="screen">virsh vol-create-as <em class="replaceable">POOL</em><span class="callout" id="co-vol-create-as-pool">1</span><em class="replaceable">NAME</em><span class="callout" id="co-vol-create-as-name">2</span> 12G --format<span class="callout" id="co-vol-create-as-capacity">3</span><em class="replaceable">raw|qcow2|qed</em><span class="callout" id="co-vol-create-as-format">4</span> --allocation 4G<span class="callout" id="co-vol-create-as-alloc">5</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-pool"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Name of the pool to which the volume should be added
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-name"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Name of the volume
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-capacity"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Size of the image, in this example 12 gigabytes. Use the suffixes k, M,
+      G, T for kilobyte, megabyte, gigabyte, and terabyte, respectively.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-format"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Format of the volume. SUSE currently supports <code class="literal">raw</code>,
+      <code class="literal">qcow2</code>, and <code class="literal">qed</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-alloc"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Optional parameter. By default <code class="command">virsh </code>creates a sparse
+      image file that grows on demand. Specify the amount of space that should
+      be allocated with this parameter (4 gigabytes in this example). Use the
+      suffixes k, M, G, T for kilobyte, megabyte, gigabyte, and terabyte,
+      respectively.
+     </p><p>
+      When not specifying this parameter, a sparse image file with no
+      allocation will be generated. To create a non-sparse volume, specify the
+      whole image size with this parameter (would be <code class="literal">12G</code> in
+      this example).
+     </p></td></tr></table></div><section class="sect3" id="sec-libvirt-storage-virsh-add-volumes-clone" data-id-title="Cloning Existing Volumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.2.3.1 </span><span class="title-name">Cloning Existing Volumes</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-add-volumes-clone">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Another way to add volumes to a pool is to clone an existing volume. The
+     new instance is always created in the same pool as the original.
+    </p><div class="verbatim-wrap"><pre class="screen">virsh vol-clone <em class="replaceable">NAME_EXISTING_VOLUME</em><span class="callout" id="co-vol-clone-existing">1</span><em class="replaceable">NAME_NEW_VOLUME</em><span class="callout" id="co-vol-clone-new">2</span> --pool <em class="replaceable">POOL</em><span class="callout" id="co-vol-clone-pool">3</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-clone-existing"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Name of the existing volume that should be cloned
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-clone-new"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Name of the new volume
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-clone-pool"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Optional parameter. <code class="systemitem">libvirt</code> tries to locate the existing volume
+       automatically. If that fails, specify this parameter.
+      </p></td></tr></table></div></section></section><section class="sect2" id="sec-libvirt-storage-virsh-del-volumes" data-id-title="Deleting Volumes from a Storage Pool"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.4 </span><span class="title-name">Deleting Volumes from a Storage Pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-del-volumes">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To permanently delete a volume from a pool, use the subcommand
+    <code class="literal">vol-delete</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">virsh vol-delete <em class="replaceable">NAME</em> --pool <em class="replaceable">POOL</em></pre></div><p>
+    <code class="option">--pool</code> is optional. <code class="systemitem">libvirt</code> tries to locate the volume
+    automatically. If that fails, specify this parameter.
+   </p><div id="id-1.12.4.6.9.7.5" data-id-title="No Checks Upon Volume Deletion" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: No Checks Upon Volume Deletion</div><p>
+     A volume will be deleted in any case, regardless of whether it is
+     currently used in an active or inactive VM Guest. There is no way to
+     recover a deleted volume.
+    </p><p>
+     Whether a volume is used by a VM Guest can only be detected by using by
+     the method described in
+     <a class="xref" href="cha-libvirt-storage.html#pro-libvirt-storage-virsh-list-vols" title="Listing all Storage Volumes Currently Used on a VM Host Server">Procedure 12.1, “Listing all Storage Volumes Currently Used on a VM Host Server”</a>.
+    </p></div></section><section class="sect2" id="libvirt-storage-virsh-attach-volumes" data-id-title="Attaching Volumes to a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.5 </span><span class="title-name">Attaching Volumes to a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#libvirt-storage-virsh-attach-volumes">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After you create a volume as described in
+    <a class="xref" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-add-volumes" title="12.2.3. Adding Volumes to a Storage Pool">Section 12.2.3, “Adding Volumes to a Storage Pool”</a>, you can
+    attach it to a virtual machine and use it as a hard disk:
+   </p><div class="verbatim-wrap"><pre class="screen">virsh attach-disk <em class="replaceable">DOMAIN</em> <em class="replaceable">SOURCE_IMAGE_FILE</em> <em class="replaceable">TARGET_DISK_DEVICE</em></pre></div><p>
+    For example:
+   </p><div class="verbatim-wrap"><pre class="screen">virsh attach-disk sles12sp3 /virt/images/example_disk.qcow2 sda2</pre></div><p>
+    To check if the new disk is attached, inspect the result of the
+    <code class="command">virsh dumpxml</code> command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virsh dumpxml sles12sp3
+[...]
+&lt;disk type='file' device='disk'&gt;
+ &lt;driver name='qemu' type='raw'/&gt;
+ &lt;source file='/virt/images/example_disk.qcow2'/&gt;
+ &lt;backingStore/&gt;
+ &lt;target dev='sda2' bus='scsi'/&gt;
+ &lt;alias name='scsi0-0-0'/&gt;
+ &lt;address type='drive' controller='0' bus='0' target='0' unit='0'/&gt;
+&lt;/disk&gt;
+[...]</pre></div><section class="sect3" id="id-1.12.4.6.9.8.8" data-id-title="Hotplug or Persistent Change"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.2.5.1 </span><span class="title-name">Hotplug or Persistent Change</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#id-1.12.4.6.9.8.8">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     You can attach disks to both active and inactive domains. The attachment
+     is controlled by the <code class="option">--live</code> and <code class="option">--config</code>
+     options:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.9.8.8.3.1"><span class="term"><code class="option">--live</code>
+      </span></dt><dd><p>
+        Hotplugs the disk to an active domain. The attachment is not saved in
+        the domain configuration. Using <code class="option">--live</code> on an inactive
+        domain is an error.
+       </p></dd><dt id="id-1.12.4.6.9.8.8.3.2"><span class="term"><code class="option">--config</code>
+      </span></dt><dd><p>
+        Changes the domain configuration persistently. The attached disk is
+        then available after the next domain start.
+       </p></dd><dt id="id-1.12.4.6.9.8.8.3.3"><span class="term"><code class="option">--live</code><code class="option">--config</code>
+      </span></dt><dd><p>
+        Hotplugs the disk and adds it to the persistent domain configuration.
+       </p></dd></dl></div><div id="id-1.12.4.6.9.8.8.4" data-id-title="virsh attach-device" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: <code class="command">virsh attach-device</code></div><p>
+      <code class="command">virsh attach-device</code> is the more generic form of
+      <code class="command">virsh attach-disk</code>. You can use it to attach other
+      types of devices to a domain.
+     </p></div></section></section><section class="sect2" id="libvirt-storage-virsh-detach-volumes" data-id-title="Detaching Volumes from a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.6 </span><span class="title-name">Detaching Volumes from a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#libvirt-storage-virsh-detach-volumes">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To detach a disk from a domain, use <code class="command">virsh detach-disk</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virsh detach-disk <em class="replaceable">DOMAIN</em> <em class="replaceable">TARGET_DISK_DEVICE</em></pre></div><p>
+    For example:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virsh detach-disk sles12sp3 sda2</pre></div><p>
+    You can control the attachment with the <code class="option">--live</code> and
+    <code class="option">--config</code> options as described in
+    <a class="xref" href="cha-libvirt-storage.html#libvirt-storage-virsh-attach-volumes" title="12.2.5. Attaching Volumes to a VM Guest">Section 12.2.5, “Attaching Volumes to a VM Guest”</a>.
+   </p></section></section><section class="sect1" id="sec-libvirt-storage-locking" data-id-title="Locking Disk Files and Block Devices with virtlockd"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.3 </span><span class="title-name">Locking Disk Files and Block Devices with <code class="systemitem">virtlockd</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-locking">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Locking block devices and disk files prevents concurrent writes to these
+   resources from different VM Guests. It provides protection against starting
+   the same VM Guest twice, or adding the same disk to two different virtual
+   machines. This will reduce the risk of a virtual machine's disk image
+   becoming corrupted because of a wrong configuration.
+  </p><p>
+   The locking is controlled by a daemon called
+   <code class="systemitem">virtlockd</code>. Since it operates
+   independently from the <code class="systemitem">libvirtd</code> daemon, locks will endure a crash or a
+   restart of <code class="systemitem">libvirtd</code>. Locks will even persist in the case of an update of
+   the <code class="systemitem">virtlockd</code> itself, since it can
+   re-execute itself. This ensures that VM Guests do <span class="emphasis"><em>not</em></span>
+   need to be restarted upon a
+   <code class="systemitem">virtlockd</code> update.
+   <code class="systemitem">virtlockd</code> is supported for KVM,
+   QEMU, and Xen.
+  </p><section class="sect2" id="sec-libvirt-storage-locking-enable" data-id-title="Enable Locking"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.3.1 </span><span class="title-name">Enable Locking</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-locking-enable">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Locking virtual disks is not enabled by default on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. To enable
+    and automatically start it upon rebooting, perform the following steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Edit <code class="filename">/etc/libvirt/qemu.conf</code> and set
+     </p><div class="verbatim-wrap"><pre class="screen">lock_manager = "lockd"</pre></div></li><li class="step"><p>
+      Start the <code class="systemitem">virtlockd</code> daemon with
+      the following command:
+     </p><div class="verbatim-wrap"><pre class="screen">systemctl start virtlockd</pre></div></li><li class="step"><p>
+      Restart the <code class="systemitem">libvirtd</code> daemon with:
+     </p><div class="verbatim-wrap"><pre class="screen">systemctl restart libvirtd</pre></div></li><li class="step"><p>
+      Make sure <code class="systemitem">virtlockd</code> is
+      automatically started when booting the system:
+     </p><div class="verbatim-wrap"><pre class="screen">systemctl enable virtlockd</pre></div></li></ol></div></div></section><section class="sect2" id="sec-libvirt-storage-locking-configure" data-id-title="Configure Locking"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.3.2 </span><span class="title-name">Configure Locking</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-locking-configure">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By default <code class="systemitem">virtlockd</code> is configured
+    to automatically lock all disks configured for your VM Guests. The default
+    setting uses a "direct" lockspace, where the locks are acquired against the
+    actual file paths associated with the VM Guest &lt;disk&gt; devices. For
+    example, <code class="literal">flock(2)</code> will be called directly on
+    <code class="filename">/var/lib/libvirt/images/my-server/disk0.raw</code> when the
+    VM Guest contains the following &lt;disk&gt; device:
+   </p><div class="verbatim-wrap"><pre class="screen">&lt;disk type='file' device='disk'&gt;
+ &lt;driver name='qemu' type='raw'/&gt;
+ &lt;source file='/var/lib/libvirt/images/my-server/disk0.raw'/&gt;
+ &lt;target dev='vda' bus='virtio'/&gt;
+&lt;/disk&gt;</pre></div><p>
+    The <code class="systemitem">virtlockd</code> configuration can be
+    changed by editing the file
+    <code class="filename">/etc/libvirt/qemu-lockd.conf</code>. It also contains
+    detailed comments with further information. Make sure to activate
+    configuration changes by reloading
+    <code class="systemitem">virtlockd</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">systemctl reload virtlockd</pre></div><div id="id-1.12.4.6.10.5.6" data-id-title="Locking Currently Only Available for All Disks" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Locking Currently Only Available for All Disks</div><p>
+
+     Currently, locking can only be activated globally, so that all virtual
+     disks are locked. Support for locking selected disks is planned for future
+     releases.
+    </p></div><section class="sect3" id="sec-libvirt-storage-locking-configure-shared-fs" data-id-title="Enabling an Indirect Lockspace"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.1 </span><span class="title-name">Enabling an Indirect Lockspace</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-locking-configure-shared-fs">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The default configuration of
+     <code class="systemitem">virtlockd</code> uses a
+     <span class="quote">“<span class="quote">direct</span>”</span> lockspace. This means that the locks are acquired
+     against the actual file paths associated with the &lt;disk&gt; devices.
+    </p><p>
+     If the disk file paths are not accessible to all hosts,
+     <code class="systemitem">virtlockd</code> can be configured to
+     allow an <span class="quote">“<span class="quote">indirect</span>”</span> lockspace. This means that a hash of the
+     disk file path is used to create a file in the indirect lockspace
+     directory. The locks are then held on these hash files instead of the
+     actual disk file paths. Indirect lockspace is also useful if the file
+     system containing the disk files does not support
+     <code class="literal">fcntl()</code> locks. An indirect lockspace is specified with
+     the <code class="option">file_lockspace_dir</code> setting:
+    </p><div class="verbatim-wrap"><pre class="screen">file_lockspace_dir = "<em class="replaceable">/MY_LOCKSPACE_DIRECTORY</em>"</pre></div></section><section class="sect3" id="sec-libvirt-storage-locking-configure-lvm-iscsi" data-id-title="Enable Locking on LVM or iSCSI Volumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.2 </span><span class="title-name">Enable Locking on LVM or iSCSI Volumes</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-locking-configure-lvm-iscsi">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     When wanting to lock virtual disks placed on LVM or iSCSI volumes shared
+     by several hosts, locking needs to be done by UUID rather than by path
+     (which is used by default). Furthermore, the lockspace directory needs to
+     be placed on a shared file system accessible by all hosts sharing the
+     volume. Set the following options for LVM and/or iSCSI:
+    </p><div class="verbatim-wrap"><pre class="screen">lvm_lockspace_dir = "<em class="replaceable">/MY_LOCKSPACE_DIRECTORY</em>"
+iscsi_lockspace_dir = "<em class="replaceable">/MY_LOCKSPACE_DIRECTORY</em>"</pre></div></section></section></section><section class="sect1" id="sec-libvirt-storage-resize" data-id-title="Online Resizing of Guest Block Devices"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.4 </span><span class="title-name">Online Resizing of Guest Block Devices</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-resize">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Sometimes you need to change—extend or shrink—the size of the
+   block device used by your guest system. For example, when the disk space
+   originally allocated is no longer enough, it is time to increase its size.
+   If the guest disk resides on a <span class="emphasis"><em>logical volume</em></span>, you can
+   resize it while the guest system is running. This is a big advantage over an
+   offline disk resizing (see the <code class="command">virt-resize</code> command from
+   the <a class="xref" href="chap-guestfs.html#sec-guestfs-tools" title="17.3. Guestfs Tools">Section 17.3, “Guestfs Tools”</a> package) as the service provided by
+   the guest is not interrupted by the resizing process. To resize a VM Guest
+   disk, follow these steps:
+  </p><div class="procedure" id="id-1.12.4.6.11.3" data-id-title="Online Resizing of Guest Disk"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 12.2: </span><span class="title-name">Online Resizing of Guest Disk </span></span><a title="Permalink" class="permalink" href="cha-libvirt-storage.html#id-1.12.4.6.11.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Inside the guest system, check the current size of the disk (for example
+     <code class="filename">/dev/vda</code>).
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>fdisk -l /dev/vda
+Disk /dev/sda: 160.0 GB, 160041885696 bytes, 312581808 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes</pre></div></li><li class="step"><p>
+     On the host, resize the logical volume holding the
+     <code class="filename">/dev/vda</code> disk of the guest to the required size, for
+     example 200 GB.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>lvresize -L 200G /dev/mapper/vg00-home
+Extending logical volume home to 200 GiB
+Logical volume home successfully resized</pre></div></li><li class="step"><p>
+     On the host, resize the block device related to the disk
+     <code class="filename">/dev/mapper/vg00-home</code> of the guest. Note that you can
+     find the <em class="replaceable">DOMAIN_ID</em> with <code class="command">virsh
+     list</code>.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virsh blockresize  --path /dev/vg00/home --size 200G <em class="replaceable">DOMAIN_ID</em>
+Block device '/dev/vg00/home' is resized</pre></div></li><li class="step"><p>
+     Check that the new disk size is accepted by the guest.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>fdisk -l /dev/vda
+Disk /dev/sda: 200.0 GB, 200052357120 bytes, 390727260 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes</pre></div></li></ol></div></div></section><section class="sect1" id="sec-libvirt-storage-share" data-id-title="Sharing Directories between Host and Guests (File System Pass-Through)"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.5 </span><span class="title-name">Sharing Directories between Host and Guests (File System Pass-Through)</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#sec-libvirt-storage-share">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   libvirt allows to share directories between host and guests using QEMU's
+   file system pass-through (also called VirtFS) feature. Such a directory can
+   be also be accessed by several VM Guests at once and therefore be used to
+   exchange files between VM Guests.
+  </p><div id="id-1.12.4.6.12.3" data-id-title="Windows Guests and File System Pass-Through" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Windows Guests and File System Pass-Through</div><p>
+    Note that sharing directories between VM Host Server and Windows guests via File
+    System Pass-Through does not work, because Windows lacks the drivers
+    required to mount the shared directory.
+   </p></div><p>
+   To make a shared directory available on a VM Guest, proceed as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Open the guest's console in Virtual Machine Manager and either choose
+     <span class="guimenu">View</span> › <span class="guimenu">Details</span> from the menu or click
+     <span class="guimenu">Show virtual hardware details</span> in the toolbar. Choose
+     <span class="guimenu">Add Hardware</span> › <span class="guimenu">Filesystem</span> to open the <span class="guimenu">Filesystem Passthrough</span>
+     dialog.
+    </p></li><li class="step"><p>
+     <span class="guimenu">Driver</span> allows you to choose between a
+     <span class="guimenu">Handle</span> or <span class="guimenu">Path</span> base driver. The
+     default setting is <span class="guimenu">Path</span>. <span class="guimenu">Mode</span> lets
+     you choose the security model, which influences the way file permissions
+     are set on the host. Three options are available:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.12.5.2.2.1"><span class="term"><span class="guimenu">Passthrough</span> (Default)</span></dt><dd><p>
+        Files on the file system are directly created with the client-user's
+        credentials. This is very similar to what NFSv3 is using.
+       </p></dd><dt id="id-1.12.4.6.12.5.2.2.2"><span class="term"><span class="guimenu">Squash</span>
+      </span></dt><dd><p>
+        Same as <span class="guimenu">Passthrough</span>, but failure of privileged
+        operations like <code class="command">chown</code> are ignored. This is required
+        when KVM is not run with
+        <code class="systemitem">root</code> privileges.
+       </p></dd><dt id="id-1.12.4.6.12.5.2.2.3"><span class="term"><span class="guimenu">Mapped</span>
+      </span></dt><dd><p>
+        Files are created with the file server's credentials
+        (<code class="literal">qemu.qemu</code>). The user credentials and the
+        client-user's credentials are saved in extended attributes. This model
+        is recommended when host and guest domains should be kept completely
+        isolated.
+       </p></dd></dl></div></li><li class="step"><p>
+     Specify the path to the directory on the VM Host Server with <span class="guimenu">Source
+     Path</span>. Enter a string at <span class="guimenu">Target Path</span> that will
+     be used as a tag to mount the shared directory. Note that the string of
+     this field is a tag only, not a path on the VM Guest.
+    </p></li><li class="step"><p>
+     <span class="guimenu">Apply</span> the setting. If the VM Guest is currently
+     running, you need to shut it down to apply the new setting (rebooting the
+     guest is not sufficient).
+    </p></li><li class="step"><p>
+     Boot the VM Guest. To mount the shared directory, enter the following
+     command:
+    </p><div class="verbatim-wrap"><pre class="screen">sudo mount -t 9p -o trans=virtio,version=9p2000.L,rw <em class="replaceable">TAG</em> /<em class="replaceable">MOUNT_POINT</em></pre></div><p>
+     To make the shared directory permanently available, add the following line
+     to the <code class="filename">/etc/fstab</code> file:
+    </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">TAG</em>   /<em class="replaceable">MOUNT_POINT</em>    9p  trans=virtio,version=9p2000.L,rw    0   0</pre></div></li></ol></div></div></section><section class="sect1" id="libvirt-storage-rbd" data-id-title="Using RADOS Block Devices with libvirt"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.6 </span><span class="title-name">Using RADOS Block Devices with <code class="systemitem">libvirt</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-storage.html#libvirt-storage-rbd">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/libvirt_storage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   RADOS Block Devices (RBD) store data in a Ceph cluster. They allow snapshotting,
+   replication, and data consistency. You can use an RBD from your
+   <code class="systemitem">libvirt</code>-managed VM Guests similarly to how you use other block devices.
+  </p><p>
+   Refer to <a class="link" href="https://www.suse.com/documentation/ses-4/book_storage_admin/data/cha_ceph_libvirt.html" target="_blank">SUSE
+    Enterprise Storage documentation</a> for more details.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-libvirt-connect.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Connecting and Authorizing</span></a> </div><div><a class="pagination-link next" href="cha-libvirt-networks.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 13 </span>Managing Networks</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-libvirt-storage.html#sec-libvirt-storage-vmm"><span class="title-number">12.1 </span><span class="title-name">Managing Storage with Virtual Machine Manager</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-storage.html#sec-libvirt-storage-virsh"><span class="title-number">12.2 </span><span class="title-name">Managing Storage with <code class="command">virsh</code></span></a></span></li><li><span class="sect1"><a href="cha-libvirt-storage.html#sec-libvirt-storage-locking"><span class="title-number">12.3 </span><span class="title-name">Locking Disk Files and Block Devices with <code class="systemitem">virtlockd</code></span></a></span></li><li><span class="sect1"><a href="cha-libvirt-storage.html#sec-libvirt-storage-resize"><span class="title-number">12.4 </span><span class="title-name">Online Resizing of Guest Block Devices</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-storage.html#sec-libvirt-storage-share"><span class="title-number">12.5 </span><span class="title-name">Sharing Directories between Host and Guests (File System Pass-Through)</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-storage.html#libvirt-storage-rbd"><span class="title-number">12.6 </span><span class="title-name">Using RADOS Block Devices with <code class="systemitem">libvirt</code></span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>
