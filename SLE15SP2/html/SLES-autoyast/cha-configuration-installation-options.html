@@ -2,7 +2,7 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | AutoYaST Guide | Configuration and Installation Options</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
 <meta name="title" content="Configuration and Installation Options | SLES 15 SP2"/>
-<meta name="description" content="This section contains configuration examples for servi…"/>
+<meta name="description" content="This section contains configuration examples for services, registration, user and group management, upgrades, partitioning, configuration management,…"/>
 <meta name="product-name" content="SUSE Linux Enterprise Server"/>
 <meta name="product-number" content="15 SP2"/>
 <meta name="book-title" content="AutoYaST Guide"/>
@@ -13,11 +13,11 @@
 <meta name="tracker-bsc-component" content="Documentation"/>
 <meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
 <meta name="publisher" content="SUSE"/><meta property="og:title" content="Configuration and Installation Options | SLES 15 SP2"/>
-<meta property="og:description" content="This section contains configuration examples for services, registration, user and group management, upgrades, partitioning, …"/>
+<meta property="og:description" content="This section contains configuration examples for services, …"/>
 <meta property="og:type" content="article"/>
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Configuration and Installation Options | SLES 15 SP2"/>
-<meta name="twitter:description" content="This section contains configuration examples for services, registration, user and group management, upgrades, partitioning, …"/>
+<meta name="twitter:description" content="This section contains configuration examples for services, …"/>
 <link rel="prev" href="part-configuration.html" title="Part II. AutoYaST Configuration Examples"/><link rel="next" href="part-rules-classes.html" title="Part III. Managing Mass Installations with Rules and Classes"/><script type="text/javascript">
 
 if ( window.location.protocol.toLowerCase() != 'file:' ) {
@@ -6522,22 +6522,21 @@ ls
         </p><div class="verbatim-wrap"><pre class="screen">&lt;password config:type="boolean"&gt;true&lt;/password&gt;</pre></div><p>
          Optional. The default is <code class="literal">false</code>.
         </p></dd><dt id="id-1.7.4.2.38.6.8"><span class="term"><code class="literal">pathlist</code></span></dt><dd><p>
-         A list of <code class="literal">path</code> elements. A path is a comma
-         separated list of elements that describes the path to the element
-         you want to change. For example, the LDAP server element can be
+         A list of <code class="literal">path</code> elements. A path is a comma-separated list of elements that describes the path to the element
+         you want to change. For example, the network configuration element can be
          found in the control file in the
-         <code class="literal">&lt;ldap&gt;&lt;ldap_server&gt;</code> section.
-         So to change that value, you need to set the path to
-         <code class="literal">ldap,ldap_server</code>.
+         <code class="literal">&lt;networking&gt;</code> section.
+         So, to change that value, you need to set the path to
+         <code class="literal">networking</code>.
         </p><div class="verbatim-wrap"><pre class="screen">&lt;pathlist config:type="list"&gt;
   &lt;path&gt;networking,dns,hostname&lt;/path&gt;
   &lt;path&gt;...&lt;/path&gt;
 &lt;/pathlist&gt;</pre></div><p>To change the
-         password of the first user in the control file, you need to set the
-         path to <code class="literal">users,0,user_password</code>. The
-         <code class="literal">0</code> indicates the first user in the &lt;users
-         config:type="list"&gt; list of users in the control file.
-         <code class="literal">1</code> would be the second one, and so on.
+         password of the first user in the control file, you need to set the path to <code class="literal">users,0,user_password</code>.
+         <code class="literal">0</code> indicates the first item in the configuration section. For example, in
+         the &lt;users
+         config:type="list"&gt; list of users mentioned below, it relates to <code class="systemitem">root</code>.
+         <code class="literal">1</code> would be the second item, and so on.
         </p><div class="verbatim-wrap"><pre class="screen">&lt;users config:type="list"&gt;
   &lt;user&gt;
     &lt;username&gt;root&lt;/username&gt;
@@ -6550,6 +6549,11 @@ ls
     &lt;encrypted config:type="boolean"&gt;false&lt;/encrypted&gt;
   &lt;/user&gt;
 &lt;/users&gt;</pre></div><p>
+          To set a password for <code class="systemitem">root</code> if the &lt;user&gt; section is similar to the one above,
+          use the &lt;pathlist&gt; as follows:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;pathlist config:type="list"&gt;
+          &lt;path&gt;users,0,user_password&lt;/path&gt;
+        &lt;/pathlist&gt;</pre></div><p>
          This information is optional but you should at least provide
          <code class="literal">path</code> or <code class="literal">file</code>.
         </p></dd><dt id="id-1.7.4.2.38.6.9"><span class="term"><code class="literal">file</code></span></dt><dd><p>
