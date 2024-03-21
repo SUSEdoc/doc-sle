@@ -1341,8 +1341,6 @@ AVAILABLE EXTENSIONS AND MODULES
       </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
          <code class="literal">luks1</code>: regular LUKS1 encryption.
         </p></li><li class="listitem"><p>
-         <code class="literal">luks2</code>: regular LUKS2 encryption.
-        </p></li><li class="listitem"><p>
          <code class="literal">pervasive_luks2</code>: pervasive volume encryption.
         </p></li><li class="listitem"><p>
          <code class="literal">protected_swap</code>: encryption with volatile protected
@@ -1359,64 +1357,29 @@ AVAILABLE EXTENSIONS AND MODULES
       </p><p>
        See <code class="literal">crypt_key</code> element to learn how to specify the
        encryption password if needed.
-      </p><p>
-       When using regular LUKS encryption, it is possible to customize several aspects
-       of the encryption using <code class="literal">crypt_pbkdf</code>, <code class="literal">crypt_cipher</code>
-       or <code class="literal">crypt_key_size</code>, depending on the exact variant of LUKS that
-       is used. Bear in mind that the encryption method and its corresponding settings may
-       dramatically affect the amount of RAM needed to complete the installation process.
-       Using regular LUKS2 with default parameters typically implies the need of having
-       several gigabytes of RAM in the system in order to encrypt the devices.
       </p></dd><dt id="id-1.7.5.2.10.8.8.4.3"><span class="term">crypt_fs</span></dt><dd><p>
        Partition will be encrypted, the default is <code class="literal">false</code>.
        This element is deprecated. Use <code class="literal">crypt_method</code> instead.
       </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_fs config:type="boolean"&gt;true&lt;/crypt_fs&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.4"><span class="term">crypt_key</span></dt><dd><p>
        Required if <code class="literal">crypt_method</code> has been set to a method
-       that requires a password (that is, <code class="literal">luks1</code>,
-       <code class="literal">luks2</code> or <code class="literal">pervasive_luks2</code>).
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_key&gt;xxxxxxxx&lt;/crypt_key&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.5"><span class="term">crypt_cipher</span></dt><dd><p>
-       Cipher used for LUKS encryption. This value is only honored if the
-       value of <code class="literal">crypt_method</code> is <code class="literal">luks1</code>
-       or <code class="literal">luks2</code>. The format and value of the string must
-       be compatible with the <code class="literal">--cipher</code> argument of the
-       command <code class="command">cryptsetup</code>.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_cipher&gt;aes-xts-plain64&lt;/crypt_cipher&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.6"><span class="term">crypt_key_size</span></dt><dd><p>
-       Key size, in bits, used for LUKS encryption. This value is only
-       honored if the value of <code class="literal">crypt_method</code> is
-       <code class="literal">luks1</code> or <code class="literal">luks2</code>. The value
-       has to be a multiple of 8. The possible key sizes are limited by
-       the used cipher.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_key_size config:type="integer"&gt;256&lt;/crypt_key_size&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.7"><span class="term">crypt_pbkdf</span></dt><dd><p>
-       Password-based key derivation function used for LUKS2 encryption.
-       This is only relevant if the <code class="literal">crypt_method</code> is
-       <code class="literal">luks2</code>. The possible values are
-       <code class="literal">pbkdf2</code>, <code class="literal">argon2i</code> and
-       <code class="literal">argon2id</code>. If omitted, the device will be encrypted
-       using the default function of the command cryptsetup. Note that both
-       variants of Argon2 are designed to intentionally consume a big amount
-       of memory during the encryption process. Using any of those functions
-       or omitting this setting (which will likely result in the usage of
-       Argon2) implies bigger RAM requirements to complete the installation
-       process, when compared to a non-encrypted setup.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_pbkdf config:type="symbol"&gt;argon2id&lt;/crypt_pbkdf&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.8"><span class="term">crypt_label</span></dt><dd><p>
-       LUKS label for the encrypted device. This is only relevant if the
-       <code class="literal">crypt_method</code> is <code class="literal">luks2</code>.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_label&gt;crypt_home&lt;/crypt_label&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.9"><span class="term">mount</span></dt><dd><p>
+       that requires a password (that is, <code class="literal">luks1</code> or
+       <code class="literal">pervasive_luks2</code>).
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;crypt_key&gt;xxxxxxxx&lt;/crypt_key&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.5"><span class="term">mount</span></dt><dd><p>
        You should have at least a root partition (/) and a swap partition.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;mount&gt;/&lt;/mount&gt;&lt;mount&gt;swap&lt;/mount&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.10"><span class="term">fstopt</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;mount&gt;/&lt;/mount&gt;&lt;mount&gt;swap&lt;/mount&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.6"><span class="term">fstopt</span></dt><dd><p>
        Mount options for this partition; see <code class="command">man mount</code> for
        available mount options.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;fstopt&gt;ro,noatime,user,data=ordered,acl,user_xattr&lt;/fstopt&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.11"><span class="term">label</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;fstopt&gt;ro,noatime,user,data=ordered,acl,user_xattr&lt;/fstopt&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.7"><span class="term">label</span></dt><dd><p>
        The label of the partition. Useful when formatting the device
        (especially if the <code class="literal">mountby</code> parameter is set to
        <code class="literal">label</code>) and for identifying a device that already
        exists (see <code class="literal">create</code> above). See <code class="command">man
        e2label</code> for an example.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;label&gt;mydata&lt;/label&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.12"><span class="term">uuid</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;label&gt;mydata&lt;/label&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.8"><span class="term">uuid</span></dt><dd><p>
        The uuid of the partition. Only useful for identifying an existing
        device (see <code class="literal">create</code> above). The uuid cannot be
        enforced for new devices. (See <code class="command">man uuidgen</code>.)
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;uuid&gt;1b4e28ba-2fa1-11d2-883f-b9a761bde3fb&lt;/uuid&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.13"><span class="term">size</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;uuid&gt;1b4e28ba-2fa1-11d2-883f-b9a761bde3fb&lt;/uuid&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.9"><span class="term">size</span></dt><dd><p>
        The size of the partition, for example 4G, 4500M, etc. The /boot
        partition and the swap partition can have <code class="literal">auto</code> as
        size. Then AutoYaST calculates a reasonable size. One partition can have the
@@ -1430,11 +1393,11 @@ AVAILABLE EXTENSIONS AND MODULES
        Starting with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> 15, all values (including
        <code class="literal">auto</code> and <code class="literal">max</code>) can be used for
        resizing partitions as well.
-      </p></dd><dt id="id-1.7.5.2.10.8.8.4.14"><span class="term">format</span></dt><dd><p>
+      </p></dd><dt id="id-1.7.5.2.10.8.8.4.10"><span class="term">format</span></dt><dd><p>
        Specify if AutoYaST should format the partition. If you set
        <code class="literal">create</code> to <code class="literal">true</code>, then you likely
        want this option set to <code class="literal">true</code> as well.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;format config:type="boolean"&gt;false&lt;/format&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.15"><span class="term">file system</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;format config:type="boolean"&gt;false&lt;/format&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.11"><span class="term">file system</span></dt><dd><p>
        Optional. The default is <code class="literal">btrfs</code> for the root partition
        (<code class="filename">/</code>) and <code class="literal">xfs</code> for data partitions.
        Specify the file system to use on this partition:
@@ -1452,26 +1415,26 @@ AVAILABLE EXTENSIONS AND MODULES
          <code class="literal">xfs</code>
         </p></li><li class="listitem"><p>
          <code class="literal">swap</code>
-        </p><div class="verbatim-wrap"><pre class="screen">&lt;filesystem config:type="symbol"&gt;ext3&lt;/filesystem&gt;</pre></div></li></ul></div></dd><dt id="id-1.7.5.2.10.8.8.4.16"><span class="term">mkfs_options</span></dt><dd><p>
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;filesystem config:type="symbol"&gt;ext3&lt;/filesystem&gt;</pre></div></li></ul></div></dd><dt id="id-1.7.5.2.10.8.8.4.12"><span class="term">mkfs_options</span></dt><dd><p>
        Optional, specify an option string for the <code class="command">mkfs</code>. Only
        use this when you know what you are doing. (See the relevant mkfs man
        page for the file system you want to use.)
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;mkfs_options&gt;-I 128&lt;/mkfs_options&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.17"><span class="term">partition_nr</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;mkfs_options&gt;-I 128&lt;/mkfs_options&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.13"><span class="term">partition_nr</span></dt><dd><p>
        The number of this partition. If you have set
        <code class="literal">create=false</code> or if you use LVM, then you can specify
        the partition via <code class="literal">partition_nr</code>.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;partition_nr config:type="integer"&gt;2&lt;/partition_nr&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.18"><span class="term">partition_id</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;partition_nr config:type="integer"&gt;2&lt;/partition_nr&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.14"><span class="term">partition_id</span></dt><dd><p>
        The <code class="literal">partition_id</code> sets the id of the partition. If you
        want different identifiers than 131 for Linux partition or 130 for swap,
        configure them with <code class="literal">partition_id.</code> The default is
        <code class="literal">131</code> for a Linux partition and <code class="literal">130</code>
        for swap.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;partition_id config:type="integer"&gt;131&lt;/partition_id&gt;</pre></div><table style="border: 0; " class="simplelist"><tr><td>FAT16 (MS-DOS): <code class="literal">6</code></td></tr><tr><td>NTFS (MS-DOS): <code class="literal">7</code></td></tr><tr><td>FAT32 (MS-DOS): <code class="literal">12</code></td></tr><tr><td>Extended FAT16 (MS-DOS): <code class="literal">15</code></td></tr><tr><td>DIAG, Diagnostics and firmware (MS-DOS, GPT): <code class="literal">18</code></td></tr><tr><td>PPC PReP Boot partition (MS-DOS, GPT): <code class="literal">65</code></td></tr><tr><td>Swap (MS-DOS, GPT, DASD, implicit): <code class="literal">130</code></td></tr><tr><td>Linux (MS-DOS, GPT, DASD): <code class="literal">131</code></td></tr><tr><td>Intel Rapid Start Technology (MS-DOS, GPT): <code class="literal">132</code></td></tr><tr><td>LVM (MS-DOS, GPT, DASD): <code class="literal">142</code></td></tr><tr><td>EFI System Partition (MS-DOS, GPT): <code class="literal">239</code></td></tr><tr><td>MD RAID (MS-DOS, GPT, DASD): <code class="literal">253</code></td></tr><tr><td>BIOS boot (GPT): <code class="literal">257</code></td></tr><tr><td>Windows basic data (GPT): <code class="literal">258</code></td></tr><tr><td>EFI (GPT): <code class="literal">259</code></td></tr><tr><td>Microsoft reserved (GPT): <code class="literal">261</code></td></tr></table></dd><dt id="id-1.7.5.2.10.8.8.4.19"><span class="term">partition_type</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;partition_id config:type="integer"&gt;131&lt;/partition_id&gt;</pre></div><table style="border: 0; " class="simplelist"><tr><td>FAT16 (MS-DOS): <code class="literal">6</code></td></tr><tr><td>NTFS (MS-DOS): <code class="literal">7</code></td></tr><tr><td>FAT32 (MS-DOS): <code class="literal">12</code></td></tr><tr><td>Extended FAT16 (MS-DOS): <code class="literal">15</code></td></tr><tr><td>DIAG, Diagnostics and firmware (MS-DOS, GPT): <code class="literal">18</code></td></tr><tr><td>PPC PReP Boot partition (MS-DOS, GPT): <code class="literal">65</code></td></tr><tr><td>Swap (MS-DOS, GPT, DASD, implicit): <code class="literal">130</code></td></tr><tr><td>Linux (MS-DOS, GPT, DASD): <code class="literal">131</code></td></tr><tr><td>Intel Rapid Start Technology (MS-DOS, GPT): <code class="literal">132</code></td></tr><tr><td>LVM (MS-DOS, GPT, DASD): <code class="literal">142</code></td></tr><tr><td>EFI System Partition (MS-DOS, GPT): <code class="literal">239</code></td></tr><tr><td>MD RAID (MS-DOS, GPT, DASD): <code class="literal">253</code></td></tr><tr><td>BIOS boot (GPT): <code class="literal">257</code></td></tr><tr><td>Windows basic data (GPT): <code class="literal">258</code></td></tr><tr><td>EFI (GPT): <code class="literal">259</code></td></tr><tr><td>Microsoft reserved (GPT): <code class="literal">261</code></td></tr></table></dd><dt id="id-1.7.5.2.10.8.8.4.15"><span class="term">partition_type</span></dt><dd><p>
        Optional. Allowed value is <code class="literal">primary</code>. When using an <code class="literal">msdos</code>
        partition table, this element sets the type of the partition to <code class="literal">primary</code>. This
        value is ignored when using a <code class="literal">gpt</code> partition table,
        because such a distinction does not exist in that case.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;partition_type&gt;primary&lt;/partition_type&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.20"><span class="term">mountby</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;partition_type&gt;primary&lt;/partition_type&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.16"><span class="term">mountby</span></dt><dd><p>
        Instead of a partition number, you can tell AutoYaST to mount a partition by
        <code class="literal">device</code>, <code class="literal">label</code>,
        <code class="literal">uuid</code>, <code class="literal">path</code> or
@@ -1481,7 +1444,7 @@ AVAILABLE EXTENSIONS AND MODULES
        See <code class="literal">label</code> and <code class="literal">uuid</code> documentation
        above. The default depends on YaST and usually is
        <code class="literal">id</code>.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;mountby config:type="symbol"&gt;label&lt;/mountby&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.21"><span class="term">subvolumes</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;mountby config:type="symbol"&gt;label&lt;/mountby&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.17"><span class="term">subvolumes</span></dt><dd><p>
        List of subvolumes to create for a file system of type Btrfs. This key
        only makes sense for file systems of type Btrfs. (See
        <a class="xref" href="cha-configuration-installation-options.html#ay-btrfs-subvolumes" title="4.5.3.3. Btrfs subvolumes">Section 4.5.3.3, “Btrfs subvolumes”</a> for more information.)
@@ -1495,50 +1458,50 @@ AVAILABLE EXTENSIONS AND MODULES
   &lt;path&gt;srv&lt;/path&gt;
   &lt;path&gt;var&lt;/path&gt;
   ...
-&lt;/subvolumes&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.22"><span class="term">create_subvolumes</span></dt><dd><p>
+&lt;/subvolumes&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.18"><span class="term">create_subvolumes</span></dt><dd><p>
        Determine whether Btrfs subvolumes should be created or not. It is set
        to <code class="literal">true</code> by default. When set to
        <code class="literal">false</code>, no subvolumes will be created.
-      </p></dd><dt id="id-1.7.5.2.10.8.8.4.23"><span class="term">subvolumes_prefix</span></dt><dd><p>
+      </p></dd><dt id="id-1.7.5.2.10.8.8.4.19"><span class="term">subvolumes_prefix</span></dt><dd><p>
        Set the Btrfs subvolumes prefix name. If no prefix is wanted, it must be
        set to an empty value:
       </p><div class="verbatim-wrap"><pre class="screen">&lt;subvolumes_prefix&gt;&lt;![CDATA[]]&gt;&lt;/subvolumes_prefix&gt;</pre></div><p>
        It is set to <code class="literal">@</code> by default.
-      </p></dd><dt id="id-1.7.5.2.10.8.8.4.24"><span class="term">lv_name</span></dt><dd><p>
+      </p></dd><dt id="id-1.7.5.2.10.8.8.4.20"><span class="term">lv_name</span></dt><dd><p>
        If this partition is on a logical volume in a volume group, specify the
        logical volume name here (see the <code class="literal">type</code> parameter in
        the drive configuration).
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;lv_name&gt;opt_lv&lt;/lv_name&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.25"><span class="term">stripes</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;lv_name&gt;opt_lv&lt;/lv_name&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.21"><span class="term">stripes</span></dt><dd><p>
        An integer that configures LVM striping. Specify across how many devices
        you want to stripe (spread data).
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;stripes config:type="integer"&gt;2&lt;/stripes&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.26"><span class="term">stripesize</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;stripes config:type="integer"&gt;2&lt;/stripes&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.22"><span class="term">stripesize</span></dt><dd><p>
        Specify the size of each block in KB.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;stripesize config:type="integer"&gt;4&lt;/stripesize&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.27"><span class="term">lvm_group</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;stripesize config:type="integer"&gt;4&lt;/stripesize&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.23"><span class="term">lvm_group</span></dt><dd><p>
        If this is a physical partition used by (part of) a volume group (LVM),
        you need to specify the name of the volume group here.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;lvm_group&gt;system&lt;/lvm_group&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.28"><span class="term">pool</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;lvm_group&gt;system&lt;/lvm_group&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.24"><span class="term">pool</span></dt><dd><p>
        <code class="literal">pool</code> must be set to <code class="literal">true</code> if the
        LVM logical volume should be an LVM thin pool.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;pool config:type="boolean"&gt;true&lt;/pool&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.29"><span class="term">used_pool</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;pool config:type="boolean"&gt;true&lt;/pool&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.25"><span class="term">used_pool</span></dt><dd><p>
        The name of the LVM thin pool that is used as a data store for this thin
        logical volume. If this is set to something non-empty, it implies that
        the volume is a so-called thin logical volume.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;used_pool&gt;my_thin_pool&lt;/used_pool&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.30"><span class="term">raid_name</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;used_pool&gt;my_thin_pool&lt;/used_pool&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.26"><span class="term">raid_name</span></dt><dd><p>
        If this physical volume is part of a RAID array, specify the name of the
        RAID array.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;raid_name&gt;/dev/md/0&lt;/raid_name&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.31"><span class="term">raid_options</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;raid_name&gt;/dev/md/0&lt;/raid_name&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.27"><span class="term">raid_options</span></dt><dd><p>
        Specify RAID options. Setting the RAID options at the
        <code class="literal">partition</code> level is deprecated. See
        <a class="xref" href="cha-configuration-installation-options.html#ay-partition-sw-raid" title="4.5.6. Software RAID">Section 4.5.6, “Software RAID”</a>.
-      </p></dd><dt id="id-1.7.5.2.10.8.8.4.32"><span class="term">bcache_backing_for</span></dt><dd><p>
+      </p></dd><dt id="id-1.7.5.2.10.8.8.4.28"><span class="term">bcache_backing_for</span></dt><dd><p>
        If this device is used as a <span class="emphasis"><em><code class="systemitem">bcache</code> backing
        device</em></span>, specify the name of the <code class="systemitem">bcache</code> device. See
        <a class="xref" href="cha-configuration-installation-options.html#ay-partition-bcache" title="4.5.8. bcache configuration">Section 4.5.8, “<code class="systemitem">bcache</code> configuration”</a> for further details.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;bcache_backing_for&gt;/dev/bcache0&lt;/bcache_backing_for&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.33"><span class="term">bcache_caching_for</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;bcache_backing_for&gt;/dev/bcache0&lt;/bcache_backing_for&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.29"><span class="term">bcache_caching_for</span></dt><dd><p>
        If this device is used as a <span class="emphasis"><em><code class="systemitem">bcache</code> caching
        device</em></span>, specify the names of the <code class="systemitem">bcache</code> devices. See
        <a class="xref" href="cha-configuration-installation-options.html#ay-partition-bcache" title="4.5.8. bcache configuration">Section 4.5.8, “<code class="systemitem">bcache</code> configuration”</a> for further details.
-      </p><div class="verbatim-wrap"><pre class="screen">&lt;bcache_caching_for config:type="list"&gt;&lt;listentry&gt;/dev/bcache0&lt;/listentry&gt;&lt;/bcache_caching_for&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.34"><span class="term">resize</span></dt><dd><p>
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;bcache_caching_for config:type="list"&gt;&lt;listentry&gt;/dev/bcache0&lt;/listentry&gt;&lt;/bcache_caching_for&gt;</pre></div></dd><dt id="id-1.7.5.2.10.8.8.4.30"><span class="term">resize</span></dt><dd><p>
        Starting with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> 15 resizing works with physical disk
        partitions and with LVM volumes
       </p><div class="verbatim-wrap"><pre class="screen">&lt;resize config:type="boolean"&gt;false&lt;/resize&gt;</pre></div></dd></dl></div></section><section class="sect3" id="ay-btrfs-subvolumes" data-id-title="Btrfs subvolumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">4.5.3.3 </span><span class="title-name">Btrfs subvolumes</span></span> <a title="Permalink" class="permalink" href="cha-configuration-installation-options.html#ay-btrfs-subvolumes">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_partitioning.xml" title="Edit source document"> </a></div></div></div></div></div><p>
