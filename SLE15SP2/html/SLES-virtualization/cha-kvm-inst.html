@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Virtualization Guide | Guest Installation</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Guest Installation | SLES 15 SP2"/>
+<meta name="description" content="A VM Guest consists of an image containing an operating system and data files and a configuration file describing the VM Guest's virtual hardware res…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 8. Guest Installation"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Guest Installation",
+  
+    "description": "Guest Installation",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-10T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-libvirt-overview.html" title="Chapter 7. Starting and Stopping libvirtd"/><link rel="next" href="cha-libvirt-managing.html" title="Chapter 9. Basic VM Guest Management"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-libvirt.html">Managing Virtual Machines with libvirt</a><span> / </span><a class="crumb" href="cha-kvm-inst.html">Guest Installation</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">5 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">6 </span><span class="title-name">Supported Hosts, Guests, and Features</span></a></li></ol></li><li class="active"><a href="part-virt-libvirt.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">7 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" you-are-here"><span class="title-number">8 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">9 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">10 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">11 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">13 </span><span class="title-name">Configuring Virtual Machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">15 </span><span class="title-name">Managing Virtual Machines with Vagrant</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">16 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">17 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">18 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">19 </span><span class="title-name">QEMU Guest Agent</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">20 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">21 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">23 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">24 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">26 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">27 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">28 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">29 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">30 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">31 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">32 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">33 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">34 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">35 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Toolstacks and Libvirt framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-kvm-inst" data-id-title="Guest Installation"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">8 </span><span class="title-name">Guest Installation</span></span> <a title="Permalink" class="permalink" href="cha-kvm-inst.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  A VM Guest consists of an image containing an operating system and data
+  files and a configuration file describing the VM Guest's virtual hardware
+  resources. VM Guests are hosted on and controlled by the VM Host Server. This
+  section provides generalized instructions for installing a VM Guest.
+  <span class="phrase">For a list of supported VM Guests refer to
+  <a class="xref" href="cha-virt-support.html" title="Chapter 6. Supported Hosts, Guests, and Features">Chapter 6, <em>Supported Hosts, Guests, and Features</em></a>.</span>
+ </p><p>
+  Virtual machines have few if any requirements above those required to run the
+  operating system. If the operating system has not been optimized for the
+  virtual machine host environment, it can only run on
+  <a class="xref" href="gloss-vt-glossary.html#gloss-vt-hwassisted" title="hardware-assisted">hardware-assisted</a> virtualization computer hardware, in
+  full virtualization mode, and requires specific device drivers to be loaded.
+  The hardware that is presented to the VM Guest depends on the configuration
+  of the host.
+ </p><p>
+  You should be aware of any licensing issues related to running a single
+  licensed copy of an operating system on multiple virtual machines. Consult
+  the operating system license agreement for more information.
+ </p><section class="sect1" id="sec-libvirt-inst-vmm" data-id-title="GUI-Based Guest Installation"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.1 </span><span class="title-name">GUI-Based Guest Installation</span></span> <a title="Permalink" class="permalink" href="cha-kvm-inst.html#sec-libvirt-inst-vmm">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <span class="guimenu">New VM</span> wizard helps you through the steps required to create a virtual machine and install its operating system.
+   To start it, open the Virtual Machine Manager and select <span class="guimenu">File</span> › <span class="guimenu">New Virtual Machine</span>.
+   Alternatively, start YaST and select <span class="guimenu">Virtualization</span> › <span class="guimenu">Create Virtual Machines</span>.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Start the <span class="guimenu">New VM</span> wizard either from YaST or Virtual Machine Manager.
+    </p></li><li class="step"><p>
+     Choose an installation source—either a locally available media or a
+     network installation source. If you want to set up your VM Guest from an
+     existing image, choose <span class="guimenu">import existing disk image</span>.
+    </p><p>
+     On a VM Host Server running the Xen hypervisor, you can choose whether to
+     install a paravirtualized or a fully virtualized guest. The respective
+     option is available under <span class="guimenu">Architecture Options</span>.
+     Depending on this choice, not all installation options may be available.
+    </p></li><li class="step"><p>
+     Depending on your choice in the previous step, you need to provide the
+     following data:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.6.3.3.2.1"><span class="term"><span class="guimenu">Local install media (ISO image or CDROM)</span>
+      </span></dt><dd><p>
+        Specify the path on the VM Host Server to an ISO image containing the
+        installation data. If it is available as a volume in a libvirt storage
+        pool, you can also select it using <span class="guimenu">Browse</span>. For more
+        information, see <a class="xref" href="cha-libvirt-storage.html" title="Chapter 11. Managing Storage">Chapter 11, <em>Managing Storage</em></a>.
+       </p><p>
+        Alternatively, choose a physical CD-ROM or DVD inserted in the optical
+        drive of the VM Host Server.
+       </p></dd><dt id="id-1.12.4.3.6.3.3.2.2"><span class="term"><span class="guimenu">Network install (HTTP, HTTPS, or FTP)</span>
+      </span></dt><dd><p>
+        Provide the <span class="guimenu">URL</span> pointing to the installation source.
+        Valid URL prefixes are, for example, <code class="literal">ftp://</code>, <code class="literal">http://</code>, and <code class="literal">https://</code>.
+       </p><p>
+        Under <span class="guimenu">URL Options</span>, provide a path to an
+        auto-installation file (AutoYaST or Kickstart, for example) and kernel
+        parameters. Having provided a URL, the operating system should be
+        automatically detected correctly. If this is not the case, deselect
+        <span class="guimenu">Automatically Detect Operating System Based on
+        Install-Media</span> and manually select the <span class="guimenu">OS
+        Type</span> and <span class="guimenu">Version</span>.
+       </p></dd><dt id="id-1.12.4.3.6.3.3.2.3"><span class="term"><span class="guimenu">Import Existing Disk Image</span>
+      </span></dt><dd><p>
+        To set up the VM Guest from an existing image, you need to specify the
+        path on the VM Host Server to the image. If it is available as a volume in a
+        libvirt storage pool, you can also select it using
+        <span class="guimenu">Browse</span>. For more information, see
+        <a class="xref" href="cha-libvirt-storage.html" title="Chapter 11. Managing Storage">Chapter 11, <em>Managing Storage</em></a>.
+       </p></dd><dt id="id-1.12.4.3.6.3.3.2.4"><span class="term"><span class="guimenu">Manual install</span></span></dt><dd><p>
+        To install a specific product version, start typing its name—for example, <code class="literal">sles</code>—and select it once a match appears.
+        Verify that the product's bootable disk or image is available to the virtual machine.
+       </p></dd></dl></div></li><li class="step"><p>
+     Choose the memory size and number of CPUs for the new virtual machine.
+    </p></li><li class="step"><p>
+     This step is omitted when <span class="guimenu">Import an Existing Image</span> is
+     chosen in the first step.
+    </p><p>
+     Set up a virtual hard disk for the VM Guest. Either create a new disk
+     image or choose an existing one from a storage pool (for more information,
+     see <a class="xref" href="cha-libvirt-storage.html" title="Chapter 11. Managing Storage">Chapter 11, <em>Managing Storage</em></a>). If you choose to create a
+     disk, a <code class="literal">qcow2</code> image will be created. By default, it is
+     stored under <code class="filename">/var/lib/libvirt/images</code>.
+    </p><p>
+     Setting up a disk is optional. If you are running a live system directly
+     from CD or DVD, for example, you can omit this step by deactivating
+     <span class="guimenu">Enable Storage for this Virtual Machine</span>.
+    </p></li><li class="step"><p>
+     On the last screen of the wizard, specify the name for the virtual
+     machine. To be offered the possibility to review and make changes to the
+     virtualized hardware selection, activate <span class="guimenu">Customize configuration
+     before install</span>. Find options to specify the network device under
+     <span class="guimenu">Network Selection</span>.
+    </p><p>
+     Click <span class="guimenu">Finish</span>.
+    </p></li><li class="step"><p><span class="step-optional">(Optional)</span> 
+     If you kept the defaults in the previous step, the installation will now
+     start. If you selected <span class="guimenu">Customize configuration before
+     install</span>, a VM Guest configuration dialog opens. For more
+     information about configuring VM Guests, see
+     <a class="xref" href="cha-libvirt-config-gui.html" title="Chapter 13. Configuring Virtual Machines with Virtual Machine Manager">Chapter 13, <em>Configuring Virtual Machines with Virtual Machine Manager</em></a>.
+    </p><p>
+     When you are done configuring, click <span class="guimenu">Begin
+     Installation</span>.
+    </p></li></ol></div></div><div id="tip-libvirt-inst-vmm-sticky" data-id-title="Passing Key Combinations to Virtual Machines" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Passing Key Combinations to Virtual Machines</div><p>
+    The installation starts in a Virtual Machine Manager console window. Some key combinations,
+    such as <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">F1</span>, are recognized by the VM Host Server but are not
+    passed to the virtual machine. To bypass the VM Host Server, Virtual Machine Manager provides the
+    <span class="quote">“<span class="quote">sticky key</span>”</span> functionality. Pressing
+    <span class="keycap">Ctrl</span>, <span class="keycap">Alt</span>, or
+    <span class="keycap">Shift</span> three times makes the key sticky, then you can
+    press the remaining keys to pass the combination to the virtual machine.
+   </p><p>
+    For example, to pass <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">F2</span> to a Linux virtual
+    machine, press <span class="keycap">Ctrl</span> three times, then press
+    <span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">F2</span>. You
+    can also press <span class="keycap">Alt</span> three times, then press <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">F2</span>.
+   </p><p>
+    The sticky key functionality is available in the Virtual Machine Manager during and after
+    installing a VM Guest.
+   </p></div></section><section class="sect1" id="sec-libvirt-inst-virt-install" data-id-title="Installing from the Command Line with virt-install"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.2 </span><span class="title-name">Installing from the Command Line with <code class="command">virt-install</code></span></span> <a title="Permalink" class="permalink" href="cha-kvm-inst.html#sec-libvirt-inst-virt-install">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">virt-install</code> is a command line tool that helps you create
+   new virtual machines using the <code class="systemitem">libvirt</code> library. It is useful if you cannot
+   use the graphical user interface, or need to automatize the process of
+   creating virtual machines.
+  </p><p>
+   <code class="command">virt-install</code> is a complex script with a lot of command
+   line switches. The following are required. For more information, see the man
+   page of <code class="command">virt-install</code> (1).
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.7.4.1"><span class="term">General Options</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <code class="option">--name <em class="replaceable">VM_GUEST_NAME</em></code>:
+        Specify the name of the new virtual machine. The name must be unique
+        across all guests known to the hypervisor on the same connection. It is
+        used to create and name the guest’s configuration file and you can
+        access the guest with this name from <code class="command">virsh</code>.
+        Alphanumeric and <code class="literal">_-.:+</code> characters are allowed.
+       </p></li><li class="listitem"><p>
+        <code class="option">--memory <em class="replaceable">REQUIRED_MEMORY</em></code>:
+        Specify the amount of memory to allocate for the new virtual machine in
+        megabytes.
+       </p></li><li class="listitem"><p>
+        <code class="option">--vcpus <em class="replaceable">NUMBER_OF_CPUS</em></code>:
+        Specify the number of virtual CPUs. For best performance, the number of
+        virtual processors should be less than or equal to the number of
+        physical processors.
+       </p></li></ul></div></dd><dt id="id-1.12.4.3.7.4.2"><span class="term">Virtualization Type</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <code class="option">--paravirt</code>: Set up a paravirtualized guest. This is
+        the default if the VM Host Server supports paravirtualization and full
+        virtualization.
+       </p></li><li class="listitem"><p>
+        <code class="option">--hvm</code>: Set up a fully virtualized guest.
+       </p></li><li class="listitem"><p>
+        <code class="option">--virt-type <em class="replaceable">HYPERVISOR</em></code>:
+        Specify the hypervisor. Supported values are <code class="literal">kvm</code>,
+        <code class="literal">xen</code>, or <code class="literal">lxc</code>.
+       </p></li></ul></div></dd><dt id="id-1.12.4.3.7.4.3"><span class="term">Guest Storage</span></dt><dd><p>
+      Specify one of <code class="option">--disk</code>, <code class="option">--filesystem</code> or
+      <code class="option">--nodisks</code> the type of the storage for the new virtual
+      machine. For example, <code class="option">--disk size=10</code> creates 10 GB disk
+      in the default image location for the hypervisor and uses it for the
+      VM Guest. <code class="option">--filesystem
+      <em class="replaceable">/export/path/on/vmhost</em></code> specifies the
+      directory on the VM Host Server to be exported to the guest. And
+      <code class="option">--nodisks</code> sets up a VM Guest without a local storage
+      (good for Live CDs).
+     </p></dd><dt id="id-1.12.4.3.7.4.4"><span class="term">Installation Method</span></dt><dd><p>
+      Specify the installation method using one of <code class="option">--location</code>,
+      <code class="option">--cdrom</code>, <code class="option">--pxe</code>,
+      <code class="option">--import</code>, or <code class="option">--boot </code>.
+     </p></dd><dt id="id-1.12.4.3.7.4.5"><span class="term">Accessing the Installation</span></dt><dd><p>
+      Use the <code class="option">--graphics <em class="replaceable">VALUE</em></code>
+      option to specify how to access the installation. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports
+      the values <code class="literal">vnc</code> or <code class="literal">none</code>.
+     </p><p>
+      If using VNC, <code class="command">virt-install</code> tries to launch
+      <code class="command">virt-viewer</code>. If it is not installed or cannot be run,
+      connect to the VM Guest manually with you preferred viewer. To
+      explicitly prevent <code class="command">virt-install</code> from launching the
+      viewer use <code class="option">--noautoconsole</code>. To define a password for
+      accessing the VNC session, use the following syntax: <code class="option">--graphics
+      vnc,password=<em class="replaceable">PASSWORD</em></code>.
+     </p><p>
+      In case you are using <code class="option">--graphics none</code>, you can access
+      the VM Guest through operating system supported services, such as SSH or
+      VNC. Refer to the operating system installation manual on how to set up
+      these services in the installation system.
+     </p></dd><dt id="id-1.12.4.3.7.4.6"><span class="term">Passing Kernel and Initrd Files</span></dt><dd><p>
+      It is possible to directly specify the Kernel and Initrd of the
+      installer, for example from a network source.
+      <span class="phrase">To set up a network source, see
+      <span class="intraxref">Book “Deployment Guide”, Chapter 16 “Setting Up a Network Installation Source”, Section 16.4 “Setting Up an HTTP Repository Manually”</span>.</span>
+     </p><p>
+      To pass additional boot parameters, use the
+      <code class="option">--extra-args</code> option. This can be used to specify
+      a network configuration. For details, see
+      <span class="intraxref">Book “Deployment Guide”, Chapter 7 “Boot Parameters”</span>
+      .
+     </p><div class="example" id="id-1.12.4.3.7.4.6.2.3" data-id-title="Loading Kernel and Initrd from HTTP Server"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 8.1: </span><span class="title-name">Loading Kernel and Initrd from HTTP Server </span></span><a title="Permalink" class="permalink" href="cha-kvm-inst.html#id-1.12.4.3.7.4.6.2.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">virt-install</code> --location "http://example.tld/REPOSITORY/DVD1/" \
+--extra-args="textmode=1" --name "SLES15" --memory 2048 --virt-type kvm\
+--connect qemu:///system --disk size=10 --graphics vnc \
+--network network=vnet_nated</pre></div></div></div></dd><dt id="id-1.12.4.3.7.4.7"><span class="term">Enabling the Console</span></dt><dd><p>
+      By default, the console is not enabled for new virtual machines installed
+      using <code class="command">virt-install</code>. To enable it, use
+      <code class="option">--extra-args="console=ttyS0 textmode=1"</code> as in the
+      following example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-install --virt-type kvm --name sles12 --memory 1024 \
+ --disk /var/lib/libvirt/images/disk1.qcow2 --os-variant sles12
+ --extra-args="console=ttyS0 textmode=1" --graphics none</pre></div><p>
+      After the installation finishes, the
+      <code class="filename">/etc/default/grub</code> file in the VM image will be
+      updated with the <code class="option">console=ttyS0</code> option on the
+      <code class="literal">GRUB_CMDLINE_LINUX_DEFAULT</code> line.
+     </p></dd><dt id="vle-libvirt-inst-virt-install-ovmf"><span class="term">Using UEFI and Secure Boot</span></dt><dd><p>
+      Install OVMF as described in <a class="xref" href="cha-vt-installation.html#sec-vt-installation-ovmf" title="5.5. Installing UEFI Support">Section 5.5, “Installing UEFI Support”</a>. Then add the
+      <code class="option">--boot uefi</code> option to the
+      <code class="command">virt-install</code> command.
+     </p><p>
+      Secure boot will be used automatically when setting up a new VM
+      with OVMF. To use a specific firmware, use <code class="option">--boot
+      loader=/usr/share/qemu/ovmf-<em class="replaceable">VERSION</em>.bin</code>.
+      Replace <em class="replaceable">VERSION</em> with the file you
+      need.
+     </p></dd></dl></div><div class="complex-example"><div class="example" id="ex-libvirt-inst-virt-install-example" data-id-title="Example of a virt-install command line"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 8.2: </span><span class="title-name">Example of a <code class="command">virt-install</code> command line </span></span><a title="Permalink" class="permalink" href="cha-kvm-inst.html#ex-libvirt-inst-virt-install-example">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+    The following command line example creates a new SUSE Linux Enterprise 15 SP2 virtual machine
+    with a virtio accelerated disk and network card. It creates a new 10 GB
+    qcow2 disk image as a storage, the source installation media being the host
+    CD-ROM drive. It will use VNC graphics, and it will auto-launch the
+    graphical client.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.7.5.3.1"><span class="term">KVM</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-install --connect qemu:///system --virt-type kvm \
+--name sle15sp2 --memory 1024 --disk size=10 --cdrom /dev/cdrom --graphics vnc \
+--os-variant sle15sp2</pre></div></dd><dt id="id-1.12.4.3.7.5.3.2"><span class="term">Xen</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-install --connect xen:// --virt-type xen --hvm \
+--name sle15sp2 --memory 1024 --disk size=10 --cdrom /dev/cdrom --graphics vnc \
+--os-variant sle15sp2</pre></div></dd></dl></div></div></div></div></section><section class="sect1" id="sec-libvirt-inst-advanced" data-id-title="Advanced Guest Installation Scenarios"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.3 </span><span class="title-name">Advanced Guest Installation Scenarios</span></span> <a title="Permalink" class="permalink" href="cha-kvm-inst.html#sec-libvirt-inst-advanced">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section provides instructions for operations exceeding the scope of a
+   normal installation, such as memory ballooning and installing add-on
+   products.
+  </p><section class="sect2" id="libvirt-advanced-balloon" data-id-title="Memory Ballooning with Windows Guests"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">8.3.1 </span><span class="title-name">Memory Ballooning with Windows Guests</span></span> <a title="Permalink" class="permalink" href="cha-kvm-inst.html#libvirt-advanced-balloon">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Memory ballooning is a method to change the amount of memory used by
+    VM Guest at runtime. Both the KVM and Xen hypervisors provide this
+    method, but it needs to be supported by the guest as well.
+   </p><p>
+    While openSUSE and SLE-based guests support memory ballooning, Windows
+    guests need the
+    <a class="link" href="https://www.suse.com/products/vmdriverpack/" target="_blank">Virtual
+    Machine Driver Pack (VMDP)</a> to provide ballooning. To set the maximum
+    memory greater than the initial memory configured for Windows guests,
+    follow these steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Install the Windows guest with the maximum memory equal or less than the
+      initial value.
+     </p></li><li class="step"><p>
+      Install the Virtual Machine Driver Pack in the Windows guest to provide
+      required drivers.
+     </p></li><li class="step"><p>
+      Shut down the Windows guest.
+     </p></li><li class="step"><p>
+      Reset the maximum memory of the Windows guest to the required value.
+     </p></li><li class="step"><p>
+      Start the Windows guest again.
+     </p></li></ol></div></div></section><section class="sect2" id="cha-kvm-inst-virtman-advanced-addons" data-id-title="Including Add-on Products in the Installation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">8.3.2 </span><span class="title-name">Including Add-on Products in the Installation</span></span> <a title="Permalink" class="permalink" href="cha-kvm-inst.html#cha-kvm-inst-virtman-advanced-addons">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/libvirt_guest_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Some operating systems such as <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> offer to include add-on
+    products in the installation process. If the add-on product installation
+    source is provided via SUSE Customer Center, no special VM Guest configuration is needed.
+    If it is provided via CD/DVD or ISO image, it is necessary to provide the
+    VM Guest installation system with both the standard installation medium
+    image and the image of the add-on product.
+   </p><p>
+    If you are using the GUI-based installation, select <span class="guimenu">Customize
+     Configuration Before Install</span> in the last step of the wizard and
+    add the add-on product ISO image via <span class="guimenu">Add
+      Hardware</span> › <span class="guimenu">Storage</span>. Specify the
+    path to the image and set the <span class="guimenu">Device Type</span> to
+    <span class="guimenu">CD-ROM</span>.
+   </p><p>
+    If you are installing from the command line, you need to set up the virtual
+    CD/DVD drives with the <code class="option">--disk</code> parameter rather than with
+    <code class="option">--cdrom</code>. The device that is specified first is used for
+    booting. The following example will install SUSE Linux Enterprise Server 15 together
+    with SUSE Enterprise Storage extension:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-install \
+ --name sles15+storage \
+ --memory 2048 --disk size=10 \
+ --disk /path/to/SLE-15-SP2-Full-<em class="replaceable">ARCH</em>-GM-media1.iso-x86_64-GM-DVD1.iso,device=cdrom \
+ --disk /path/to/SUSE-Enterprise-Storage-<em class="replaceable">VERSION</em>-DVD-<em class="replaceable">ARCH</em>-Media1.iso,device=cdrom \
+ --graphics vnc --os-variant sle15</pre></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-libvirt-overview.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 7 </span>Starting and Stopping <code class="systemitem">libvirtd</code></span></a> </div><div><a class="pagination-link next" href="cha-libvirt-managing.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 9 </span>Basic VM Guest Management</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-kvm-inst.html#sec-libvirt-inst-vmm"><span class="title-number">8.1 </span><span class="title-name">GUI-Based Guest Installation</span></a></span></li><li><span class="sect1"><a href="cha-kvm-inst.html#sec-libvirt-inst-virt-install"><span class="title-number">8.2 </span><span class="title-name">Installing from the Command Line with <code class="command">virt-install</code></span></a></span></li><li><span class="sect1"><a href="cha-kvm-inst.html#sec-libvirt-inst-advanced"><span class="title-number">8.3 </span><span class="title-name">Advanced Guest Installation Scenarios</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

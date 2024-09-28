@@ -1,0 +1,1669 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Administration Guide | System recovery and snapshot management with Snapper</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="System recovery and snapshot management with Snapper |…"/>
+<meta name="description" content="Snapper allows creating and managing file system snapshots. File system snapshots allow keeping a copy of the state of a file system at a certain poi…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 10. System recovery and snapshot management with Snapper"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "System recovery and snapshot management with Snapper",
+  
+    "description": "Snapper allows creating and managing file system snapshots. File system snapshots allow keeping a copy of the state of a file system at a certain poi…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-17T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-sw-cl.html" title="Chapter 9. Managing software with command line tools"/><link rel="next" href="cha-klp.html" title="Chapter 11. Live kernel patching with KLP"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-administration.html">Common tasks</a><span> / </span><a class="crumb" href="cha-snapper.html">System recovery and snapshot management with Snapper</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="preface-administration.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li class="active"><a href="part-administration.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name"><code class="command">sudo</code> basics</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">3 </span><span class="title-name">Using YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST in text mode</span></a></li><li><a href="cha-yast-lang.html" class=" "><span class="title-number">5 </span><span class="title-name">Changing language and country settings with YaST</span></a></li><li><a href="cha-yast-userman.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing users with YaST</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">7 </span><span class="title-name">YaST online update</span></a></li><li><a href="cha-yast-software.html" class=" "><span class="title-number">8 </span><span class="title-name">Installing or removing software</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">9 </span><span class="title-name">Managing software with command line tools</span></a></li><li><a href="cha-snapper.html" class=" you-are-here"><span class="title-number">10 </span><span class="title-name">System recovery and snapshot management with Snapper</span></a></li><li><a href="cha-klp.html" class=" "><span class="title-number">11 </span><span class="title-name">Live kernel patching with KLP</span></a></li><li><a href="cha-ulp.html" class=" "><span class="title-number">12 </span><span class="title-name">User space live patching</span></a></li><li><a href="cha-transactional-updates.html" class=" "><span class="title-number">13 </span><span class="title-name">Transactional updates</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">14 </span><span class="title-name">Remote graphical sessions with VNC</span></a></li><li><a href="cha-net-rsync.html" class=" "><span class="title-number">15 </span><span class="title-name">File copying with RSync</span></a></li></ol></li><li><a href="part-boot.html" class="has-children "><span class="title-number">II </span><span class="title-name">Booting a Linux system</span></a><ol><li><a href="cha-boot.html" class=" "><span class="title-number">16 </span><span class="title-name">Introduction to the boot process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">17 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" "><span class="title-number">18 </span><span class="title-name">The boot loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">19 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li><a href="part-system.html" class="has-children "><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">20 </span><span class="title-name">32-bit and 64-bit applications in a 64-bit system environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">21 </span><span class="title-name"><code class="command">journalctl</code>: query the <code class="systemitem">systemd</code> journal</span></a></li><li><a href="cha-update-alternative.html" class=" "><span class="title-number">22 </span><span class="title-name"><code class="command">update-alternatives</code>: managing multiple versions of commands and files</span></a></li><li><a href="cha-network.html" class=" "><span class="title-number">23 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-print.html" class=" "><span class="title-number">24 </span><span class="title-name">Printer operation</span></a></li><li><a href="cha-gui-desktop.html" class=" "><span class="title-number">25 </span><span class="title-name">Graphical user interface</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">26 </span><span class="title-name">Accessing file systems with FUSE</span></a></li><li><a href="cha-tuning-multikernel.html" class=" "><span class="title-number">27 </span><span class="title-name">Installing multiple kernel versions</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing kernel modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">29 </span><span class="title-name">Dynamic kernel device management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">30 </span><span class="title-name">Special system features</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">31 </span><span class="title-name">Using NetworkManager</span></a></li></ol></li><li><a href="part-hardware.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Hardware configuration</span></a><ol><li><a href="sec-yast-hw-keym.html" class=" "><span class="title-number">32 </span><span class="title-name">Setting up your system keyboard layout</span></a></li><li><a href="sec-yast-hw-sound.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up sound cards</span></a></li><li><a href="sec-yast-hw-print.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a printer</span></a></li><li><a href="cha-power-mgmt.html" class=" "><span class="title-number">35 </span><span class="title-name">Power management</span></a></li><li><a href="cha-nvdimm.html" class=" "><span class="title-number">36 </span><span class="title-name">Persistent memory</span></a></li></ol></li><li><a href="part-services.html" class="has-children "><span class="title-number">V </span><span class="title-name">Services</span></a><ol><li><a href="cha-yast-serviceman.html" class=" "><span class="title-number">37 </span><span class="title-name">Service management with YaST</span></a></li><li><a href="cha-ntp.html" class=" "><span class="title-number">38 </span><span class="title-name">Time synchronization with NTP</span></a></li><li><a href="cha-dns.html" class=" "><span class="title-number">39 </span><span class="title-name">The domain name system</span></a></li><li><a href="cha-dhcp.html" class=" "><span class="title-number">40 </span><span class="title-name">DHCP</span></a></li><li><a href="cha-slp.html" class=" "><span class="title-number">41 </span><span class="title-name">SLP</span></a></li><li><a href="cha-apache2.html" class=" "><span class="title-number">42 </span><span class="title-name">The Apache HTTP server</span></a></li><li><a href="cha-ftp.html" class=" "><span class="title-number">43 </span><span class="title-name">Setting up an FTP server with YaST</span></a></li><li><a href="cha-squid.html" class=" "><span class="title-number">44 </span><span class="title-name">Squid caching proxy server</span></a></li><li><a href="cha-wbem.html" class=" "><span class="title-number">45 </span><span class="title-name">Web Based Enterprise Management using SFCB</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">46 </span><span class="title-name">Help and documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">47 </span><span class="title-name">Gathering system information for support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">48 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An example network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-snapper" data-id-title="System recovery and snapshot management with Snapper"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">10 </span><span class="title-name">System recovery and snapshot management with Snapper</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Snapper allows creating and managing file system snapshots.
+    File system snapshots allow keeping a copy of the state of a file system
+    at a certain point of time.
+    The standard setup of Snapper is designed to allow rolling back system
+    changes.
+    However, you can also use it to create on-disk backups of user data.
+    As the basis for this functionality, Snapper uses the Btrfs file system or
+    thinly-provisioned LVM volumes with an XFS or Ext4 file system.
+   </p></div></div></div></div><p>
+  Snapper has a command line interface and a YaST interface.
+  Snapper lets you create and manage file system snapshots on the following
+  types of file systems:
+ </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+    Btrfs, a copy-on-write file system for Linux that natively supports
+    file system snapshots of subvolumes.
+    (Subvolumes are separately mountable file systems within a physical
+    partition.)
+   </p><p>
+    You can also boot from <code class="literal">Btrfs</code> snapshots. For more
+    information, see <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a>.
+   </p></li><li class="listitem"><p>
+    Thinly-provisioned LVM volumes formatted with XFS or Ext4.
+   </p></li></ul></div><p>
+  Using Snapper, you can perform the following tasks:
+ </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+    Undo system changes made by <code class="command">zypper</code> and YaST. See
+    <a class="xref" href="cha-snapper.html#sec-snapper-undo" title="10.2. Using Snapper to undo changes">Section 10.2, “Using Snapper to undo changes”</a> for details.
+   </p></li><li class="listitem"><p>
+    Restore files from previous snapshots. See
+    <a class="xref" href="cha-snapper.html#sec-snapper-undo-delete-file" title="10.2.2. Using Snapper to restore files">Section 10.2.2, “Using Snapper to restore files”</a> for details.
+   </p></li><li class="listitem"><p>
+    Do a system rollback by booting from a snapshot. See
+    <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a> for details.
+   </p></li><li class="listitem"><p>
+    Manually create and manage snapshots, within the running system. See
+    <a class="xref" href="cha-snapper.html#sec-snapper-manage" title="10.6. Manually creating and managing snapshots">Section 10.6, “Manually creating and managing snapshots”</a> for details.
+   </p></li></ul></div><section class="sect1" id="sec-snapper-setup" data-id-title="Default setup"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.1 </span><span class="title-name">Default setup</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-setup">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Snapper on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is set up as an undo and recovery
+   tool for system changes. By default, the root partition
+   (<code class="filename">/</code>) of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is formatted with
+   <code class="literal">Btrfs</code>. Taking snapshots is automatically enabled if the
+   root partition (<code class="filename">/</code>) is big enough (more
+   than approximately 16 GB). By default, snapshots are disabled on partitions
+   other than <code class="filename">/</code>.
+  </p><div id="id-1.3.3.11.7.3" data-id-title="Enabling Snapper in the installed system" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Enabling Snapper in the installed system</div><p>
+    If you disabled Snapper during the installation, you can enable it at
+    any time later. To do so, create a default Snapper configuration for the
+    root file system by running:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c root create-config /</pre></div><p>
+    Afterward enable the different snapshot types as described in <a class="xref" href="cha-snapper.html#sec-snapper-setup-customize-auto-snapshots" title="10.1.4.1. Disabling/enabling snapshots">Section 10.1.4.1, “Disabling/enabling snapshots”</a>.
+   </p><p>
+    Note that on a Btrfs root file system, snapshots require a file system with
+    subvolumes configured as proposed by the installer and a partition size of at
+    least 16 GB.
+   </p></div><p>
+   When a snapshot is created, both the snapshot and the original point to the
+   same blocks in the file system. So, initially a snapshot does not occupy
+   additional disk space. If data in the original file system is modified,
+   changed data blocks are copied while the old data blocks are kept for the
+   snapshot. Therefore, a snapshot occupies the same amount of space as the
+   data modified. So, over time, the amount of space a snapshot allocates,
+   constantly grows. As a consequence, deleting files from a
+   <code class="literal">Btrfs</code> file system containing snapshots may
+   <span class="emphasis"><em>not</em></span> free disk space!
+  </p><div id="id-1.3.3.11.7.5" data-id-title="Snapshot location" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Snapshot location</div><p>
+    Snapshots always reside on the same partition or subvolume on which the
+    snapshot has been taken. It is not possible to store snapshots on a
+    different partition or subvolume.
+   </p></div><p>
+   As a result, partitions containing snapshots need to be larger than
+   partitions not containing snapshots. The exact amount depends strongly on the
+   number of snapshots you keep and the amount of data modifications. As a rule
+   of thumb, give partitions twice as much space as you normally would.
+   To prevent disks from running out of space, old snapshots are automatically
+   cleaned up. Refer to
+   <a class="xref" href="cha-snapper.html#sec-snapper-setup-customize-archiving" title="10.1.4.4. Controlling snapshot archiving">Section 10.1.4.4, “Controlling snapshot archiving”</a> for details.
+  </p><section class="sect2" id="snapper-default-settings" data-id-title="Default settings"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.1 </span><span class="title-name">Default settings</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#snapper-default-settings">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.7.7.2.1"><span class="term">Disks larger than 16 GB</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Configuration file: <code class="filename">/etc/snapper/configs/root</code></p></li><li class="listitem"><p><code class="literal">USE_SNAPPER=yes</code></p></li><li class="listitem"><p><code class="literal">TIMELINE_CREATE=no</code></p></li></ul></div></dd><dt id="id-1.3.3.11.7.7.2.2"><span class="term">Disks smaller than 16 GB</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>Configuration file: not created</p></li><li class="listitem"><p><code class="literal">USE_SNAPPER=no</code></p></li><li class="listitem"><p><code class="literal">TIMELINE_CREATE=yes</code></p></li></ul></div></dd></dl></div></section><section class="sect2" id="snapper-snapshot-type" data-id-title="Types of snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.2 </span><span class="title-name">Types of snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#snapper-snapshot-type">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Although snapshots themselves do not differ in a technical sense, we
+    distinguish between three types of snapshots, based on the events that trigger them:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.7.8.3.1"><span class="term">Timeline snapshots</span></dt><dd><p>
+        A single snapshot is created every hour. Using the YaST OS
+        installation method (default), timeline snapshots are enabled, except
+        for the root file system. You can configure timeline snapshots to be
+        taken at different intervals: hourly, daily, weekly, monthly and yearly.
+        Old snapshots are automatically deleted. By default, the first snapshot
+        of the last ten days, months and years is kept.
+      </p></dd><dt id="id-1.3.3.11.7.8.3.2"><span class="term">Installation snapshots</span></dt><dd><p>
+        Whenever one or more packages are installed with Zypper or YaST,
+        three installation snapshots are created. In case an important system
+        component such as the kernel has been installed, the snapshot pair is
+        marked as important. Old snapshots are automatically deleted.
+        Installation snapshots are enabled by default.
+      </p></dd><dt id="id-1.3.3.11.7.8.3.3"><span class="term">Administration snapshots</span></dt><dd><p>
+         Whenever you make changes to the system using Zypper or YaST, a
+         pair of snapshots is created: one prior to the system change
+         (<span class="quote">“<span class="quote">pre</span>”</span>) and the other one after the system change
+         (<span class="quote">“<span class="quote">post</span>”</span>). Old snapshots are automatically deleted.
+         Administration snapshots are enabled by default.
+       </p></dd></dl></div></section><section class="sect2" id="snapper-dir-excludes" data-id-title="Directories that are excluded from snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.3 </span><span class="title-name">Directories that are excluded from snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#snapper-dir-excludes">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Some directories need to be excluded from snapshots for different reasons.
+    The following list shows all directories that are excluded:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.7.9.3.2"><span class="term"><code class="filename">/boot/grub2/i386-pc</code>,
+   <code class="filename">/boot/grub2/x86_64-efi</code>,
+   <code class="filename">/boot/grub2/powerpc-ieee1275</code>,
+   <code class="filename">/boot/grub2/s390x-emu</code>
+  </span></dt><dd><p>
+    A rollback of the boot loader configuration is not supported. The
+    directories listed above are architecture-specific. The first two
+    directories are present on AMD64/Intel 64 machines, the latter two on IBM
+    POWER and on IBM Z, respectively.
+   </p></dd><dt id="id-1.3.3.11.7.9.3.3"><span class="term"><code class="filename">/home</code>
+  </span></dt><dd><p>
+    If <code class="filename">/home</code> does not reside on a separate partition, it
+    is excluded to avoid data loss on rollbacks.
+   </p></dd><dt id="id-1.3.3.11.7.9.3.4"><span class="term"><code class="filename">/opt</code>
+  </span></dt><dd><p>
+    Third-party products usually get installed to <code class="filename">/opt</code>. It
+    is excluded to avoid uninstalling these applications on rollbacks.
+   </p></dd><dt id="id-1.3.3.11.7.9.3.5"><span class="term"><code class="filename">/srv</code>
+  </span></dt><dd><p>
+    Contains data for Web and FTP servers. It is excluded to avoid data loss on
+    rollbacks.
+   </p></dd><dt id="id-1.3.3.11.7.9.3.6"><span class="term"><code class="filename">/tmp</code>
+  </span></dt><dd><p>
+    All directories containing temporary files and caches are excluded from
+    snapshots.
+   </p></dd><dt id="id-1.3.3.11.7.9.3.7"><span class="term"><code class="filename">/usr/local</code>
+  </span></dt><dd><p>
+    This directory is used when manually installing software. It is excluded to
+    avoid uninstalling these installations on rollbacks.
+   </p></dd><dt id="id-1.3.3.11.7.9.3.8"><span class="term"><code class="filename">/var</code>
+  </span></dt><dd><p>
+    This directory contains many variable files, including logs, temporary
+    caches, third party products in <code class="filename">/var/opt</code>, and is the
+    default location for virtual machine images and databases. Therefore this
+    subvolume is created to exclude all of this variable data from snapshots
+    and has Copy-On-Write disabled.
+   </p></dd></dl></div></section><section class="sect2" id="sec-snapper-setup-customize" data-id-title="Customizing the setup"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.4 </span><span class="title-name">Customizing the setup</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-setup-customize">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> comes with a reasonable default setup, which should be
+    sufficient for most use cases. However, all aspects of taking automatic
+    snapshots and snapshot keeping can be configured according to your needs.
+   </p><section class="sect3" id="sec-snapper-setup-customize-auto-snapshots" data-id-title="Disabling/enabling snapshots"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.1.4.1 </span><span class="title-name">Disabling/enabling snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-setup-customize-auto-snapshots">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Each of the three snapshot types (timeline, installation, administration)
+     can be enabled or disabled independently.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.7.10.3.3.1"><span class="term">Disabling/enabling timeline snapshots</span></dt><dd><p><span class="formalpara-title">Enabling. </span>
+         <code class="command">snapper -c root set-config "TIMELINE_CREATE=yes"</code>
+        </p><p><span class="formalpara-title">Disabling. </span>
+         <code class="command">snapper -c root set-config "TIMELINE_CREATE=no"</code>
+        </p><p>
+        Using the YaST OS installation method (default), timeline snapshots
+        are enabled, except for the root file system.
+       </p></dd><dt id="id-1.3.3.11.7.10.3.3.2"><span class="term">Disabling/enabling installation snapshots</span></dt><dd><p><span class="formalpara-title">Enabling:</span>
+         Install the package
+         <code class="systemitem">snapper-zypp-plugin</code>
+        </p><p><span class="formalpara-title">Disabling:</span>
+         Uninstall the package
+         <code class="systemitem">snapper-zypp-plugin</code>
+        </p><p>
+        Installation snapshots are enabled by default.
+       </p></dd><dt id="id-1.3.3.11.7.10.3.3.3"><span class="term">Disabling/enabling administration snapshots</span></dt><dd><p><span class="formalpara-title">Enabling:</span>
+         Set <code class="envar">USE_SNAPPER</code> to <code class="literal">yes</code> in
+         <code class="filename">/etc/sysconfig/yast2</code>.
+        </p><p><span class="formalpara-title">Disabling:</span>
+         Set <code class="envar">USE_SNAPPER</code> to <code class="literal">no</code> in
+         <code class="filename">/etc/sysconfig/yast2</code>.
+        </p><p>
+        Administration snapshots are enabled by default.
+       </p></dd></dl></div></section><section class="sect3" id="sec-snapper-setup-customize-inst-snapshots" data-id-title="Controlling installation snapshots"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.1.4.2 </span><span class="title-name">Controlling installation snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-setup-customize-inst-snapshots">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Taking snapshot pairs upon installing packages with YaST or Zypper is
+     handled by the
+     <code class="systemitem">snapper-zypp-plugin</code>. An XML
+     configuration file, <code class="filename">/etc/snapper/zypp-plugin.conf</code>
+     defines, when to make snapshots. By default the file looks like the
+     following:
+    </p><div class="verbatim-wrap"><pre class="screen"> 1 &lt;?xml version="1.0" encoding="utf-8"?&gt;
+ 2 &lt;snapper-zypp-plugin-conf&gt;
+ 3  &lt;solvables&gt;
+ 4   &lt;solvable match="w"<span class="callout" id="zypp-conf-match">1</span> important="true"<span class="callout" id="zypp-conf-important">2</span>&gt;kernel-*<span class="callout" id="zypp-conf-kernel">3</span>&lt;/solvable&gt;
+ 5   &lt;solvable match="w" important="true"&gt;dracut&lt;/solvable&gt;
+ 6   &lt;solvable match="w" important="true"&gt;glibc&lt;/solvable&gt;
+ 7   &lt;solvable match="w" important="true"&gt;systemd*&lt;/solvable&gt;
+ 8   &lt;solvable match="w" important="true"&gt;udev&lt;/solvable&gt;
+ 9   &lt;solvable match="w"&gt;*&lt;/solvable&gt;<span class="callout" id="zypp-conf-packages">4</span>
+10  &lt;/solvables&gt;
+11 &lt;/snapper-zypp-plugin-conf&gt;</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#zypp-conf-match"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       The match attribute defines whether the pattern is a Unix shell-style
+       wild card (<code class="literal">w</code>) or a Python regular expression
+       (<code class="literal">re</code>).
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#zypp-conf-important"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       If the given pattern matches and the corresponding package is marked as
+       important (for example kernel packages), the snapshot will also be
+       marked as important.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#zypp-conf-kernel"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Pattern to match a package name. Based on the setting of the
+       <code class="literal">match</code> attribute, special characters are either
+       interpreted as shell wild cards or regular expressions. This pattern
+       matches all package names starting with <code class="literal">kernel-</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#zypp-conf-packages"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       This line unconditionally matches all packages.
+      </p></td></tr></table></div><p>
+     With this configuration snapshot, pairs are made whenever a package is
+     installed (line 9). When the kernel, dracut, glibc, systemd, or udev packages
+     marked as important are installed, the snapshot pair will also be marked
+     as important (lines 4 to 8). All rules are evaluated.
+    </p><p>
+     To disable a rule, either delete it or deactivate it using XML comments.
+     To prevent the system from making snapshot pairs for every package
+     installation for example, comment line 9:
+    </p><div class="verbatim-wrap"><pre class="screen"> 1 &lt;?xml version="1.0" encoding="utf-8"?&gt;
+ 2 &lt;snapper-zypp-plugin-conf&gt;
+ 3  &lt;solvables&gt;
+ 4   &lt;solvable match="w" important="true"&gt;kernel-*&lt;/solvable&gt;
+ 5   &lt;solvable match="w" important="true"&gt;dracut&lt;/solvable&gt;
+ 6   &lt;solvable match="w" important="true"&gt;glibc&lt;/solvable&gt;
+ 7   &lt;solvable match="w" important="true"&gt;systemd*&lt;/solvable&gt;
+ 8   &lt;solvable match="w" important="true"&gt;udev&lt;/solvable&gt;
+ 9   &lt;!-- &lt;solvable match="w"&gt;*&lt;/solvable&gt; --&gt;
+10  &lt;/solvables&gt;
+11 &lt;/snapper-zypp-plugin-conf&gt;</pre></div></section><section class="sect3" id="sec-snapper-setup-customizing-new-subvolume" data-id-title="Creating and mounting new subvolumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.1.4.3 </span><span class="title-name">Creating and mounting new subvolumes</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-setup-customizing-new-subvolume">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Creating a new subvolume underneath the <code class="filename">/</code> hierarchy
+     and permanently mounting it is supported. Such a subvolume will be
+     excluded from snapshots. You need to make sure not to create it inside an
+     existing snapshot, since you would not be able to delete snapshots anymore
+     after a rollback.
+    </p><p>
+     <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is configured with the <code class="filename">/@/</code> subvolume
+     which serves as an independent root for permanent subvolumes such as
+     <code class="filename">/opt</code>, <code class="filename">/srv</code>,
+     <code class="filename">/home</code> and others. Any new subvolumes you create and
+     permanently mount need to be created in this initial root file system.
+    </p><p>
+     To do so, run the following commands. In this example, a new subvolume
+     <code class="filename">/usr/important</code> is created from
+     <code class="filename">/dev/sda2</code>.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount /dev/sda2 -o subvol=@ /mnt
+<code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume create /mnt/usr/important
+<code class="prompt user">&gt; </code><code class="command">sudo</code> umount /mnt</pre></div><p>
+     The corresponding entry in <code class="filename">/etc/fstab</code> needs to look
+     like the following:
+    </p><div class="verbatim-wrap"><pre class="screen">/dev/sda2 /usr/important btrfs subvol=@/usr/important 0 0</pre></div><div id="id-1.3.3.11.7.10.5.8" data-id-title="Disable copy-on-write (cow)" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Disable copy-on-write (cow)</div><p>
+      A subvolume may contain files that constantly change, such as
+      virtualized disk images, database files, or log files. If so, consider
+      disabling the copy-on-write feature for this volume, to avoid duplication
+      of disk blocks. Use the <code class="option">nodatacow</code> mount option in
+      <code class="filename">/etc/fstab</code> to do so:
+     </p><div class="verbatim-wrap"><pre class="screen">/dev/sda2 /usr/important btrfs nodatacow,subvol=@/usr/important 0 0</pre></div><p>
+      To alternatively disable copy-on-write for single files or directories,
+      use the command <code class="command">chattr +C
+      <em class="replaceable">PATH</em></code>.
+     </p></div></section><section class="sect3" id="sec-snapper-setup-customize-archiving" data-id-title="Controlling snapshot archiving"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.1.4.4 </span><span class="title-name">Controlling snapshot archiving</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-setup-customize-archiving">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Snapshots occupy disk space. To prevent disks from running out of space
+     and thus causing system outages, old snapshots are automatically deleted.
+     By default, up to ten important installation and administration snapshots
+     and up to ten regular installation and administration snapshots are kept.
+     If these snapshots occupy more than 50% of the root file system size,
+     additional snapshots will be deleted. A minimum of four important and two
+     regular snapshots are always kept.
+    </p><p>
+     Refer to <a class="xref" href="cha-snapper.html#sec-snapper-config-modify" title="10.5.1. Managing existing configurations">Section 10.5.1, “Managing existing configurations”</a> for instructions on
+     how to change these values.
+    </p></section><section class="sect3" id="sec-snapper-lvm" data-id-title="Using Snapper on thinly provisioned LVM volumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.1.4.5 </span><span class="title-name">Using Snapper on thinly provisioned LVM volumes</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-lvm">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Apart from snapshots on <code class="literal">Btrfs</code> file systems, Snapper
+     also supports taking snapshots on thinly-provisioned LVM volumes (snapshots
+     on regular LVM volumes are <span class="emphasis"><em>not</em></span> supported) formatted
+     with XFS, Ext4 or Ext3. For more information and setup instructions on LVM
+     volumes, refer to <span class="intraxref">Book “Deployment Guide”, Chapter 10 “<span class="guimenu">Expert Partitioner</span>”, Section 10.2 “LVM configuration”</span>.
+    </p><p>
+     To use Snapper on a thinly-provisioned LVM volume you need to create a
+     Snapper configuration for it. On LVM it is required to specify the file
+     system with
+     <code class="option">--fstype=lvm(<em class="replaceable">FILESYSTEM</em>)</code>.
+     <code class="literal">ext3</code>, <code class="literal">etx4</code> or <code class="literal">xfs</code>
+     are valid values for <em class="replaceable">FILESYSTEM</em>. Example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c lvm create-config --fstype="lvm(xfs)" /thin_lvm</pre></div><p>
+     You can adjust this configuration according to your needs as described in
+     <a class="xref" href="cha-snapper.html#sec-snapper-config-modify" title="10.5.1. Managing existing configurations">Section 10.5.1, “Managing existing configurations”</a>.
+    </p></section></section></section><section class="sect1" id="sec-snapper-undo" data-id-title="Using Snapper to undo changes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.2 </span><span class="title-name">Using Snapper to undo changes</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-undo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Snapper on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is preconfigured to serve as a tool that lets you
+   undo changes made by <code class="command">zypper</code> and YaST. For this purpose,
+   Snapper is configured to create a pair of snapshots before and after each
+   run of <code class="command">zypper</code> and YaST. Snapper also lets you restore
+   system files that have been accidentally deleted or modified. Timeline
+   snapshots for the root partition need to be enabled for this
+   purpose—see
+   <a class="xref" href="cha-snapper.html#sec-snapper-setup-customize-auto-snapshots" title="10.1.4.1. Disabling/enabling snapshots">Section 10.1.4.1, “Disabling/enabling snapshots”</a> for details.
+  </p><p>
+   By default, automatic snapshots as described above are configured for the
+   root partition and its subvolumes. To make snapshots available for other
+   partitions such as <code class="filename">/home</code> for example, you can create
+   custom configurations.
+  </p><div id="id-1.3.3.11.8.4" data-id-title="Undoing changes compared to rollback" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Undoing changes compared to rollback</div><p>
+    When working with snapshots to restore data, it is important to know that
+    there are two fundamentally different scenarios Snapper can handle:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.8.4.3.1"><span class="term">Undoing changes</span></dt><dd><p>
+       When undoing changes as described in the following, two snapshots are
+       being compared and the changes between these two snapshots are made
+       undone. Using this method also allows to explicitly select the files
+       that should be restored.
+      </p></dd><dt id="id-1.3.3.11.8.4.3.2"><span class="term">Rollback</span></dt><dd><p>
+       When doing rollbacks as described in
+       <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a>, the system is reset to the
+       state at which the snapshot was taken.
+      </p></dd></dl></div><p>
+    When undoing changes, it is also possible to compare a snapshot against the
+    current system. When restoring <span class="emphasis"><em>all</em></span> files from such a
+    comparison, this will have the same result as doing a rollback. However,
+    using the method described in <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a>
+    for rollbacks should be preferred, since it is faster and allows you to
+    review the system before doing the rollback.
+   </p></div><div id="id-1.3.3.11.8.5" data-id-title="Data consistency" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Data consistency</div><p>
+    There is no mechanism to ensure data consistency when creating a snapshot.
+    Whenever a file (for example, a database) is written at the same time as the
+    snapshot is being created, it will result in a corrupted or partly written
+    file. Restoring such a file will cause problems. Furthermore, certain system
+    files such as <code class="filename">/etc/mtab</code> must never be restored.
+    Therefore it is strongly recommended to <span class="emphasis"><em>always</em></span> closely
+    review the list of changed files and their diffs. Only restore files that
+    really belong to the action you want to revert.
+   </p></div><section class="sect2" id="sec-snapper-undo-yast" data-id-title="Undoing YaST and Zypper changes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.1 </span><span class="title-name">Undoing YaST and Zypper changes</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-undo-yast">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you set up the root partition with <code class="literal">Btrfs</code> during the
+    installation, Snapper—preconfigured for doing rollbacks of YaST or
+    Zypper changes—will automatically be installed. Every time you start
+    a YaST module or a Zypper transaction, two snapshots are created: a
+    <span class="quote">“<span class="quote">pre-snapshot</span>”</span> capturing the state of the file system before
+    the start of the module and a <span class="quote">“<span class="quote">post-snapshot</span>”</span> after the module
+    has been finished.
+   </p><p>
+    Using the YaST Snapper module or the <code class="command">snapper</code> command
+    line tool, you can undo the changes made by YaST/Zypper by restoring
+    files from the <span class="quote">“<span class="quote">pre-snapshot</span>”</span>. Comparing two snapshots the
+    tools also allow you to see which files have been changed. You can also
+    display the differences between two versions of a file (diff).
+   </p><div class="procedure" id="proc-snapper-undo-yast" data-id-title="Undoing changes using the YaST Snapper module"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.1: </span><span class="title-name">Undoing changes using the YaST <span class="guimenu">Snapper</span> module </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#proc-snapper-undo-yast">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start the <span class="guimenu">Snapper</span> module from the
+      <span class="guimenu">Miscellaneous</span> section in YaST or by entering
+      <code class="command">yast2 snapper</code>.
+     </p></li><li class="step"><p>
+      Make sure <span class="guimenu">Current Configuration</span> is set to
+      <span class="guimenu">root</span>. This is always the case unless you have manually
+      added own Snapper configurations.
+     </p></li><li class="step"><p>
+      Choose a pair of pre- and post-snapshots from the list. Both, YaST and
+      Zypper snapshot pairs are of the type <span class="guimenu">Pre &amp; Post</span>.
+      YaST snapshots are labeled as <code class="literal">zypp(y2base)</code> in the
+      <span class="guimenu">Description column</span>; Zypper snapshots are labeled
+      <code class="literal">zypp(zypper)</code>.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/snapper_yast2_list.png"><img src="images/snapper_yast2_list.png" width="75%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+      Click <span class="guimenu">Show Changes</span> to open the list of files that
+      differ between the two snapshots.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/snapper_yast2_changes.png"><img src="images/snapper_yast2_changes.png" width="75%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+      Review the list of files. To display a <span class="quote">“<span class="quote">diff</span>”</span> between the
+      pre- and post-version of a file, select it from the list.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/snapper_yast2_diff.png"><img src="images/snapper_yast2_diff.png" width="75%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+      To restore one or more files, select the relevant files or directories by
+      activating the respective check box. Click <span class="guimenu">Restore
+      Selected</span> and confirm the action by clicking
+      <span class="guimenu">Yes</span>.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/snapper_yast2_restore.png"><img src="images/snapper_yast2_restore.png" width="75%" alt="Image" title="Image"/></a></div></div><p>
+      To restore a single file, activate its diff view by clicking its name.
+      Click <span class="guimenu">Restore From First</span> and confirm your choice with
+      <span class="guimenu">Yes</span>.
+     </p></li></ol></div></div><div class="procedure" id="proc-snapper-yast-cmdline" data-id-title="Undoing changes using the snapper command"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.2: </span><span class="title-name">Undoing changes using the <code class="command">snapper</code> command </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#proc-snapper-yast-cmdline">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Get a list of YaST and Zypper snapshots by running <code class="command">snapper
+      list -t pre-post</code>. YaST snapshots are labeled
+      as <code class="literal">yast <em class="replaceable">MODULE_NAME</em></code> in the
+      <span class="guimenu">Description column</span>; Zypper snapshots are labeled
+      <code class="literal">zypp(zypper)</code>.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper list -t pre-post
+Pre # | Post # | Pre Date                      | Post Date                     | Description
+------+--------+-------------------------------+-------------------------------+--------------
+311   | 312    | Tue 06 May 2018 14:05:46 CEST | Tue 06 May 2018 14:05:52 CEST | zypp(y2base)
+340   | 341    | Wed 07 May 2018 16:15:10 CEST | Wed 07 May 2018 16:15:16 CEST | zypp(zypper)
+342   | 343    | Wed 07 May 2018 16:20:38 CEST | Wed 07 May 2018 16:20:42 CEST | zypp(y2base)
+344   | 345    | Wed 07 May 2018 16:21:23 CEST | Wed 07 May 2018 16:21:24 CEST | zypp(zypper)
+346   | 347    | Wed 07 May 2018 16:41:06 CEST | Wed 07 May 2018 16:41:10 CEST | zypp(y2base)
+348   | 349    | Wed 07 May 2018 16:44:50 CEST | Wed 07 May 2018 16:44:53 CEST | zypp(y2base)
+350   | 351    | Wed 07 May 2018 16:46:27 CEST | Wed 07 May 2018 16:46:38 CEST | zypp(y2base)</pre></div></li><li class="step"><p>
+      Get a list of changed files for a snapshot pair with <code class="command">snapper
+      status</code>
+      <em class="replaceable">PRE</em>..<em class="replaceable">POST</em>. Files
+      with content changes are marked with <span class="guimenu">c</span>, files that
+      have been added are marked with <span class="guimenu">+</span> and deleted files
+      are marked with <span class="guimenu">-</span>.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper status 350..351
++..... /usr/share/doc/packages/mikachan-fonts
++..... /usr/share/doc/packages/mikachan-fonts/COPYING
++..... /usr/share/doc/packages/mikachan-fonts/dl.html
+c..... /usr/share/fonts/truetype/fonts.dir
+c..... /usr/share/fonts/truetype/fonts.scale
++..... /usr/share/fonts/truetype/みかちゃん-p.ttf
++..... /usr/share/fonts/truetype/みかちゃん-pb.ttf
++..... /usr/share/fonts/truetype/みかちゃん-ps.ttf
++..... /usr/share/fonts/truetype/みかちゃん.ttf
+c..... /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-x86_64.cache-4
+c..... /var/lib/rpm/Basenames
+c..... /var/lib/rpm/Dirnames
+c..... /var/lib/rpm/Group
+c..... /var/lib/rpm/Installtid
+c..... /var/lib/rpm/Name
+c..... /var/lib/rpm/Packages
+c..... /var/lib/rpm/Providename
+c..... /var/lib/rpm/Requirename
+c..... /var/lib/rpm/Sha1header
+c..... /var/lib/rpm/Sigmd5</pre></div></li><li class="step"><p>
+      To display the diff for a certain file, run <code class="command">snapper
+      diff</code>
+      <em class="replaceable">PRE</em>..<em class="replaceable">POST</em>
+      <em class="replaceable">FILENAME</em>. If you do not specify
+      <em class="replaceable">FILENAME</em>, a diff for all files will be
+      displayed.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper diff 350..351 /usr/share/fonts/truetype/fonts.scale
+--- /.snapshots/350/snapshot/usr/share/fonts/truetype/fonts.scale       2014-04-23 15:58:57.000000000 +0200
++++ /.snapshots/351/snapshot/usr/share/fonts/truetype/fonts.scale       2014-05-07 16:46:31.000000000 +0200
+@@ -1,4 +1,4 @@
+-1174
++1486
+ ds=y:ai=0.2:luximr.ttf -b&amp;h-luxi mono-bold-i-normal--0-0-0-0-c-0-iso10646-1
+ ds=y:ai=0.2:luximr.ttf -b&amp;h-luxi mono-bold-i-normal--0-0-0-0-c-0-iso8859-1
+[...]</pre></div></li><li class="step"><p>
+      To restore one or more files run <code class="command">snapper -v undochange</code>
+      <em class="replaceable">PRE</em>..<em class="replaceable">POST</em>
+      <em class="replaceable">FILENAMES</em>. If you do not specify a
+      <em class="replaceable">FILENAMES</em>, all changed files will be restored.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -v undochange 350..351
+     create:0 modify:13 delete:7
+     undoing change...
+     deleting /usr/share/doc/packages/mikachan-fonts
+     deleting /usr/share/doc/packages/mikachan-fonts/COPYING
+     deleting /usr/share/doc/packages/mikachan-fonts/dl.html
+     deleting /usr/share/fonts/truetype/みかちゃん-p.ttf
+     deleting /usr/share/fonts/truetype/みかちゃん-pb.ttf
+     deleting /usr/share/fonts/truetype/みかちゃん-ps.ttf
+     deleting /usr/share/fonts/truetype/みかちゃん.ttf
+     modifying /usr/share/fonts/truetype/fonts.dir
+     modifying /usr/share/fonts/truetype/fonts.scale
+     modifying /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-x86_64.cache-4
+     modifying /var/lib/rpm/Basenames
+     modifying /var/lib/rpm/Dirnames
+     modifying /var/lib/rpm/Group
+     modifying /var/lib/rpm/Installtid
+     modifying /var/lib/rpm/Name
+     modifying /var/lib/rpm/Packages
+     modifying /var/lib/rpm/Providename
+     modifying /var/lib/rpm/Requirename
+     modifying /var/lib/rpm/Sha1header
+     modifying /var/lib/rpm/Sigmd5
+     undoing change done</pre></div></li></ol></div></div><div id="id-1.3.3.11.8.6.6" data-id-title="Reverting user additions" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Reverting user additions</div><p>
+     Reverting user additions via undoing changes with Snapper is not
+     recommended. Since certain directories are excluded from snapshots, files
+     belonging to these users will remain in the file system. If a user with
+     the same user ID as a deleted user is created, this user will inherit the
+     files. Therefore it is strongly recommended to use the YaST
+     <span class="guimenu">User and Group Management</span> tool to remove users.
+    </p></div></section><section class="sect2" id="sec-snapper-undo-delete-file" data-id-title="Using Snapper to restore files"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.2 </span><span class="title-name">Using Snapper to restore files</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-undo-delete-file">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Apart from the installation and administration snapshots, Snapper creates
+    timeline snapshots. You can use these backup snapshots to restore files
+    that have accidentally been deleted or to restore a previous version of a
+    file. By using Snapper's diff feature you can also find out which
+    modifications have been made at a certain point of time.
+   </p><p>
+    Being able to restore files is especially interesting for data, which may
+    reside on subvolumes or partitions for which snapshots are not taken by
+    default. To be able to restore files from home directories, for example,
+    create a separate Snapper configuration for <code class="filename">/home</code>
+    doing automatic timeline snapshots. See
+    <a class="xref" href="cha-snapper.html#sec-snapper-config" title="10.5. Creating and modifying Snapper configurations">Section 10.5, “Creating and modifying Snapper configurations”</a> for instructions.
+   </p><div id="id-1.3.3.11.8.7.4" data-id-title="Restoring files compared to rollback" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Restoring files compared to rollback</div><p>
+     Snapshots taken from the root file system (defined by Snapper's root
+     configuration), can be used to do a system rollback. The recommended way
+     to do such a rollback is to boot from the snapshot and then perform the
+     rollback. See <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a> for details.
+    </p><p>
+     Performing a rollback would also be possible by restoring all files from a
+     root file system snapshot as described below. However, this is not
+     recommended. You may restore single files, for example a configuration
+     file from the <code class="systemitem">/etc</code> directory, but not the
+     complete list of files from the snapshot.
+    </p><p>
+     This restriction only affects snapshots taken from the root file system.
+    </p></div><div class="procedure" id="proc-snapper-restore-yast" data-id-title="Restoring files using the YaST Snapper module"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.3: </span><span class="title-name">Restoring files using the YaST <span class="guimenu">Snapper</span> module </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#proc-snapper-restore-yast">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start the <span class="guimenu">Snapper</span> module from the
+      <span class="guimenu">Miscellaneous</span> section in YaST or by entering
+      <code class="command">yast2 snapper</code>.
+     </p></li><li class="step"><p>
+      Choose the <span class="guimenu">Current Configuration</span> from which to choose
+      a snapshot.
+     </p></li><li class="step"><p>
+      Select a timeline snapshot from which to restore a file and choose
+      <span class="guimenu">Show Changes</span>. Timeline snapshots are of the type
+      <span class="guimenu">Single</span> with a description value of
+      <span class="guimenu">timeline</span>.
+     </p></li><li class="step"><p>
+      Select a file from the text box by clicking the file name. The difference
+      between the snapshot version and the current system is shown. Activate
+      the check box to select the file for restore. Do so for all files you
+      want to restore.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">Restore Selected</span> and confirm the action by
+      clicking <span class="guimenu">Yes</span>.
+     </p></li></ol></div></div><div class="procedure" id="proc-snapper-restore-cmdl" data-id-title="Restoring files using the snapper command"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.4: </span><span class="title-name">Restoring files using the <code class="command">snapper</code> command </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#proc-snapper-restore-cmdl">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Get a list of timeline snapshots for a specific configuration by running
+      the following command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> list -t single | grep timeline</pre></div><p>
+      <em class="replaceable">CONFIG</em> needs to be replaced by an existing
+      Snapper configuration. Use <code class="command">snapper list-configs</code> to
+      display a list.
+     </p></li><li class="step"><p>
+      Get a list of changed files for a given snapshot by running the following
+      command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> status <em class="replaceable">SNAPSHOT_ID</em>..0</pre></div><p>
+      Replace <em class="replaceable">SNAPSHOT_ID</em> by the ID for the snapshot
+      from which you want to restore the files.
+     </p></li><li class="step"><p>
+      Optionally list the differences between the current file version and the
+      one from the snapshot by running
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> diff <em class="replaceable">SNAPSHOT_ID</em>..0 <em class="replaceable">FILE NAME</em></pre></div><p>
+      If you do not specify <em class="replaceable">&lt;FILE NAME&gt;</em>, the
+      difference for all files are shown.
+     </p></li><li class="step"><p>
+      To restore one or more files, run
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> -v undochange <em class="replaceable">SNAPSHOT_ID</em>..0 <em class="replaceable">FILENAME1</em> <em class="replaceable">FILENAME2</em></pre></div><p>
+      If you do not specify file names, all changed files will be restored.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-snapper-snapshot-boot" data-id-title="System rollback by booting from snapshots"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.3 </span><span class="title-name">System rollback by booting from snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-snapshot-boot">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The GRUB 2 version included on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> can boot from Btrfs snapshots.
+   Together with Snapper's rollback feature, this allows to recover a
+   misconfigured system. Only snapshots created for the default Snapper
+   configuration (<code class="literal">root</code>) are bootable.
+  </p><div id="id-1.3.3.11.9.3" data-id-title="Supported configuration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Supported configuration</div><p>
+
+    As of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber"><span class="phrase">15 SP5</span></span> system rollbacks are only supported if
+    the default subvolume configuration of the root partition has not been
+    changed.
+   </p></div><p>
+   When booting a snapshot, the parts of the file system included in the
+   snapshot are mounted read-only; all other file systems and parts that are
+   excluded from snapshots are mounted read-write and can be modified.
+  </p><div id="id-1.3.3.11.9.5" data-id-title="Undoing changes compared to rollback" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Undoing changes compared to rollback</div><p>
+    When working with snapshots to restore data, it is important to know that
+    there are two fundamentally different scenarios Snapper can handle:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.9.5.3.1"><span class="term">Undoing changes</span></dt><dd><p>
+       When undoing changes as described in <a class="xref" href="cha-snapper.html#sec-snapper-undo" title="10.2. Using Snapper to undo changes">Section 10.2, “Using Snapper to undo changes”</a>,
+       two snapshots are compared and the changes between these two snapshots
+       are reverted. Using this method also allows to explicitly exclude
+       selected files from being restored.
+      </p></dd><dt id="id-1.3.3.11.9.5.3.2"><span class="term">Rollback</span></dt><dd><p>
+       When doing rollbacks as described in the following, the system is reset
+       to the state at which the snapshot was taken.
+      </p></dd></dl></div></div><p>
+   To do a rollback from a bootable snapshot, the following requirements must
+   be met. When doing a default installation, the system is set up accordingly.
+  </p><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">Requirements for a rollback from a bootable snapshot </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#id-1.3.3.11.9.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     The root file system needs to be Btrfs. Booting from LVM volume snapshots
+     is not supported.
+    </p></li><li class="listitem"><p>
+     The root file system needs to be on a single device. To check, run
+     <code class="command">sudo /sbin/btrfs filesystem show</code>. It needs to report
+     <code class="literal">Total devices 1</code>. If more than <code class="literal">1</code>
+     device is listed, your setup is not supported.
+    </p><div id="id-1.3.3.11.9.7.3.2" data-id-title="Directories excluded from snapshots" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Directories excluded from snapshots</div><p>
+      Directories that are excluded from snapshots such as
+      <code class="filename">/srv</code> (see <a class="xref" href="cha-snapper.html#snapper-dir-excludes" title="10.1.3. Directories that are excluded from snapshots">Section 10.1.3, “Directories that are excluded from snapshots”</a>
+      for a full list) may reside on separate devices.
+     </p></div></li><li class="listitem"><p>
+     The system needs to be bootable via the installed boot loader.
+    </p></li><li class="listitem"><p>
+     Only contents of the subvolume <code class="filename">/</code> will be rolled
+     back. It is not possible to include other subvolumes.
+    </p></li></ul></div><p>
+   To perform a rollback from a bootable snapshot, do as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Boot the system. In the boot menu choose <span class="guimenu">Bootable
+     snapshots</span> and select the snapshot you want to boot. The list of
+     snapshots is listed by date—the most recent snapshot is listed
+     first.
+    </p></li><li class="step"><p>
+     Log in to the system. Carefully check whether everything works as
+     expected. Note that you cannot write to any directory that is part of the
+     snapshot. Data you write to other directories will
+     <span class="emphasis"><em>not</em></span> get lost, regardless of what you do next.
+    </p></li><li class="step"><p>
+     Depending on whether you want to perform the rollback or not, choose your
+     next step:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       If the system is in a state where you do not want to do a rollback,
+       reboot to boot into the current system state. You can then choose a different
+       snapshot, or start the rescue system.
+      </p></li><li class="step"><p>
+       To perform the rollback, run
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper rollback</pre></div><p>
+       and reboot afterward. On the boot screen, choose the default boot entry
+       to reboot into the reinstated system. A snapshot of the file system status
+       before the rollback is created. The default subvolume for root will
+       be replaced with a fresh read-write snapshot.
+       For details, see <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot-rollback" title="10.3.1. Snapshots after rollback">Section 10.3.1, “Snapshots after rollback”</a>.
+       </p><p>
+        It is useful to add a description for the snapshot with the <code class="option">-d</code> option.
+        For example:
+       </p><div class="verbatim-wrap"><pre class="screen">New file system root since rollback on <em class="replaceable">DATE</em> <em class="replaceable">TIME</em></pre></div></li></ol></li></ol></div></div><div id="id-1.3.3.11.9.10" data-id-title="Rolling back to a specific installation state" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Rolling back to a specific installation state</div><p>
+    If snapshots are not disabled during installation, an initial bootable
+    snapshot is created at the end of the initial system installation. You can
+    go back to that state at any time by booting this snapshot. The snapshot
+    can be identified by the description <code class="literal">after installation</code>.
+   </p><p>
+    A bootable snapshot is also created when starting a system upgrade to a
+    service pack or a new major release (provided snapshots are not disabled).
+   </p></div><section class="sect2" id="sec-snapper-snapshot-boot-rollback" data-id-title="Snapshots after rollback"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.3.1 </span><span class="title-name">Snapshots after rollback</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-snapshot-boot-rollback">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Before a rollback is performed, a snapshot of the running file system
+    is created. The description references the ID of the snapshot that
+    was restored in the rollback.
+   </p><p>
+    Snapshots created by rollbacks receive the value <code class="literal">number</code>
+    for the <code class="literal">Cleanup</code> attribute. The rollback snapshots are
+    therefore automatically deleted when the set number of snapshots is reached.
+    Refer to <a class="xref" href="cha-snapper.html#sec-snapper-clean-up" title="10.7. Automatic snapshot clean-up">Section 10.7, “Automatic snapshot clean-up”</a> for details.
+    If the snapshot contains important data, extract the data from the snapshot
+    before it is removed.
+   </p><section class="sect3" id="sec-snapper-snapshot-boot-rollback-example" data-id-title="Example of rollback snapshot"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.3.1.1 </span><span class="title-name">Example of rollback snapshot</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-snapshot-boot-rollback-example">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     For example, after a fresh installation the following snapshots are
+     available on the system:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">snapper</code> --iso list
+Type   | # |     | Cleanup | Description           | Userdata
+-------+---+ ... +---------+-----------------------+--------------
+single | 0 |     |         | current               |
+single | 1 |     |         | first root filesystem |
+single | 2 |     | number  | after installation    | important=yes</pre></div><p>
+     After running <code class="command">sudo snapper rollback</code> snapshot
+     <code class="literal">3</code> is created and contains the state of the system
+     before the rollback was executed. Snapshot <code class="literal">4</code> is
+     the new default Btrfs subvolume and thus the system after a reboot.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">snapper</code> --iso list
+Type   | # |     | Cleanup | Description           | Userdata
+-------+---+ ... +---------+-----------------------+--------------
+single | 0 |     |         | current               |
+single | 1 |     | number  | first root filesystem |
+single | 2 |     | number  | after installation    | important=yes
+single | 3 |     | number  | rollback backup of #1 | important=yes
+single | 4 |     |         |                       |</pre></div></section></section><section class="sect2" id="sec-snapper-snapshot-boot-identify" data-id-title="Accessing and identifying snapshot boot entries"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.3.2 </span><span class="title-name">Accessing and identifying snapshot boot entries</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-snapshot-boot-identify">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To boot from a snapshot, reboot your machine and choose <span class="guimenu">Start
+    Bootloader from a read-only snapshot</span>. A screen listing all
+    bootable snapshots opens. The most recent snapshot is listed first, the
+    oldest last. Use the keys <span class="keycap">↓</span> and
+    <span class="keycap">↑</span> to navigate and press <span class="keycap">Enter</span> to
+    activate the selected snapshot. Activating a snapshot from the boot menu
+    does not reboot the machine immediately, but rather opens the boot loader
+    of the selected snapshot.
+   </p><div class="figure" id="fig-snapper-snapshot-boot-identify"><div class="figure-contents"><div class="mediaobject"><a href="images/boot_snapshots.png"><img src="images/boot_snapshots.png" width="75%" alt="Boot loader: snapshots" title="Boot loader: snapshots"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 10.1: </span><span class="title-name">Boot loader: snapshots </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#fig-snapper-snapshot-boot-identify">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div><div id="id-1.3.3.11.9.12.4" data-id-title="Booting Xen from a Btrfs snapshot using UEFI currently fails" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Booting Xen from a Btrfs snapshot using UEFI currently fails</div><p>
+     Refer to <a class="link" href="https://www.suse.com/support/kb/doc/?id=000020602" target="_blank">https://www.suse.com/support/kb/doc/?id=000020602</a> for more
+     details.
+    </p></div><p>
+    Each snapshot entry in the boot loader follows a naming scheme which makes
+    it possible to identify it easily:
+   </p><div class="verbatim-wrap"><pre class="screen">[*]<span class="callout" id="snapper-boot-important">1</span><em class="replaceable">OS</em><span class="callout" id="snapper-boot-os">2</span> (<em class="replaceable">KERNEL</em><span class="callout" id="snapper-boot-kernel">3</span>,<em class="replaceable">DATE</em><span class="callout" id="snapper-boot-date">4</span>T<em class="replaceable">TIME</em><span class="callout" id="snapper-boot-time">5</span>,<em class="replaceable">DESCRIPTION</em><span class="callout" id="snapper-boot-description">6</span>)</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-boot-important"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      If the snapshot was marked <code class="literal">important</code>, the entry is
+      marked with a <code class="literal">*</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-boot-os"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Operating system label.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-boot-date"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Date in the format <code class="literal">YYYY-MM-DD</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-boot-time"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Time in the format <code class="literal">HH:MM</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-boot-description"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      This field contains a description of the snapshot. In case of a manually
+      created snapshot this is the string created with the option
+      <code class="option">--description</code> or a custom string (see
+      <a class="xref" href="cha-snapper.html#tip-snapper-snapshot-boot-custom-descr" title="Tip: Setting a custom description for boot loader snapshot entries">Tip: Setting a custom description for boot loader snapshot entries</a>). In case
+      of an automatically created snapshot, it is the tool that was called, for
+      example <code class="literal">zypp(zypper)</code> or
+      <code class="literal">yast_sw_single</code>. Long descriptions may be truncated,
+      depending on the size of the boot screen.
+     </p></td></tr></table></div><div id="tip-snapper-snapshot-boot-custom-descr" data-id-title="Setting a custom description for boot loader snapshot entries" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Setting a custom description for boot loader snapshot entries</div><p>
+     It is possible to replace the default string in the description field of a
+     snapshot with a custom string. This is for example useful if an
+     automatically created description is not sufficient, or a user-provided
+     description is too long. To set a custom string
+     <em class="replaceable">STRING</em> for snapshot
+     <em class="replaceable">NUMBER</em>, use the following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper modify --userdata "bootloader=<em class="replaceable">STRING</em>" <em class="replaceable">NUMBER</em></pre></div><p>
+     The description should be no longer than 25 characters—everything
+     that exceeds this size will not be readable on the boot screen.
+    </p></div></section><section class="sect2" id="sec-snapper-snapshot-boot-limits" data-id-title="Limitations"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.3.3 </span><span class="title-name">Limitations</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-snapshot-boot-limits">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    A <span class="emphasis"><em>complete</em></span> system rollback, restoring the complete
+    system to the identical state as it was in when a snapshot was taken, is
+    not possible.
+   </p><section class="sect3" id="sec-snapper-limits-snapshot-boot-excludes" data-id-title="Directories excluded from snapshots"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.3.3.1 </span><span class="title-name">Directories excluded from snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-limits-snapshot-boot-excludes">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Root file system snapshots do not contain all directories. See
+     <a class="xref" href="cha-snapper.html#snapper-dir-excludes" title="10.1.3. Directories that are excluded from snapshots">Section 10.1.3, “Directories that are excluded from snapshots”</a> for details and reasons. As a
+     general consequence, data from these directories is not restored,
+     resulting in the following limitations.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.9.13.3.3.1"><span class="term">
+       Add-ons and third-party software may be unusable after a rollback
+      </span></dt><dd><p>
+        Applications and add-ons installing data in subvolumes excluded from
+        the snapshot, such as <code class="filename">/opt</code>, may not work after a
+        rollback, if others parts of the application data are also installed on
+        subvolumes included in the snapshot. Re-install the application or the
+        add-on to solve this problem.
+       </p></dd><dt id="id-1.3.3.11.9.13.3.3.2"><span class="term">File access problems</span></dt><dd><p>
+        If an application had changed file permissions and/or ownership in
+        between snapshot and current system, the application may not be able to
+        access these files. Reset permissions and/or ownership for the affected
+        files after the rollback.
+       </p></dd><dt id="id-1.3.3.11.9.13.3.3.3"><span class="term">Incompatible data formats</span></dt><dd><p>
+        If a service or an application has established a new data format in
+        between snapshot and current system, the application may not be able to
+        read the affected data files after a rollback.
+       </p></dd><dt id="id-1.3.3.11.9.13.3.3.4"><span class="term">Subvolumes with a mixture of code and data</span></dt><dd><p>
+        Subvolumes like <code class="filename">/srv</code> may contain a mixture of code
+        and data. A rollback may result in non-functional code. A downgrade of
+        the PHP version, for example, may result in broken PHP scripts for the
+        Web server.
+       </p></dd><dt id="id-1.3.3.11.9.13.3.3.5"><span class="term">User data</span></dt><dd><p>
+        If a rollback removes users from the system, data that is owned by
+        these users in directories excluded from the snapshot, is not removed.
+        If a user with the same user ID is created, this user will inherit the
+        files. Use a tool like <code class="command">find</code> to locate and remove
+        orphaned files.
+       </p></dd></dl></div></section><section class="sect3" id="sec-snapper-limits-snapshot-boot-grub" data-id-title="No rollback of boot loader data"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.3.3.2 </span><span class="title-name">No rollback of boot loader data</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-limits-snapshot-boot-grub">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     A rollback of the boot loader is not possible, since all
+     <span class="quote">“<span class="quote">stages</span>”</span> of the boot loader must fit together. This cannot be
+     guaranteed when doing rollbacks of <code class="filename">/boot</code>.
+    </p></section></section></section><section class="sect1" id="sec-snapper-homedirs" data-id-title="Enabling Snapper in user home directories"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.4 </span><span class="title-name">Enabling Snapper in user home directories</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-homedirs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+         You may enable snapshots for users' <code class="filename">/home</code> 
+         directories, which supports several use cases:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                 Individual users may manage their own snapshots and rollbacks.
+             </p></li><li class="listitem"><p>
+                 System users, for example database, system, and network admins
+                 who want to track copies of configuration files, documentation, 
+                 and so on.
+             </p></li><li class="listitem"><p>
+                 Samba shares with home directories and Btrfs back-end.
+             </p></li></ul></div><p>
+         Each user's directory is a Btrfs subvolume of <code class="filename">/home</code>.         
+         It is possible to set this up manually 
+         (see <a class="xref" href="cha-snapper.html#sec-snapper-manual-home-config" title="10.4.3. Manually enabling snapshots in home directories">Section 10.4.3, “Manually enabling snapshots in home directories”</a>). However, a 
+         more convenient way is to use <code class="literal">pam_snapper</code>.
+         The <code class="literal">pam_snapper</code> package installs the 
+         <code class="literal">pam_snapper.so</code> module and helper scripts, which 
+         automate user creation and Snapper configuration. 
+     </p><p>
+         <code class="literal">pam_snapper</code> provides integration with the 
+         <code class="command">useradd</code> command, pluggable authentication modules
+         (PAM), and Snapper. By default it creates snapshots at user login and
+         logout, and also creates time-based snapshots as certain users remain
+         logged in for extended periods of time. You may change the defaults
+         using the normal Snapper commands and configuration files.
+     </p><section class="sect2" id="sec-snapper-install-pam-snapper" data-id-title="Installing pam_snapper and creating users"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.1 </span><span class="title-name">Installing pam_snapper and creating users</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-install-pam-snapper">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+             The easiest way is to start with a new <code class="filename">/home</code> 
+             directory formatted with Btrfs, and no existing users. Install
+             <code class="literal">pam_snapper</code>:
+         </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper in pam_snapper</pre></div><p>
+             Add this line to <code class="filename">/etc/pam.d/common-session</code>:
+         </p><div class="verbatim-wrap"><pre class="screen">session optional pam_snapper.so</pre></div><p>
+             Use the <code class="command">/usr/lib/pam_snapper/pam_snapper_useradd.sh</code>
+             script to create a new user and home directory. By default the script
+             performs a dry run. Edit the script to change 
+             <code class="literal">DRYRUN=1</code> to <code class="literal">DRYRUN=0</code>. Now you
+             can create a new user:
+         </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>/usr/lib/pam_snapper/pam_snapper_useradd.sh \
+<em class="replaceable">username</em> <em class="replaceable">group</em> passwd=<em class="replaceable">password</em>
+Create subvolume '/home/username'
+useradd: warning: the home directory already exists.
+Not copying any file from skel directory into it.</pre></div><p>
+             The files from <code class="filename">/etc/skel</code> will be copied
+             into the user's home directory at their first login. Verify that
+             the user's configuration was created by listing your Snapper 
+             configurations:
+         </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>snapper list --all
+Config: home_username, subvolume: /home/username
+Type   | # | Pre # | Date | User | Cleanup | Description | Userdata
+-------+---+-------+------+------+---------+-------------+---------
+single | 0 |       |      | root |         | current     |</pre></div><p>
+            Over time, this output will become populated with a list of snapshots,
+            which the user can manage with the standard Snapper commands.
+        </p></section><section class="sect2" id="sec-snapper-remove-user" data-id-title="Removing users"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.2 </span><span class="title-name">Removing users</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-remove-user">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+             Remove users with the 
+             <code class="command">/usr/lib/pam_snapper/pam_snapper_userdel.sh</code>
+             script. By default it performs a dry run, so edit it to change 
+             <code class="literal">DRYRUN=1</code> to <code class="literal">DRYRUN=0</code>. This 
+             removes the user, the user's home subvolume, Snapper configuration, 
+             and deletes all snapshots.
+         </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>/usr/lib/pam_snapper/pam_snapper_userdel.sh username</pre></div></section><section class="sect2" id="sec-snapper-manual-home-config" data-id-title="Manually enabling snapshots in home directories"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.3 </span><span class="title-name">Manually enabling snapshots in home directories</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manual-home-config">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            These are the steps for manually setting up users' home directories
+            with Snapper. <code class="filename">/home</code> must be formatted with Btrfs,
+            and the users not yet created.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs subvol create /home/<em class="replaceable">username</em>
+<code class="prompt root"># </code>snapper -c home_<em class="replaceable">username</em> create-config /home/<em class="replaceable">username</em>
+<code class="prompt root"># </code>sed -i -e "s/ALLOW_USERS=\"\"/ALLOW_USERS=\"<em class="replaceable">username</em>\"/g" \
+/etc/snapper/configs/home_<em class="replaceable">username</em>
+<code class="prompt root"># </code>yast users add username=<em class="replaceable">username</em> home=/home/<em class="replaceable">username</em> password=<em class="replaceable">password</em>
+<code class="prompt root"># </code>chown <em class="replaceable">username</em>.<em class="replaceable">group</em> /home/<em class="replaceable">username</em>
+<code class="prompt root"># </code>chmod 755 /home/<em class="replaceable">username</em>/.snapshots</pre></div></section></section><section class="sect1" id="sec-snapper-config" data-id-title="Creating and modifying Snapper configurations"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.5 </span><span class="title-name">Creating and modifying Snapper configurations</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The way Snapper behaves is defined in a configuration file that is specific
+   for each partition or <code class="literal">Btrfs</code> subvolume. These
+   configuration files reside under <code class="filename">/etc/snapper/configs/</code>.
+  </p><p>
+   In case the root file system is big enough (approximately 12 GB), snapshots
+   are automatically enabled for the root file system <code class="filename">/</code>
+   upon installation. The corresponding default configuration is named
+   <code class="filename">root</code>. It creates and manages the YaST and Zypper
+   snapshot. See <a class="xref" href="cha-snapper.html#sec-snapper-config-modify-values" title="10.5.1.1. Configuration data">Section 10.5.1.1, “Configuration data”</a> for a list
+   of the default values.
+  </p><div id="id-1.3.3.11.11.4" data-id-title="Minimum root file system size for enabling snapshots" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Minimum root file system size for enabling snapshots</div><p>
+    As explained in <a class="xref" href="cha-snapper.html#sec-snapper-setup" title="10.1. Default setup">Section 10.1, “Default setup”</a>, enabling snapshots
+    requires additional free space in the root file system. The amount depends
+    on the amount of packages installed and the amount of changes made to the
+    volume that is included in snapshots. The snapshot frequency and the number
+    of snapshots that get archived also matter.
+   </p><p>
+    There is a minimum root file system size that is required to automatically
+    enable snapshots during the installation. Currently this size is
+    approximately 12 GB. This value may change in the future, depending on
+    architecture and the size of the base system. It depends on the values for
+    the following tags in the file <code class="filename">/control.xml</code> from the
+    installation media:
+   </p><div class="verbatim-wrap"><pre class="screen">&lt;root_base_size&gt;
+&lt;btrfs_increase_percentage&gt;</pre></div><p>
+    It is calculated with the following formula: <em class="replaceable">ROOT_BASE_SIZE</em> * (1 + <em class="replaceable">BTRFS_INCREASE_PERCENTAGE</em>/100)
+   </p><p>
+    Keep in mind that this value is a minimum size. Consider using more space
+    for the root file system. As a rule of thumb, double the size you would use
+    when not having enabled snapshots.
+   </p></div><p>
+   You may create your own configurations for other partitions formatted with
+   <code class="literal">Btrfs</code> or existing subvolumes on a
+   <code class="literal">Btrfs</code> partition. In the following example we will set up
+   a Snapper configuration for backing up the Web server data residing on a
+   separate, <code class="literal">Btrfs</code>-formatted partition mounted at
+   <code class="filename">/srv/www</code>.
+  </p><p>
+   After a configuration has been created, you can either use
+   <code class="command">snapper</code> itself or the YaST <span class="guimenu">Snapper</span>
+   module to restore files from these snapshots. In YaST you need to select
+   your <span class="guimenu">Current Configuration</span>, while you need to specify
+   your configuration for <code class="command">snapper</code> with the global switch
+   <code class="option">-c</code> (for example, <code class="command">snapper -c myconfig
+   list</code>).
+  </p><p>
+   To create a new Snapper configuration, run <code class="command">snapper
+   create-config</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c www-data<span class="callout" id="snapper-create-name">1</span> create-config /srv/www<span class="callout" id="snapper-create-volume">2</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-create-name"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Name of configuration file.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#snapper-create-volume"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Mount point of the partition or <code class="literal">Btrfs</code> subvolume on
+     which to take snapshots.
+    </p></td></tr></table></div><p>
+   This command will create a new configuration file
+   <code class="filename">/etc/snapper/configs/www-data</code> with reasonable default
+   values (taken from
+   <code class="filename">/etc/snapper/config-templates/default</code>). Refer to
+   <a class="xref" href="cha-snapper.html#sec-snapper-config-modify" title="10.5.1. Managing existing configurations">Section 10.5.1, “Managing existing configurations”</a> for instructions on how to
+   adjust these defaults.
+  </p><div id="id-1.3.3.11.11.11" data-id-title="Configuration defaults" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Configuration defaults</div><p>
+    Default values for a new configuration are taken from
+    <code class="filename">/etc/snapper/config-templates/default</code>. To use your own
+    set of defaults, create a copy of this file in the same directory and
+    adjust it to your needs. To use it, specify the <code class="option">-t</code> option
+    with the create-config command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c www-data create-config -t <em class="replaceable">MY_DEFAULTS</em> /srv/www</pre></div></div><section class="sect2" id="sec-snapper-config-modify" data-id-title="Managing existing configurations"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.5.1 </span><span class="title-name">Managing existing configurations</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-config-modify">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">snapper</code> command offers several subcommands for managing
+    existing configurations. You can list, show, delete and modify them:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.11.12.3.1"><span class="term">Listing configurations</span></dt><dd><p>
+       Use the subcommand <code class="command">snapper list-configs</code> to get all
+       existing configurations:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper list-configs
+Config | Subvolume
+-------+----------
+root   | /
+usr    | /usr
+local  | /local</pre></div></dd><dt id="id-1.3.3.11.11.12.3.2"><span class="term">Showing a configuration</span></dt><dd><p>
+       Use the subcommand <code class="command">snapper -c
+       <em class="replaceable">CONFIG</em> get-config</code> to display the
+       specified configuration. Replace <em class="replaceable">CONFIG</em> with
+       one of the configuration names shown by
+       <code class="command">snapper list-configs</code>.
+       For more information about the configuration options, see
+       <a class="xref" href="cha-snapper.html#sec-snapper-config-modify-values" title="10.5.1.1. Configuration data">Section 10.5.1.1, “Configuration data”</a>.
+      </p><p>
+       To display the default configuration, run:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c root get-config</pre></div></dd><dt id="id-1.3.3.11.11.12.3.3"><span class="term">Modifying a configuration</span></dt><dd><p>
+       Use the subcommand <code class="command">snapper -c <em class="replaceable">CONFIG</em>
+       set-config
+       <em class="replaceable">OPTION</em>=<em class="replaceable">VALUE</em></code>
+       to modify an option in the specified configuration.
+       Replace <em class="replaceable">CONFIG</em> with one of the
+       configuration names shown by <code class="command">snapper list-configs</code>.
+       Possible values for <em class="replaceable">OPTION</em> and
+       <em class="replaceable">VALUE</em> are listed in <a class="xref" href="cha-snapper.html#sec-snapper-config-modify-values" title="10.5.1.1. Configuration data">Section 10.5.1.1, “Configuration data”</a>.
+      </p></dd><dt id="id-1.3.3.11.11.12.3.4"><span class="term">Deleting a configuration</span></dt><dd><p>
+       Use the subcommand <code class="command">snapper -c
+       <em class="replaceable">CONFIG</em> delete-config</code> to delete a
+       configuration. Replace <em class="replaceable">CONFIG</em> with one of the
+       configuration names shown by <code class="command">snapper list-configs</code>.
+      </p></dd></dl></div><section class="sect3" id="sec-snapper-config-modify-values" data-id-title="Configuration data"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.1.1 </span><span class="title-name">Configuration data</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-config-modify-values">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Each configuration contains a list of options that can be modified from
+     the command line. The following list provides details for each option. To
+     change a value, run <code class="command">snapper -c <em class="replaceable">CONFIG</em>
+     set-config
+     "<em class="replaceable">KEY</em>=<em class="replaceable">VALUE</em>"</code>.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.11.12.4.3.1"><span class="term"><code class="literal">ALLOW_GROUPS</code>,
+      <code class="literal">ALLOW_USERS</code>
+      </span></dt><dd><p>
+        Granting permissions to use snapshots to regular users. See
+        <a class="xref" href="cha-snapper.html#sec-snapper-config-user" title="10.5.1.2. Using Snapper as regular user">Section 10.5.1.2, “Using Snapper as regular user”</a> for more information.
+       </p><p>
+        The default value is <code class="literal">""</code>.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.2"><span class="term"><code class="literal">BACKGROUND_COMPARISON</code>
+      </span></dt><dd><p>
+        Defines whether pre and post snapshots should be compared in the
+        background after creation.
+       </p><p>
+        The default value is <code class="literal">"yes"</code>.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.3"><span class="term"><code class="literal">EMPTY_*</code>
+      </span></dt><dd><p>
+        Defines the clean-up algorithm for snapshots pairs with identical pre
+        and post snapshots. See <a class="xref" href="cha-snapper.html#sec-snapper-clean-up-empty" title="10.7.3. Cleaning up snapshot pairs that do not differ">Section 10.7.3, “Cleaning up snapshot pairs that do not differ”</a>
+        for details.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.4"><span class="term"><code class="literal">FSTYPE</code>
+      </span></dt><dd><p>
+        File system type of the partition. Do not change.
+       </p><p>
+        The default value is <code class="literal">"btrfs"</code>.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.5"><span class="term"><code class="literal">NUMBER_*</code></span></dt><dd><p>
+        Defines the clean-up algorithm for installation and administration
+        snapshots. See <a class="xref" href="cha-snapper.html#sec-snapper-clean-up-number" title="10.7.1. Cleaning up numbered snapshots">Section 10.7.1, “Cleaning up numbered snapshots”</a> for
+        details.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.6"><span class="term"><code class="literal">QGROUP</code> / <code class="literal">SPACE_LIMIT</code>
+      </span></dt><dd><p>
+        Adds quota support to the clean-up algorithms. See
+        <a class="xref" href="cha-snapper.html#sec-snapper-clean-up-quota" title="10.7.5. Adding disk quota support">Section 10.7.5, “Adding disk quota support”</a> for details.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.7"><span class="term"><code class="literal">SUBVOLUME</code>
+      </span></dt><dd><p>
+        Mount point of the partition or subvolume to snapshot. Do not change.
+       </p><p>
+        The default value is <code class="literal">"/"</code>.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.8"><span class="term"><code class="literal">SYNC_ACL</code>
+      </span></dt><dd><p>
+        If Snapper is used by regular users (see
+        <a class="xref" href="cha-snapper.html#sec-snapper-config-user" title="10.5.1.2. Using Snapper as regular user">Section 10.5.1.2, “Using Snapper as regular user”</a>), the users must be able to
+        access the <code class="filename">.snapshot</code> directories and to read files
+        within them. If SYNC_ACL is set to <code class="literal">yes</code>, Snapper
+        automatically makes them accessible using ACLs for users and groups
+        from the ALLOW_USERS or ALLOW_GROUPS entries.
+       </p><p>
+        The default value is <code class="literal">"no"</code>.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.9"><span class="term"><code class="literal">TIMELINE_CREATE</code>
+      </span></dt><dd><p>
+        If set to <code class="literal">yes</code>, hourly snapshots are created. Valid
+        values: <code class="literal">yes</code>, <code class="literal">no</code>.
+       </p><p>
+        The default value is <code class="literal">"no"</code>.
+       </p></dd><dt id="id-1.3.3.11.11.12.4.3.10"><span class="term"><code class="literal">TIMELINE_CLEANUP</code> /
+       <code class="literal">TIMELINE_LIMIT_*</code>
+      </span></dt><dd><p>
+        Defines the clean-up algorithm for timeline snapshots. See
+        <a class="xref" href="cha-snapper.html#sec-snapper-clean-up-timeline" title="10.7.2. Cleaning up timeline snapshots">Section 10.7.2, “Cleaning up timeline snapshots”</a> for details.
+       </p></dd></dl></div></section><section class="sect3" id="sec-snapper-config-user" data-id-title="Using Snapper as regular user"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.1.2 </span><span class="title-name">Using Snapper as regular user</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-config-user">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     By default Snapper can only be used by <code class="systemitem">root</code>. However, there are
+     cases in which certain groups or users need to be able to create snapshots
+     or undo changes by reverting to a snapshot:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       Web site administrators who want to take snapshots of
+       <code class="filename">/srv/www</code>
+      </p></li><li class="listitem"><p>
+       Users who want to take a snapshot of their home directory
+      </p></li></ul></div><p>
+     For these purposes, you can create Snapper configurations that grant
+     permissions to users or/and groups. The corresponding
+     <code class="filename">.snapshots</code> directory needs to be readable and
+     accessible by the specified users. The easiest way to achieve this is to
+     set the SYNC_ACL option to <code class="literal">yes</code>.
+    </p><div class="procedure" id="id-1.3.3.11.11.12.5.5" data-id-title="Enabling regular users to use Snapper"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.5: </span><span class="title-name">Enabling regular users to use Snapper </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#id-1.3.3.11.11.12.5.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+      All steps in this procedure need to be run by <code class="systemitem">root</code>.
+     </p><ol class="procedure" type="1"><li class="step"><p>
+       If a Snapper configuration does not exist yet, create one for the partition or
+       subvolume on which the user should be able to use Snapper. Refer to
+       <a class="xref" href="cha-snapper.html#sec-snapper-config" title="10.5. Creating and modifying Snapper configurations">Section 10.5, “Creating and modifying Snapper configurations”</a> for instructions. Example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper --config web_data create /srv/www</pre></div></li><li class="step"><p>
+       The configuration file is created under
+       <code class="filename">/etc/snapper/configs/<em class="replaceable">CONFIG</em></code>,
+       where CONFIG is the value you specified with
+       <code class="option">-c/--config</code> in the previous step (for example
+       <code class="filename">/etc/snapper/configs/web_data</code>). Adjust it according
+       to your needs. For more information, see
+       <a class="xref" href="cha-snapper.html#sec-snapper-config-modify" title="10.5.1. Managing existing configurations">Section 10.5.1, “Managing existing configurations”</a>.
+      </p></li><li class="step"><p>
+       Set values for <code class="envar">ALLOW_USERS</code> and/or
+       <code class="envar">ALLOW_GROUPS</code> to grant permissions to users and/or groups,
+       respectively. Multiple entries need to be separated by
+       <span class="keycap">Space</span>. To grant permissions to the user
+       <code class="systemitem">www_admin</code> for example, run:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c web_data set-config "ALLOW_USERS=www_admin" SYNC_ACL="yes"</pre></div></li><li class="step"><p>
+       The given Snapper configuration can now be used by the specified user(s)
+       and/or group(s). You can test it with the <code class="literal">list</code>
+       command, for example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">www_admin:~ &gt; </code>snapper -c web_data list</pre></div></li></ol></div></div></section></section></section><section class="sect1" id="sec-snapper-manage" data-id-title="Manually creating and managing snapshots"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.6 </span><span class="title-name">Manually creating and managing snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Snapper is not restricted to creating and managing snapshots automatically
+   by configuration; you can also create snapshot pairs (<span class="quote">“<span class="quote">before and
+   after</span>”</span>) or single snapshots manually using either the command-line
+   tool or the YaST module.
+  </p><p>
+   All Snapper operations are carried out for an existing configuration (see
+   <a class="xref" href="cha-snapper.html#sec-snapper-config" title="10.5. Creating and modifying Snapper configurations">Section 10.5, “Creating and modifying Snapper configurations”</a> for details). You can only take
+   snapshots of partitions or volumes for which a configuration exists. By
+   default the system configuration (<code class="literal">root</code>) is used.
+   To create or manage snapshots for your own configuration you need to
+   explicitly choose it. Use the <span class="guimenu">Current Configuration</span>
+   drop-down box in YaST or specify the <code class="option">-c</code> on the command
+   line (<code class="command">snapper -c <em class="replaceable">MYCONFIG</em>
+   <em class="replaceable">COMMAND</em></code>).
+  </p><section class="sect2" id="sec-snapper-manage-metadata" data-id-title="Snapshot metadata"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.6.1 </span><span class="title-name">Snapshot metadata</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage-metadata">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Each snapshot consists of the snapshot itself and certain metadata. When
+    creating a snapshot you also need to specify the metadata. Modifying a
+    snapshot means changing its metadata—you cannot modify its content.
+    Use <code class="command">snapper list</code> to show existing snapshots and their
+    metadata:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.12.4.3.1"><span class="term"><code class="command">snapper --config home list</code>
+     </span></dt><dd><p>
+       Lists snapshots for the configuration <code class="literal">home</code>. To list
+       snapshots for the default configuration (root), use <code class="command">snapper -c
+       root list</code> or <code class="command">snapper list</code>.
+      </p></dd><dt id="id-1.3.3.11.12.4.3.2"><span class="term"><code class="command">snapper list -a</code>
+     </span></dt><dd><p>
+       Lists snapshots for all existing configurations.
+      </p></dd><dt id="id-1.3.3.11.12.4.3.3"><span class="term"><code class="command">snapper list -t pre-post</code>
+     </span></dt><dd><p>
+       Lists all pre and post snapshot pairs for the default
+       (<code class="literal">root</code>) configuration.
+      </p></dd><dt id="id-1.3.3.11.12.4.3.4"><span class="term"><code class="command">snapper list -t single</code>
+     </span></dt><dd><p>
+       Lists all snapshots of the type <code class="literal">single</code> for the
+       default (<code class="literal">root</code>) configuration.
+      </p></dd></dl></div><p>
+    The following metadata is available for each snapshot:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <span class="bold"><strong>Type</strong></span>: snapshot type, see
+      <a class="xref" href="cha-snapper.html#sec-snapper-manage-metadata-type" title="10.6.1.1. Snapshot types">Section 10.6.1.1, “Snapshot types”</a> for details. This data
+      cannot be changed.
+     </p></li><li class="listitem"><p>
+      <span class="bold"><strong>Number</strong></span>: unique number of the snapshot.
+      This data cannot be changed.
+     </p></li><li class="listitem"><p>
+      <span class="bold"><strong>Pre Number</strong></span>: specifies the number of the
+      corresponding pre snapshot. For snapshots of type post only. This data
+      cannot be changed.
+     </p></li><li class="listitem"><p>
+      <span class="bold"><strong>Description</strong></span>: a description of the
+      snapshot.
+     </p></li><li class="listitem"><p>
+      <span class="bold"><strong>Userdata</strong></span>: an extended description where
+      you can specify custom data in the form of a comma-separated key=value
+      list: <code class="literal">reason=testing, project=foo</code>. This field is also
+      used to mark a snapshot as important (<code class="literal">important=yes</code>)
+      and to list the user that created the snapshot
+      (user=tux).
+     </p></li><li class="listitem"><p>
+      <span class="bold"><strong>Cleanup-Algorithm</strong></span>: cleanup-algorithm for
+      the snapshot, see <a class="xref" href="cha-snapper.html#sec-snapper-clean-up" title="10.7. Automatic snapshot clean-up">Section 10.7, “Automatic snapshot clean-up”</a> for details.
+     </p></li></ul></div><section class="sect3" id="sec-snapper-manage-metadata-type" data-id-title="Snapshot types"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.6.1.1 </span><span class="title-name">Snapshot types</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage-metadata-type">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Snapper knows three different types of snapshots: pre, post and single.
+     Physically they do not differ, but Snapper handles them differently.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.12.4.6.3.1"><span class="term"><code class="literal">pre</code>
+      </span></dt><dd><p>
+        Snapshot of a file system <span class="emphasis"><em>before</em></span> a modification.
+        Each <code class="literal">pre</code> snapshot corresponds to a
+        <code class="literal">post</code> snapshot.
+        For example, this is used for the automatic YaST/Zypper snapshots.
+       </p></dd><dt id="id-1.3.3.11.12.4.6.3.2"><span class="term"><code class="literal">post</code>
+      </span></dt><dd><p>
+        Snapshot of a file system <span class="emphasis"><em>after</em></span> a modification.
+        Each <code class="literal">post</code> snapshot corresponds to a
+        <code class="literal">pre</code> snapshot.
+        For example, this is used for the automatic YaST/Zypper snapshots.
+       </p></dd><dt id="id-1.3.3.11.12.4.6.3.3"><span class="term"><code class="literal">single</code>
+      </span></dt><dd><p>
+        Stand-alone snapshot.
+        For example, this is used for the automatic hourly snapshots.
+        This is the default type when creating snapshots.
+       </p></dd></dl></div></section><section class="sect3" id="sec-snapper-manage-metadata-cleanup" data-id-title="Cleanup algorithms"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.6.1.2 </span><span class="title-name">Cleanup algorithms</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage-metadata-cleanup">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Snapper provides three algorithms to clean up old snapshots. The
+     algorithms are executed in a daily
+     <code class="systemitem">cron</code> job.
+     It is possible to define the
+     number of different types of snapshots to keep in the Snapper
+     configuration (see <a class="xref" href="cha-snapper.html#sec-snapper-config-modify" title="10.5.1. Managing existing configurations">Section 10.5.1, “Managing existing configurations”</a> for
+     details).
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.12.4.7.3.1"><span class="term">number</span></dt><dd><p>
+        Deletes old snapshots when a certain snapshot count is reached.
+       </p></dd><dt id="id-1.3.3.11.12.4.7.3.2"><span class="term">timeline</span></dt><dd><p>
+        Deletes old snapshots having passed a certain age but keeps several
+        hourly, daily, monthly and yearly snapshots.
+       </p></dd><dt id="id-1.3.3.11.12.4.7.3.3"><span class="term">empty-pre-post</span></dt><dd><p>
+        Deletes pre/post snapshot pairs with empty diffs.
+       </p></dd></dl></div></section></section><section class="sect2" id="sec-snapper-manage-create" data-id-title="Creating snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.6.2 </span><span class="title-name">Creating snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage-create">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To create a snapshot, run <code class="command">snapper create</code> or
+    click <span class="guimenu">Create</span> in the YaST module
+    <span class="guimenu">Snapper</span>. The following examples explain how to create
+    snapshots from the command line.
+    The YaST interface for Snapper is not explicitly described here but
+    provides equivalent functionality.
+   </p><div id="id-1.3.3.11.12.5.3" data-id-title="Snapshot description" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Snapshot description</div><p>
+     Always specify a meaningful description to later be able to
+     identify its purpose. You can also specify additional information via
+     the option <code class="option">--userdata</code>.
+    </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.12.5.5.1"><span class="term"><code class="command">snapper create --from <em class="replaceable">17</em> --description 
+        "with package2"</code>
+     </span></dt><dd><p>
+       Creates a stand-alone snapshot (type single) from an existing snapshot, which is specified
+       by the snapshot's number from <code class="command">snapper list</code>. (This applies to Snapper version
+       0.8.4 and newer.)
+      </p></dd><dt id="id-1.3.3.11.12.5.5.2"><span class="term"><code class="command">snapper create --description "Snapshot for week 2
+      2014"</code>
+     </span></dt><dd><p>
+       Creates a stand-alone snapshot (type single) for the default
+       (<code class="literal">root</code>) configuration with a description. Because no
+       cleanup-algorithm is specified, the snapshot will never be deleted
+       automatically.
+      </p></dd><dt id="id-1.3.3.11.12.5.5.3"><span class="term"><code class="command">snapper --config home create --description "Cleanup in
+     ~tux"</code>
+     </span></dt><dd><p>
+       Creates a stand-alone snapshot (type single) for a custom configuration
+       named <code class="literal">home</code> with a description. Because no
+       cleanup-algorithm is specified, the snapshot will never be deleted
+       automatically.
+      </p></dd><dt id="id-1.3.3.11.12.5.5.4"><span class="term"><code class="command">snapper --config home create --description "Daily data
+     backup" --cleanup-algorithm timeline</code>&gt;
+     </span></dt><dd><p>
+       Creates a stand-alone snapshot (type single) for a custom configuration
+       named <code class="literal">home</code> with a description. The snapshot will
+       automatically be deleted when it meets the criteria specified for the
+       timeline cleanup-algorithm in the configuration.
+      </p></dd><dt id="id-1.3.3.11.12.5.5.5"><span class="term"><code class="command">snapper create --type pre --print-number --description
+     "Before the Apache config cleanup" --userdata "important=yes"</code>
+     </span></dt><dd><p>
+       Creates a snapshot of the type <code class="literal">pre</code> and prints the
+       snapshot number. First command needed to create a pair of snapshots used
+       to save a <span class="quote">“<span class="quote">before</span>”</span> and <span class="quote">“<span class="quote">after</span>”</span> state. The
+       snapshot is marked as important.
+      </p></dd><dt id="id-1.3.3.11.12.5.5.6"><span class="term"><code class="command">snapper create --type post --pre-number 30 --description
+     "After the Apache config cleanup" --userdata "important=yes"</code>
+     </span></dt><dd><p>
+       Creates a snapshot of the type <code class="literal">post</code> paired with the
+       <code class="literal">pre</code> snapshot number <code class="literal">30</code>. Second
+       command needed to create a pair of snapshots used to save a
+       <span class="quote">“<span class="quote">before</span>”</span> and <span class="quote">“<span class="quote">after</span>”</span> state. The snapshot is
+       marked as important.
+      </p></dd><dt id="id-1.3.3.11.12.5.5.7"><span class="term"><code class="command">snapper create --command <em class="replaceable">COMMAND</em>
+     --description "Before and after COMMAND"</code>
+     </span></dt><dd><p>
+       Automatically creates a snapshot pair before and after running
+       <em class="replaceable">COMMAND</em>. This option is only available when
+       using snapper on the command line.
+      </p></dd></dl></div></section><section class="sect2" id="sec-snapper-manage-modify" data-id-title="Modifying snapshot metadata"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.6.3 </span><span class="title-name">Modifying snapshot metadata</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage-modify">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Snapper allows you to modify the description, the cleanup algorithm, and
+    the user data of a snapshot. All other metadata cannot be changed. The
+    following examples explain how to modify snapshots from the command line.
+    It should be easy to adopt them when using the YaST interface.
+   </p><p>
+    To modify a snapshot on the command line, you need to know its number. Use
+    <code class="command">snapper list</code> to display all snapshots
+    and their numbers.
+   </p><p>
+    The YaST <span class="guimenu">Snapper</span> module already lists all snapshots.
+    Choose one from the list and click <span class="guimenu">Modify</span>.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.12.6.5.1"><span class="term"><code class="command">snapper modify --cleanup-algorithm "timeline"</code>
+      10
+     </span></dt><dd><p>
+       Modifies the metadata of snapshot 10 for the default
+       (<code class="literal">root</code>) configuration. The cleanup algorithm is set to
+       <code class="literal">timeline</code>.
+      </p></dd><dt id="id-1.3.3.11.12.6.5.2"><span class="term"><code class="command">snapper --config home modify --description "daily backup"
+     -cleanup-algorithm "timeline" 120</code>
+     </span></dt><dd><p>
+       Modifies the metadata of snapshot 120 for a custom configuration named
+       <code class="literal">home</code>. A new description is set and the cleanup
+       algorithm is unset.
+      </p></dd></dl></div></section><section class="sect2" id="sec-snapper-manage-delete" data-id-title="Deleting snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.6.4 </span><span class="title-name">Deleting snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-manage-delete">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To delete a snapshot with the YaST <span class="guimenu">Snapper</span> module,
+    choose a snapshot from the list and click <span class="guimenu">Delete</span>.
+   </p><p>
+    To delete a snapshot with the command-line tool, you need to know its
+    number. Get it by running <code class="command">snapper list</code>. To delete a
+    snapshot, run <code class="command">snapper delete</code>
+    <em class="replaceable">NUMBER</em>.
+   </p><p>
+    Deleting the current default subvolume snapshot is not allowed.
+   </p><p>
+    When deleting snapshots with Snapper, the freed space will be claimed by a
+    Btrfs process running in the background. Thus the visibility and the
+    availability of free space is delayed. In case you need space freed by
+    deleting a snapshot to be available immediately, use the option
+    <code class="option">--sync</code> with the delete command.
+   </p><div id="id-1.3.3.11.12.7.6" data-id-title="Deleting snapshot pairs" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Deleting snapshot pairs</div><p>
+     When deleting a <code class="literal">pre</code> snapshot, you should always delete
+     its corresponding <code class="literal">post</code> snapshot (and vice versa).
+    </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.12.7.7.1"><span class="term"><code class="command">snapper delete 65</code>
+     </span></dt><dd><p>
+       Deletes snapshot 65 for the default (<code class="literal">root</code>)
+       configuration.
+      </p></dd><dt id="id-1.3.3.11.12.7.7.2"><span class="term"><code class="command">snapper -c home delete 89 90</code>
+     </span></dt><dd><p>
+       Deletes snapshots 89 and 90 for a custom configuration named
+       <code class="literal">home</code>.
+      </p></dd><dt id="id-1.3.3.11.12.7.7.3"><span class="term"><code class="command">snapper delete --sync 23</code></span></dt><dd><p>
+       Deletes snapshot 23 for the default (<code class="literal">root</code>)
+       configuration and makes the freed space available immediately.
+      </p></dd></dl></div><div id="id-1.3.3.11.12.7.8" data-id-title="Delete unreferenced snapshots" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Delete unreferenced snapshots</div><p>
+     Sometimes the Btrfs snapshot is present but the XML file containing the
+     metadata for Snapper is missing. In this case the snapshot is not visible
+     for Snapper and needs to be deleted manually:
+    </p><div class="verbatim-wrap"><pre class="screen">btrfs subvolume delete /.snapshots/<em class="replaceable">SNAPSHOTNUMBER</em>/snapshot
+rm -rf /.snapshots/SNAPSHOTNUMBER</pre></div></div><div id="id-1.3.3.11.12.7.9" data-id-title="Old snapshots occupy more disk space" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Old snapshots occupy more disk space</div><p>
+     If you delete snapshots to free space on your hard disk, make sure to
+     delete old snapshots first. The older a snapshot is, the more disk space
+     it occupies.
+    </p></div><p>
+    Snapshots are also automatically deleted by a daily cron job. Refer to
+    <a class="xref" href="cha-snapper.html#sec-snapper-manage-metadata-cleanup" title="10.6.1.2. Cleanup algorithms">Section 10.6.1.2, “Cleanup algorithms”</a> for details.
+   </p></section></section><section class="sect1" id="sec-snapper-clean-up" data-id-title="Automatic snapshot clean-up"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.7 </span><span class="title-name">Automatic snapshot clean-up</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-clean-up">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Snapshots occupy disk space and over time the amount of disk space occupied
+   by the snapshots may become large. To prevent disks from running out of
+   space, Snapper offers algorithms to automatically delete old snapshots.
+   These algorithms differentiate between timeline snapshots and numbered
+   snapshots (administration plus installation snapshot pairs). You can specify
+   the number of snapshots to keep for each type.
+  </p><p>
+   Additionally, you can optionally specify a disk space quota, defining
+   the maximum amount of disk space the snapshots may occupy. It is also
+   possible to automatically delete pre and post snapshots pairs that do not
+   differ.
+  </p><p>
+   A clean-up algorithm is always bound to a single Snapper configuration, so
+    you need to configure algorithms for each configuration. To prevent certain
+    snapshots from being automatically deleted, refer to <a class="xref" href="cha-snapper.html#faq-snapper-permanent" title="Q:"><em>
+      Can a snapshot be protected from deletion?
+     </em></a>.
+  </p><p>
+   The default setup (<code class="literal">root</code>) is configured to do clean-up
+   for numbered snapshots and empty pre and post snapshot pairs. Quota support
+   is enabled—snapshots may not occupy more than 50% of the available
+   disk space of the root partition. Timeline snapshots are disabled by
+   default, therefore the timeline clean-up algorithm is also disabled.
+  </p><section class="sect2" id="sec-snapper-clean-up-number" data-id-title="Cleaning up numbered snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.1 </span><span class="title-name">Cleaning up numbered snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-clean-up-number">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Cleaning up numbered snapshots—administration plus installation
+    snapshot pairs—is controlled by the following parameters of a Snapper
+    configuration.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.13.6.3.1"><span class="term"><code class="literal">NUMBER_CLEANUP</code>
+     </span></dt><dd><p>
+       Enables or disables clean-up of installation and admin snapshot pairs.
+       If enabled, snapshot pairs are deleted when the total snapshot count
+       exceeds a number specified with <code class="literal">NUMBER_LIMIT</code> and/or
+       <code class="literal">NUMBER_LIMIT_IMPORTANT</code> <span class="emphasis"><em>and</em></span> an
+       age specified with <code class="literal">NUMBER_MIN_AGE</code>. Valid values:
+       <code class="literal">yes</code> (enable), <code class="literal">no</code> (disable).
+      </p><p>
+       The default value is <code class="literal">"yes"</code>.
+      </p><p>
+       Example command to change or set:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> set-config "NUMBER_CLEANUP=no"</pre></div></dd><dt id="id-1.3.3.11.13.6.3.2"><span class="term"><code class="literal">NUMBER_LIMIT</code> /
+      <code class="literal">NUMBER_LIMIT_IMPORTANT</code>
+     </span></dt><dd><p>
+       Defines how many regular and/or important installation and
+       administration snapshot pairs to keep. Ignored if
+       <code class="literal">NUMBER_CLEANUP</code> is set to
+       <code class="literal">"no"</code>.
+      </p><p>
+       The default value is <code class="literal">"2-10"</code> for
+       <code class="literal">NUMBER_LIMIT</code> and <code class="literal">"4-10"</code>
+       for <code class="literal">NUMBER_LIMIT_IMPORTANT</code>. The cleaning
+       algorithms delete snapshots above the specified maximum value,
+       without taking the snapshot and file system space into
+       account. The algorithms also delete snapshots above the minimum
+       value until the limits for the snapshot and file system are
+       reached.
+      </p><p>
+       Example command to change or set:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> set-config "NUMBER_LIMIT=10"</pre></div><div id="id-1.3.3.11.13.6.3.2.2.5" data-id-title="Ranged compared to constant values" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Ranged compared to constant values</div><p>
+        In case quota support is enabled (see
+        <a class="xref" href="cha-snapper.html#sec-snapper-clean-up-quota" title="10.7.5. Adding disk quota support">Section 10.7.5, “Adding disk quota support”</a>) the limit needs
+        to be specified as a minimum-maximum range, for example
+        <code class="literal">2-10</code>. If quota support is disabled, a constant
+        value, for example <code class="literal">10</code>, needs to be provided,
+        otherwise cleaning-up will fail with an error.
+       </p></div></dd><dt id="id-1.3.3.11.13.6.3.3"><span class="term"><code class="literal">NUMBER_MIN_AGE</code>
+     </span></dt><dd><p>
+       Defines the minimum age in seconds a snapshot must have before it can
+       automatically be deleted. Snapshots younger than the value specified
+       here will not be deleted, regardless of how many exist.
+      </p><p>
+       The default value is <code class="literal">"1800"</code>.
+      </p><p>
+       Example command to change or set:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> set-config "NUMBER_MIN_AGE=864000"</pre></div></dd></dl></div><div id="id-1.3.3.11.13.6.4" data-id-title="Limit and age" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Limit and age</div><p>
+     <code class="literal">NUMBER_LIMIT</code>, <code class="literal">NUMBER_LIMIT_IMPORTANT</code>
+     and <code class="literal">NUMBER_MIN_AGE</code> are always evaluated. Snapshots are
+     only deleted when <span class="emphasis"><em>all</em></span> conditions are met.
+    </p><p>
+     If you always want to keep the number of snapshots defined with
+     <code class="literal">NUMBER_LIMIT*</code> regardless of their age, set
+     <code class="literal">NUMBER_MIN_AGE</code> to <code class="literal">0</code>.
+    </p><p>
+     The following example shows a configuration to keep the last 10 important
+     and regular snapshots regardless of age:
+    </p><div class="verbatim-wrap"><pre class="screen">NUMBER_CLEANUP=yes
+NUMBER_LIMIT_IMPORTANT=10
+NUMBER_LIMIT=10
+NUMBER_MIN_AGE=0</pre></div><p>
+     If you do not want to keep snapshots beyond a certain
+     age, set <code class="literal">NUMBER_LIMIT*</code> to <code class="literal">0</code> and
+     provide the age with <code class="literal">NUMBER_MIN_AGE</code>.
+    </p><p>
+     The following example shows a configuration to only keep snapshots younger
+     than ten days:
+    </p><div class="verbatim-wrap"><pre class="screen">NUMBER_CLEANUP=yes
+NUMBER_LIMIT_IMPORTANT=0
+NUMBER_LIMIT=0
+NUMBER_MIN_AGE=864000</pre></div></div></section><section class="sect2" id="sec-snapper-clean-up-timeline" data-id-title="Cleaning up timeline snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.2 </span><span class="title-name">Cleaning up timeline snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-clean-up-timeline">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Cleaning up timeline snapshots is controlled by the following
+    parameters of a Snapper configuration.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.13.7.3.1"><span class="term"><code class="literal">TIMELINE_CLEANUP</code>
+     </span></dt><dd><p>
+       Enables or disables clean-up of timeline snapshots. If enabled,
+       snapshots are deleted when the total snapshot count exceeds a number
+       specified with <code class="literal">TIMELINE_LIMIT_*</code>
+       <span class="emphasis"><em>and</em></span> an age specified with
+       <code class="literal">TIMELINE_MIN_AGE</code>. Valid values:
+       <code class="literal">yes</code>, <code class="literal">no</code>.
+      </p><p>
+       The default value is <code class="literal">"yes"</code>.
+      </p><p>
+       Example command to change or set:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c <em class="replaceable">CONFIG</em> set-config "TIMELINE_CLEANUP=yes"</pre></div></dd><dt id="id-1.3.3.11.13.7.3.2"><span class="term"><code class="literal">TIMELINE_LIMIT_DAILY</code>,
+      <code class="literal">TIMELINE_LIMIT_HOURLY</code>,
+      <code class="literal">TIMELINE_LIMIT_MONTHLY</code>,
+      <code class="literal">TIMELINE_LIMIT_WEEKLY</code>,
+      <code class="literal">TIMELINE_LIMIT_YEARLY</code>
+     </span></dt><dd><p>
+       Number of snapshots to keep for hour, day, month, week and year.
+      </p><p>
+       The default value for each entry is <code class="literal">"10"</code>, except for
+       <code class="literal">TIMELINE_LIMIT_WEEKLY</code>, which is set to
+       <code class="literal">"0"</code> by default.
+      </p></dd><dt id="id-1.3.3.11.13.7.3.3"><span class="term"><code class="literal">TIMELINE_MIN_AGE</code>
+     </span></dt><dd><p>
+       Defines the minimum age in seconds a snapshot must have before it can
+       automatically be deleted.
+      </p><p>
+       The default value is <code class="literal">"1800"</code>.
+      </p></dd></dl></div><div class="complex-example"><div class="example" id="ex-snapper-config-timeline" data-id-title="Example timeline configuration"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 10.1: </span><span class="title-name">Example timeline configuration </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#ex-snapper-config-timeline">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">TIMELINE_CLEANUP="yes"
+TIMELINE_CREATE="yes"
+TIMELINE_LIMIT_DAILY="7"
+TIMELINE_LIMIT_HOURLY="24"
+TIMELINE_LIMIT_MONTHLY="12"
+TIMELINE_LIMIT_WEEKLY="4"
+TIMELINE_LIMIT_YEARLY="2"
+TIMELINE_MIN_AGE="1800"</pre></div><p>
+     This example configuration enables hourly snapshots which are
+     automatically cleaned up. <code class="literal">TIMELINE_MIN_AGE</code> and
+     <code class="literal">TIMELINE_LIMIT_*</code> are always both evaluated. In this
+     example, the minimum age of a snapshot before it can be deleted is set to
+     30 minutes (1800 seconds). Since we create hourly snapshots, this ensures
+     that only the latest snapshots are kept. If
+     <code class="literal">TIMELINE_LIMIT_DAILY</code> is set to not zero, this means
+     that the first snapshot of the day is kept, too.
+    </p><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">Snapshots to be kept </span></span><a title="Permalink" class="permalink" href="cha-snapper.html#id-1.3.3.11.13.7.4.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+       Hourly: the last 24 snapshots that have been made.
+      </p></li><li class="listitem"><p>
+       Daily: the first daily snapshot that has been made is kept from the last
+       seven days.
+      </p></li><li class="listitem"><p>
+       Monthly: the first snapshot made on the last day of the month is kept
+       for the last twelve months.
+      </p></li><li class="listitem"><p>
+       Weekly: the first snapshot made on the last day of the week is kept from
+       the last four weeks.
+      </p></li><li class="listitem"><p>
+       Yearly: the first snapshot made on the last day of the year is kept for
+       the last two years.
+      </p></li></ul></div></div></div></div></section><section class="sect2" id="sec-snapper-clean-up-empty" data-id-title="Cleaning up snapshot pairs that do not differ"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.3 </span><span class="title-name">Cleaning up snapshot pairs that do not differ</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-clean-up-empty">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As explained in <a class="xref" href="cha-snapper.html#snapper-snapshot-type" title="10.1.2. Types of snapshots">Section 10.1.2, “Types of snapshots”</a>, whenever you run a
+    YaST module or execute Zypper, a pre snapshot is created on start-up and
+    a post snapshot is created when exiting. In case you have not made any
+    changes there will be no difference between the pre and post snapshots.
+    Such <span class="quote">“<span class="quote">empty</span>”</span> snapshot pairs can be automatically be deleted by
+    setting the following parameters in a Snapper configuration:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.13.8.3.1"><span class="term"><code class="literal">EMPTY_PRE_POST_CLEANUP</code>
+     </span></dt><dd><p>
+       If set to <code class="literal">yes</code>, pre and post snapshot pairs that do
+       not differ will be deleted.
+      </p><p>
+       The default value is <code class="literal">"yes"</code>.
+      </p></dd><dt id="id-1.3.3.11.13.8.3.2"><span class="term"><code class="literal">EMPTY_PRE_POST_MIN_AGE</code>
+     </span></dt><dd><p>
+       Defines the minimum age in seconds a pre and post snapshot pair that
+       does not differ must have before it can automatically be deleted.
+      </p><p>
+       The default value is <code class="literal">"1800"</code>.
+      </p></dd></dl></div></section><section class="sect2" id="sec-snapper-clean-up-manual" data-id-title="Cleaning up manually created snapshots"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.4 </span><span class="title-name">Cleaning up manually created snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-clean-up-manual">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Snapper does not offer custom clean-up algorithms for manually created
+    snapshots. However, you can assign the number or timeline clean-up
+    algorithm to a manually created snapshot. If you do so, the snapshot will
+    join the <span class="quote">“<span class="quote">clean-up queue</span>”</span> for the algorithm you specified.
+    You can specify a clean-up algorithm when creating a snapshot, or by
+    modifying an existing snapshot:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.13.9.3.1"><span class="term"><code class="command">snapper create --description "Test" --cleanup-algorithm number</code>
+     </span></dt><dd><p>
+       Creates a stand-alone snapshot (type single) for the default (root)
+       configuration and assigns the <code class="literal">number</code> clean-up
+       algorithm.
+      </p></dd><dt id="id-1.3.3.11.13.9.3.2"><span class="term"><code class="command">snapper modify --cleanup-algorithm "timeline" 25</code>
+     </span></dt><dd><p>
+       Modifies the snapshot with the number 25 and assigns the clean-up
+       algorithm <code class="literal">timeline</code>.
+      </p></dd></dl></div></section><section class="sect2" id="sec-snapper-clean-up-quota" data-id-title="Adding disk quota support"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.5 </span><span class="title-name">Adding disk quota support</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-clean-up-quota">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    In addition to the number and/or timeline clean-up algorithms described
+    above, Snapper supports quotas. You can define what percentage of the
+    available space snapshots are allowed to occupy. This percentage value
+    always applies to the Btrfs subvolume defined in the respective Snapper
+    configuration.
+   </p><p> 
+       Btrfs quotas are applied to subvolumes, not to users. You may apply 
+       disk space quotas to users and groups (for example, with the 
+       <code class="command">quota</code> command) in addition to using Btrfs quotas.
+   </p><p>
+    If Snapper was enabled during the installation, quota support is
+    automatically enabled. In case you manually enable Snapper at a later point
+    in time, you can enable quota support by running <code class="command">snapper
+    setup-quota</code>. This requires a valid configuration (see
+    <a class="xref" href="cha-snapper.html#sec-snapper-config" title="10.5. Creating and modifying Snapper configurations">Section 10.5, “Creating and modifying Snapper configurations”</a> for more information).
+   </p><p>
+    Quota support is controlled by the following parameters of a Snapper
+    configuration.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.11.13.10.6.1"><span class="term"><code class="literal">QGROUP</code>
+     </span></dt><dd><p>
+       The Btrfs quota group used by Snapper. If not set, run <code class="command">snapper
+       setup-quota</code>. If already set, only change if you are familiar
+       with <code class="command">man 8 btrfs-qgroup</code>. This value is set with
+       <code class="command">snapper setup-quota</code> and should not be changed.
+      </p></dd><dt id="id-1.3.3.11.13.10.6.2"><span class="term"><code class="literal">SPACE_LIMIT</code>
+     </span></dt><dd><p>
+       Limit of space snapshots are allowed to use in fractions of 1 (100%).
+       Valid values range from 0 to 1 (0.1 = 10%, 0.2 = 20%, ...).
+      </p></dd></dl></div><p>
+    The following limitations and guidelines apply:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Quotas are only activated in <span class="emphasis"><em>addition</em></span> to an existing
+      number and/or timeline clean-up algorithm. If no clean-up algorithm is
+      active, quota restrictions are not applied.
+     </p></li><li class="listitem"><p>
+      With quota support enabled, Snapper will perform two clean-up runs if
+      required. The first run will apply the rules specified for number and
+      timeline snapshots. Only if the quota is exceeded after this run, the
+      quota-specific rules will be applied in a second run.
+     </p></li><li class="listitem"><p>
+      Even if quota support is enabled, Snapper will always keep the number of
+      snapshots specified with the <code class="literal">NUMBER_LIMIT*</code> and
+      <code class="literal">TIMELINE_LIMIT*</code> values, even if the quota will be
+      exceeded. It is therefore recommended to specify ranged values
+      (<code class="literal"><em class="replaceable">MIN</em>-<em class="replaceable">MAX</em></code>)
+      for <code class="literal">NUMBER_LIMIT*</code> and
+      <code class="literal">TIMELINE_LIMIT*</code> to ensure the quota can be applied.
+     </p><p>
+      If, for example, <code class="literal">NUMBER_LIMIT=5-20</code> is set, Snapper
+      will perform a first clean-up run and reduce the number of regular
+      numbered snapshots to 20. In case these 20 snapshots exceed the
+      quota, Snapper will delete the oldest ones in a second run until the
+      quota is met. A minimum of five snapshots will always be kept, regardless
+      of the amount of space they occupy.
+     </p></li></ul></div></section></section><section class="sect1" id="id-1.3.3.11.14" data-id-title="Showing exclusive disk space used by snapshots"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.8 </span><span class="title-name">Showing exclusive disk space used by snapshots</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#id-1.3.3.11.14">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Snapshots share data, for efficient use of storage space, so using ordinary
+      commands like <code class="command">du</code> and <code class="command">df</code> will not measure
+      used disk space accurately. When you want to free up disk space on Btrfs 
+      with quotas enabled, you need to know how much exclusive disk space is 
+      used by each snapshot, rather than shared space. Snapper 0.6 and up reports 
+      the used disk space for each snapshot in the
+    <code class="literal">Used Space</code> column:
+</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>snapper--iso list
+  # | Type   | Pre # | Date                | User | Used Space | Cleanup | Description           | Userdata     
+----+--------+-------+---------------------+------+------------+---------+-----------------------+--------------
+ 0  | single |       |                     | root |            |         | current               |              
+ 1* | single |       | 2019-07-22 13:08:38 | root |  16.00 KiB |         | first root filesystem |              
+ 2  | single |       | 2019-07-22 14:21:05 | root |  14.23 MiB | number  | after installation    | important=yes
+ 3  | pre    |       | 2019-07-22 14:26:03 | root | 144.00 KiB | number  | zypp(zypper)          | important=no 
+ 4  | post   |     3 | 2019-07-22 14:26:04 | root | 112.00 KiB | number  |                       | important=no 
+ 5  | pre    |       | 2019-07-23 08:19:36 | root | 128.00 KiB | number  | zypp(zypper)          | important=no 
+ 6  | post   |     5 | 2019-07-23 08:19:43 | root |  80.00 KiB | number  |                       | important=no 
+ 7  | pre    |       | 2019-07-23 08:20:50 | root | 256.00 KiB | number  | yast sw_single        |              
+ 8  | pre    |       | 2019-07-23 08:23:22 | root | 112.00 KiB | number  | zypp(ruby.ruby2.5)    | important=no 
+ 9  | post   |     8 | 2019-07-23 08:23:35 | root |  64.00 KiB | number  |                       | important=no 
+10  | post   |     7 | 2019-07-23 08:24:05 | root |  16.00 KiB | number  |                       |</pre></div><p>
+    The <code class="command">btrfs</code> command provides another view of space used by 
+    snapshots:
+</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs qgroup show -p /
+qgroupid         rfer         excl parent  
+--------         ----         ---- ------  
+0/5          16.00KiB     16.00KiB ---     
+[...]    
+0/272         3.09GiB     14.23MiB 1/0     
+0/273         3.11GiB    144.00KiB 1/0     
+0/274         3.11GiB    112.00KiB 1/0     
+0/275         3.11GiB    128.00KiB 1/0     
+0/276         3.11GiB     80.00KiB 1/0     
+0/277         3.11GiB    256.00KiB 1/0     
+0/278         3.11GiB    112.00KiB 1/0     
+0/279         3.12GiB     64.00KiB 1/0     
+0/280         3.12GiB     16.00KiB 1/0     
+1/0           3.33GiB    222.95MiB ---</pre></div><p>
+    The <code class="literal">qgroupid</code> column displays the identification number for
+    each subvolume, assigning a qgroup level/ID combination.
+</p><p>
+    The <code class="literal">rfer</code> column displays the total amount of data 
+    referred to in the subvolume.
+</p><p>
+    The <code class="literal">excl</code> column displays the exclusive data in each
+    subvolume. 
+</p><p>
+    The <code class="literal">parent</code> column shows the parent qgroup of the subvolumes.
+</p><p>    
+    The final item, <code class="literal">1/0</code>, shows the totals for the parent 
+    qgroup. In the above example, 222.95 MiB will be freed if all subvolumes
+    are removed. Run the following command to see which snapshots are associated
+    with each subvolume:
+</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs subvolume list -st /
+ID	gen	top level	path	
+--	---	---------	----	
+267	298	266		@/.snapshots/1/snapshot
+272	159	266		@/.snapshots/2/snapshot
+273	170	266		@/.snapshots/3/snapshot
+274	171	266		@/.snapshots/4/snapshot
+275	287	266		@/.snapshots/5/snapshot
+276	288	266		@/.snapshots/6/snapshot
+277	292	266		@/.snapshots/7/snapshot
+278	296	266		@/.snapshots/8/snapshot
+279	297	266		@/.snapshots/9/snapshot
+280	298	266		@/.snapshots/10/snapshot</pre></div><p>
+      Doing an upgrade from one service pack to another results in snapshots
+      occupying a lot of disk space on the system subvolumes. Manually deleting 
+      these snapshots after they are no longer needed is recommended. See
+      <a class="xref" href="cha-snapper.html#sec-snapper-manage-delete" title="10.6.4. Deleting snapshots">Section 10.6.4, “Deleting snapshots”</a> for details.
+     </p></section><section class="sect1" id="sec-snapper-faqs" data-id-title="Frequently asked questions"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.9 </span><span class="title-name">Frequently asked questions</span></span> <a title="Permalink" class="permalink" href="cha-snapper.html#sec-snapper-faqs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/snapper.xml" title="Edit source document"> </a></div></div></div></div></div><div class="qandaset" id="id-1.3.3.11.15.2"><div class="free-id" id="id-1.3.3.11.15.2.1"> </div><dl class="qandaentry"><dt class="question" id="id-1.3.3.11.15.2.1.1"><strong>Q:</strong>
+      Why does Snapper never show changes in <code class="filename">/var/log</code>,
+      <code class="filename">/tmp</code> and other directories?
+     </dt><dd class="answer" id="id-1.3.3.11.15.2.1.2"><p>
+      For certain directories, we decided to exclude them from snapshots. See
+      <a class="xref" href="cha-snapper.html#snapper-dir-excludes" title="10.1.3. Directories that are excluded from snapshots">Section 10.1.3, “Directories that are excluded from snapshots”</a> for a list and reasons. To exclude
+      a path from snapshots we create a subvolume for that path.
+     </p></dd></dl><div class="free-id" id="id-1.3.3.11.15.2.2"> </div><dl class="qandaentry"><dt class="question" id="id-1.3.3.11.15.2.2.1"><strong>Q:</strong>
+      Can I boot a snapshot from the boot loader?
+     </dt><dd class="answer" id="id-1.3.3.11.15.2.2.2"><p>
+      Yes—refer to <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a> for
+      details.
+     </p></dd></dl><div class="free-id" id="faq-snapper-permanent"> </div><dl class="qandaentry"><dt class="question" id="id-1.3.3.11.15.2.3.1"><strong>Q:</strong>
+      Can a snapshot be protected from deletion?
+     </dt><dd class="answer" id="id-1.3.3.11.15.2.3.2"><p>
+      Currently Snapper does not offer means to prevent a snapshot from being
+      deleted manually. However, you can prevent snapshots from being
+      automatically deleted by clean-up algorithms. Manually created snapshots
+      (see <a class="xref" href="cha-snapper.html#sec-snapper-manage-create" title="10.6.2. Creating snapshots">Section 10.6.2, “Creating snapshots”</a>) have no clean-up
+      algorithm assigned unless you specify one with
+      <code class="option">--cleanup-algorithm</code>. Automatically created snapshots
+      always either have the <code class="literal">number</code> or
+      <code class="literal">timeline</code> algorithm assigned. To remove such an
+      assignment from one or more snapshots, proceed as follows:
+     </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+        List all available snapshots:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper list -a</pre></div></li><li class="step"><p>
+        Memorize the number of the snapshots you want to prevent from being
+        deleted.
+       </p></li><li class="step"><p>
+        Run the following command and replace the number placeholders with the
+        number(s) you memorized:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper modify --cleanup-algorithm "" <em class="replaceable">#1</em> <em class="replaceable">#2</em> <em class="replaceable">#n</em></pre></div></li><li class="step"><p>
+        Check the result by running <code class="command">snapper list -a</code> again.
+        The entry in the column <code class="literal">Cleanup</code> should now be empty
+        for the snapshots you modified.
+       </p></li></ol></div></div></dd></dl><div class="free-id" id="id-1.3.3.11.15.2.4"> </div><dl class="qandaentry"><dt class="question" id="id-1.3.3.11.15.2.4.1"><strong>Q:</strong>
+      Where can I get more information on Snapper?
+     </dt><dd class="answer" id="id-1.3.3.11.15.2.4.2"><p>
+      See the Snapper home page at <a class="link" href="http://snapper.io/" target="_blank">http://snapper.io/</a>.
+     </p></dd></dl></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-sw-cl.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 9 </span>Managing software with command line tools</span></a> </div><div><a class="pagination-link next" href="cha-klp.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Live kernel patching with KLP</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-setup"><span class="title-number">10.1 </span><span class="title-name">Default setup</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-undo"><span class="title-number">10.2 </span><span class="title-name">Using Snapper to undo changes</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-snapshot-boot"><span class="title-number">10.3 </span><span class="title-name">System rollback by booting from snapshots</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-homedirs"><span class="title-number">10.4 </span><span class="title-name">Enabling Snapper in user home directories</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-config"><span class="title-number">10.5 </span><span class="title-name">Creating and modifying Snapper configurations</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-manage"><span class="title-number">10.6 </span><span class="title-name">Manually creating and managing snapshots</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-clean-up"><span class="title-number">10.7 </span><span class="title-name">Automatic snapshot clean-up</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#id-1.3.3.11.14"><span class="title-number">10.8 </span><span class="title-name">Showing exclusive disk space used by snapshots</span></a></span></li><li><span class="sect1"><a href="cha-snapper.html#sec-snapper-faqs"><span class="title-number">10.9 </span><span class="title-name">Frequently asked questions</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

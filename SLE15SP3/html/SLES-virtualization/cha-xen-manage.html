@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP3 | Virtualization Guide | Managing a virtualization environment</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Managing a virtualization environment | SLES 15 SP3"/>
+<meta name="description" content="Apart from using the recommended libvirt library (Part II, “Managing virtual machines with libvirt”), you can manage Xen guest domains with the xl to…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP3"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 25. Managing a virtualization environment"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Managing a virtualization environment",
+  
+    "description": "Managing a virtualization environment",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-29T00:00+02:00",
+      
+    "datePublished": "2021-06-22T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-xen-network.html" title="Chapter 24. Virtual networking"/><link rel="next" href="cha-xen-vbd.html" title="Chapter 26. Block devices in Xen"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-xen.html">Managing virtual machines with Xen</a><span> / </span><a class="crumb" href="cha-xen-manage.html">Managing a virtualization environment</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">16 </span><span class="title-name">Managing virtual machines with Vagrant</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">17 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">18 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">19 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">20 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">21 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></a></li></ol></li><li class="active"><a href="part-virt-xen.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">23 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">24 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" you-are-here"><span class="title-number">25 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">26 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">27 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">28 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">29 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">30 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">32 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">34 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">35 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">36 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">37 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">38 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-xen-manage" data-id-title="Managing a virtualization environment"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">25 </span><span class="title-name">Managing a virtualization environment</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Apart from using the recommended <code class="systemitem">libvirt</code> library
+  (<a class="xref" href="part-virt-libvirt.html" title="Part II. Managing virtual machines with libvirt">Part II, “Managing virtual machines with <code class="systemitem">libvirt</code>”</a>), you can manage Xen guest
+  domains with the <code class="command">xl</code> tool from the command line.
+ </p><section class="sect1" id="sec-xen-manage-xl" data-id-title="XL—Xen management tool"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.1 </span><span class="title-name">XL—Xen management tool</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-manage-xl">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <code class="command">xl</code> program is a tool for managing Xen guest
+   domains. It is part of the <span class="package">xen-tools</span> package.
+   <code class="command">xl</code> is based on the LibXenlight library, and can be
+   used for general domain management, such as domain creation, listing,
+   pausing, or shutting down. Usually you need to be <code class="systemitem">root</code> to
+   execute <code class="command">xl</code> commands.
+  </p><div id="id-1.12.6.4.4.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+    <code class="command">xl</code> can only manage running guest domains specified by
+    their configuration file. If a guest domain is not running, you cannot
+    manage it with <code class="command">xl</code>.
+   </p></div><div id="id-1.12.6.4.4.4" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+    To allow users to continue to have managed guest domains in the way the
+    obsolete <code class="command">xm</code> command allowed, we now recommend using
+    <code class="systemitem">libvirt</code>'s <code class="command">virsh</code> and
+    <code class="command">virt-manager</code> tools. For more information, see
+    <a class="xref" href="part-virt-libvirt.html" title="Part II. Managing virtual machines with libvirt">Part II, “Managing virtual machines with <code class="systemitem">libvirt</code>”</a>.
+   </p></div><p>
+   <code class="command">xl</code> operations rely upon
+   <code class="systemitem">xenstored</code> and
+   <code class="systemitem">xenconsoled</code> services. Make sure you start
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>systemctl start xencommons</pre></div><p>
+   at boot time to initialize all the daemons required by
+   <code class="command">xl</code>.
+  </p><div id="id-1.12.6.4.4.8" data-id-title="Set up a xenbr0 network bridge in the host domain" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Set up a <code class="literal">xenbr0</code> network bridge in the host domain</div><p>
+    In the most common network configuration, you need to set up a bridge in
+    the host domain named <code class="literal">xenbr0</code> to have a
+    working network for the guest domains.
+   </p></div><p>
+   The basic structure of every <code class="command">xl</code> command is:
+  </p><div class="verbatim-wrap"><pre class="screen">xl &lt;subcommand&gt; [options] domain_id</pre></div><p>
+   where &lt;subcommand&gt; is the xl command to run, domain_id is the ID
+   number assigned to a domain or the name of the virtual machine, and
+   <code class="command">OPTIONS</code> indicates subcommand-specific options.
+  </p><p>
+   For a complete list of the available <code class="command">xl</code> subcommands,
+   run <code class="command">xl help</code>. For each command, there is a more
+   detailed help available that is obtained with the extra parameter
+   <code class="systemitem">--help</code>. More information about the respective
+   subcommands is available in the manual page of <code class="command">xl</code>.
+  </p><p>
+   For example, the <code class="command">xl list --help</code> displays all options
+   that are available to the list command. As an example, the <code class="command">xl
+   list</code> command displays the status of all virtual machines.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xl list
+Name                                 ID    Mem VCPUs        State   Time(s)
+Domain-0                              0    457     2       r-----   2712.9
+sles12                                7    512     1       -b----     16.3
+opensuse                                   512     1                  12.9</pre></div><p>
+   The <span class="guimenu">State</span> information indicates if a machine is
+   running, and in which state it is. The most common flags are
+   <code class="literal">r</code> (running) and <code class="literal">b</code> (blocked) where
+   blocked means it is either waiting for IO, or sleeping because there is
+   nothing to do. For more details about the state flags, see <code class="command">man 1
+   xl</code>.
+  </p><p>
+   Other useful <code class="command">xl</code> commands include:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <code class="command">xl create</code> creates a virtual machine from a given
+     configuration file.
+    </p></li><li class="listitem"><p>
+     <code class="command">xl reboot </code>reboots a virtual machine.
+    </p></li><li class="listitem"><p>
+     <code class="command">xl destroy</code> immediately terminates a virtual machine.
+    </p></li><li class="listitem"><p>
+     <code class="command">xl block-list</code> displays all virtual block devices
+     attached to a virtual machine.
+    </p></li></ul></div><section class="sect2" id="sec-xen-manage-xl-cfg-file" data-id-title="Guest domain configuration file"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">25.1.1 </span><span class="title-name">Guest domain configuration file</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-manage-xl-cfg-file">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When operating domains, <code class="command">xl</code> requires a domain
+    configuration file for each domain. The default directory to store such
+    configuration files is <code class="filename">/etc/xen/</code>.
+   </p><p>
+    A domain configuration file is a plain text file. It consists of
+    several
+    <em class="replaceable">KEY</em>=<em class="replaceable">VALUE</em>
+    pairs. Some keys are mandatory, some are general and apply to any
+    guest, and some apply only to a specific guest type (para or fully
+    virtualized). A value can either be a <code class="literal">"string"</code>
+    surrounded by single or double quotes, a number, a boolean value, or
+    a list of several values enclosed in brackets <code class="literal">[ value1,
+    value2, ... ]</code>.
+   </p><div class="example" id="id-1.12.6.4.4.18.4" data-id-title="Guest domain configuration file for SLED 12: /etc/xen/sled12.cfg"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 25.1: </span><span class="title-name">Guest domain configuration file for SLED 12: <code class="filename">/etc/xen/sled12.cfg</code> </span></span><a title="Permalink" class="permalink" href="cha-xen-manage.html#id-1.12.6.4.4.18.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">name= "sled12"
+builder = "hvm"
+vncviewer = 1
+memory = 512
+disk = [ '/var/lib/xen/images/sled12.raw,,hda', '/dev/cdrom,,hdc,cdrom' ]
+vif = [ 'mac=00:16:3e:5f:48:e4,model=rtl8139,bridge=br0' ]
+boot = "n"</pre></div></div></div><p>
+    To start such domain, run <code class="command">xl create
+    /etc/xen/sled12.cfg</code>.
+   </p></section></section><section class="sect1" id="sec-xen-manage-autostart" data-id-title="Automatic start of guest domains"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.2 </span><span class="title-name">Automatic start of guest domains</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-manage-autostart">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To make a guest domain start automatically after the host system boots,
+   follow these steps:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Create the domain configuration file if it does not exist, and save it
+     in the <code class="filename">/etc/xen/</code> directory, for example
+     <code class="filename">/etc/xen/domain_name.cfg</code>.
+    </p></li><li class="step"><p>
+     Make a symbolic link of the guest domain configuration file in the
+     <code class="filename">auto/</code> subdirectory.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ln -s /etc/xen/domain_name.cfg /etc/xen/auto/domain_name.cfg</pre></div></li><li class="step"><p>
+     On the next system boot, the guest domain defined in
+     <code class="filename">domain_name.cfg</code> will be started.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-xen-manage-events" data-id-title="Event actions"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.3 </span><span class="title-name">Event actions</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-manage-events">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   In the guest domain configuration file, you can define actions to be
+   performed on a predefined set of events. For example, to tell the domain
+   to restart itself after it is powered off, include the following line in
+   its configuration file:
+  </p><div class="verbatim-wrap"><pre class="screen">on_poweroff="restart"</pre></div><p>
+   A list of predefined events for a guest domain follows:
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">List of events </span></span><a title="Permalink" class="permalink" href="cha-xen-manage.html#id-1.12.6.4.6.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.6.4.6.5.2"><span class="term">on_poweroff</span></dt><dd><p>
+      Specifies what should be done with the domain if it shuts itself down.
+     </p></dd><dt id="id-1.12.6.4.6.5.3"><span class="term">on_reboot</span></dt><dd><p>
+      Action to take if the domain shuts down with a reason code requesting
+      a reboot.
+     </p></dd><dt id="id-1.12.6.4.6.5.4"><span class="term">on_watchdog</span></dt><dd><p>
+      Action to take if the domain shuts down because of a Xen watchdog
+      timeout.
+     </p></dd><dt id="id-1.12.6.4.6.5.5"><span class="term">on_crash</span></dt><dd><p>
+      Action to take if the domain crashes.
+     </p></dd></dl></div><p>
+   For these events, you can define one of the following actions:
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">List of related actions </span></span><a title="Permalink" class="permalink" href="cha-xen-manage.html#id-1.12.6.4.6.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.6.4.6.7.2"><span class="term">destroy</span></dt><dd><p>
+      Destroy the domain.
+     </p></dd><dt id="id-1.12.6.4.6.7.3"><span class="term">restart</span></dt><dd><p>
+      Destroy the domain and immediately create a new domain with the same
+      configuration.
+     </p></dd><dt id="id-1.12.6.4.6.7.4"><span class="term">rename-restart</span></dt><dd><p>
+      Rename the domain that terminated, and then immediately create a new
+      domain with the same configuration as the original.
+     </p></dd><dt id="id-1.12.6.4.6.7.5"><span class="term">preserve</span></dt><dd><p>
+      Keep the domain. It can be examined, and later destroyed with
+      <code class="command">xl destroy</code>.
+     </p></dd><dt id="id-1.12.6.4.6.7.6"><span class="term">coredump-destroy</span></dt><dd><p>
+      Write a core dump of the domain to
+      <code class="filename">/var/xen/dump/NAME</code> and then destroy the domain.
+     </p></dd><dt id="id-1.12.6.4.6.7.7"><span class="term">coredump-restart</span></dt><dd><p>
+      Write a core dump of the domain to
+      <code class="filename">/var/xen/dump/NAME</code> and then restart the domain.
+     </p></dd></dl></div></section><section class="sect1" id="sec-xen-manage-tsc" data-id-title="Time Stamp Counter"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.4 </span><span class="title-name">Time Stamp Counter</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-manage-tsc">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Time Stamp Counter (TSC) may be specified for each domain in the guest
+   domain configuration file (for more information, see <a class="xref" href="cha-xen-manage.html#sec-xen-manage-xl-cfg-file" title="25.1.1. Guest domain configuration file">Section 25.1.1, “Guest domain configuration file”</a>).
+  </p><p>
+   With the <code class="literal">tsc_mode</code> setting, you specify whether
+   rdtsc instructions are executed <span class="quote">“<span class="quote">natively</span>”</span> (fast, but
+   TSC-sensitive applications may sometimes run incorrectly) or emulated
+   (always run correctly, but performance may suffer).
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.6.4.7.4.1"><span class="term"><code class="literal">tsc_mode=0</code> (default)</span></dt><dd><p>
+      Use this to ensure correctness while providing the best performance
+      possible—for more information, see <a class="link" href="https://xenbits.xen.org/docs/4.3-testing/misc/tscmode.txt" target="_blank">https://xenbits.xen.org/docs/4.3-testing/misc/tscmode.txt</a>.
+     </p></dd><dt id="id-1.12.6.4.7.4.2"><span class="term"><code class="literal">tsc_mode=1</code> (always emulate)</span></dt><dd><p>
+      Use this when TSC-sensitive apps are running and worst-case
+      performance degradation is known and acceptable.
+     </p></dd><dt id="id-1.12.6.4.7.4.3"><span class="term"><code class="literal">tsc_mode=2</code> (never emulate)</span></dt><dd><p>
+      Use this when all applications running in
+      this VM are TSC-resilient and highest performance is required.
+     </p></dd><dt id="id-1.12.6.4.7.4.4"><span class="term"><code class="literal">tsc_mode=3</code> (PVRDTSCP)</span></dt><dd><p>
+      High-TSC-frequency applications may be paravirtualized (modified)
+      to obtain both correctness and highest performance—any
+      unmodified applications must be TSC-resilient.
+     </p></dd></dl></div><p>
+   For background information, see <a class="link" href="https://xenbits.xen.org/docs/4.3-testing/misc/tscmode.txt" target="_blank">https://xenbits.xen.org/docs/4.3-testing/misc/tscmode.txt</a>.
+  </p></section><section class="sect1" id="sec-xen-config-suspend" data-id-title="Saving virtual machines"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.5 </span><span class="title-name">Saving virtual machines</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-config-suspend">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure" id="id-1.12.6.4.8.2" data-id-title="Save a virtual machine’s current state"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 25.1: </span><span class="title-name">Save a virtual machine’s current state </span></span><a title="Permalink" class="permalink" href="cha-xen-manage.html#id-1.12.6.4.8.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Make sure the virtual machine to be saved is running.
+    </p></li><li class="step"><p>
+     In the host environment, enter
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xl save <em class="replaceable">ID</em> <em class="replaceable">STATE-FILE</em></pre></div><p>
+     where <em class="replaceable">ID</em> is the virtual machine ID you want
+     to save, and <em class="replaceable">STATE-FILE</em> is the name you
+     specify for the memory state file. By default, the domain will no
+     longer be running after you create its snapshot. Use
+     <code class="option">-c</code> to keep it running even after you create the
+     snapshot.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-xen-config-restore" data-id-title="Restoring virtual machines"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.6 </span><span class="title-name">Restoring virtual machines</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-config-restore">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure" id="id-1.12.6.4.9.2" data-id-title="Restore a virtual machine’s current state"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 25.2: </span><span class="title-name">Restore a virtual machine’s current state </span></span><a title="Permalink" class="permalink" href="cha-xen-manage.html#id-1.12.6.4.9.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Make sure the virtual machine to be restored has not been started since
+     you ran the save operation.
+    </p></li><li class="step"><p>
+     In the host environment, enter
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xl restore <em class="replaceable">STATE-FILE</em></pre></div><p>
+     where <em class="replaceable">STATE-FILE</em> is the previously saved
+     memory state file. By default, the domain will be running after it is
+     restored. To pause it after the restore, use <code class="option">-p</code>.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-xen-config-state" data-id-title="Virtual machine states"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">25.7 </span><span class="title-name">Virtual machine states</span></span> <a title="Permalink" class="permalink" href="cha-xen-manage.html#sec-xen-config-state">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/xen_virtualization_manage.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A virtual machine’s state can be displayed by viewing the results of
+   the <code class="command">xl list</code> command, which abbreviates the state using
+   a single character.
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <code class="command">r</code> - running - The virtual machine is currently
+     running and consuming allocated resources.
+    </p></li><li class="listitem"><p>
+     <code class="command">b</code> - blocked - The virtual machine’s processor is
+     not running and not able to run. It is either waiting for I/O or has
+     stopped working.
+    </p></li><li class="listitem"><p>
+     <code class="command">p</code> - paused - The virtual machine is paused. It does
+     not interact with the hypervisor but still maintains its allocated
+     resources, such as memory.
+    </p></li><li class="listitem"><p>
+     <code class="command">s</code> - shutdown - The guest operating system is in the
+     process of being shut down, rebooted, or suspended, and the virtual
+     machine is being stopped.
+    </p></li><li class="listitem"><p>
+     <code class="command">c</code> - crashed - The virtual machine has crashed and is
+     not running.
+    </p></li><li class="listitem"><p>
+     <code class="command">d</code> - dying - The virtual machine is in the process of
+     shutting down or crashing.
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-xen-network.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 24 </span>Virtual networking</span></a> </div><div><a class="pagination-link next" href="cha-xen-vbd.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 26 </span>Block devices in Xen</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-manage-xl"><span class="title-number">25.1 </span><span class="title-name">XL—Xen management tool</span></a></span></li><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-manage-autostart"><span class="title-number">25.2 </span><span class="title-name">Automatic start of guest domains</span></a></span></li><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-manage-events"><span class="title-number">25.3 </span><span class="title-name">Event actions</span></a></span></li><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-manage-tsc"><span class="title-number">25.4 </span><span class="title-name">Time Stamp Counter</span></a></span></li><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-config-suspend"><span class="title-number">25.5 </span><span class="title-name">Saving virtual machines</span></a></span></li><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-config-restore"><span class="title-number">25.6 </span><span class="title-name">Restoring virtual machines</span></a></span></li><li><span class="sect1"><a href="cha-xen-manage.html#sec-xen-config-state"><span class="title-number">25.7 </span><span class="title-name">Virtual machine states</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

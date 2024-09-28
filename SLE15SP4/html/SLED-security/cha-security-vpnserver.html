@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP4 | Security and Hardening Guide | Configuring a VPN server</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Configuring a VPN server | SLED 15 SP4"/>
+<meta name="description" content="Today, Internet connections are cheap and available almost everywhere. However, not all connections are secure. Using a Virtual Private Network (VPN)…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 24. Configuring a VPN server"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Configuring a VPN server",
+  
+    "description": "Today, Internet connections are cheap and available almost everywhere. However, not all connections are secure. Using a Virtual Private Network (VPN)…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-27T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-security-firewall.html" title="Chapter 23. Masquerading and firewalls"/><link rel="next" href="cha-security-xca.html" title="Chapter 25. Managing a PKI with XCA, X certificate and key manager"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-network-security.html">Network security</a><span> / </span><a class="crumb" href="cha-security-vpnserver.html">Configuring a VPN server</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li class="active"><a href="part-network-security.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" you-are-here"><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and Compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">29 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">30 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">31 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">32 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">33 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">34 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">35 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">36 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">37 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">38 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">39 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">40 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">42 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">43 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">44 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk05apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-vpnserver" data-id-title="Configuring a VPN server"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Today, Internet connections are cheap and available almost
+    everywhere. However, not all connections are secure.
+    Using a Virtual Private Network (VPN), you can create a secure network
+    within an insecure network such as the Internet or Wi-Fi. It can be
+    implemented in different ways and serves several purposes. In this chapter,
+    we focus on the
+    <a class="link" href="https://openvpn.net" target="_blank">OpenVPN</a> implementation
+    to link branch offices via secure wide area networks (WANs).
+
+        </p></div></div></div></div><section class="sect1" id="sec-security-vpn-overview" data-id-title="Conceptual overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">24.1 </span><span class="title-name">Conceptual overview</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section defines some terms regarding VPN and gives a brief overview
+   of some scenarios.
+  </p><section class="sect2" id="sec-security-vpn-terminology" data-id-title="Terminology"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.1.1 </span><span class="title-name">Terminology</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-terminology">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.6.6.3.3.2.1"><span class="term">Endpoint</span></dt><dd><p>
+       The two <span class="quote">“<span class="quote">ends</span>”</span> of a tunnel, the source or destination
+       client.
+      </p></dd><dt id="id-1.7.6.6.3.3.2.2"><span class="term">Tap device</span></dt><dd><p>
+       A tap device simulates an Ethernet device (layer 2 packets in the OSI
+       model, such as Ethernet frames). A tap device is used for creating a
+       network bridge. It works with Ethernet frames.
+      </p></dd><dt id="id-1.7.6.6.3.3.2.3"><span class="term">Tun device</span></dt><dd><p>
+       A tun device simulates a point-to-point network (layer 3 packets in
+       the OSI model, such as IP packets). A tun device is used with
+       routing and works with IP frames.
+      </p></dd><dt id="id-1.7.6.6.3.3.2.4"><span class="term">Tunnel</span></dt><dd><p>
+       Linking two locations through a primarily public network. From a more
+       technical viewpoint, it is a connection between the client's device
+       and the server's device. Usually a tunnel is encrypted, but it does
+       need to be by definition.
+      </p></dd></dl></div></section><section class="sect2" id="sec-security-vpn-scenarios" data-id-title="VPN scenarios"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.1.2 </span><span class="title-name">VPN scenarios</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-scenarios">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Whenever you set up a VPN connection, your IP packets are transferred
+    over a secured <span class="emphasis"><em>tunnel</em></span>. A tunnel can use either a
+    <span class="emphasis"><em>tun</em></span> or <span class="emphasis"><em>tap</em></span> device. They are
+    virtual network kernel drivers which implement the transmission of
+    Ethernet frames or IP frames/packets.
+   </p><p>
+    Any user space program, such as OpenVPN, can attach itself to a tun or tap
+    device to receive packets sent by your operating system. The program is
+    also able to write packets to the device.
+   </p><p>
+    There are many solutions to set up and build a VPN connection. This
+    section focuses on the OpenVPN package. Compared to other VPN software,
+    OpenVPN can be operated in two modes:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.6.6.3.4.5.1"><span class="term">Routed VPN</span></dt><dd><p>
+       Routing is an easy solution to set up. It is more efficient and
+       scales better than a bridged VPN. Furthermore, it allows the user to
+       tune MTU (Maximum Transfer Unit) to raise efficiency. However, in a
+       heterogeneous environment, if you do not have a Samba server on the
+       gateway, NetBIOS broadcasts do not work. If you need IPv6, the drivers
+       for the tun devices on both ends must support this protocol explicitly.
+       This scenario is depicted in <a class="xref" href="cha-security-vpnserver.html#fig-vpn-scenario-routed-1" title="Routed VPN">Figure 24.1, “Routed VPN”</a>.
+      </p><div class="figure" id="fig-vpn-scenario-routed-1"><div class="figure-contents"><div class="mediaobject"><a href="images/vpn_routed1.png"><img src="images/vpn_routed1.png" width="80%" alt="Routed VPN" title="Routed VPN"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 24.1: </span><span class="title-name">Routed VPN </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#fig-vpn-scenario-routed-1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></dd><dt id="id-1.7.6.6.3.4.5.2"><span class="term">Bridged VPN</span></dt><dd><p>
+       Bridging is a more complex solution. It is recommended when you need
+       to browse Windows file shares across the VPN without setting up a
+       Samba or WINS server. Bridged VPN is also needed to use
+       non-IP protocols (such as IPX) or applications relying on network
+       broadcasts. However, it is less efficient than routed VPN. Another
+       disadvantage is that it does not scale well. This scenario is
+       depicted in the following figures.
+      </p><div class="figure" id="fig-vpn-scenario-briged-1"><div class="figure-contents"><div class="mediaobject"><a href="images/vpn_bridged1.png"><img src="images/vpn_bridged1.png" width="80%" alt="Bridged VPN - scenario 1" title="Bridged VPN - scenario 1"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 24.2: </span><span class="title-name">Bridged VPN - scenario 1 </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#fig-vpn-scenario-briged-1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div><div class="figure" id="fig-vpn-scenario-briged-2"><div class="figure-contents"><div class="mediaobject"><a href="images/vpn_bridged2.png"><img src="images/vpn_bridged2.png" width="80%" alt="Bridged VPN - scenario 2" title="Bridged VPN - scenario 2"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 24.3: </span><span class="title-name">Bridged VPN - scenario 2 </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#fig-vpn-scenario-briged-2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div><div class="figure" id="fig-vpn-scenario-briged-3"><div class="figure-contents"><div class="mediaobject"><a href="images/vpn_bridged3.png"><img src="images/vpn_bridged3.png" width="80%" alt="Bridged VPN - scenario 3" title="Bridged VPN - scenario 3"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 24.4: </span><span class="title-name">Bridged VPN - scenario 3 </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#fig-vpn-scenario-briged-3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></dd></dl></div><p>
+    The major difference between bridging and routing is that a routed VPN
+    cannot IP-broadcast while a bridged VPN can.
+   </p></section></section><section class="sect1" id="sec-security-vpn-simplest" data-id-title="Setting up a simple test scenario"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">24.2 </span><span class="title-name">Setting up a simple test scenario</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-simplest">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   In the following example, we will create a point-to-point VPN tunnel. The
+   example demonstrates how to create a VPN tunnel between one client and a
+   server. It is assumed that your VPN server will use private IP addresses
+   like <code class="systemitem"><em class="replaceable">IP_OF_SERVER</em></code>
+   and your client will use the IP address
+   <code class="systemitem"><em class="replaceable">IP_OF_CLIENT</em></code>.
+   Make sure you select addresses which do not conflict with other IP addresses.
+  </p><div id="id-1.7.6.6.4.3" data-id-title="Use only for testing" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Use only for testing</div><p>
+    This following scenario is provided as an example meant for familiarizing
+    yourself with VPN technology. <span class="emphasis"><em>Do not</em></span> use this as a
+    real world scenario, as it can compromise the security and safety of your IT
+    infrastructure!
+   </p></div><div id="id-1.7.6.6.4.4" data-id-title="Names for configuration file" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Names for configuration file</div><p>
+    To simplify working with OpenVPN configuration files, we recommend the
+    following:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Place your OpenVPN configuration files in the directory
+      <code class="filename">/etc/openvpn</code>.
+     </p></li><li class="listitem"><p>
+      Name your configuration files
+      <code class="filename"><em class="replaceable">MY_CONFIGURATION</em>.conf</code>.
+     </p></li><li class="listitem"><p>
+      If there are multiple files that belong to the same configuration, place
+      them in a subdirectory like
+      <code class="filename">/etc/openvpn/<em class="replaceable">MY_CONFIGURATION</em></code>.
+     </p></li></ul></div></div><section class="sect2" id="sec-security-vpn-simplest-vpnserv" data-id-title="Configuring the VPN server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.2.1 </span><span class="title-name">Configuring the VPN server</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-simplest-vpnserv">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To configure a VPN server, proceed as follows:
+   </p><div class="procedure" id="pro-security-vpn-simplest-vpnserv" data-id-title="VPN server configuration"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 24.1: </span><span class="title-name">VPN server configuration </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#pro-security-vpn-simplest-vpnserv">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Install the package <code class="systemitem">openvpn</code>
+      on the machine that will later become your VPN server.
+     </p></li><li class="step"><p>
+      Open a shell, become <code class="systemitem">root</code> and create the VPN secret key:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>openvpn --genkey secret /etc/openvpn/secret.key</pre></div></li><li class="step"><p>
+      Copy the secret key to your client:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>scp /etc/openvpn/secret.key root@<em class="replaceable">IP_OF_CLIENT</em>:/etc/openvpn/</pre></div></li><li class="step"><p>
+      Create the file <code class="filename">/etc/openvpn/server.conf</code> with the
+      following content:
+     </p><div class="verbatim-wrap"><pre class="screen">dev tun
+ifconfig <em class="replaceable">IP_OF_SERVER</em> <em class="replaceable">IP_OF_CLIENT</em>
+secret secret.key</pre></div></li><li class="step"><p>
+      Set up a tun device configuration by creating a file called
+      <code class="filename">/etc/sysconfig/network/ifcfg-tun0</code> with the following
+      content:
+     </p><div class="verbatim-wrap"><pre class="screen">STARTMODE='manual'
+BOOTPROTO='static'
+TUNNEL='tun'
+TUNNEL_SET_OWNER='nobody'
+TUNNEL_SET_GROUP='nobody'
+LINK_REQUIRED=no
+PRE_UP_SCRIPT='systemd:openvpn@server'
+PRE_DOWN_SCRIPT='systemd:openvpn@service'</pre></div><p>
+      The notation <code class="literal">openvpn@server</code> points to the OpenVPN
+      server configuration file located at
+      <code class="filename">/etc/openvpn/server.conf</code>. For more information, see
+      <code class="filename">/usr/share/doc/packages/openvpn/README.SUSE</code>.
+     </p></li><li class="step" id="st-security-vpn-simplest-vpnserv-yast"><p>
+      If you use a firewall, start YaST and open UDP port 1194
+      (<span class="guimenu">Security and
+      Users</span> › <span class="guimenu">Firewall</span> › <span class="guimenu">Allowed
+      Services</span>).
+     </p></li><li class="step"><p>
+      Start the OpenVPN server service by setting the tun device to
+      <code class="literal">up</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">wicked ifup tun0</code></pre></div><p>
+      You should see the confirmation:
+     </p><div class="verbatim-wrap"><pre class="screen">tun0            up</pre></div></li></ol></div></div></section><section class="sect2" id="sec-security-vpn-simplest-vpnclient" data-id-title="Configuring the VPN clients"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.2.2 </span><span class="title-name">Configuring the VPN clients</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-simplest-vpnclient">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To configure the VPN client, do the following:
+   </p><div class="procedure" id="id-1.7.6.6.4.6.3" data-id-title="VPN client configuration"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 24.2: </span><span class="title-name">VPN client configuration </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#id-1.7.6.6.4.6.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Install the package <code class="systemitem">openvpn</code>
+      on your client VPN machine.
+     </p></li><li class="step"><p>
+      Create <code class="filename">/etc/openvpn/client.conf</code> with the
+      following content:
+     </p><div class="verbatim-wrap"><pre class="screen">remote <em class="replaceable">DOMAIN_OR_PUBLIC_IP_OF_SERVER</em>
+dev tun
+ifconfig <em class="replaceable">IP_OF_CLIENT</em> <em class="replaceable">IP_OF_SERVER</em>
+secret secret.key</pre></div><p>
+      Replace the placeholder <em class="replaceable">IP_OF_CLIENT</em> in the
+      first line with either the domain name, or the public IP address of
+      your server.
+     </p></li><li class="step"><p>
+      Set up a tun device configuration by creating a file called
+      <code class="filename">/etc/sysconfig/network/ifcfg-tun0</code> with the following
+      content:
+     </p><div class="verbatim-wrap"><pre class="screen">STARTMODE='manual'
+BOOTPROTO='static'
+TUNNEL='tun'
+TUNNEL_SET_OWNER='nobody'
+TUNNEL_SET_GROUP='nobody'
+LINK_REQUIRED=no
+PRE_UP_SCRIPT='systemd:openvpn@client'
+PRE_DOWN_SCRIPT='systemd:openvpn@client'</pre></div></li><li class="step"><p>
+      If you use a firewall, start YaST and open UDP port 1194 as
+      described in <a class="xref" href="cha-security-vpnserver.html#st-security-vpn-simplest-vpnserv-yast" title="Step 6">Step 6</a>
+      of <a class="xref" href="cha-security-vpnserver.html#pro-security-vpn-simplest-vpnserv" title="VPN server configuration">Procedure 24.1, “VPN server configuration”</a>.
+     </p></li><li class="step"><p>
+      Start the OpenVPN server service by setting the tun device to
+      <code class="literal">up</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">wicked ifup tun0</code></pre></div><p>
+      You should see the confirmation:
+     </p><div class="verbatim-wrap"><pre class="screen">tun0            up</pre></div></li></ol></div></div></section><section class="sect2" id="sec-security-vpn-simplest-use" data-id-title="Testing the VPN example scenario"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.2.3 </span><span class="title-name">Testing the VPN example scenario</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-simplest-use">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After OpenVPN has successfully started, test the availability of the tun
+    device with the following command:
+   </p><div class="verbatim-wrap"><pre class="screen">ip addr show tun0</pre></div><p>
+    To verify the VPN connection, use <code class="command">ping</code> on both client
+    and server side to see if they can reach each other. Ping the server
+    from the client:
+   </p><div class="verbatim-wrap"><pre class="screen">ping -I tun0 <em class="replaceable">IP_OF_SERVER</em></pre></div><p>
+    Ping the client from the server:
+   </p><div class="verbatim-wrap"><pre class="screen">ping -I tun0 <em class="replaceable">IP_OF_CLIENT</em></pre></div></section></section><section class="sect1" id="sec-security-vpn-ca" data-id-title="Setting up your VPN server using a certificate authority"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">24.3 </span><span class="title-name">Setting up your VPN server using a certificate authority</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-ca">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The example in
+   <a class="xref" href="cha-security-vpnserver.html#sec-security-vpn-simplest" title="24.2. Setting up a simple test scenario">Section 24.2</a>
+   is useful for testing, but not for daily work. This section explains how
+   to build a VPN server that allows more than one connection at the same
+   time. This is done with a public key infrastructure (PKI). A PKI consists
+   of a pair of public and private keys for the server and each client, and
+   a certificate authority (CA), which is used to sign every server
+   and client certificate.
+  </p><p>
+   This setup involves the following basic steps:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     <a class="xref" href="cha-security-vpnserver.html#sec-security-vpn-certs" title="24.3.1. Creating certificates">Section 24.3.1, “Creating certificates”</a>
+    </p></li><li class="step"><p>
+     <a class="xref" href="cha-security-vpnserver.html#sec-security-vpn-config-server" title="24.3.2. Configuring the VPN server">Section 24.3.2, “Configuring the VPN server”</a>
+    </p></li><li class="step"><p>
+     <a class="xref" href="cha-security-vpnserver.html#sec-security-vpn-config-clients" title="24.3.3. Configuring the VPN clients">Section 24.3.3, “Configuring the VPN clients”</a>
+    </p></li></ol></div></div><section class="sect2" id="sec-security-vpn-certs" data-id-title="Creating certificates"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.3.1 </span><span class="title-name">Creating certificates</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-certs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Before a VPN connection can be established, the client must authenticate
+    the server certificate. Conversely, the server must also authenticate
+    the client certificate. This is called <span class="emphasis"><em>mutual
+    authentication</em></span>.
+   </p><p>
+    Creating certificates is not supported on <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>. The following
+    assumes you have created a CA certificate, a server certificate, and a
+    client certificate on another system.
+   </p><p>
+    The server certificate is required in the PEM and unencrypted
+    key in PEM formats. Copy the PEM version to
+    <code class="filename">/etc/openvpn/server_crt.pem</code> on the VPN server. The
+    unencrypted version needs to go to
+    <code class="filename">/etc/openvpn/server_key.pem</code>.
+   </p><p>
+    Client certificates need to be of the format PKCS12 (preferred) or PEM. The
+    certificate in PKCS12 format needs to contain the CA chain and needs to be
+    copied to
+    <code class="filename">/etc/openvpn/<em class="replaceable">CLIENT</em>.p12</code>. In
+    case you have client certificates in PEM format containing the CA chain,
+    copy them to
+    <code class="filename">/etc/openvpn/<em class="replaceable">CLIENT</em>.pem</code>. In
+    case you have split the PEM certificates into client certificate
+    (<code class="filename">*.ca</code>), client key (<code class="filename">*.key</code>), and
+    the CA certificate (<code class="filename">*.ca</code>), copy these files to
+    <code class="filename">/etc/openvpn/</code> on each client.
+   </p><p>
+    The CA certificate needs to be copied to
+    <code class="filename">/etc/openvpn/vpn_ca.pem</code> on the server and each client.
+   </p><div id="id-1.7.6.6.5.5.7" data-id-title="Splitting client certificates" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Splitting client certificates</div><p>
+     If you split client certificates into client certificate, client key, and
+     the CA certificate, you need to provide the respective file names in the
+     OpenVPN configuration file on the respective clients (see <a class="xref" href="cha-security-vpnserver.html#ex-vpn-serv-config" title="VPN server configuration file">Example 24.1, “VPN server configuration file”</a>).
+    </p></div></section><section class="sect2" id="sec-security-vpn-config-server" data-id-title="Configuring the VPN server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.3.2 </span><span class="title-name">Configuring the VPN server</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-config-server">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As the basis of your configuration file, copy
+    <code class="filename">/usr/share/doc/packages/openvpn/sample-config-files/server.conf</code>
+    to <code class="filename">/etc/openvpn/</code>. Then customize it to your needs.
+   </p><div class="example" id="ex-vpn-serv-config" data-id-title="VPN server configuration file"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 24.1: </span><span class="title-name">VPN server configuration file </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#ex-vpn-serv-config">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># /etc/openvpn/server.conf
+port 1194 <span class="callout" id="co-vpn-servconfig-port">1</span>
+proto udp <span class="callout" id="co-vpn-servconfig-proto">2</span>
+dev tun0 <span class="callout" id="co-vpn-servconfig-dev">3</span>
+
+# Security <span class="callout" id="co-vpn-servconfig-security">4</span>
+
+ca    vpn_ca.pem
+cert  server_crt.pem
+key   server_key.pem
+
+# ns-cert-type server 
+remote-cert-tls client <span class="callout" id="co-vpn-servconfig-remote-cert-tls">5</span>
+dh   server/dh2048.pem <span class="callout" id="co-vpn-servconfig-dh">6</span>
+
+server 192.168.1.0 255.255.255.0 <span class="callout" id="co-vpn-servconfig-server">7</span>
+ifconfig-pool-persist /var/run/openvpn/ipp.txt <span class="callout" id="co-vpn-servconfig-pool">8</span>
+
+# Privileges <span class="callout" id="co-vpn-serverconf-privilege">9</span>
+user nobody
+group nobody
+
+# Other configuration <span class="callout" id="co-vpn-servconfig-misc">10</span>
+keepalive 10 120
+comp-lzo
+persist-key
+persist-tun
+# status      /var/log/openvpn-status.tun0.log <span class="callout" id="co-vpn-serverconfig-status">11</span>
+# log-append  /var/log/openvpn-server.log <span class="callout" id="co-vpn-serverconfig-log-append">12</span>
+verb 4</pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-port"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The TCP/UDP port on which OpenVPN listens. You need to open the port
+      in the firewall, see <a class="xref" href="cha-security-firewall.html" title="Chapter 23. Masquerading and firewalls">Chapter 23, <em>Masquerading and firewalls</em></a>. The
+      standard port for VPN is 1194, so you can usually leave that as
+      it is.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-proto"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The protocol, either UDP or TCP.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-dev"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The tun or tap device. For the difference between these, see
+      <a class="xref" href="cha-security-vpnserver.html#sec-security-vpn-terminology" title="24.1.1. Terminology">Section 24.1.1, “Terminology”</a>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-security"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The following lines contain the relative or absolute path to the root
+      server CA certificate (<code class="literal">ca</code>), the root CA key
+      (<code class="literal">cert</code>), and the private server key
+      (<code class="literal">key</code>). These were generated in
+      <a class="xref" href="cha-security-vpnserver.html#sec-security-vpn-certs" title="24.3.1. Creating certificates">Section 24.3.1, “Creating certificates”</a>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-remote-cert-tls"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p> Require that peer certificates have been signed with an
+            explicit key usage and extended key usage based on RFC3280
+            TLS rules. </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-dh"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p> The Diffie-Hellman parameters. Create the required file with
+            the following command: </p><div class="verbatim-wrap"><pre class="screen">openssl dhparam -out /etc/openvpn/dh2048.pem 2048</pre></div></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-server"><span class="callout">7</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Supplies a VPN subnet. The server can be reached by
+      <code class="systemitem">192.168.1.1</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-pool"><span class="callout">8</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Records a mapping of clients and its virtual IP address in the given
+      file. Useful when the server goes down and (after the restart) the
+      clients get their previously assigned IP address.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-serverconf-privilege"><span class="callout">9</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      For security reasons, run the OpenVPN daemon with reduced privileges. To
+      do so, specify that it should use the group and user
+      <code class="systemitem">nobody</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-servconfig-misc"><span class="callout">10</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p> Several configuration options—see the comment in the
+            example configuration file:
+              <code class="filename">/usr/share/doc/packages/openvpn/sample-config-files</code>. </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-serverconfig-status"><span class="callout">11</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Enable this option to write short status updates with statistical data
+      (<span class="quote">“<span class="quote">operational status dump</span>”</span>) to the named file.
+      By default, this is not enabled.
+     </p><p>
+      All output is written to the system journal, which can be displayed with
+      <code class="command">journalctl</code>. If you have more than one configuration
+      file (for example, one for home and another for work), it is recommended
+      to include the device name into the file name. This avoids overwriting
+      output files accidentally. In this case, it is
+      <code class="systemitem">tun0</code>, taken from the <code class="option">dev</code>
+      directive—see <a class="xref" href="cha-security-vpnserver.html#co-vpn-servconfig-dev"><span class="callout">3</span></a>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-serverconfig-log-append"><span class="callout">12</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      By default, log messages go to syslog. Overwrite this behavior by
+      removing the hash character. In that case, all messages go to
+      <code class="filename">/var/log/openvpn-server.log</code>. Do not forget to
+      configure a logrotate service. See <code class="command">man 8 logrotate</code>
+      for further details.
+     </p></td></tr></table></div><p>
+    After having completed this configuration, you can see log messages of
+    your OpenVPN server under <code class="filename">/var/log/openvpn.log</code>.
+    After having started it for the first time, it should finish with:
+   </p><div class="verbatim-wrap"><pre class="screen">... Initialization Sequence Completed</pre></div><p>
+    If you do not see this message, check the log carefully for any hints of
+    what is wrong in your configuration file.
+   </p></section><section class="sect2" id="sec-security-vpn-config-clients" data-id-title="Configuring the VPN clients"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">24.3.3 </span><span class="title-name">Configuring the VPN clients</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-config-clients">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As the basis of your configuration file, copy
+    <code class="filename">/usr/share/doc/packages/openvpn/sample-config-files/client.conf</code>
+    to <code class="filename">/etc/openvpn/</code>. Then customize it to your needs.
+   </p><div class="example" id="id-1.7.6.6.5.7.3" data-id-title="VPN client configuration file"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 24.2: </span><span class="title-name">VPN client configuration file </span></span><a title="Permalink" class="permalink" href="cha-security-vpnserver.html#id-1.7.6.6.5.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"># /etc/openvpn/client.conf
+client <span class="callout" id="co-vpn-clientconf-client">1</span>
+dev tun <span class="callout" id="co-vpn-clientconf-dev">2</span>
+proto udp <span class="callout" id="co-vpn-clientconf-proto">3</span>
+remote <em class="replaceable">IP_OR_HOST_NAME</em> 1194 <span class="callout" id="co-vpn-clientconf-remote">4</span>
+resolv-retry infinite
+nobind
+
+remote-cert-tls server <span class="callout" id="co-vpn-clientconf-remote-cert-tls">5</span>
+
+# Privileges <span class="callout" id="co-vpn-clientconf-privileges">6</span>
+user nobody
+group nobody
+
+# Try to preserve some state across restarts.
+persist-key
+persist-tun
+
+# Security <span class="callout" id="co-vpn-clientconf-security">7</span>
+pkcs12 client1.p12
+
+comp-lzo <span class="callout" id="co-vpn-clientconf-compr">8</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-client"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Specifies that this machine is a client.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-dev"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       The network device. Both clients and server must use the same device.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-proto"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       The protocol. Use the same settings as on the server.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-remote-cert-tls"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       This is security option for clients which ensures that the host
+       they connect to is a designated server.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-remote"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Replace the placeholder <em class="replaceable">IP_OR_HOST_NAME</em>
+       with the respective host name or IP address of your VPN server. After
+       the host name, the port of the server is given. You can have multiple
+       lines of <code class="literal">remote</code> entries pointing to different VPN
+       servers. This is useful for load balancing between different VPN
+       servers.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-privileges"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       For security reasons, run the OpenVPN daemon with reduced privileges. To
+       do so, specify that it should use the group and user
+       <code class="systemitem">nobody</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-security"><span class="callout">7</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Contains the client files. For security reasons, use a separate pair of
+       files for each client.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vpn-clientconf-compr"><span class="callout">8</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Turn on compression. Only use this parameter if compression is enabled
+       on the server as well.
+      </p></td></tr></table></div></div></div></section></section><section class="sect1" id="sec-security-vpn-moreinfo" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">24.4 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-security-vpnserver.html#sec-security-vpn-moreinfo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_vpnserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   For more information on setting up a VPN connection using NetworkManager, see
+   <span class="intraxref">Book “Administration Guide”, Chapter 31 “Using NetworkManager”, Section 31.3.5 “NetworkManager and VPN”</span>.
+  </p><p>
+   For more information about VPN in general, see:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <a class="link" href="https://openvpn.net" target="_blank">https://openvpn.net</a>: the OpenVPN home page
+    </p></li><li class="listitem"><p>
+     <code class="command">man</code> <code class="option">openvpn</code>
+    </p></li><li class="listitem"><p>
+     <code class="filename">/usr/share/doc/packages/openvpn/sample-config-files/</code>:
+     example configuration files for different scenarios.
+    </p></li><li class="listitem"><p>
+     <code class="filename">/usr/src/linux/Documentation/networking/tuntap.txt</code>,
+     to install the <code class="systemitem">kernel-source</code>
+     package.
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-firewall.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 23 </span>Masquerading and firewalls</span></a> </div><div><a class="pagination-link next" href="cha-security-xca.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 25 </span>Managing a PKI with XCA, X certificate and key manager</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-vpnserver.html#sec-security-vpn-overview"><span class="title-number">24.1 </span><span class="title-name">Conceptual overview</span></a></span></li><li><span class="sect1"><a href="cha-security-vpnserver.html#sec-security-vpn-simplest"><span class="title-number">24.2 </span><span class="title-name">Setting up a simple test scenario</span></a></span></li><li><span class="sect1"><a href="cha-security-vpnserver.html#sec-security-vpn-ca"><span class="title-number">24.3 </span><span class="title-name">Setting up your VPN server using a certificate authority</span></a></span></li><li><span class="sect1"><a href="cha-security-vpnserver.html#sec-security-vpn-moreinfo"><span class="title-number">24.4 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

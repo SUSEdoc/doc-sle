@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP3 | Virtualization Guide | Connecting and authorizing</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Connecting and authorizing | SLES 15 SP3"/>
+<meta name="description" content="Managing several VM Host Servers, each hosting multiple VM Guests, quickly becomes difficult. One benefit of libvirt is the ability to connect to sev…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP3"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 12. Connecting and authorizing"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Connecting and authorizing",
+  
+    "description": "Connecting and authorizing",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-29T00:00+02:00",
+      
+    "datePublished": "2021-06-22T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-libvirt-managing.html" title="Chapter 11. Basic VM Guest management"/><link rel="next" href="cha-libvirt-storage.html" title="Chapter 13. Advanced storage topics"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-libvirt.html">Managing virtual machines with libvirt</a><span> / </span><a class="crumb" href="cha-libvirt-connect.html">Connecting and authorizing</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li class="active"><a href="part-virt-libvirt.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" you-are-here"><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">16 </span><span class="title-name">Managing virtual machines with Vagrant</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">17 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">18 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">19 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">20 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">21 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">23 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">24 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">26 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">27 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">28 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">29 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">30 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">32 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">34 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">35 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">36 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">37 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">38 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-libvirt-connect" data-id-title="Connecting and authorizing"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Managing several VM Host Servers, each hosting multiple VM Guests, quickly
+  becomes difficult.  One benefit of <code class="systemitem">libvirt</code> is the ability to connect to
+  several VM Host Servers at once, providing a single interface to manage all
+  VM Guests and to connect to their graphical console.
+ </p><p>
+  To ensure only authorized users can connect, <code class="systemitem">libvirt</code> offers
+  several connection types (via TLS, SSH, Unix sockets, and TCP) that can be
+  combined with different authorization mechanisms (socket, Polkit, SASL
+  and Kerberos).
+ </p><section class="sect1" id="sec-libvirt-connect-auth" data-id-title="Authentication"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.1 </span><span class="title-name">Authentication</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The power to manage VM Guests and to access their graphical console
+   is something that should be restricted to a well defined circle
+   of persons. To achieve this goal, you can use the following
+   authentication techniques on the VM Host Server:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Access control for Unix sockets with permissions and group ownership.
+     This method is available for <code class="systemitem">libvirtd</code> connections only.
+    </p></li><li class="listitem"><p>
+     Access control for Unix sockets with Polkit. This method is available
+     for local <code class="systemitem">libvirtd</code> connections only.
+    </p></li><li class="listitem"><p>
+     User name and password authentication with SASL (Simple Authentication
+     and Security Layer). This method is available for both, <code class="systemitem">libvirtd</code>
+     and VNC connections. Using SASL does not require real user accounts on
+     the server, since it uses its own database to store user names and
+     passwords. Connections authenticated with SASL are encrypted.
+    </p></li><li class="listitem"><p>
+     Kerberos authentication. This method, available for <code class="systemitem">libvirtd</code>
+     connections only, is not covered in this manual. Refer to
+     <a class="link" href="https://libvirt.org/auth.html#ACL_server_kerberos" target="_blank">https://libvirt.org/auth.html#ACL_server_kerberos</a>
+     for details.
+    </p></li><li class="listitem"><p>
+     Single password authentication. This method is available for VNC
+     connections only.
+    </p></li></ul></div><div id="id-1.12.4.6.5.4" data-id-title="Authentication for libvirtd and VNC need to be configured separately" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Authentication for <code class="systemitem">libvirtd</code> and VNC need to be configured separately</div><p>
+    Access to the VM Guest's management functions (via <code class="systemitem">libvirtd</code>) on
+    the one hand, and to its graphical console on the other hand, always
+    needs to be configured separately. When restricting access to the
+    management tools, these restrictions do <span class="emphasis"><em>not</em></span>
+    automatically apply to VNC connections!
+   </p></div><p>
+   When accessing VM Guests from remote via TLS/SSL connections, access
+   can be indirectly controlled on each client by restricting read
+   permissions to the certificate's key file to a certain group. See
+   <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security" title="12.3.2.5. Restricting access (security considerations)">Section 12.3.2.5, “Restricting access (security considerations)”</a> for details.
+  </p><section class="sect2" id="sec-libvirt-connect-auth-libvirt" data-id-title="libvirtd authentication"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.1 </span><span class="title-name"><code class="systemitem">libvirtd</code> authentication</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="systemitem">libvirtd</code> authentication is configured in
+    <code class="filename">/etc/libvirt/libvirtd.conf</code>. The configuration made
+    here applies to all <code class="systemitem">libvirt</code> tools such as the Virtual Machine Manager or
+    <code class="command">virsh</code>.
+   </p><p>
+    <code class="systemitem">libvirt</code> offers two sockets: a read-only socket for monitoring
+    purposes and a read-write socket to be used for management operations.
+    Access to both sockets can be configured independently. By default, both
+    sockets are owned by <code class="literal">root.root</code>. Default access
+    permissions on the read-write socket are restricted to the user
+    <code class="systemitem">root</code> (<code class="literal">0700</code>) and fully open on the read-only
+    socket (<code class="literal">0777</code>).
+   </p><p>
+    In the following instructions, you will learn how to configure access
+    permissions for the read-write socket. The same instructions also apply
+    to the read-only socket. All configuration steps need to be carried out
+    on the VM Host Server.
+   </p><div id="id-1.12.4.6.5.6.5" data-id-title="Default authentication settings on SUSE Linux Enterprise Server" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Default authentication settings on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></div><p>
+     The default authentication method on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is access control
+     for Unix sockets. Only the user <code class="systemitem">root</code> may authenticate. When
+     accessing the <code class="systemitem">libvirt</code> tools as a non-root user directly on the
+     VM Host Server, you need to provide the <code class="systemitem">root</code> password through
+     Polkit once. You are then granted access for the current and for future
+     sessions.
+    </p><p>
+     Alternatively, you can configure <code class="systemitem">libvirt</code> to allow
+     <span class="quote">“<span class="quote">system</span>”</span> access to non-privileged users. See
+     <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting-dac" title="12.2.1. “system” access for non-privileged users">Section 12.2.1, “<span class="quote">“<span class="quote">system</span>”</span> access for non-privileged users”</a> for details.
+    </p></div><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Recommended authorization methods </span></span><a title="Permalink" class="permalink" href="cha-libvirt-connect.html#id-1.12.4.6.5.6.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.4.6.5.6.6.2"><span class="term">Local connections</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td><a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-pk" title="12.1.1.2. Local access control for Unix sockets with Polkit">Section 12.1.1.2, “Local access control for Unix sockets with Polkit”</a>
+       </td></tr><tr><td><a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-traditional" title="12.1.1.1. Access control for Unix sockets with permissions and group ownership">Section 12.1.1.1, “Access control for Unix sockets with permissions and group ownership”</a>
+       </td></tr></table></dd><dt id="id-1.12.4.6.5.6.6.3"><span class="term">Remote tunnel over SSH</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td><a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-traditional" title="12.1.1.1. Access control for Unix sockets with permissions and group ownership">Section 12.1.1.1, “Access control for Unix sockets with permissions and group ownership”</a>
+       </td></tr></table></dd><dt id="id-1.12.4.6.5.6.6.4"><span class="term">Remote TLS/SSL connection</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td><a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-sasl" title="12.1.1.3. User name and password authentication with SASL">Section 12.1.1.3, “User name and password authentication with SASL”</a>
+       </td></tr><tr><td>none (access controlled on the client side by restricting
+        access to the certificates)</td></tr></table></dd></dl></div><section class="sect3" id="sec-libvirt-connect-auth-libvirt-traditional" data-id-title="Access control for Unix sockets with permissions and group ownership"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.1.1 </span><span class="title-name">Access control for Unix sockets with permissions and group ownership</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-traditional">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To grant access for non-<code class="systemitem">root</code> accounts, configure the
+     sockets to be owned and accessible by a certain group
+     (<code class="systemitem">libvirt</code> in the following
+     example). This authentication method can be used for local and remote
+     SSH connections.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       In case it does not exist, create the group that should own the
+       socket:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> groupadd libvirt</pre></div><div id="id-1.12.4.6.5.6.7.3.1.3" data-id-title="Group needs to exist" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Group needs to exist</div><p>
+        The group must exist prior to restarting <code class="systemitem">libvirtd</code>. If not, the
+        restart will fail.
+       </p></div></li><li class="step"><p>
+       Add the desired users to the group:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> usermod --append --groups libvirt tux</pre></div></li><li class="step"><p>
+       Change the configuration in
+       <code class="filename">/etc/libvirt/libvirtd.conf</code> as follows:
+      </p><div class="verbatim-wrap"><pre class="screen">unix_sock_group = "libvirt"<span class="callout" id="co-libvirt-connect-ssh-group">1</span>
+unix_sock_rw_perms = "0770"<span class="callout" id="co-libvirt-connect-ssh-perms">2</span>
+auth_unix_rw = "none"<span class="callout" id="co-libvirt-connect-ssh-enable">3</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-ssh-group"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+         Group ownership will be set to group <code class="literal">libvirt</code>.
+        </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-ssh-perms"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+         Sets the access permissions for the socket
+         (<code class="literal">srwxrwx---</code>).
+        </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-ssh-enable"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+         Disables other authentication methods (Polkit or SASL). Access is
+         solely controlled by the socket permissions.
+        </p></td></tr></table></div></li><li class="step"><p>
+       Restart <code class="systemitem">libvirtd</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start libvirtd</pre></div></li></ol></div></div></section><section class="sect3" id="sec-libvirt-connect-auth-libvirt-pk" data-id-title="Local access control for Unix sockets with Polkit"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.1.2 </span><span class="title-name">Local access control for Unix sockets with Polkit</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-pk">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Access control for Unix sockets with Polkit is the default
+     authentication method on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> for non-remote connections.
+     Therefore, no <code class="systemitem">libvirt</code> configuration changes are needed. With
+     Polkit authorization enabled, permissions on both sockets default to
+     <code class="literal">0777</code> and each application trying to access a socket
+     needs to authenticate via Polkit.
+    </p><div id="id-1.12.4.6.5.6.8.3" data-id-title="Polkit authentication for local connections only" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Polkit authentication for local connections only</div><p>
+      Authentication with Polkit can only be used for local connections on
+      the VM Host Server itself, since Polkit does not handle remote
+      authentication.
+
+     </p></div><p>
+     Two policies for accessing <code class="systemitem">libvirt</code>'s sockets exist:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       <span class="emphasis"><em>org.libvirt.unix.monitor</em></span>: accessing the
+       read-only socket
+      </p></li><li class="listitem"><p>
+       <span class="emphasis"><em>org.libvirt.unix.manage</em></span>: accessing the
+       read-write socket
+      </p></li></ul></div><p>
+     By default, the policy for accessing the read-write socket is to
+     authenticate with the <code class="systemitem">root</code> password once and grant the
+     privilege for the current and for future sessions.
+    </p><p>
+     To grant users access to a socket without having to provide
+     the <code class="systemitem">root</code> password, you need to create a rule in
+     <code class="filename">/etc/polkit-1/rules.d</code>. Create the file
+     <code class="filename">/etc/polkit-1/rules.d/10-grant-libvirt</code> with the
+     following content to grant access to the read-write socket to all
+     members of the group
+     <code class="systemitem">libvirt</code>:
+    </p><div class="verbatim-wrap"><pre class="screen">polkit.addRule(function(action, subject) {
+  if (action.id == "org.libvirt.unix.manage" &amp;&amp; subject.isInGroup("libvirt")) {
+    return polkit.Result.YES;
+  }
+});</pre></div></section><section class="sect3" id="sec-libvirt-connect-auth-libvirt-sasl" data-id-title="User name and password authentication with SASL"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.1.3 </span><span class="title-name">User name and password authentication with SASL</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-sasl">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     SASL provides user name and password authentication and data
+     encryption (digest-md5, by default). Since SASL maintains its own user
+     database, the users do not need to exist on the VM Host Server. SASL is
+     required by TCP connections and on top of TLS/SSL connections.
+    </p><div id="id-1.12.4.6.5.6.9.3" data-id-title="Plain TCP and SASL with digest-md5 encryption" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Plain TCP and SASL with digest-md5 encryption</div><p>
+      Using digest-md5 encryption on an otherwise not encrypted TCP connection
+      does not provide enough security for production environments. It is
+      recommended to only use it in testing environments.
+     </p></div><div id="id-1.12.4.6.5.6.9.4" data-id-title="SASL authentication on top of TLS/SSL" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: SASL authentication on top of TLS/SSL</div><p>
+      Access from remote TLS/SSL connections can be indirectly controlled on
+      the <span class="emphasis"><em>client side</em></span> by restricting access to the
+      certificate's key file. However, this might prove error-prone when
+      dealing with many clients. Using SASL with TLS adds
+      security by additionally controlling access on the server side.
+     </p></div><p>
+     To configure SASL authentication, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Change the configuration in
+       <code class="filename">/etc/libvirt/libvirtd.conf</code> as follows:
+      </p><ol type="a" class="substeps"><li class="step"><p>
+         To enable SASL for TCP connections:
+        </p><div class="verbatim-wrap"><pre class="screen">auth_tcp = "sasl"</pre></div></li><li class="step"><p>
+         To enable SASL for TLS/SSL connections:
+        </p><div class="verbatim-wrap"><pre class="screen">auth_tls = "sasl"</pre></div></li></ol></li><li class="step"><p>
+       Restart <code class="systemitem">libvirtd</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div></li><li class="step"><p>
+       The libvirt SASL configuration file is located at
+       <code class="filename">/etc/sasl2/libvirtd.conf</code>. Normally, there is no
+       need to change the defaults. However, if using SASL on top of TLS,
+       you may turn off session encryption to avoid additional overhead (TLS
+       connections are already encrypted) by commenting the line setting the
+       <code class="literal">mech_list</code> parameter. Only do this for TLS/SASL, for
+       TCP connections this parameter must be set to digest-md5.
+      </p><div class="verbatim-wrap"><pre class="screen">#mech_list: digest-md5</pre></div></li><li class="step"><p>
+       By default, no SASL users are configured, so no logins are possible.
+       Use the following commands to manage users:
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.5.6.9.6.4.2.1"><span class="term">Add the user <code class="systemitem">tux</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen">saslpasswd2 -a libvirt tux</pre></div></dd><dt id="id-1.12.4.6.5.6.9.6.4.2.2"><span class="term">Delete the user <code class="systemitem">tux</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen">saslpasswd2 -a libvirt -d tux</pre></div></dd><dt id="id-1.12.4.6.5.6.9.6.4.2.3"><span class="term">List existing users</span></dt><dd><div class="verbatim-wrap"><pre class="screen">sasldblistusers2 -f /etc/libvirt/passwd.db</pre></div></dd></dl></div></li></ol></div></div><div id="id-1.12.4.6.5.6.9.7" data-id-title="virsh and SASL authentication" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: <code class="command">virsh</code> and SASL authentication</div><p>
+      When using SASL authentication, you will be prompted for a user name
+      and password every time you issue a <code class="command">virsh</code> command.
+      Avoid this by using <code class="command">virsh</code> in shell mode.
+     </p></div></section></section><section class="sect2" id="sec-libvirt-connect-auth-vnc" data-id-title="VNC authentication"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.2 </span><span class="title-name">VNC authentication</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-vnc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Since access to the graphical console of a VM Guest is not
+    controlled by <code class="systemitem">libvirt</code>, but rather by the specific hypervisor, it is
+    always necessary to additionally configure VNC authentication. The main
+    configuration file is
+    <code class="filename">/etc/libvirt/&lt;hypervisor&gt;.conf</code>. This
+    section describes the QEMU/KVM hypervisor, so the target
+    configuration file is <code class="filename">/etc/libvirt/qemu.conf</code>.
+   </p><div id="id-1.12.4.6.5.7.3" data-id-title="VNC authentication for Xen" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: VNC authentication for Xen</div><p>
+     In contrast with KVM, Xen does not yet offer VNC authentication more
+     sophisticated than setting a password on a per-VM basis. See the
+     <code class="literal">&lt;graphics type='vnc'...</code> <code class="systemitem">libvirt</code> configuration
+     option below.
+    </p></div><p>
+    Two authentication types are available: SASL and single-password
+    authentication. If you are using SASL for <code class="systemitem">libvirt</code> authentication,
+    it is strongly recommended to use it for VNC authentication as
+    well—it is possible to share the same database.
+   </p><p>
+    A third method to restrict access to the VM Guest is to enable the
+    use of TLS encryption on the VNC server. This requires the VNC clients
+    to have access to x509 client certificates. By restricting access to
+    these certificates, access can indirectly be controlled on the client
+    side. Refer to
+    <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-vnc-client" title="12.3.2.4.2. VNC over TLS/SSL: client configuration">Section 12.3.2.4.2, “VNC over TLS/SSL: client configuration”</a> for details.
+   </p><section class="sect3" id="sec-libvirt-connect-auth-vnc-tls" data-id-title="User name and password authentication with SASL"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.2.1 </span><span class="title-name">User name and password authentication with SASL</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-vnc-tls">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     SASL provides user name and password authentication and data
+     encryption. Since SASL maintains its own user database, the users do
+     not need to exist on the VM Host Server. As with SASL authentication for
+     <code class="systemitem">libvirt</code>, you may use SASL on top of TLS/SSL connections. Refer to
+     <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-vnc-client" title="12.3.2.4.2. VNC over TLS/SSL: client configuration">Section 12.3.2.4.2, “VNC over TLS/SSL: client configuration”</a> for details
+     on configuring these connections.
+    </p><p>
+     To configure SASL authentication for VNC, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Create a SASL configuration file. It is recommended to use the
+       existing <code class="systemitem">libvirt</code> file. If you have already configured SASL for
+       <code class="systemitem">libvirt</code> and are planning to use the same settings including the
+       same user name and password database, a simple link is suitable:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ln -s /etc/sasl2/libvirt.conf /etc/sasl2/qemu.conf</pre></div><p>
+       If are setting up SASL for VNC only or you are planning to use a
+       different configuration than for <code class="systemitem">libvirt</code>, copy the existing file
+       to use as a template:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cp /etc/sasl2/libvirt.conf /etc/sasl2/qemu.conf</pre></div><p>
+       Then edit it according to your needs.
+      </p></li><li class="step"><p>
+       Change the configuration in
+       <code class="filename">/etc/libvirt/qemu.conf</code> as follows:
+      </p><div class="verbatim-wrap"><pre class="screen">vnc_listen = "0.0.0.0"
+vnc_sasl = 1
+sasldb_path: /etc/libvirt/qemu_passwd.db</pre></div><p>
+       The first parameter enables VNC to listen on all public interfaces
+       (rather than to the local host only), and the second parameter
+       enables SASL authentication.
+      </p></li><li class="step"><p>
+       By default, no SASL users are configured, so no logins are possible.
+       Use the following commands to manage users:
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.5.7.6.4.3.2.1"><span class="term">Add the user <code class="systemitem">tux</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>saslpasswd2 -f /etc/libvirt/qemu_passwd.db -a qemu tux</pre></div></dd><dt id="id-1.12.4.6.5.7.6.4.3.2.2"><span class="term">Delete the user <code class="systemitem">tux</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>saslpasswd2 -f /etc/libvirt/qemu_passwd.db -a qemu -d tux</pre></div></dd><dt id="id-1.12.4.6.5.7.6.4.3.2.3"><span class="term">List existing users</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>sasldblistusers2 -f /etc/libvirt/qemu_passwd.db</pre></div></dd></dl></div></li><li class="step"><p>
+       Restart <code class="systemitem">libvirtd</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div></li><li class="step"><p>
+       Restart all VM Guests that have been running prior to changing
+       the configuration. VM Guests that have not been restarted will
+       not use SASL authentication for VNC connects.
+      </p></li></ol></div></div><div id="id-1.12.4.6.5.7.6.5" data-id-title="Supported VNC viewers" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Supported VNC viewers</div><p>
+      SASL authentication is currently supported by Virtual Machine Manager and
+      <code class="command">virt-viewer</code>.
+      Both of these viewers also support TLS/SSL connections.
+     </p></div></section><section class="sect3" id="sec-libvirt-connect-auth-vnc-pw" data-id-title="Single password authentication"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.2.2 </span><span class="title-name">Single password authentication</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-vnc-pw">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Access to the VNC server may also be controlled by setting a VNC
+     password. You can either set a global password for all VM Guests or
+     set individual passwords for each guest. The latter requires to edit
+     the VM Guest's configuration files.
+    </p><div id="id-1.12.4.6.5.7.7.3" data-id-title="Always set a global password" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Always set a global password</div><p>
+      If you are using single password authentication, it is good practice
+      to set a global password even if setting passwords for each
+      VM Guest. This will always leave your virtual machines protected
+      with a <span class="quote">“<span class="quote">fallback</span>”</span> password if you forget to set a
+      per-machine password. The global password will only be used if no
+      other password is set for the machine.
+     </p></div><div class="procedure" id="id-1.12.4.6.5.7.7.4" data-id-title="Setting a global VNC password"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 12.1: </span><span class="title-name">Setting a global VNC password </span></span><a title="Permalink" class="permalink" href="cha-libvirt-connect.html#id-1.12.4.6.5.7.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Change the configuration in
+       <code class="filename">/etc/libvirt/qemu.conf</code> as follows:
+      </p><div class="verbatim-wrap"><pre class="screen">vnc_listen = "0.0.0.0"
+vnc_password = "<em class="replaceable">PASSWORD</em>"</pre></div><p>
+       The first parameter enables VNC to listen on all public interfaces
+       (rather than to the local host only), and the second parameter sets
+       the password. The maximum length of the password is eight characters.
+      </p></li><li class="step"><p>
+       Restart <code class="systemitem">libvirtd</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div></li><li class="step"><p>
+       Restart all VM Guests that have been running prior to changing
+       the configuration. VM Guests that have not been restarted will
+       not use password authentication for VNC connects.
+      </p></li></ol></div></div><div class="procedure" id="id-1.12.4.6.5.7.7.5" data-id-title="Setting a VM Guest specific VNC password"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 12.2: </span><span class="title-name">Setting a VM Guest specific VNC password </span></span><a title="Permalink" class="permalink" href="cha-libvirt-connect.html#id-1.12.4.6.5.7.7.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Change the configuration in
+       <code class="filename">/etc/libvirt/qemu.conf</code> as follows to enable VNC
+       to listen on all public interfaces (rather than to the local host
+       only).
+      </p><div class="verbatim-wrap"><pre class="screen">vnc_listen = "0.0.0.0"</pre></div></li><li class="step"><p>
+       Open the VM Guest's XML configuration file in an editor. Replace
+       <em class="replaceable">VM_NAME</em> in the following example with the
+       name of the VM Guest. The editor that is used defaults to
+       <code class="envar">$EDITOR</code>. If that variable is not set,
+       <code class="command">vi</code> is used.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh edit <em class="replaceable">VM_NAME</em></pre></div></li><li class="step"><p>
+       Search for the element <code class="literal">&lt;graphics&gt;</code> with
+       the attribute <code class="literal">type='vnc'</code>, for example:
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;graphics type='vnc' port='-1' autoport='yes'/&gt;</pre></div></li><li class="step"><p>
+       Add the <code class="literal">passwd=<em class="replaceable">PASSWORD</em></code>
+       attribute, save the file and exit the editor. The maximum length of
+       the password is eight characters.
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;graphics type='vnc' port='-1' autoport='yes' passwd='PASSWORD'/&gt;</pre></div></li><li class="step"><p>
+       Restart <code class="systemitem">libvirtd</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div></li><li class="step"><p>
+       Restart all VM Guests that have been running prior to changing
+       the configuration. VM Guests that have not been restarted will
+       not use password authentication for VNC connects.
+      </p></li></ol></div></div><div id="id-1.12.4.6.5.7.7.6" data-id-title="Security of the VNC protocol" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Security of the VNC protocol</div><p>
+      The VNC protocol is not considered to be safe. Although the password is
+      sent encrypted, it might be vulnerable when an attacker can sniff both the
+      encrypted password and the encryption key. Therefore, it is recommended to
+      use VNC with TLS/SSL or tunneled over SSH.
+      <code class="command">virt-viewer</code>, Virtual Machine Manager and Remmina (refer to <span class="intraxref">Book “Administration Guide”, Chapter 10 “Remote graphical sessions with VNC”, Section 10.2 “Remmina: the remote desktop client”</span>) support both methods.
+     </p></div></section></section></section><section class="sect1" id="sec-libvirt-connect-connecting" data-id-title="Connecting to a VM Host Server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.2 </span><span class="title-name">Connecting to a VM Host Server</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To connect to a hypervisor with <code class="systemitem">libvirt</code>, you need to
+   specify a uniform resource identifier (URI). This URI is needed with
+   <code class="command">virsh</code> and <code class="command">virt-viewer</code> (except when
+   working as <code class="systemitem">root</code> on the VM Host Server) and is optional for the
+   Virtual Machine Manager. Although the latter can be called with a connection parameter
+   (for example, <code class="command">virt-manager -c qemu:///system</code>), it also
+   offers a graphical interface to create connection URIs. See
+   <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting-vmm" title="12.2.2. Managing connections with Virtual Machine Manager">Section 12.2.2, “Managing connections with Virtual Machine Manager”</a> for details.
+  </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">HYPERVISOR</em><span class="callout" id="co-libvirt-connect-hyperv">1</span><em class="replaceable">+PROTOCOL</em><span class="callout" id="co-libvirt-connect-protocol">2</span>://<em class="replaceable">USER@REMOTE</em><span class="callout" id="co-libvirt-connect-remote">3</span>/<em class="replaceable">CONNECTION_TYPE</em><span class="callout" id="co-libvirt-connect-type">4</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-hyperv"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Specify the hypervisor. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> currently supports the
+     following hypervisors: <code class="option">test</code> (dummy for testing),
+     <code class="option">qemu</code> (KVM), and <code class="option">xen</code> (Xen).
+     This parameter is mandatory.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-protocol"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     When connecting to a remote host, specify the protocol here. It can be
+     one of: <code class="option">ssh</code> (connection via SSH tunnel),
+     <code class="option">tcp</code> (TCP connection with SASL/Kerberos
+     authentication), <code class="option">tls</code> (TLS/SSL encrypted connection
+     with authentication via x509 certificates).
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-remote"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     When connecting to a remote host, specify the user name and the remote host
+     name. If no user name is specified, the user name that has called the
+     command (<code class="envar">$USER</code>) is used. See below for more
+     information. For TLS connections, the host name needs to be specified
+     exactly as in the x509 certificate.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-libvirt-connect-type"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     When connecting to the <code class="literal">QEMU/KVM</code>
+     hypervisor, two connection types are accepted: <code class="option">system</code>
+     for full access rights, or <code class="option">session</code> for restricted
+     access. Since <code class="option">session</code> access is not supported on
+     <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, this documentation focuses on <code class="option">system</code>
+     access.
+    </p></td></tr></table></div><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Example hypervisor connection URIs </span></span><a title="Permalink" class="permalink" href="cha-libvirt-connect.html#id-1.12.4.6.6.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.4.6.6.5.2"><span class="term"><code class="option">test:///default</code>
+    </span></dt><dd><p>
+      Connect to the local dummy hypervisor. Useful for testing.
+     </p></dd><dt id="id-1.12.4.6.6.5.3"><span class="term"><code class="option">qemu:///system</code> or <code class="option">xen:///system</code>
+    </span></dt><dd><p>
+      Connect to the QEMU/Xen hypervisor on the local host having
+      full access (type system).
+     </p></dd><dt id="id-1.12.4.6.6.5.4"><span class="term"><code class="option">qemu+ssh://tux@mercury.example.com/system</code> or
+    <code class="option">xen+ssh://tux@mercury.example.com/system</code>
+    </span></dt><dd><p>
+      Connect to the QEMU/Xen hypervisor on the remote host
+      mercury.example.com. The connection is established via an SSH tunnel.
+     </p></dd><dt id="id-1.12.4.6.6.5.5"><span class="term"><code class="option">qemu+tls://saturn.example.com/system</code> or <code class="option">xen+tls://saturn.example.com/system</code>
+    </span></dt><dd><p>
+      Connect to the QEMU/Xen hypervisor on the remote host
+      mercury.example.com. The connection is established using TLS/SSL.
+     </p></dd></dl></div><p>
+   For more details and examples, refer to the <code class="systemitem">libvirt</code> documentation at
+   <a class="link" href="https://libvirt.org/uri.html" target="_blank">https://libvirt.org/uri.html</a>.
+  </p><div id="id-1.12.4.6.6.7" data-id-title="User names in URIs" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: User names in URIs</div><p>
+    A user name needs to be specified when using Unix socket authentication
+    (regardless of whether using the user/password authentication scheme or
+    Polkit). This applies to all SSH and local connections.
+   </p><p>
+    There is no need to specify a user name when using SASL authentication
+    (for TCP or TLS connections) or when doing no additional server-side
+    authentication for TLS connections. With SASL the user name will not be
+    evaluated—you will be prompted for an SASL user/password
+    combination in any case.
+   </p></div><section class="sect2" id="sec-libvirt-connect-connecting-dac" data-id-title="system access for non-privileged users"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.1 </span><span class="title-name"><span class="quote">“<span class="quote">system</span>”</span> access for non-privileged users</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting-dac">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As mentioned above, a connection to the QEMU hypervisor can be
+    established using two different protocols: <code class="literal">session</code>
+    and <code class="literal">system</code>. A <span class="quote">“<span class="quote">session</span>”</span> connection is
+    spawned with the same privileges as the client program. Such a
+    connection is intended for desktop virtualization, since it is
+    restricted (for example no USB/PCI device assignments, no virtual
+    network setup, limited remote access to <code class="systemitem">libvirtd</code>).
+   </p><p>
+    The <span class="quote">“<span class="quote">system</span>”</span> connection intended for server virtualization
+    has no functional restrictions but is, by default, only accessible by
+    <code class="systemitem">root</code>. However, with the addition of the DAC (Discretionary
+    Access Control) driver to <code class="systemitem">libvirt</code> it is now possible to grant
+    non-privileged users <span class="quote">“<span class="quote">system</span>”</span> access. To grant
+    <span class="quote">“<span class="quote">system</span>”</span> access to the user <code class="systemitem">tux</code>, proceed as
+    follows:
+   </p><div class="procedure" id="id-1.12.4.6.6.8.4" data-id-title="Granting system access to a regular user"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 12.3: </span><span class="title-name">Granting <span class="quote">“<span class="quote">system</span>”</span> access to a regular user </span></span><a title="Permalink" class="permalink" href="cha-libvirt-connect.html#id-1.12.4.6.6.8.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Enable access via Unix sockets as described in <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-traditional" title="12.1.1.1. Access control for Unix sockets with permissions and group ownership">Section 12.1.1.1, “Access control for Unix sockets with permissions and group ownership”</a>. In that
+      example access to libvirt is granted to all members of the group
+      <code class="systemitem">libvirt</code> and <code class="systemitem">tux</code>
+      made a member of this group. This ensures that <code class="systemitem">tux</code> can connect
+      using <code class="command">virsh</code> or Virtual Machine Manager.
+     </p></li><li class="step"><p>
+      Edit <code class="filename">/etc/libvirt/qemu.conf</code> and change the
+      configuration as follows:
+     </p><div class="verbatim-wrap"><pre class="screen">user = "tux"
+group = "libvirt"
+dynamic_ownership = 1</pre></div><p>
+      This ensures that the VM Guests are started by <code class="systemitem">tux</code> and that
+      resources bound to the guest (for example virtual disks) can be accessed
+      and modified by <code class="systemitem">tux</code>.
+     </p></li><li class="step"><p>
+      Make <code class="systemitem">tux</code> a member of the group <code class="systemitem">kvm</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> usermod --append --groups kvm tux</pre></div><p>
+      This step is needed to grant access to <code class="filename">/dev/kvm</code>,
+      which is required to start VM Guests.
+     </p></li><li class="step"><p>
+      Restart <code class="systemitem">libvirtd</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div></li></ol></div></div></section><section class="sect2" id="sec-libvirt-connect-connecting-vmm" data-id-title="Managing connections with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.2 </span><span class="title-name">Managing connections with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The Virtual Machine Manager uses a <code class="literal">Connection</code> for every VM Host Server
+    it manages. Each connection contains all VM Guests on the respective
+    host. By default, a connection to the local host is already configured
+    and connected.
+   </p><p>
+    All configured connections are displayed in the Virtual Machine Manager main window.
+    Active connections are marked with a small triangle, which you can click
+    to fold or unfold the list of VM Guests for this
+    connection.
+   </p><p>
+    Inactive connections are listed gray and are marked with <code class="literal">Not
+    Connected</code>. Either double-click or right-click it and choose
+    <span class="guimenu">Connect</span> from the context menu. You can also
+    <span class="guimenu">Delete</span> an existing connection from this menu.
+   </p><div id="id-1.12.4.6.6.9.5" data-id-title="Editing existing connections" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Editing existing connections</div><p>
+     It is not possible to edit an existing connection. To change a
+     connection, create a new one with the desired parameters and delete the
+     <span class="quote">“<span class="quote">old</span>”</span> one.
+    </p></div><p>
+    To add a new connection in the Virtual Machine Manager, proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Choose <span class="guimenu">File</span> › <span class="guimenu">Add
+      Connection</span>
+     </p></li><li class="step"><p>
+      Choose the host's <span class="guimenu">Hypervisor</span>
+      (<span class="guimenu">Xen</span> or <span class="guimenu">QEMU/KVM</span>)
+     </p></li><li class="step"><p><span class="step-optional">(Optional)</span> 
+      To set up a remote connection, choose <span class="guimenu">Connect to remote host</span>.
+      For more information, see
+      <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote" title="12.3. Configuring remote connections">Section 12.3, “Configuring remote connections”</a>.
+     </p><p>
+      In case of a remote connection, specify the
+      <span class="guimenu">Hostname</span> of the remote machine in the format
+      <code class="literal"><em class="replaceable">USERNAME</em>@<em class="replaceable">REMOTE _HOST</em></code>.
+     </p><div id="id-1.12.4.6.6.9.7.3.3" data-id-title="Specifying a user name" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Specifying a user name</div><p>
+       There is no need to specify a user name for TCP and TLS connections: In
+       these cases, it will not be evaluated. However, in the case of SSH
+       connections, specifying a user name is necessary when you want to
+       connect as a user other than
+       <code class="systemitem">root</code>.
+      </p></div></li><li class="step"><p>
+      If you do not want the connection to be automatically started when
+      starting the Virtual Machine Manager, deactivate <span class="guimenu">Autoconnect</span>.
+     </p></li><li class="step"><p>
+      Finish the configuration by clicking <span class="guimenu">Connect</span>.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-libvirt-connect-remote" data-id-title="Configuring remote connections"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.3 </span><span class="title-name">Configuring remote connections</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A major benefit of <code class="systemitem">libvirt</code> is the ability to manage VM Guests on
+   different remote hosts from a central location. This section gives
+   detailed instructions on how to configure server and client to allow
+   remote connections.
+  </p><section class="sect2" id="sec-libvirt-connect-remote-ssh" data-id-title="Remote tunnel over SSH (qemu+ssh or xen+ssh)"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.3.1 </span><span class="title-name">Remote tunnel over SSH (<code class="literal">qemu+ssh</code> or <code class="literal">xen+ssh</code>)</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-ssh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Enabling a remote connection that is tunneled over SSH on the
+    VM Host Server only requires the ability to accept SSH connections. Make
+    sure the SSH daemon is started (<code class="command">systemctl status
+    sshd</code>) and that the ports for service
+    <code class="systemitem">SSH</code> are opened in the firewall.
+   </p><p>
+    User authentication for SSH connections can be done using traditional
+    file user/group ownership and permissions as described in
+    <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-traditional" title="12.1.1.1. Access control for Unix sockets with permissions and group ownership">Section 12.1.1.1, “Access control for Unix sockets with permissions and group ownership”</a>.
+    Connecting as user tux
+    (<code class="literal">qemu+ssh://tuxsIVname;/system</code> or
+    <code class="literal">xen+ssh://tuxsIVname;/system</code>) works out
+    of the box and does not require additional configuration on the
+    <code class="systemitem">libvirt</code> side.
+   </p><p>
+    When connecting via SSH
+    <code class="literal">qemu+ssh://<em class="replaceable">USER</em>@<em class="replaceable">SYSTEM</em></code>
+    or
+    <code class="literal">xen+ssh://<em class="replaceable">USER</em>@<em class="replaceable">SYSTEM</em></code>
+    you need to provide the password for <em class="replaceable">USER</em>.
+    This can be avoided by copying your public key to
+    <code class="filename">~<em class="replaceable">USER</em>/.ssh/authorized_keys</code>
+    on the VM Host Server as explained in
+    <span class="intraxref">Book “Security and Hardening Guide”, Chapter 22 “Securing network operations with OpenSSH”, Section 22.6 “Public key authentication”</span>. Using
+    <code class="command">gnome-keyring</code> on the
+    machine from which you are connecting adds even more
+    convenience. For more information, see
+    <span class="intraxref">Book “Security and Hardening Guide”, Chapter 22 “Securing network operations with OpenSSH”, Section 22.9 “Automated public key logins with gnome-keyring”</span>.
+   </p></section><section class="sect2" id="sec-libvirt-connect-remote-tls" data-id-title="Remote TLS/SSL connection with x509 certificate (qemu+tls or xen+tls)"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.3.2 </span><span class="title-name">Remote TLS/SSL connection with x509 certificate (<code class="literal">qemu+tls</code> or <code class="literal">xen+tls</code>)</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Using TCP connections with TLS/SSL encryption and authentication via
+    x509 certificates is much more complicated to set up than SSH, but it is
+    a lot more scalable. Use this method if you need to manage several
+    VM Host Servers with a varying number of administrators.
+   </p><section class="sect3" id="sec-libvirt-connect-remote-tls-concept" data-id-title="Basic concept"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.1 </span><span class="title-name">Basic concept</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-concept">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     TLS (Transport Layer Security) encrypts the communication between two
+     computers by using certificates. The computer starting the connection
+     is always considered the <span class="quote">“<span class="quote">client</span>”</span>, using a <span class="quote">“<span class="quote">client
+     certificate</span>”</span>, while the receiving computer is always considered
+     the <span class="quote">“<span class="quote">server</span>”</span>, using a <span class="quote">“<span class="quote">server certificate</span>”</span>.
+     This scenario applies, for example, if you manage your VM Host Servers
+     from a central desktop.
+    </p><p>
+     If connections are initiated from both computers, each needs to have a
+     client <span class="emphasis"><em>and</em></span> a server certificate. This is the case,
+     for example, if you migrate a VM Guest from one host to another.
+    </p><p>
+     Each x509 certificate has a matching private key file. Only the
+     combination of certificate and private key file can identify
+     itself correctly. To assure that a certificate was issued by
+     the assumed owner, it is signed and issued by a central certificate
+     called certificate authority (CA). Both the client and the server
+     certificates must be issued by the same CA.
+    </p><div id="id-1.12.4.6.7.4.3.5" data-id-title="User authentication" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: User authentication</div><p>
+      Using a remote TLS/SSL connection only ensures that two computers are
+      allowed to communicate in a certain direction. Restricting access to
+      certain users can indirectly be achieved on the client side by
+      restricting access to the certificates. For more information, see
+      <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security" title="12.3.2.5. Restricting access (security considerations)">Section 12.3.2.5, “Restricting access (security considerations)”</a>.
+     </p><p>
+      <code class="systemitem">libvirt</code> also supports user authentication on the server with
+      SASL. For more information, see
+      <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-sasl" title="12.3.2.6. Central user authentication with SASL for TLS sockets">Section 12.3.2.6, “Central user authentication with SASL for TLS sockets”</a>.
+     </p></div></section><section class="sect3" id="sec-libvirt-connect-remote-tls-server" data-id-title="Configuring the VM Host Server"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.2 </span><span class="title-name">Configuring the VM Host Server</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-server">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The VM Host Server is the machine receiving connections. Therefore, the
+     <span class="emphasis"><em>server</em></span> certificates need to be installed. The CA
+     certificate needs to be installed, too. When the certificates are
+     in place, TLS support can be turned on for <code class="systemitem">libvirt</code>.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Create the server certificate and export it together with the
+       respective CA certificate.
+      </p></li><li class="step"><p>
+       Create the following directories on the VM Host Server:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir -p /etc/pki/CA/ /etc/pki/libvirt/private/</pre></div><p>
+       Install the certificates as follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> /etc/pki/CA/cacert.pem
+<code class="prompt user">&gt; </code><code class="command">sudo</code> /etc/pki/libvirt/servercert.pem
+<code class="prompt user">&gt; </code><code class="command">sudo</code> /etc/pki/libvirt/private/serverkey.pem</pre></div><div id="id-1.12.4.6.7.4.4.3.2.5" data-id-title="Restrict access to certificates" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Restrict access to certificates</div><p>
+        Make sure to restrict access to certificates as explained in
+        <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security" title="12.3.2.5. Restricting access (security considerations)">Section 12.3.2.5, “Restricting access (security considerations)”</a>.
+       </p></div></li><li class="step"><p>
+       Enable TLS support by enabling the relevant socket and restarting
+       <code class="systemitem">libvirtd</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl stop libvirtd.service
+<code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl enable --now libvirtd-tls.socket
+<code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start libvirtd.service</pre></div></li><li class="step"><p>
+       By default, <code class="systemitem">libvirt</code> uses the TCP port 16514 for accepting secure
+       TLS connections. Open this port in the firewall.
+      </p></li></ol></div></div><div id="id-1.12.4.6.7.4.4.4" data-id-title="Restarting libvirtd with TLS enabled" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Restarting <code class="systemitem">libvirtd</code> with TLS enabled</div><p>
+      If you enable TLS for <code class="systemitem">libvirt</code>, the server certificates need to be
+      in place, otherwise restarting <code class="systemitem">libvirtd</code> will fail. You also need
+      to restart <code class="systemitem">libvirtd</code> in case you change the certificates.
+     </p></div></section><section class="sect3" id="sec-libvirt-connect-remote-tls-client" data-id-title="Configuring the client and testing the setup"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.3 </span><span class="title-name">Configuring the client and testing the setup</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-client">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The client is the machine initiating connections. Therefore the
+     <span class="emphasis"><em>client</em></span> certificates need to be installed. The CA
+     certificate needs to be installed, too.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Create the client certificate and export it together with the
+       respective CA certificate.
+      </p></li><li class="step"><p>
+       Create the following directories on the client:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir -p /etc/pki/CA/ /etc/pki/libvirt/private/</pre></div><p>
+       Install the certificates as follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> /etc/pki/CA/cacert.pem
+<code class="prompt user">&gt; </code><code class="command">sudo</code> /etc/pki/libvirt/clientcert.pem
+<code class="prompt user">&gt; </code><code class="command">sudo</code> /etc/pki/libvirt/private/clientkey.pem</pre></div><div id="id-1.12.4.6.7.4.5.3.2.5" data-id-title="Restrict access to certificates" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Restrict access to certificates</div><p>
+        Make sure to restrict access to certificates as explained in
+        <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security" title="12.3.2.5. Restricting access (security considerations)">Section 12.3.2.5, “Restricting access (security considerations)”</a>.
+       </p></div></li><li class="step"><p>
+       Test the client/server setup by issuing the following command.
+       Replace <em class="replaceable">mercury.example.com</em> with the name of
+       your VM Host Server. Specify the same fully qualified host name as used
+       when creating the server certificate.
+      </p><div class="verbatim-wrap"><pre class="screen">#QEMU/KVM
+virsh -c qemu+tls://<em class="replaceable">mercury.example.com</em>/system list --all
+
+#Xen
+virsh -c xen+tls://<em class="replaceable">mercury.example.com</em>/system list --all</pre></div><p>
+       If your setup is correct, you will see a list of all VM Guests
+       registered with <code class="systemitem">libvirt</code> on the VM Host Server.
+      </p></li></ol></div></div></section><section class="sect3" id="sec-libvirt-connect-remote-tls-vnc" data-id-title="Enabling VNC for TLS/SSL connections"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.4 </span><span class="title-name">Enabling VNC for TLS/SSL connections</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-vnc">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Currently, VNC communication over TLS is only supported by a few tools.
+     Common VNC viewers such as <code class="command">tightvnc</code> or
+     <code class="command">tigervnc</code> do not support TLS/SSL. The only supported
+     alternative to Virtual Machine Manager and <code class="command">virt-viewer</code> is
+     <code class="command">remmina</code> (refer to <span class="intraxref">Book “Administration Guide”, Chapter 10 “Remote graphical sessions with VNC”, Section 10.2 “Remmina: the remote desktop client”</span>).
+    </p><section class="sect4" id="sec-libvirt-connect-remote-tls-vnc-server" data-id-title="VNC over TLS/SSL: VM Host Server configuration"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">12.3.2.4.1 </span><span class="title-name">VNC over TLS/SSL: VM Host Server configuration</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-vnc-server">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To access the graphical console via VNC over TLS/SSL, you
+      need to configure the VM Host Server as follows:
+     </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+        Open ports for the service
+        <code class="systemitem">VNC</code> in your firewall.
+       </p></li><li class="step"><p>
+        Create a directory <code class="filename">/etc/pki/libvirt-vnc</code> and
+        link the certificates into this directory as follows:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir -p /etc/pki/libvirt-vnc &amp;&amp; cd /etc/pki/libvirt-vnc
+<code class="prompt user">&gt; </code><code class="command">sudo</code> ln -s /etc/pki/CA/cacert.pem ca-cert.pem
+<code class="prompt user">&gt; </code><code class="command">sudo</code> ln -s /etc/pki/libvirt/servercert.pem server-cert.pem
+<code class="prompt user">&gt; </code><code class="command">sudo</code> ln -s /etc/pki/libvirt/private/serverkey.pem server-key.pem</pre></div></li><li class="step"><p>
+        Edit <code class="filename">/etc/libvirt/qemu.conf</code> and set the
+        following parameters:
+       </p><div class="verbatim-wrap"><pre class="screen">vnc_listen = "0.0.0.0"
+        vnc_tls = 1
+        vnc_tls_x509_verify = 1</pre></div></li><li class="step"><p>
+        Restart the <code class="systemitem">libvirtd</code>:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div><div id="id-1.12.4.6.7.4.6.3.3.4.3" data-id-title="VM Guests need to be restarted" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: VM Guests need to be restarted</div><p>
+         The VNC TLS setting is only set when starting a VM Guest.
+         Therefore, you need to restart all machines that have been running
+         prior to making the configuration change.
+        </p></div></li></ol></div></div></section><section class="sect4" id="sec-libvirt-connect-remote-tls-vnc-client" data-id-title="VNC over TLS/SSL: client configuration"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">12.3.2.4.2 </span><span class="title-name">VNC over TLS/SSL: client configuration</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-vnc-client">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The only action needed on the client side is to place the x509 client
+      certificates in a location recognized by the client of choice.
+      Unfortunately, Virtual Machine Manager and <code class="command">virt-viewer</code> expect the
+      certificates in a different location. Virtual Machine Manager can either read from a
+      system-wide location applying to all users, or from a per-user location.
+      Remmina (refer to <span class="intraxref">Book “Administration Guide”, Chapter 10 “Remote graphical sessions with VNC”, Section 10.2 “Remmina: the remote desktop client”</span>) asks for the location of
+      certificates when initializing the connection to the remote VNC session.
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.7.4.6.4.3.1"><span class="term"><span class="bold"><strong>
+         Virtual Machine Manager (<code class="command">virt-manager</code>)
+        </strong></span>
+       </span></dt><dd><p>
+         To connect to the remote host, Virtual Machine Manager requires the setup explained in
+         <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-client" title="12.3.2.3. Configuring the client and testing the setup">Section 12.3.2.3, “Configuring the client and testing the setup”</a>. To be able
+         to connect via VNC, the client certificates also need to be placed in
+         the following locations:
+        </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.7.4.6.4.3.1.2.2.1"><span class="term">System-wide location</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td><code class="filename">/etc/pki/CA/cacert.pem</code>
+            </td></tr><tr><td><code class="filename">/etc/pki/libvirt-vnc/clientcert.pem</code>
+            </td></tr><tr><td><code class="filename">/etc/pki/libvirt-vnc/private/clientkey.pem</code>
+            </td></tr></table></dd><dt id="id-1.12.4.6.7.4.6.4.3.1.2.2.2"><span class="term">Per-user location</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td><code class="filename">/etc/pki/CA/cacert.pem</code>
+            </td></tr><tr><td><code class="filename">~/.pki/libvirt-vnc/clientcert.pem</code>
+            </td></tr><tr><td><code class="filename">~/.pki/libvirt-vnc/private/clientkey.pem</code>
+            </td></tr></table></dd></dl></div></dd><dt id="id-1.12.4.6.7.4.6.4.3.2"><span class="term"><span class="bold"><strong><code class="command">virt-viewer</code></strong></span>
+       </span></dt><dd><p>
+         <code class="command">virt-viewer</code> only accepts certificates from a
+         system-wide location:
+        </p><table style="border: 0; " class="simplelist"><tr><td><code class="filename">/etc/pki/CA/cacert.pem</code>
+         </td></tr><tr><td><code class="filename">/etc/pki/libvirt-vnc/clientcert.pem</code>
+         </td></tr><tr><td><code class="filename">/etc/pki/libvirt-vnc/private/clientkey.pem</code>
+         </td></tr></table></dd></dl></div><div id="id-1.12.4.6.7.4.6.4.4" data-id-title="Restrict access to certificates" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Restrict access to certificates</div><p>
+       Make sure to restrict access to certificates as explained in
+       <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security" title="12.3.2.5. Restricting access (security considerations)">Section 12.3.2.5, “Restricting access (security considerations)”</a>.
+      </p></div></section></section><section class="sect3" id="sec-libvirt-connect-remote-tls-security" data-id-title="Restricting access (security considerations)"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.5 </span><span class="title-name">Restricting access (security considerations)</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Each x509 certificate consists of two pieces: the public certificate
+     and a private key. A client can only authenticate using both pieces.
+     Therefore, any user that has read access to the client certificate and
+     its private key can access your VM Host Server. On the other hand, an
+     arbitrary machine equipped with the full server certificate can pretend
+     to be the VM Host Server. Since this is probably not desirable, access to
+     at least the private key files needs to be restricted as much as
+     possible. The easiest way to control access to a key file is to use
+     access permissions.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.6.7.4.7.3.1"><span class="term"><span class="bold"><strong>Server certificates</strong></span>
+      </span></dt><dd><p>
+        Server certificates need to be readable for QEMU processes. On
+        <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> QEMU, processes started from <code class="systemitem">libvirt</code> tools
+        are owned by <code class="systemitem">root</code>, so it is sufficient if the <code class="systemitem">root</code> can
+        read the certificates:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>chmod 700 /etc/pki/libvirt/private/
+<code class="prompt user">&gt; </code>chmod 600 /etc/pki/libvirt/private/serverkey.pem</pre></div><p>
+        If you change the ownership for QEMU processes in
+        <code class="filename">/etc/libvirt/qemu.conf</code>, you also need to adjust
+        the ownership of the key file.
+       </p></dd><dt id="id-1.12.4.6.7.4.7.3.2"><span class="term"><span class="bold"><strong>System-wide client certificates</strong></span>
+      </span></dt><dd><p>
+        To control access to a key file that is available system-wide,
+        restrict read access to a certain group, so that only members of
+        that group can read the key file. In the following example, a group
+        <code class="systemitem">libvirt</code> is created, and
+        group ownership of the <code class="filename">clientkey.pem</code> file and
+        its parent directory is set to
+        <code class="systemitem">libvirt</code>. Afterward, the
+        access permissions are restricted to owner and group. Finally the
+        user <code class="systemitem">tux</code> is added to the group
+        <code class="systemitem">libvirt</code>, and thus can
+        access the key file.
+       </p><div class="verbatim-wrap"><pre class="screen">CERTPATH="/etc/pki/libvirt/"
+# create group libvirt
+groupadd libvirt
+# change ownership to user root and group libvirt
+chown root.libvirt $CERTPATH/private $CERTPATH/clientkey.pem
+# restrict permissions
+chmod 750 $CERTPATH/private
+chmod 640 $CERTPATH/private/clientkey.pem
+# add user tux to group libvirt
+usermod --append --groups libvirt tux</pre></div></dd><dt id="id-1.12.4.6.7.4.7.3.3"><span class="term"><span class="bold"><strong>Per-user certificates</strong></span>
+      </span></dt><dd><p>
+        User-specific client certificates for accessing the graphical
+        console of a VM Guest via VNC need to be placed in the user's
+        home directory in <code class="filename">~/.pki</code>. Contrary to SSH, for
+        example, the VNC viewer using these certificates do not check the
+        access permissions of the private key file. Therefore, it is solely
+        the user's responsibility to make sure the key file is not readable
+        by others.
+       </p></dd></dl></div><section class="sect4" id="sec-libvirt-connect-remote-tls-server-restrict" data-id-title="Restricting access from the server side"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">12.3.2.5.1 </span><span class="title-name">Restricting access from the server side</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-server-restrict">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      By default, every client that is equipped with appropriate client
+      certificates may connect to a VM Host Server accepting TLS connections.
+      Therefore, it is possible to use additional server-side authentication
+      with SASL as described in
+      <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-sasl" title="12.1.1.3. User name and password authentication with SASL">Section 12.1.1.3, “User name and password authentication with SASL”</a>.
+     </p><p>
+      It is also possible to restrict access with a whitelist of DNs
+      (distinguished names), so only clients with a certificate matching a
+      DN from the list can connect.
+     </p><p>
+      Add a list of allowed DNs to <code class="literal">tls_allowed_dn_list</code> in
+      <code class="filename">/etc/libvirt/libvirtd.conf</code>. This list may contain
+      wild cards. Do not specify an empty list, since that would result in
+      refusing all connections.
+     </p><div class="verbatim-wrap"><pre class="screen">tls_allowed_dn_list = [
+   "C=US,L=Provo,O=SUSE Linux Products GmbH,OU=*,CN=venus.example.com,EMAIL=*",
+   "C=DE,L=Nuremberg,O=SUSE Linux Products GmbH,OU=Documentation,CN=*"]</pre></div><p>
+      Get the distinguished name of a certificate with the following
+      command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>certtool -i --infile /etc/pki/libvirt/clientcert.pem | grep "Subject:"</pre></div><p>
+      Restart <code class="systemitem">libvirtd</code> after having changed the configuration:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart libvirtd</pre></div></section></section><section class="sect3" id="sec-libvirt-connect-remote-tls-sasl" data-id-title="Central user authentication with SASL for TLS sockets"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.6 </span><span class="title-name">Central user authentication with SASL for TLS sockets</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-sasl">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     A direct user authentication via TLS is not possible—this is
+     handled indirectly on each client via the read permissions for the
+     certificates as explained in
+     <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-security" title="12.3.2.5. Restricting access (security considerations)">Section 12.3.2.5, “Restricting access (security considerations)”</a>. However, if
+     a central, server-based user authentication is needed, <code class="systemitem">libvirt</code>
+     also allows to use SASL (Simple Authentication and Security Layer) on
+     top of TLS for direct user authentication. See
+     <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-auth-libvirt-sasl" title="12.1.1.3. User name and password authentication with SASL">Section 12.1.1.3, “User name and password authentication with SASL”</a> for
+     configuration details.
+    </p></section><section class="sect3" id="sec-libvirt-connect-remote-tls-troubleshoot" data-id-title="Troubleshooting"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.3.2.7 </span><span class="title-name">Troubleshooting</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-troubleshoot">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect4" id="sec-libvirt-connect-remote-tls-troubleshoot-no-connect" data-id-title="Virtual Machine Manager/virsh cannot connect to server"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">12.3.2.7.1 </span><span class="title-name">Virtual Machine Manager/<code class="command">virsh</code> cannot connect to server</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-troubleshoot-no-connect">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Check the following in the given order:
+     </p><table style="border: 0; " class="simplelist"><tr><td>Is it a firewall issue (TCP port 16514 needs to be open on the
+       server)?</td></tr><tr><td>Is the client certificate (certificate and key) readable by the
+       user that has started
+       Virtual Machine Manager/<code class="command">virsh</code>?
+      </td></tr><tr><td>Has the same full qualified host name as in the server
+       certificate been specified with the connection?</td></tr><tr><td>Is TLS enabled on the server (<code class="literal">listen_tls =
+        1</code>)?</td></tr><tr><td>Has <code class="systemitem">libvirtd</code> been
+       restarted on the server?</td></tr></table></section><section class="sect4" id="sec-libvirt-connect-remote-tls-troubleshoot-vnc" data-id-title="VNC connection fails"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">12.3.2.7.2 </span><span class="title-name">VNC connection fails</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-troubleshoot-vnc">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/libvirt_connect.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Ensure that you can connect to the remote server using Virtual Machine Manager. If
+      so, check whether the virtual machine on the server has been started
+      with TLS support. The virtual machine's name in the following example
+      is <code class="literal">sles</code>.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ps ax | grep qemu | grep "\-name sles" | awk -F" -vnc " '{ print FS $2 }'</pre></div><p>
+      If the output does not begin with a string similar to the following,
+      the machine has not been started with TLS support and must be
+      restarted.
+     </p><div class="verbatim-wrap"><pre class="screen"> -vnc 0.0.0.0:0,tls,x509verify=/etc/pki/libvirt</pre></div></section></section></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-libvirt-managing.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Basic VM Guest management</span></a> </div><div><a class="pagination-link next" href="cha-libvirt-storage.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 13 </span>Advanced storage topics</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-libvirt-connect.html#sec-libvirt-connect-auth"><span class="title-number">12.1 </span><span class="title-name">Authentication</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-connect.html#sec-libvirt-connect-connecting"><span class="title-number">12.2 </span><span class="title-name">Connecting to a VM Host Server</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-connect.html#sec-libvirt-connect-remote"><span class="title-number">12.3 </span><span class="title-name">Configuring remote connections</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

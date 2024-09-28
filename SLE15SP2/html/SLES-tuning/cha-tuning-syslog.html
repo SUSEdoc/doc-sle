@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | System Analysis and Tuning Guide | System Log Files</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="System Log Files | SLES 15 SP2"/>
+<meta name="description" content="System log file analysis is one of the most important tasks when analyzing the system. In fact, looking at the system log files should be the first t…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 3. System Log Files"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLES systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLES systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "System Log Files",
+  
+    "description": "System Log Files",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-03-12T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-util.html" title="Chapter 2. System Monitoring Utilities"/><link rel="next" href="part-tuning-kerneltrace.html" title="Part III. Kernel Monitoring"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-monitoring.html">System Monitoring</a><span> / </span><a class="crumb" href="cha-tuning-syslog.html">System Log Files</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General Notes on System Tuning</span></a></li></ol></li><li class="active"><a href="part-tuning-monitoring.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">System Monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System Monitoring Utilities</span></a></li><li><a href="cha-tuning-syslog.html" class=" you-are-here"><span class="title-number">3 </span><span class="title-name">System Log Files</span></a></li></ol></li><li><a href="part-tuning-kerneltrace.html" class="has-children "><span class="title-number">III </span><span class="title-name">Kernel Monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—Filtering and Analyzing System Data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-Based Performance Monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—System-Wide Profiler</span></a></li><li><a href="cha-tuning-dynamic-debug.html" class=" "><span class="title-number">8 </span><span class="title-name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li><a href="part-tuning-resources.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Resource Management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">9 </span><span class="title-name">General System Resource Management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">10 </span><span class="title-name">Kernel Control Groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">11 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) Balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">12 </span><span class="title-name">Power Management</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel Tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">13 </span><span class="title-name">Tuning I/O Performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning the task scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the Memory Management Subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">16 </span><span class="title-name">Tuning the Network</span></a></li></ol></li><li><a href="part-tuning-dumps.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Handling System Dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">17 </span><span class="title-name">Tracing Tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">18 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">19 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to Debug Application Crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized Clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">20 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk07apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-syslog" data-id-title="System Log Files"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">System Log Files</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  System log file analysis is one of the most important tasks when analyzing
+  the system. In fact, looking at the system log files should be the first
+  thing to do when maintaining or troubleshooting a system. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+  automatically logs almost everything that happens on the system in detail.
+  Since the move to <code class="systemitem">systemd</code>, kernel messages and messages of system
+  services registered with <code class="systemitem">systemd</code> are logged in <code class="systemitem">systemd</code> journal
+  (see <span class="intraxref">Book “Administration Guide”, Chapter 17 “<code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> Journal”</span>). Other log files (mainly those of
+  system applications) are written in plain text and can be easily read
+  using an editor or pager. It is also possible to parse them using scripts.
+  This allows you to filter their content.
+ </p><section class="sect1" id="sec-tuning-syslog-logs" data-id-title="System log files in /var/log/"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.1 </span><span class="title-name">System log files in <code class="filename">/var/log/</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-logs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   System log files are always located under the
+   <code class="filename">/var/log</code> directory. The following list presents an
+   overview of all system log files from <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> present after a
+   default installation. Depending on your installation scope,
+   <code class="filename">/var/log</code> also contains log files from other services
+   and applications not listed here. Some files and directories described
+   below are <span class="quote">“<span class="quote">placeholders</span>”</span> and are only used, when the
+   corresponding application is installed. Most log files are only visible
+   for the user <code class="systemitem">root</code>.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.9.4.3.4.3.1"><span class="term"><code class="filename">apparmor/</code>
+    </span></dt><dd><p>
+      <span class="phrase">AppArmor</span> log files. For more information about <span class="phrase">AppArmor</span>, see
+      <span class="intraxref">Book “Security and Hardening Guide”</span>.
+     </p></dd><dt id="id-1.9.4.3.4.3.2"><span class="term"><code class="filename">audit/</code>
+    </span></dt><dd><p>
+      Logs from the audit framework. See <span class="intraxref">Book “Security and Hardening Guide”</span> for
+      details.
+     </p></dd><dt id="id-1.9.4.3.4.3.3"><span class="term"><code class="filename">ConsoleKit/</code>
+    </span></dt><dd><p>
+      Logs of the <code class="systemitem">ConsoleKit</code> daemon
+      (daemon for tracking what users are logged in and how they interact
+      with the computer).
+     </p></dd><dt id="id-1.9.4.3.4.3.4"><span class="term"><code class="filename">cups/</code>
+    </span></dt><dd><p>
+      Access and error logs of the Common Unix Printing System
+      (<code class="systemitem">cups</code>).
+     </p></dd><dt id="id-1.9.4.3.4.3.5"><span class="term"><code class="filename">firewall</code>
+    </span></dt><dd><p>
+      Firewall logs.
+     </p></dd><dt id="id-1.9.4.3.4.3.6"><span class="term"><code class="filename">gdm/</code>
+    </span></dt><dd><p>
+      Log files from the GNOME display manager.
+     </p></dd><dt id="id-1.9.4.3.4.3.7"><span class="term"><code class="filename">krb5/</code>
+    </span></dt><dd><p>
+      Log files from the Kerberos network authentication system.
+     </p></dd><dt id="id-1.9.4.3.4.3.8"><span class="term"><code class="filename">lastlog</code>
+    </span></dt><dd><p>
+      A database containing information on the last login of each user. Use
+      the command <code class="command">lastlog</code> to view. See <code class="command">man 8
+      lastlog</code> for more information.
+     </p></dd><dt id="id-1.9.4.3.4.3.9"><span class="term"><code class="filename">localmessages</code>
+    </span></dt><dd><p>
+      Log messages of some boot scripts, for example the log of the DHCP
+      client.
+     </p></dd><dt id="id-1.9.4.3.4.3.10"><span class="term"><code class="filename">mail*</code>
+    </span></dt><dd><p>
+      Mail server (<code class="systemitem">postfix</code>,
+      <code class="systemitem">sendmail</code>) logs.
+     </p></dd><dt id="id-1.9.4.3.4.3.11"><span class="term"><code class="filename">messages</code>
+    </span></dt><dd><p>
+      This is the default place where all kernel and system log messages go
+      and should be the first place (along with
+      <code class="filename">/var/log/warn</code>) to look at in case of problems.
+     </p></dd><dt id="id-1.9.4.3.4.3.12"><span class="term"><code class="filename">NetworkManager</code>
+    </span></dt><dd><p>
+      NetworkManager log files.
+     </p></dd><dt id="id-1.9.4.3.4.3.13"><span class="term"><code class="filename">news/</code>
+    </span></dt><dd><p>
+      Log messages from a news server.
+     </p></dd><dt id="id-1.9.4.3.4.3.14"><span class="term"><code class="filename">chrony/</code>
+    </span></dt><dd><p>
+      Logs from the Network Time Protocol daemon
+      (<code class="systemitem">chrony</code>).
+     </p></dd><dt id="id-1.9.4.3.4.3.15"><span class="term"><code class="filename">pk_backend_zypp*</code>
+    </span></dt><dd><p>
+      PackageKit (with <code class="systemitem">libzypp</code>
+      back-end) log files.
+     </p></dd><dt id="id-1.9.4.3.4.3.16"><span class="term"><code class="filename">samba/</code>
+    </span></dt><dd><p>
+      Log files from Samba, the Windows SMB/CIFS file server.
+     </p></dd><dt id="id-1.9.4.3.4.3.17"><span class="term"><code class="filename">warn</code>
+    </span></dt><dd><p>
+      Log of all system warnings and errors. This should be the first place
+      (along with the output of the <code class="systemitem">systemd</code> journal) to look in case of
+      problems.
+     </p></dd><dt id="id-1.9.4.3.4.3.18"><span class="term"><code class="filename">wtmp</code>
+    </span></dt><dd><p>
+      Database of all login/logout activities,
+      
+      and remote connections. Use the command <code class="command">last</code> to
+      view. See <code class="command">man 1 last</code> for more information.
+     </p></dd><dt id="id-1.9.4.3.4.3.19"><span class="term"><code class="filename">Xorg.0.log</code>
+    </span></dt><dd><p>
+      X.Org start-up log file. Refer to this in case you have
+      problems starting X.Org. Copies from previous X.Org
+      starts are numbered Xorg.<em class="replaceable">?</em>.log.
+     </p></dd><dt id="id-1.9.4.3.4.3.20"><span class="term"><code class="filename">YaST2/</code>
+    </span></dt><dd><p>
+      All YaST log files.
+     </p></dd><dt id="id-1.9.4.3.4.3.21"><span class="term"><code class="filename">zypp/</code>
+    </span></dt><dd><p>
+      <code class="systemitem">libzypp</code> log files. Refer to
+      these files for the package installation history.
+     </p></dd><dt id="id-1.9.4.3.4.3.22"><span class="term"><code class="filename">zypper.log</code>
+    </span></dt><dd><p>
+      Logs from the command line installer <code class="command">zypper</code>.
+     </p></dd></dl></div></section><section class="sect1" id="sec-tuning-syslog-view" data-id-title="Viewing and Parsing Log Files"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.2 </span><span class="title-name">Viewing and Parsing Log Files</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-view">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To view log files, you can use any text editor. There is also a simple
+   YaST module for viewing the system log available in the YaST
+   control center under <span class="guimenu">Miscellaneous</span> › <span class="guimenu">System Log</span>.
+  </p><p>
+   For viewing log files in a text console, use the commands
+   <code class="command">less</code> or <code class="command">more</code>. Use
+   <code class="command">head</code> and <code class="command">tail</code> to view the beginning
+   or end of a log file. To view entries appended to a log file in real-time
+   use <code class="command">tail</code> <code class="option">-f</code>. For information about
+   how to use these tools, see their man pages.
+  </p><p>
+   To search for strings or regular expressions in log files use
+   <code class="command">grep</code>. <code class="command">awk</code> is useful for parsing and
+   rewriting log files.
+  </p></section><section class="sect1" id="sec-tuning-syslog-logrotate" data-id-title="Managing Log Files with logrotate"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.3 </span><span class="title-name">Managing Log Files with <code class="command">logrotate</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-logrotate">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Log files under <code class="filename">/var/log</code> grow on a daily basis and
+   quickly become very large. <code class="command">logrotate</code> is a tool that
+   helps you manage log files and their growth. It allows automatic
+   rotation, removal, compression, and mailing of log files. Log files can
+   be handled periodically (daily, weekly, or monthly) or when exceeding a
+   particular size.
+  </p><p>
+   <code class="command">logrotate</code> is usually run daily by <code class="systemitem">systemd</code>,
+   and thus usually modifies log files only once a day. However, exceptions
+   occur when a log file is modified because of its size, if
+   <code class="command">logrotate</code> is run multiple times a day, or if
+   <code class="option">--force</code> is enabled.  Use
+   <code class="filename">/var/lib/misc/logrotate.status</code> to find out when a
+   particular file was last rotated.
+  </p><p>
+   The main configuration file of <code class="command">logrotate</code> is
+   <code class="filename">/etc/logrotate.conf</code>. System packages and
+   programs that produce log files (for example,
+   <code class="systemitem">apache2</code>) put their own
+   configuration files in the <code class="filename">/etc/logrotate.d/</code>
+   directory. The content of <code class="filename">/etc/logrotate.d/</code> is
+   included via <code class="filename">/etc/logrotate.conf</code>.
+  </p><div class="complex-example"><div class="example" id="ex-tuning-syslog-logrotate-config" data-id-title="Example for /etc/logrotate.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.1: </span><span class="title-name">Example for <code class="filename">/etc/logrotate.conf</code> </span></span><a title="Permalink" class="permalink" href="cha-tuning-syslog.html#ex-tuning-syslog-logrotate-config">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+    
+   </p><div class="verbatim-wrap"><pre class="screen"># see "man logrotate" for details
+# rotate log files weekly
+weekly
+
+# keep 4 weeks worth of backlogs
+rotate 4
+
+# create new (empty) log files after rotating old ones
+create
+
+# use date as a suffix of the rotated file
+dateext
+
+# uncomment this if you want your log files compressed
+#compress
+
+# comment these to switch compression to use gzip or another
+# compression scheme
+compresscmd /usr/bin/bzip2
+uncompresscmd /usr/bin/bunzip2
+
+# RPM packages drop log rotation information into this directory
+include /etc/logrotate.d</pre></div></div></div></div><div id="id-1.9.4.3.6.6" data-id-title="Avoid Permission Conflicts" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Avoid Permission Conflicts</div><p>
+    The <code class="systemitem">create</code> option pays heed to the modes and
+    ownerships of files specified in <code class="filename">/etc/permissions*</code>.
+    If you modify these settings, make sure no conflicts arise.
+   </p></div></section><section class="sect1" id="sec-tuning-syslog-logwatch" data-id-title="Monitoring Log Files with logwatch"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.4 </span><span class="title-name">Monitoring Log Files with <code class="command">logwatch</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-logwatch">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">logwatch</code> is a customizable, pluggable log-monitoring
+   script. It parses system logs, extracts the important information and
+   presents them in a human readable manner. To use
+   <code class="command">logwatch</code>, install the
+   <code class="systemitem">logwatch</code> package.
+  </p><p>
+   <code class="command">logwatch</code> can either be used at the command line to
+   generate on-the-fly reports, or via <code class="systemitem">cron</code> to regularly create custom
+   reports. Reports can either be printed on the screen, saved to a file, or
+   be mailed to a specified address. The latter is especially useful when
+   automatically generating reports via <code class="systemitem">cron</code>.
+  </p><p>
+   On the command line, you can tell <code class="command">logwatch</code> for which
+   service and time span to generate a report and how much detail should be
+   included:
+  </p><div class="verbatim-wrap"><pre class="screen"># Detailed report on all kernel messages from yesterday
+logwatch --service kernel --detail High --range Yesterday --print
+
+# Low detail report on all sshd events recorded (incl. archived logs)
+logwatch --service sshd --detail Low --range All --archives --print
+
+# Mail a report on all smartd messages from May 5th to May 7th to root@localhost
+logwatch --service smartd --range 'between 5/5/2005 and 5/7/2005' \
+--mailto root@localhost --print</pre></div><p>
+   The <code class="option">--range</code> option has got a complex syntax—see
+   <code class="command">logwatch</code> <code class="option">--range help</code> for details. A
+   list of all services that can be queried is available with the following
+   command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ls /usr/share/logwatch/default.conf/services/ | sed 's/\.conf//g'</pre></div><p>
+   <code class="command">logwatch</code> can be customized to great detail. However,
+   the default configuration should usually be sufficient. The default
+   configuration files are located under
+   <code class="filename">/usr/share/logwatch/default.conf/</code>. Never change them
+   because they would get overwritten again with the next update. Rather
+   place custom configuration in <code class="filename">/etc/logwatch/conf/</code>
+   (you may use the default configuration file as a template, though). A
+   detailed HOWTO on customizing <code class="command">logwatch</code> is available at
+   <code class="filename">/usr/share/doc/packages/logwatch/HOWTO-Customize-LogWatch</code>.
+   The following configuration files exist:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.9.4.3.7.9.1"><span class="term"><code class="filename">logwatch.conf</code>
+    </span></dt><dd><p>
+      The main configuration file. The default version is extensively
+      commented. Each configuration option can be overwritten on the command
+      line.
+     </p></dd><dt id="id-1.9.4.3.7.9.2"><span class="term"><code class="filename">ignore.conf</code>
+    </span></dt><dd><p>
+      Filter for all lines that should globally be ignored by
+      <code class="command">logwatch</code>.
+     </p></dd><dt id="id-1.9.4.3.7.9.3"><span class="term"><code class="filename">services/*.conf</code>
+    </span></dt><dd><p>
+      The service directory holds configuration files for each service you
+      can generate a report for.
+     </p></dd><dt id="id-1.9.4.3.7.9.4"><span class="term"><code class="filename">logfiles/*.conf</code>
+    </span></dt><dd><p>
+      Specifications on which log files should be parsed for each service.
+     </p></dd></dl></div></section><section class="sect1" id="sec-tuning-syslog-forward" data-id-title="Configuring mail forwarding for root"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.5 </span><span class="title-name">Configuring mail forwarding for <code class="systemitem">root</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-forward">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   System daemons, <code class="systemitem">cron</code> jobs, <code class="systemitem">systemd</code>
+   timers, and other applications can generate messages and send them to the
+   <code class="systemitem">root</code> user of the system. By default, each user account owns a local
+   mailbox and will be notified about new mail messages upon login.
+  </p><p>
+   These messages can contain security relevant reports and incidents that might
+   require a quick response by the system administrator. To get notified about
+   these messages in a timely fashion, it is strongly recommended to forward
+   these mails to a dedicated remote email account that is regularly checked.
+  </p><div class="procedure" id="pro-tuning-syslog-forward" data-id-title="Configure mail forwarding for the root user"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 3.1: </span><span class="title-name">Configure mail forwarding for the <code class="systemitem">root</code> user </span></span><a title="Permalink" class="permalink" href="cha-tuning-syslog.html#pro-tuning-syslog-forward">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+    To forward mail for the <code class="systemitem">root</code> user, perform the following steps:
+   </p><ol class="procedure" type="1"><li class="step"><p>
+     Install the <span class="package">yast2-mail</span> package:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">zypper in yast2-mail</code></pre></div></li><li class="step"><p>
+     Run the interactive YaST mail configuration:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">yast mail</code></pre></div></li><li class="step"><p>
+     Choose <span class="guimenu">Permanent</span> as <span class="guimenu">Connection type</span>
+     and proceed with <span class="guimenu">Next</span>.
+    </p></li><li class="step"><p>
+     Enter the address of the <span class="guimenu">Outgoing mail server</span>. If
+     necessary, configure <span class="guimenu">Authentication</span>. It is strongly
+     recommended to <span class="guimenu">Enforce TLS encryption </span> to prevent
+     potentially sensitive system data from being sent unencrypted over the
+     network. Proceed with <span class="guimenu">Next</span>.
+    </p></li><li class="step"><p>
+     Enter the email address to <span class="guimenu">Forward root's mail to</span> and
+     <span class="guimenu">Finish</span> the configuration.
+    </p><div id="id-1.9.4.3.8.4.7.2" data-id-title="Do not accept remote SMTP connections" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Do not accept remote SMTP connections</div><p>
+      Do <span class="emphasis"><em>not</em></span> enable <span class="guimenu">Accept remote SMTP
+       connections</span>, otherwise the local machine will act as a mail
+      relay.
+     </p></div></li><li class="step"><p>
+     Send a message to test whether mail forwarding works correctly:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">mail root</code>
+subject: test
+test
+.</pre></div></li><li class="step"><p>
+     Use the <code class="command">mailq</code> command to verify that the test message
+     has been sent. Upon success, the queue should be empty. The message should
+     be received by the dedicated mail address configured previously.
+    </p></li></ol></div></div><p>
+   Depending on the number of managed machines and the number of persons who
+   need to be informed about system events, different email address models can
+   be established:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Collect messages from different systems in an email account that is only
+     accessed by a single person.
+    </p></li><li class="listitem"><p>
+     Collect messages from different systems in a group email account (aliases
+     or mailing list) that can be accessed by all relevant persons.
+    </p></li><li class="listitem"><p>
+     Create separate email accounts for each system.
+    </p></li></ul></div><p>
+   It is crucial that administrators regularly check the related email accounts.
+   To facilitate this effort and identify impoetant events, avoid sending
+   unnecessary information. Configure applications to only send relevant
+   information.
+  </p></section><section class="sect1" id="sec-tuning-syslog-server" data-id-title="Forwarding Log Messages to a Central Syslog Server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.6 </span><span class="title-name">Forwarding Log Messages to a Central Syslog Server</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-server">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   System log data can be forwarded from individual systems to a central
+   syslog server on the network. This allows administrators to get an overview
+   of events on all hosts, and prevents attackers that succeed in taking over a
+   system from manipulating system logs to cover their tracks.
+  </p><p>
+   Setting up a central syslog server consists of two parts. First you configure
+   the central log server, then the clients for remote logging.
+  </p><section class="sect2" id="sec-tuning-syslog-server-setup" data-id-title="Set Up the Central Syslog Server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.6.1 </span><span class="title-name">Set Up the Central Syslog Server</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-server-setup">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure" id="pro-tuning-syslog-server" data-id-title="Configure the Central rsyslog Server"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 3.2: </span><span class="title-name">Configure the Central <code class="systemitem">rsyslog</code> Server </span></span><a title="Permalink" class="permalink" href="cha-tuning-syslog.html#pro-tuning-syslog-server">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+     To set up a central syslog server, perform the following steps:
+    </p><ol class="procedure" type="1"><li class="step"><p>
+      Edit the configuration file
+      <code class="filename">/etc/rsyslog.d/remote.conf</code>.
+     </p></li><li class="step"><p>
+      Uncomment the following lines in the <code class="literal">UDP Syslog Server</code>
+      or <code class="literal">TCP Syslog Server</code> section of the configuration file.
+      Assign an IP address and port for <code class="systemitem">rsyslogd</code>.
+     </p><p>
+      TCP example:
+     </p><div class="verbatim-wrap"><pre class="screen">$ModLoad imtcp.so
+$UDPServerAddress <em class="replaceable">IP</em><span class="callout" id="co-tuning-syslog-server-ip">1</span>
+$InputTCPServerRun <em class="replaceable">PORT</em><span class="callout" id="co-tuning-syslog-server-port">2</span></pre></div><p>
+      UDP example:
+     </p><div class="verbatim-wrap"><pre class="screen">$ModLoad imudp.so
+$UDPServerAddress <em class="replaceable">IP</em><a class="xref" href="cha-tuning-syslog.html#co-tuning-syslog-server-ip"><span class="callout">1</span></a>
+$UDPServerRun <em class="replaceable">PORT</em><a class="xref" href="cha-tuning-syslog.html#co-tuning-syslog-server-port"><span class="callout">2</span></a></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-syslog-server-ip"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        IP address of the interface for <code class="systemitem">rsyslogd</code> to listen on. If no address is
+        given, the daemon listens on all interfaces.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-syslog-server-port"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Port for <code class="systemitem">rsyslogd</code> to listen on.
+        Select a privileged port below 1024. The default is 514.
+       </p></td></tr></table></div><div id="id-1.9.4.3.9.4.2.4.7" data-id-title="TCP versus UDP Protocol" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: TCP versus UDP Protocol</div><p>
+       Traditionally syslog uses the UDP protocol to transmit log messages over
+       the network. This involves less overhead, but lacks reliability. Log
+       messages can get lost under high load.
+       
+       
+      </p><p>
+       The TCP protocol is more reliable and should be preferred over UDP.
+      </p></div><div id="id-1.9.4.3.9.4.2.4.8" data-id-title="UDPServerAddress with TCP" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="literal">UDPServerAddress</code> with TCP</div><p>
+       The <code class="literal">$UDPServerAddress</code> configuration parameter in the
+       TCP example is no error. Despite its name it is used for both TCP and
+       UDP.
+      </p></div></li><li class="step"><p>
+      Save the file.
+     </p></li><li class="step"><p>
+      Restart the <code class="systemitem">rsyslog</code> service:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl restart rsyslog.service</code></pre></div></li><li class="step"><p>Open the respective port in the firewall. For <code class="systemitem">firewalld</code> with TCP on port 514 run:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">firewall-cmd --add-port <em class="replaceable">514/tcp</em> --permanent</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">firewall-cmd --reload</code></pre></div></li></ol></div></div><p>
+    You have now configured the central syslog server. Next, configure clients
+    for remote logging.
+   </p></section><section class="sect2" id="sec-tuning-syslog-server-client" data-id-title="Set Up the Client Machines"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.6.2 </span><span class="title-name">Set Up the Client Machines</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-server-client">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure" id="pro-tuning-syslog-client" data-id-title="Configure a rsyslog Instance for Remote Logging"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 3.3: </span><span class="title-name">Configure a <span class="guimenu">rsyslog</span> Instance for Remote Logging </span></span><a title="Permalink" class="permalink" href="cha-tuning-syslog.html#pro-tuning-syslog-client">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+     To configure a machine for remote logging on a central syslog server,
+     perform the following steps:
+    </p><ol class="procedure" type="1"><li class="step"><p>
+      Edit the configuration file
+      <code class="filename">/etc/rsyslog.d/remote.conf</code>.
+     </p></li><li class="step"><p>
+      Uncomment the appropriate line (TCP or UDP) and replace
+      <code class="literal">remote-host</code> with the address of the central syslog
+      server set up in <a class="xref" href="cha-tuning-syslog.html#sec-tuning-syslog-server-setup" title="3.6.1. Set Up the Central Syslog Server">Section 3.6.1, “Set Up the Central Syslog Server”</a>.
+     </p><p>
+      TCP example:
+     </p><div class="verbatim-wrap"><pre class="screen"># Remote Logging using TCP for reliable delivery
+# remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
+*.* <em class="replaceable">@@remote-host</em></pre></div><p>
+      UDP example:
+     </p><div class="verbatim-wrap"><pre class="screen"># Remote Logging using UDP
+# remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
+*.* <em class="replaceable">@remote-host</em></pre></div></li><li class="step"><p>
+      Save the file.
+     </p></li><li class="step"><p>
+      Restart the <code class="systemitem">rsyslog</code> service:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl restart rsyslog.service</code></pre></div></li><li class="step"><p>
+      Verify the proper function of the syslog forwarding:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">logger "hello world"</code></pre></div><p>
+      The log message <code class="literal">hello world</code> should now appear on the
+      central syslog server.
+     </p></li></ol></div></div><p>
+    You have now configured a system for remote logging to your central syslog
+    server. Repeat this procedure for all systems that should log remotely.
+   </p></section><section class="sect2" id="sec-tuning-syslog-server-more" data-id-title="More Information"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.6.3 </span><span class="title-name">More Information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-server-more">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This basic setup does not include encryption and is only suitable for
+    trusted internal networks. TLS encryption is strongly recommended, but
+    requires a certificate infrastructure.
+   </p><p>
+    In this configuration, all messages from remote hosts will be treated the
+    same on the central syslog server. Consider filtering messages into separate
+    files by remote host or classify them by message category.
+   </p><p>
+    For more information about encryption, filtering, and other advanced topics,
+    consult the <span class="productname">RSyslog</span> documentation at
+    <a class="link" href="https://www.rsyslog.com/doc/master/index.html#manual" target="_blank">https://www.rsyslog.com/doc/master/index.html#manual</a>.
+   </p></section></section><section class="sect1" id="sec-tuning-syslog-logger" data-id-title="Using logger to Make System Log Entries"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.7 </span><span class="title-name">Using <code class="command">logger</code> to Make System Log Entries</span></span> <a title="Permalink" class="permalink" href="cha-tuning-syslog.html#sec-tuning-syslog-logger">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/tuning_logfiles.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">logger</code> is a tool for making entries in the system log.
+   It provides a shell command interface to the rsyslogd system log module.
+   For example, the following line outputs its message in
+   <code class="filename">/var/log/messages</code> or directly in the journal (if no
+   logging facility is running):
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>logger -t Test "This message comes from $USER"</pre></div><p>
+   Depending on the current user and host name, the log contains a line
+   similar to this:
+  </p><div class="verbatim-wrap"><pre class="screen">Sep 28 13:09:31 venus Test: This message comes from tux</pre></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-util.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 2 </span>System Monitoring Utilities</span></a> </div><div><a class="pagination-link next" href="part-tuning-kerneltrace.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part III </span>Kernel Monitoring</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-logs"><span class="title-number">3.1 </span><span class="title-name">System log files in <code class="filename">/var/log/</code></span></a></span></li><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-view"><span class="title-number">3.2 </span><span class="title-name">Viewing and Parsing Log Files</span></a></span></li><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-logrotate"><span class="title-number">3.3 </span><span class="title-name">Managing Log Files with <code class="command">logrotate</code></span></a></span></li><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-logwatch"><span class="title-number">3.4 </span><span class="title-name">Monitoring Log Files with <code class="command">logwatch</code></span></a></span></li><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-forward"><span class="title-number">3.5 </span><span class="title-name">Configuring mail forwarding for <code class="systemitem">root</code></span></a></span></li><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-server"><span class="title-number">3.6 </span><span class="title-name">Forwarding Log Messages to a Central Syslog Server</span></a></span></li><li><span class="sect1"><a href="cha-tuning-syslog.html#sec-tuning-syslog-logger"><span class="title-number">3.7 </span><span class="title-name">Using <code class="command">logger</code> to Make System Log Entries</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

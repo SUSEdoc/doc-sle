@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Virtualization Guide | XenStore: Configuration Database Shared between Domains</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="XenStore: Configuration Database Shared between Domain…"/>
+<meta name="description" content="This section introduces basic information about XenStore, its role in the Xen environment, the directory structure of files used by XenStore, and the…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 27. XenStore: Configuration Database Shared between Domains"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "XenStore: Configuration Database Shared between Domains",
+  
+    "description": "XenStore: Configuration Database Shared between Domains",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-10T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-xen-admin.html" title="Chapter 26. Administrative Tasks"/><link rel="next" href="cha-xen-ha.html" title="Chapter 28. Xen as a High-Availability Virtualization Host"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-xen.html">Managing Virtual Machines with Xen</a><span> / </span><a class="crumb" href="cha-xen-xenstore.html">XenStore: Configuration Database Shared between Domains</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">5 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">6 </span><span class="title-name">Supported Hosts, Guests, and Features</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">7 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">8 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">9 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">10 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">11 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">13 </span><span class="title-name">Configuring Virtual Machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">15 </span><span class="title-name">Managing Virtual Machines with Vagrant</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">16 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">17 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">18 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">19 </span><span class="title-name">QEMU Guest Agent</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">20 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li class="active"><a href="part-virt-xen.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">21 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">23 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">24 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">26 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" you-are-here"><span class="title-number">27 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">28 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">29 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">30 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">31 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">32 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">33 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">34 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">35 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Toolstacks and Libvirt framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-xen-xenstore" data-id-title="XenStore: Configuration Database Shared between Domains"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">27 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></span> <a title="Permalink" class="permalink" href="cha-xen-xenstore.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  This section introduces basic information about XenStore, its role in
+  the Xen environment, the directory structure of files used by
+  XenStore, and the description of XenStore's commands.
+ </p><section class="sect1" id="sec-xenstore-intro" data-id-title="Introduction"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">27.1 </span><span class="title-name">Introduction</span></span> <a title="Permalink" class="permalink" href="cha-xen-xenstore.html#sec-xenstore-intro">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   XenStore is a database of configuration and status information
+   shared between VM Guests and the management tools running in
+   Dom0. VM Guests and the management tools read and write to
+   XenStore to convey configuration information, status updates, and
+   state changes. The XenStore database is managed by Dom0 and
+   supports simple operations such as reading and writing a key.
+   VM Guests and management tools can be notified of any changes in
+   XenStore by watching entries of interest. Note that the
+   <code class="systemitem">xenstored</code> daemon is managed by the
+   <code class="systemitem">xencommons</code> service.
+  </p><p>
+   XenStore is located on Dom0 in a single database file
+   <code class="filename">/var/lib/xenstored/tdb</code> (<code class="literal">tdb</code>
+   represents <span class="emphasis"><em>tree database</em></span>).
+  </p></section><section class="sect1" id="sec-xenstore-fsi" data-id-title="File System Interface"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">27.2 </span><span class="title-name">File System Interface</span></span> <a title="Permalink" class="permalink" href="cha-xen-xenstore.html#sec-xenstore-fsi">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   XenStore database content is represented by a virtual file system
+   similar to <code class="filename">/proc</code> (for more information on
+   <code class="filename">/proc</code>, see <span class="intraxref">Book “System Analysis and Tuning Guide”, Chapter 2 “System Monitoring Utilities”, Section 2.6 “The <code class="filename">/proc</code> File System”</span>). The
+   tree has three main paths: <code class="filename">/vm</code>,
+   <code class="filename">/local/domain</code>, and <code class="filename">/tool</code>.
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <code class="filename">/vm</code> - stores information about the VM Guest
+     configuration.
+    </p></li><li class="listitem"><p>
+     <code class="filename">/local/domain</code> - stores information about
+     VM Guest on the local node.
+    </p></li><li class="listitem"><p>
+     <code class="filename">/tool</code> - stores general information about various
+     tools.
+    </p></li></ul></div><div id="id-1.12.6.8.5.4" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+    Each VM Guest has two different ID numbers. The <span class="emphasis"><em>universal
+    unique identifier</em></span> (UUID) remains the same even if the
+    VM Guest is migrated to another machine. The <span class="emphasis"><em>domain
+    identifier</em></span> (DOMID) is an identification number that
+    represents a particular running instance. It typically changes when the
+    VM Guest is migrated to another machine.
+   </p></div><section class="sect2" id="id-1.12.6.8.5.5" data-id-title="XenStore Commands"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.2.1 </span><span class="title-name">XenStore Commands</span></span> <a title="Permalink" class="permalink" href="cha-xen-xenstore.html#id-1.12.6.8.5.5">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The file system structure of the XenStore database can be operated
+    with the following commands:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.6.8.5.5.3.1"><span class="term"><code class="command">xenstore-ls</code>
+     </span></dt><dd><p>
+       Displays the full dump of the XenStore database.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.2"><span class="term"><code class="command">xenstore-read</code><code class="option">path_to_xenstore_entry</code>
+     </span></dt><dd><p>
+       Displays the value of the specified XenStore entry.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.3"><span class="term"><code class="command">xenstore-exists</code><code class="option">xenstore_path</code>
+     </span></dt><dd><p>
+       Reports whether the specified XenStore path exists.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.4"><span class="term"><code class="command">xenstore-list</code><code class="option">xenstore_path</code>
+     </span></dt><dd><p>
+       Displays all the children entries of the specified XenStore
+       path.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.5"><span class="term"><code class="command">xenstore-write</code><code class="option">path_to_xenstore_entry</code>
+     </span></dt><dd><p>
+       Updates the value of the specified XenStore entry.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.6"><span class="term"><code class="command">xenstore-rm</code><code class="option">xenstore_path</code>
+     </span></dt><dd><p>
+       Removes the specified XenStore entry or directory.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.7"><span class="term"><code class="command">xenstore-chmod</code><code class="option">xenstore_path</code><code class="option">mode</code>
+     </span></dt><dd><p>
+       Updates the read/write permission on the specified XenStore
+       path.
+      </p></dd><dt id="id-1.12.6.8.5.5.3.8"><span class="term"><code class="command">xenstore-control</code>
+     </span></dt><dd><p>
+       Sends a command to the <code class="systemitem">xenstored</code> back-end,
+       such as triggering an integrity check.
+      </p></dd></dl></div></section><section class="sect2" id="xenstore-vm" data-id-title="/vm"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.2.2 </span><span class="title-name"><code class="filename">/vm</code></span></span> <a title="Permalink" class="permalink" href="cha-xen-xenstore.html#xenstore-vm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="filename">/vm</code> path is indexed by the UUID of each
+    VM Guest, and stores configuration information such as the number of
+    virtual CPUs and the amount of allocated memory. There is a
+    <code class="filename">/vm/&lt;uuid&gt;</code> directory for each
+    VM Guest. To list the directory content, use
+    <code class="command">xenstore-list</code>.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xenstore-list /vm
+00000000-0000-0000-0000-000000000000
+9b30841b-43bc-2af9-2ed3-5a649f466d79-1</pre></div><p>
+    The first line of the output belongs to Dom0, and the second one to
+    a running VM Guest. The following command lists all the entries
+    related to the VM Guest:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xenstore-list /vm/9b30841b-43bc-2af9-2ed3-5a649f466d79-1
+image
+rtc
+device
+pool_name
+shadow_memory
+uuid
+on_reboot
+start_time
+on_poweroff
+bootloader_args
+on_crash
+vcpus
+vcpu_avail
+bootloader
+name</pre></div><p>
+    To read a value of an entry, for example the number of virtual CPUs
+    dedicated to the VM Guest, use <code class="command">xenstore-read</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xenstore-read /vm/9b30841b-43bc-2af9-2ed3-5a649f466d79-1/vcpus
+1</pre></div><p>
+    A list of selected <code class="filename">/vm/&lt;uuid&gt;</code> entries
+    follows:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.6.8.5.6.9.1"><span class="term"><code class="literal">uuid</code>
+     </span></dt><dd><p>
+       UUID of the VM Guest. It does not change during the migration
+       process.
+      </p></dd><dt id="id-1.12.6.8.5.6.9.2"><span class="term"><code class="literal">on_reboot</code>
+     </span></dt><dd><p>
+       Specifies whether to destroy or restart the VM Guest in response
+       to a reboot request.
+      </p></dd><dt id="id-1.12.6.8.5.6.9.3"><span class="term"><code class="literal">on_poweroff</code>
+     </span></dt><dd><p>
+       Specifies whether to destroy or restart the VM Guest in response
+       to a halt request.
+      </p></dd><dt id="id-1.12.6.8.5.6.9.4"><span class="term"><code class="literal">on_crash</code>
+     </span></dt><dd><p>
+       Specifies whether to destroy or restart the VM Guest in response
+       to a crash.
+      </p></dd><dt id="id-1.12.6.8.5.6.9.5"><span class="term"><code class="literal">vcpus</code>
+     </span></dt><dd><p>
+       Number of virtual CPUs allocated to the VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.6.9.6"><span class="term"><code class="literal">vcpu_avail</code>
+     </span></dt><dd><p>
+       Bitmask of active virtual CPUs for the VM Guest. The bitmask has
+       several bits equal to the value of <code class="literal">vcpus</code>, with
+       a bit set for each online virtual CPU.
+      </p></dd><dt id="id-1.12.6.8.5.6.9.7"><span class="term"><code class="literal">name</code>
+     </span></dt><dd><p>
+       The name of the VM Guest.
+      </p></dd></dl></div><p>
+    Regular VM Guests (not Dom0) use the
+    <code class="filename">/vm/&lt;uuid&gt;/image</code> path:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xenstore-list /vm/9b30841b-43bc-2af9-2ed3-5a649f466d79-1/image
+ostype
+kernel
+cmdline
+ramdisk
+dmargs
+device-model
+display</pre></div><p>
+    An explanation of the used entries follows:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.6.8.5.6.13.1"><span class="term"><code class="literal">ostype</code>
+     </span></dt><dd><p>
+       The OS type of the VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.6.13.2"><span class="term"><code class="literal">kernel</code>
+     </span></dt><dd><p>
+       The path on Dom0 to the kernel for the VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.6.13.3"><span class="term"><code class="literal">cmdline</code>
+     </span></dt><dd><p>
+       The kernel command line for the VM Guest used when booting.
+      </p></dd><dt id="id-1.12.6.8.5.6.13.4"><span class="term"><code class="literal">ramdisk</code>
+     </span></dt><dd><p>
+       The path on Dom0 to the RAM disk for the VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.6.13.5"><span class="term"><code class="literal">dmargs</code>
+     </span></dt><dd><p>
+       Shows arguments passed to the QEMU process. If you look at the
+       QEMU process with <code class="command">ps</code>, you should see the same
+       arguments as in
+       <code class="filename">/vm/&lt;uuid&gt;/image/dmargs</code>.
+      </p></dd></dl></div></section><section class="sect2" id="id-1.12.6.8.5.7" data-id-title="/local/domain/domid"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.2.3 </span><span class="title-name"><code class="filename">/local/domain/&lt;domid&gt;</code></span></span> <a title="Permalink" class="permalink" href="cha-xen-xenstore.html#id-1.12.6.8.5.7">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/xen_xenstore.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This path is indexed by the running domain (VM Guest) ID, and
+    contains information about the running VM Guest. Remember that the
+    domain ID changes during VM Guest migration. The following entries
+    are available:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.6.8.5.7.3.1"><span class="term"><code class="literal">vm</code>
+     </span></dt><dd><p>
+       The path of the <code class="filename">/vm</code> directory for this
+       VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.7.3.2"><span class="term"><code class="literal">on_reboot, on_poweroff, on_crash, name</code>
+     </span></dt><dd><p>
+       See identical options in <a class="xref" href="cha-xen-xenstore.html#xenstore-vm" title="27.2.2. /vm">Section 27.2.2, “<code class="filename">/vm</code>”</a>
+      </p></dd><dt id="id-1.12.6.8.5.7.3.3"><span class="term"><code class="literal">domid</code>
+     </span></dt><dd><p>
+       Domain identifier for the VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.7.3.4"><span class="term"><code class="literal">cpu</code>
+     </span></dt><dd><p>
+       The current CPU to which the VM Guest is pinned.
+      </p></dd><dt id="id-1.12.6.8.5.7.3.5"><span class="term"><code class="literal">cpu_weight</code>
+     </span></dt><dd><p>
+       The weight assigned to the VM Guest for scheduling purposes.
+       Higher weights use the physical CPUs more often.
+      </p></dd></dl></div><p>
+    Apart from the individual entries described above, there are also
+    several subdirectories under
+    <code class="filename">/local/domain/&lt;domid&gt;</code>, containing specific
+    entries. To see all entries available, refer to
+    <a class="link" href="http://wiki.xen.org/wiki/XenStore_Reference" target="_blank">XenStore
+    Reference</a>.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.6.8.5.7.5.1"><span class="term"><code class="literal">/local/domain/&lt;domid&gt;/memory</code>
+     </span></dt><dd><p>
+       Contains memory information.
+       <code class="literal">/local/domain/&lt;domid&gt;/memory/target</code>
+       contains target memory size for the VM Guest (in kilobytes).
+      </p></dd><dt id="id-1.12.6.8.5.7.5.2"><span class="term"><code class="literal">/local/domain/&lt;domid&gt;/console</code>
+     </span></dt><dd><p>
+       Contains information about a console used by the VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.7.5.3"><span class="term"><code class="literal">/local/domain/&lt;domid&gt;/backend</code>
+     </span></dt><dd><p>
+       Contains information about all back-end devices used by the
+       VM Guest. The path has subdirectories of its own.
+      </p></dd><dt id="id-1.12.6.8.5.7.5.4"><span class="term"><code class="literal">/local/domain/&lt;domid&gt;/device</code>
+     </span></dt><dd><p>
+       Contains information about the front-end devices for the
+       VM Guest.
+      </p></dd><dt id="id-1.12.6.8.5.7.5.5"><span class="term"><code class="literal">/local/domain/&lt;domid&gt;/device-misc</code>
+     </span></dt><dd><p>
+       Contains miscellaneous information about devices.
+      </p></dd><dt id="id-1.12.6.8.5.7.5.6"><span class="term"><code class="literal">/local/domain/&lt;domid&gt;/store</code>
+     </span></dt><dd><p>
+       Contains information about the VM Guest's store.
+      </p></dd></dl></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-xen-admin.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 26 </span>Administrative Tasks</span></a> </div><div><a class="pagination-link next" href="cha-xen-ha.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 28 </span>Xen as a High-Availability Virtualization Host</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-xen-xenstore.html#sec-xenstore-intro"><span class="title-number">27.1 </span><span class="title-name">Introduction</span></a></span></li><li><span class="sect1"><a href="cha-xen-xenstore.html#sec-xenstore-fsi"><span class="title-number">27.2 </span><span class="title-name">File System Interface</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

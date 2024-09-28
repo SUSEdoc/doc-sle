@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | AutoYaST Guide | ERB templates</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="ERB templates | SLES 15 SP6"/>
+<meta name="description" content="ERB templates are for embedding Ruby code within an AutoYaST profile to modify the profile during the installation. With this approach, you can inspe…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="AutoYaST Guide"/>
+<meta name="chapter-title" content="Chapter 7. ERB templates"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="AutoYaST Guide"/>
+<meta property="og:description" content="Automate SLES installation with AutoYaST"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="AutoYaST Guide"/>
+<meta name="twitter:description" content="Automate SLES installation with AutoYaST"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "ERB templates",
+  
+    "description": "ERB templates",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="rulesandclass.html" title="Chapter 6. Rules and classes"/><link rel="next" href="pre-scripts.html" title="Chapter 8. Combining ERB templates and scripts"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">AutoYaST Guide</a><span> / </span><a class="crumb" href="part-dynamic-profiles.html">Managing mass installations with dynamic profiles</a><span> / </span><a class="crumb" href="erb-templates.html">ERB templates</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">AutoYaST Guide</div><ol><li><a href="ay-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-intro-to-autoyast.html" class=" "><span class="title-number">1 </span><span class="title-name">Introduction to AutoYaST</span></a></li><li><a href="part-control.html" class="has-children "><span class="title-number">I </span><span class="title-name">Understanding and creating the AutoYaST control file</span></a><ol><li><a href="cha-autoyast-control-file.html" class=" "><span class="title-number">2 </span><span class="title-name">The AutoYaST control file</span></a></li><li><a href="cha-autoyast-create-control-file.html" class=" "><span class="title-number">3 </span><span class="title-name">Creating an AutoYaST control file</span></a></li></ol></li><li><a href="part-configuration.html" class="has-children "><span class="title-number">II </span><span class="title-name">AutoYaST configuration examples</span></a><ol><li><a href="cha-configuration-installation-options.html" class=" "><span class="title-number">4 </span><span class="title-name">Configuration and installation options</span></a></li></ol></li><li class="active"><a href="part-dynamic-profiles.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Managing mass installations with dynamic profiles</span></a><ol><li><a href="dynamic-profiles.html" class=" "><span class="title-number">5 </span><span class="title-name">Supported approaches to dynamic profiles</span></a></li><li><a href="rulesandclass.html" class=" "><span class="title-number">6 </span><span class="title-name">Rules and classes</span></a></li><li><a href="erb-templates.html" class=" you-are-here"><span class="title-number">7 </span><span class="title-name">ERB templates</span></a></li><li><a href="pre-scripts.html" class=" "><span class="title-number">8 </span><span class="title-name">Combining ERB templates and scripts</span></a></li></ol></li><li><a href="bk05pt04.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Understanding the auto-installation process</span></a><ol><li><a href="Invoking.html" class=" "><span class="title-number">9 </span><span class="title-name">The auto-installation process</span></a></li></ol></li><li><a href="bk05pt05.html" class="has-children "><span class="title-number">V </span><span class="title-name">Uses for AutoYaST on installed systems</span></a><ol><li><a href="InstalledSystem.html" class=" "><span class="title-number">10 </span><span class="title-name">Running AutoYaST in an installed system</span></a></li></ol></li><li><a href="bk05pt06.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Appendixes</span></a><ol><li><a href="handlingrules.html" class=" "><span class="title-number">A </span><span class="title-name">Handling rules</span></a></li><li><a href="app-ay-faq.html" class=" "><span class="title-number">B </span><span class="title-name">AutoYaST FAQ—frequently asked questions</span></a></li><li><a href="appendix-linuxrc.html" class=" "><span class="title-number">C </span><span class="title-name">Advanced <code class="command">linuxrc</code> options</span></a></li><li><a href="appendix-ay-12vs15.html" class=" "><span class="title-number">D </span><span class="title-name">Differences between AutoYaST profiles in SLE 12 and 15</span></a></li><li><a href="bk05pt06ape.html" class=" "><span class="title-number">E </span><span class="title-name">GNU licenses</span></a></li></ol></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="erb-templates" data-id-title="ERB templates"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">7 </span><span class="title-name">ERB templates</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  ERB templates are for embedding Ruby code within an AutoYaST profile to modify
+  the profile during the installation. With this approach, you can inspect
+  the system and adjust the profile by setting values, adding or skipping
+  sections, and so on.
+ </p><p>
+  To activate the ERB processing, the profile must have the extension
+  <code class="filename">.erb</code> (for example,
+  <code class="filename">autoyast.xml.erb</code>). Hence, it is not possible to
+  combine rules/classes and ERB templates.
+ </p><section class="sect1" id="erb" data-id-title="What is ERB?"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.1 </span><span class="title-name">What is ERB?</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   ERB stands for <span class="emphasis"><em>Embedded Ruby</em></span>. ERB
+   uses the power of the Ruby programming language to generate
+   different kinds of content. With ERB, you can include
+   some Ruby code in your profiles to adapt them at runtime, depending on
+   the installation system.
+  </p><p>
+   When using ERB, the Ruby code is enclosed between <code class="literal">&lt;%</code>
+   and <code class="literal">%&gt;</code> signs. Use an equals sign,
+   <code class="literal">=</code>, to include command output in the resulting profile.
+  </p><div class="example" id="simple-erb" data-id-title="Including a file using ERB"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.1: </span><span class="title-name">Including a file using ERB </span></span><a title="Permalink" class="permalink" href="erb-templates.html#simple-erb">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;bootloader&gt;
+  &lt;% require "open-uri" %&gt;
+  &lt;%= URI.open("http://192.168.1.1/profiles/bootloader-common.xml").read %&gt;
+&lt;/bootloader&gt; &lt;!-- this line gets replaced with the content of bootloader-common.xml --&gt;</pre></div></div></div><p>
+   You can use Ruby facilities to run arbitrary commands. If you want
+   to get the output of a command, then enclose it between backticks.
+   If you want to know whether a command was successful or not, run the
+   command with the <code class="literal">system</code> function.
+  </p><div class="example" id="id-1.7.6.4.5.6" data-id-title="Running commands with Ruby"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.2: </span><span class="title-name">Running commands with Ruby </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.5.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;% files = `ls` %&gt; &lt;!-- files contains the output of the command (for instance "file1\nfile2\nfile3") --&gt;
+&lt;% success = system("dmidecode | grep some-model") %&gt; &lt;!-- success contains true or false --&gt;</pre></div></div></div><p>
+   Also, you can use more advanced Ruby code structures such as conditions
+   and loops.
+  </p><div class="example" id="id-1.7.6.4.5.8" data-id-title="Using Ruby structures"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.3: </span><span class="title-name">Using Ruby structures </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.5.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;% ip_forward = File.read("/proc/sys/net/ipv4/ip_forward").strip %&gt;
+&lt;% if ip_forward == "1" %&gt;
+  &lt;!-- something --&gt;
+&lt;% end %&gt;
+
+&lt;% files = `ls /tmp/config/*.xml` %&gt;
+&lt;% files.split.each do |file| %&gt;
+  &lt;%= file.read %&gt;
+&lt;% end %&gt;</pre></div></div></div><p>
+   AutoYaST offers a small set of <span class="emphasis"><em>helper functions</em></span> to retrieve
+   information from the underlying system, like <code class="literal">disks</code> or
+   <code class="literal">network_cards</code>. You can check the list of helpers and
+   their values in the <a class="xref" href="erb-templates.html#erb-helpers" title="7.2. Template helpers">Section 7.2, “Template helpers”</a> section.
+  </p></section><section class="sect1" id="erb-helpers" data-id-title="Template helpers"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.2 </span><span class="title-name">Template helpers</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-helpers">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Template helpers are sets of Ruby methods that can be used in the
+   profiles to retrieve information about the installation system.
+  </p><section class="sect2" id="erb-boot-efi-helper" data-id-title="boot_efi?"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.1 </span><span class="title-name"><code class="literal">boot_efi?</code></span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-boot-efi-helper">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="literal">boot_efi?</code> is a boolean helper that returns
+    whether the system is booted using EFI. In the example below, the
+    profile configures the bootloader according to the current boot mode.
+   </p><div class="example" id="id-1.7.6.4.6.3.3" data-id-title="Configuring the boot loader"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.4: </span><span class="title-name">Configuring the boot loader </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.6.3.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;% if env.boot_efi? %&gt;
+  &lt;loader_type&gt;grub2-efi&lt;/loader_type&gt;
+&lt;% else %&gt;
+  &lt;loader_type&gt;grub2&lt;/loader_type&gt;
+&lt;% end %&gt;</pre></div></div></div></section><section class="sect2" id="erb-disks-helper" data-id-title="disks"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.2 </span><span class="title-name"><code class="literal">disks</code></span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-disks-helper">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="literal">disks</code> helper returns a list of the detected disks.
+    Each element of the list contains some basic information like the device
+    name or the size.
+   </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Key
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Type
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Value
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:device</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Device kernel name (for example, <code class="literal">sda</code>).
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:model</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Disk model
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:serial</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Serial number
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:size</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Integer
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Disk size (is a count of disk sectors)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:udev_names</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Array&lt;String&gt;
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         List of disk udev names. You can use any of them to refer to the
+         device.
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="literal">:vendor</code>
+        </p>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td>
+        <p>
+         Disk vendor's name
+        </p>
+       </td></tr></tbody></table></div><p>
+    The profile in the example below installs the system on the largest disk.
+    It sorts the list of existing disks by size and takes the last one. Then it
+    uses the <code class="literal">:device</code> key as value for the
+    <code class="literal">device</code> element.
+   </p><div class="example" id="id-1.7.6.4.6.4.5" data-id-title="Using the largest disk"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.5: </span><span class="title-name">Using the largest disk </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.6.4.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;partitioning t="list"&gt;
+  &lt;drive&gt;
+    &lt;% disk = disks.sort_by { |d| d[:size] }.last %&gt; &lt;!-- find the largest disk --&gt;
+    &lt;device&gt;&lt;%= disk[:device] %&gt;&lt;/device&gt; &lt;!-- print the disk device name --&gt;
+    &lt;initialize t="boolean"&gt;true&lt;/initialize&gt;
+    &lt;use&gt;all&lt;/use&gt;
+  &lt;/drive&gt;
+&lt;/partitioning&gt;</pre></div></div></div></section><section class="sect2" id="erb-network-cards-helper" data-id-title="network_cards"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.3 </span><span class="title-name"><code class="literal">network_cards</code></span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-network-cards-helper">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="literal">network_cards</code> helper returns a list of network
+    cards, including their names, status information (for example, if they are
+    connected or not).
+   </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Key
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Type
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Value
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:device</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Device name (for example, <code class="literal">eth0</code> or
+         <code class="literal">enp3s0</code>)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:mac</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         MAC address
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:active</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Boolean
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Whether the device is active or not
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:link</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Boolean
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Whether the device is connected or not
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="literal">:vendor</code>
+        </p>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td>
+        <p>
+         Disk vendor's name
+        </p>
+       </td></tr></tbody></table></div><p>
+    The following example finds the first network card that is connected to the
+    network and configures it to use DHCP.
+   </p><div class="example" id="id-1.7.6.4.6.5.5" data-id-title="Configure the connected network cards"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.6: </span><span class="title-name">Configure the connected network cards </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.6.5.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;interfaces t="list"&gt;
+  &lt;% with_link = network_cards.sort_by { |n| n[:name] }.find { |n| n[:link] } %&gt;
+  &lt;% if with_link %&gt;
+    &lt;interface&gt;
+      &lt;device&gt;&lt;%= with_link[:device] %&gt;&lt;/device&gt;
+      &lt;startmode&gt;auto&lt;/startmode&gt;
+      &lt;bootproto&gt;dhcp&lt;/bootproto&gt;
+      &lt;/interface&gt;
+  &lt;% end %&gt;
+&lt;/interfaces&gt;</pre></div></div></div></section><section class="sect2" id="erb-os-release-helper" data-id-title="os_release"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.4 </span><span class="title-name"><code class="literal">os_release</code></span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-os-release-helper">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="literal">os_release</code> helper returns the operating system
+    information, which is included in the <code class="filename">/etc/os-release</code>
+    file.
+   </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Key
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Type
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Value
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:id</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Distribution ID (<span class="phrase">for example,
+         <code class="literal">sles</code>,
+         <code class="literal">opensuse-tumbleweed</code></span>)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">:name</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Distribution name (<span class="phrase">for example,
+         <code class="literal">SLES</code> or <code class="literal">openSUSE
+         Tumbleweed</code></span>)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="literal">:version</code>
+        </p>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         String
+        </p>
+       </td><td>
+        <p>
+         Distribution version (<span class="phrase">for example,
+         <code class="literal">15.2</code></span>)
+        </p>
+       </td></tr></tbody></table></div><p>
+    You might use this information to decide which product to install, using
+    pretty much the same profile for all of them (SLE or openSUSE
+    distributions).
+   </p><div class="example" id="id-1.7.6.4.6.6.5" data-id-title="Reusing the same profile for different distributions"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.7: </span><span class="title-name">Reusing the same profile for different distributions </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.6.6.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;products t="list"&gt;
+  &lt;% if os_release[:id] == 'sle' %&gt;
+  &lt;product&gt;SLES&lt;/product&gt;
+  &lt;% else %&gt;
+  &lt;product&gt;openSUSE&lt;/product&gt;
+  &lt;% end %&gt;
+&lt;/products&gt;</pre></div></div></div></section><section class="sect2" id="erb-hardware-helper" data-id-title="hardware"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.5 </span><span class="title-name"><code class="literal">hardware</code></span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-hardware-helper">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="literal">hardware</code> helper provides additional hardware information.
+    It returns all the information from the <code class="literal">hwinfo</code> command. You can
+    use this helper as a fallback for those cases in which the information available
+    through the described helpers is not enough. In the next example, the
+    <code class="literal">hardware</code> helper is used to filter USB devices. Check
+    <a class="xref" href="erb-templates.html#erb-running-helpers" title="7.3. Running ERB helpers">Section 7.3, “Running ERB helpers”</a> to learn how to inspect all the information
+    provided by the <code class="literal">hardware</code> helper.
+   </p><div class="example" id="id-1.7.6.4.6.7.3" data-id-title="Filtering USB devices"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.8: </span><span class="title-name">Filtering USB devices </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.6.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;% usb_disks = hardware["disk"].select { |d| d["driver"] != "usb-storage" } %&gt;</pre></div></div></div></section></section><section class="sect1" id="erb-running-helpers" data-id-title="Running ERB helpers"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.3 </span><span class="title-name">Running ERB helpers</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-running-helpers">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   You can use the Ruby console to run AutoYaST ERB
+   helpers and find out what they offer. All ERB helpers are
+   accessed through an instance of the
+   <code class="literal">Y2Autoinstallation::Y2ERB::TemplateEnvironment</code> class. Start the
+   Ruby interactive interpreter by running, as root:
+   <code class="literal">irb -ryast -rautoinstall/y2erb</code>.
+  </p><div class="example" id="id-1.7.6.4.7.3" data-id-title="Running helpers"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.9: </span><span class="title-name">Running helpers </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">irb &gt; env = Y2Autoinstallation::Y2ERB::TemplateEnvironment.new  # the env variable gives access to the helpers
+
+irb &gt; env.disks
+=&gt;
+[{:vendor=&gt;"WDC", :device=&gt;"sda", ...},
+ {:vendor=&gt;"TOSHIBA", :device=&gt;"sdb", ...},
+...]
+
+irb &gt; env.hardware.keys
+=&gt;
+["architecture",
+ "bios",
+ "bios_video",
+ ...]
+
+irb &gt; env.hardware["architecture"]
+=&gt;
+"x86_64"</pre></div></div></div></section><section class="sect1" id="erb-rendering-profile" data-id-title="Rendering ERB profiles"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.4 </span><span class="title-name">Rendering ERB profiles</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-rendering-profile">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The AutoYaST command line provides a <code class="literal">check-profile</code> command that can be used
+   to generate a profile from an ERB file. This command asks AutoYaST to parse, run the ERB code, and
+   generate the resulting profile. You can inspect the rendered profile to check that everything
+   worked as expected. See the command help for all the options it supports:
+   <code class="literal">autoyast check-profile --help</code>.
+   In the following example, <code class="literal">check-profile</code> asks AutoYaST to download and parse
+   the profile, interpret the ERB code and run the pre-scripts. The result
+   will be dumped to the <code class="literal">result.xml</code> file.
+  </p><div class="example" id="id-1.7.6.4.8.3" data-id-title="Rendering profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.10: </span><span class="title-name">Rendering profile </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.8.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"> <code class="prompt user">&gt; </code><code class="command">sudo</code> yast2 autoyast check-profile filename=<em class="replaceable">http://192.168.1.100</em>/autoinst.erb output=result.xml run-scripts=true run-erb=true</pre></div></div></div><div id="id-1.7.6.4.8.4" data-id-title="check-profile permissions" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: <code class="literal">check-profile</code> permissions</div><p>
+    In most cases, <code class="literal">check-profile</code> requires root permissions,
+    so be careful when running pre-installation scripts and ERB profiles as root.
+    Use only profiles that you trust.
+   </p></div></section><section class="sect1" id="erb-debugging-erb" data-id-title="Debugging ERB profiles"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.5 </span><span class="title-name">Debugging ERB profiles</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-debugging-erb">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   For those cases in which you want to stop the ERB evaluation
+   and check what is happening, YaST offers integration with the
+   <code class="literal">byebug</code>
+   debugger. Install the <code class="literal">rubygem(byebug)</code> package and set
+   the <code class="literal">Y2DEBUGGER</code> environment variable to 1.
+  </p><div class="example" id="id-1.7.6.4.9.3" data-id-title="Preparing the debug environment"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.11: </span><span class="title-name">Preparing the debug environment </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.9.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper --non-interactive in "rubygem(byebug)"
+<code class="prompt user">&gt; </code><code class="command">sudo</code> Y2DEBUGGER=1 yast2 autoyast check-profile ...</pre></div></div></div><p>
+   Adding breakpoints is as easy as adding &lt;% byebug %&gt; where you want to stop.
+   For more information about <code class="literal">byebug</code>, see
+   <a class="link" href="https://github.com/deivid-rodriguez/byebug" target="_blank">https://github.com/deivid-rodriguez/byebug</a>.
+  </p><div class="example" id="id-1.7.6.4.9.5" data-id-title="Adding a breakpoint"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.12: </span><span class="title-name">Adding a breakpoint </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.9.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;% byebug %&gt;
+&lt;% if system("dmidecode | grep some-model") %&gt;
+  &lt;!-- do something --&gt;
+%&lt;% end %&gt;</pre></div></div></div></section><section class="sect1" id="erb-comparison" data-id-title="ERB compared to rules and classes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.6 </span><span class="title-name">ERB compared to rules and classes</span></span> <a title="Permalink" class="permalink" href="erb-templates.html#erb-comparison">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Although both ERB and rules/classes enable generating profiles
+   dynamically, in general ERB profiles are easier to read and
+   understand. One important difference is that rules and classes can
+   merge profiles,
+   and ERB cannot. See more about merging profiles in
+   <a class="xref" href="rulesandclass.html" title="Chapter 6. Rules and classes">Chapter 6, <em>Rules and classes</em></a>. On the other hand, ERB brings all
+   the power of a high-level language, Ruby. Let's see an example
+   using both. In the following example, we want to place <code class="literal">/home</code>
+   directory in <code class="literal">/dev/sdb</code> if it exists.
+  </p><div class="example" id="id-1.7.6.4.10.3" data-id-title="Rules and classes"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.13: </span><span class="title-name">Rules and classes </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.10.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;rule&gt;
+  &lt;custom1&gt;
+    &lt;script&gt;
+if blkid | grep /dev/sdb &gt; /dev/null; then
+echo -n "yes"
+else
+echo -n "no"
+fi;
+    &lt;/script&gt;
+    &lt;match&gt;yes&lt;/match&gt;
+    &lt;match_type&gt;exact&lt;/match_type&gt;
+  &lt;/custom1&gt;
+  &lt;result&gt;
+    &lt;profile&gt;classes/sdb_home.xml&lt;/profile&gt;
+    &lt;dont_merge config:type="list"&gt;
+      &lt;element&gt;partition&lt;/element&gt;
+    &lt;/dont_merge&gt;
+  &lt;/result&gt;
+&lt;/rule&gt;</pre></div></div></div><div class="example" id="id-1.7.6.4.10.4" data-id-title="ERB"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 7.14: </span><span class="title-name">ERB </span></span><a title="Permalink" class="permalink" href="erb-templates.html#id-1.7.6.4.10.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ay_erb_templates.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;% home_in_sdb = disks.map { |d| d[:device] }.include?("sdb") %&gt;
+
+&lt;partitioning config:type="list"&gt;
+  &lt;drive&gt;
+    ...
+  &lt;/drive&gt;
+  &lt;% if home_in_sdb %&gt;
+  &lt;drive&gt;
+    &lt;device&gt;/dev/sdb&lt;/device&gt;
+    &lt;disklabel&gt;none&lt;/disklabel&gt;
+    &lt;partitions t="list"&gt;
+      &lt;partition&gt;
+        &lt;format t="boolean"&gt;true&lt;/format&gt;
+        &lt;filesystem t="symbol"&gt;xfs&lt;/filesystem&gt;
+        &lt;mount&gt;/home&lt;/mount&gt;
+      &lt;/partition&gt;
+    &lt;/partitions&gt;
+  &lt;/drive&gt;
+  &lt;% end %&gt;
+&lt;/partitioning&gt;</pre></div></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="rulesandclass.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>Rules and classes</span></a> </div><div><a class="pagination-link next" href="pre-scripts.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 8 </span>Combining ERB templates and scripts</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="erb-templates.html#erb"><span class="title-number">7.1 </span><span class="title-name">What is ERB?</span></a></span></li><li><span class="sect1"><a href="erb-templates.html#erb-helpers"><span class="title-number">7.2 </span><span class="title-name">Template helpers</span></a></span></li><li><span class="sect1"><a href="erb-templates.html#erb-running-helpers"><span class="title-number">7.3 </span><span class="title-name">Running ERB helpers</span></a></span></li><li><span class="sect1"><a href="erb-templates.html#erb-rendering-profile"><span class="title-number">7.4 </span><span class="title-name">Rendering ERB profiles</span></a></span></li><li><span class="sect1"><a href="erb-templates.html#erb-debugging-erb"><span class="title-number">7.5 </span><span class="title-name">Debugging ERB profiles</span></a></span></li><li><span class="sect1"><a href="erb-templates.html#erb-comparison"><span class="title-number">7.6 </span><span class="title-name">ERB compared to rules and classes</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

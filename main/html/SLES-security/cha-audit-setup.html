@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Security and Hardening Guide | Setting up the Linux audit framework</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Setting up the Linux audit framework | SLES 15 SP6"/>
+<meta name="description" content="This chapter shows how to set up a simple audit scenario. Every step involved in configuring and enabling audit is explained in detail. After you hav…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 45. Setting up the Linux audit framework"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Setting up the Linux audit framework",
+  
+    "description": "Setting up the Linux audit framework",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-audit-comp.html" title="Chapter 44. Understanding Linux audit"/><link rel="next" href="cha-audit-scenarios.html" title="Chapter 46. Introducing an audit rule set"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-audit.html">The Linux Audit Framework</a><span> / </span><a class="crumb" href="cha-audit-setup.html">Setting up the Linux audit framework</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li><li><a href="cha-security-pci-dss.html" class=" "><span class="title-number">29 </span><span class="title-name">Payment Card Industry Data Security Standard (PCI DSS)</span></a></li><li><a href="cha-security-stig.html" class=" "><span class="title-number">30 </span><span class="title-name">Hardening SUSE Linux Enterprise with STIG</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">31 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">32 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">33 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">34 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">35 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">36 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">37 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">38 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">39 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">40 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">42 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-selinux.html" class="has-children "><span class="title-number">VI </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">43 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li class="active"><a href="part-audit.html" class="has-children you-are-here"><span class="title-number">VII </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">44 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" you-are-here"><span class="title-number">45 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">46 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">47 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-audit-setup" data-id-title="Setting up the Linux audit framework"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">45 </span><span class="title-name">Setting up the Linux audit framework</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  This chapter shows how to set up a simple audit scenario. Every step
+  involved in configuring and enabling audit is explained in detail. After
+  you have learned to set up audit, consider a real-world example scenario
+  in <a class="xref" href="cha-audit-scenarios.html" title="Chapter 46. Introducing an audit rule set">Chapter 46, <em>Introducing an audit rule set</em></a>.
+ </p><p>
+  To set up audit on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, you need to complete the following
+  steps:
+ </p><div class="procedure" id="id-1.8.10.4.5" data-id-title="Setting up the Linux audit framework"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 45.1: </span><span class="title-name">Setting up the Linux audit framework </span></span><a title="Permalink" class="permalink" href="cha-audit-setup.html#id-1.8.10.4.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+    Install the <code class="systemitem">audit</code>
+    package. To use the log visualization as described in
+    <a class="xref" href="cha-audit-setup.html#sec-audit-viz" title="45.6. Configuring log visualization">Section 45.6, “Configuring log visualization”</a>,
+    install <code class="systemitem">gnuplot</code> and
+    <code class="systemitem">graphviz</code>.
+   </p></li><li class="step"><p>
+    Determine the components to audit. Refer to
+    <a class="xref" href="cha-audit-setup.html#sec-audit-choose" title="45.1. Determining the components to audit">Section 45.1, “Determining the components to audit”</a> for details.
+   </p></li><li class="step"><p>
+    Check or modify the basic audit daemon configuration. Refer to
+    <a class="xref" href="cha-audit-setup.html#sec-audit-config" title="45.2. Configuring the audit daemon">Section 45.2, “Configuring the audit daemon”</a> for details.
+   </p></li><li class="step"><p>
+    Enable auditing for system calls. Refer to
+    <a class="xref" href="cha-audit-setup.html#sec-audit-syscall" title="45.3. Enabling audit for system calls">Section 45.3, “Enabling audit for system calls”</a> for details.
+   </p></li><li class="step"><p>
+    Compose audit rules to suit your scenario. Refer to
+    <a class="xref" href="cha-audit-setup.html#sec-audit-aurules" title="45.4. Setting up audit rules">Section 45.4, “Setting up audit rules”</a> for details.
+   </p></li><li class="step"><p>
+    Generate logs and configure tailor-made reports. Refer to
+    <a class="xref" href="cha-audit-setup.html#sec-audit-aurepo" title="45.5. Configuring audit reports">Section 45.5, “Configuring audit reports”</a> for details.
+   </p></li><li class="step"><p>
+    Configure optional log visualization. Refer to
+    <a class="xref" href="cha-audit-setup.html#sec-audit-viz" title="45.6. Configuring log visualization">Section 45.6, “Configuring log visualization”</a> for details.
+   </p></li></ol></div></div><div id="id-1.8.10.4.6" data-id-title="Controlling the audit daemon" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Controlling the audit daemon</div><p>
+   Before configuring any of the components of the audit system, make sure
+   that the audit daemon is not running by entering <code class="command">systemctl
+   status auditd</code> as <code class="systemitem">root</code>. On a default
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> system, audit is started on boot, so you need to turn it
+   off by entering <code class="command">systemctl stop auditd</code>. Start
+   the daemon after configuring it with <code class="command">systemctl start
+   auditd</code>.
+  </p></div><section class="sect1" id="sec-audit-choose" data-id-title="Determining the components to audit"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">45.1 </span><span class="title-name">Determining the components to audit</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#sec-audit-choose">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Before starting to create your own audit configuration, determine to
+   which degree you want to use it. Check the following general rules to
+   determine which use case best applies to you and your requirements:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     If you require a full security audit for CAPP/EAL certification, enable
+     full audit for system calls and configure watches on various
+     configuration files and directories, similar to the rule set featured
+     in <a class="xref" href="cha-audit-scenarios.html" title="Chapter 46. Introducing an audit rule set">Chapter 46, <em>Introducing an audit rule set</em></a>.
+    </p></li><li class="listitem"><p>
+     If you need to trace a process based on the audit rules, use
+     <code class="command">autrace</code>.
+    </p></li><li class="listitem"><p>
+     If you require file and directory watches to track access to important
+     or security-sensitive data, create a rule set matching these
+     requirements. Enable audit as described in
+     <a class="xref" href="cha-audit-setup.html#sec-audit-syscall" title="45.3. Enabling audit for system calls">Section 45.3, “Enabling audit for system calls”</a> and proceed to
+     <a class="xref" href="cha-audit-setup.html#sec-audit-aurules" title="45.4. Setting up audit rules">Section 45.4, “Setting up audit rules”</a>.
+    </p></li></ul></div></section><section class="sect1" id="sec-audit-config" data-id-title="Configuring the audit daemon"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">45.2 </span><span class="title-name">Configuring the audit daemon</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#sec-audit-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The basic setup of the audit daemon is done by editing
+   <code class="filename">/etc/audit/auditd.conf</code>. You may also use YaST
+   to configure the basic settings by calling <span class="guimenu">YaST</span> › <span class="guimenu">Security and Users</span> › <span class="guimenu">Linux Audit Framework (LAF)</span>. Use the
+   tabs <span class="guimenu">Log File</span> and <span class="guimenu">Disk Space</span> for
+   configuration.
+  </p><div class="verbatim-wrap"><pre class="screen">log_file = /var/log/audit/audit.log
+log_format = RAW
+log_group = root
+priority_boost = 4
+flush = INCREMENTAL
+freq = 20
+num_logs = 5
+disp_qos = lossy
+dispatcher = /sbin/audispd
+name_format = NONE
+##name = mydomain
+max_log_file = 6
+max_log_file_action = ROTATE
+space_left = 75
+space_left_action = SYSLOG
+action_mail_acct = root
+admin_space_left = 50
+admin_space_left_action = SUSPEND
+disk_full_action = SUSPEND
+disk_error_action = SUSPEND
+##tcp_listen_port =
+tcp_listen_queue = 5
+tcp_max_per_addr = 1
+##tcp_client_ports = 1024-65535
+tcp_client_max_idle = 0
+cp_client_max_idle = 0</pre></div><p>
+   The default settings work reasonably well for many setups. Some values,
+   such as <code class="literal">num_logs</code>, <code class="literal">max_log_file</code>,
+   <code class="literal">space_left</code>, and <code class="literal">admin_space_left</code>
+   depend on the size of your deployment. If disk space is limited, you
+   should reduce the number of log files to keep if they are rotated
+   and you should get an earlier warning if disk space is running out.
+   For a CAPP-compliant setup, adjust the values for
+   <code class="literal">log_file</code>, <code class="literal">flush</code>,
+   <code class="literal">max_log_file</code>, <code class="literal">max_log_file_action</code>,
+   <code class="literal">space_left</code>, <code class="literal">space_left_action</code>,
+   <code class="literal">admin_space_left</code>,
+   <code class="literal">admin_space_left_action</code>,
+   <code class="literal">disk_full_action</code>, and
+   <code class="literal">disk_error_action</code>, as described in
+   <a class="xref" href="cha-audit-comp.html#sec-audit-auditd" title="44.2. Configuring the audit daemon">Section 44.2, “Configuring the audit daemon”</a>. An example CAPP-compliant
+   configuration looks like this:
+  </p><div class="verbatim-wrap"><pre class="screen">log_file = <em class="replaceable">PATH_TO_SEPARATE_PARTITION</em>/audit.log
+log_format = RAW
+priority_boost = 4
+flush = SYNC                       ### or DATA
+freq = 20
+num_logs = 4
+dispatcher = /sbin/audispd
+disp_qos = lossy
+max_log_file = 5
+max_log_file_action = KEEP_LOGS
+space_left = 75
+space_left_action = EMAIL
+action_mail_acct = root
+admin_space_left = 50
+admin_space_left_action = SINGLE   ### or HALT
+disk_full_action = SUSPEND         ### or HALT
+disk_error_action = SUSPEND        ### or HALT</pre></div><p>
+   The <code class="literal">###</code> precedes comments where you can choose from
+   several options. Do not add the comments to your actual configuration
+   files.
+  </p><div id="id-1.8.10.4.8.7" data-id-title="More information" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: More information</div><p>
+    Refer to <a class="xref" href="cha-audit-comp.html#sec-audit-auditd" title="44.2. Configuring the audit daemon">Section 44.2, “Configuring the audit daemon”</a> for detailed background
+    information about the <code class="filename">auditd.conf</code> configuration
+    parameters.
+   </p></div></section><section class="sect1" id="sec-audit-syscall" data-id-title="Enabling audit for system calls"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">45.3 </span><span class="title-name">Enabling audit for system calls</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#sec-audit-syscall">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If the audit framework is not installed, install the
+   <code class="systemitem">audit</code> package. A standard <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+   system does not have auditd running by default. Enable it with:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl enable auditd</pre></div><p>
+   There are different levels of auditing activity available:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.10.4.9.5.1"><span class="term">Basic logging</span></dt><dd><p>
+      Out of the box (without any further configuration) auditd logs only
+      events concerning its own configuration changes to
+      <code class="filename">/var/log/audit/audit.log</code>. No events (file access,
+      system call, etc.) are generated by the kernel audit component until
+      requested by <code class="command">auditctl</code>. However, other kernel
+      components and modules may log audit events outside of the control of
+      <code class="command">auditctl</code> and these appear in the audit log. By
+      default, the only module that generates audit events is <span class="phrase">AppArmor</span>.
+     </p></dd><dt id="id-1.8.10.4.9.5.2"><span class="term">Advanced logging with system call auditing</span></dt><dd><p>
+      To audit system calls and get meaningful file watches, you need to
+      enable audit contexts for system calls.
+     </p></dd></dl></div><p>
+   As you need system call auditing capabilities even when you are
+   configuring plain file or directory watches, you need to enable audit
+   contexts for system calls. To enable audit contexts for the duration of
+   the current session, execute <code class="command">auditctl -e 1</code> as
+   <code class="systemitem">root</code>. To disable this feature, execute <code class="command">auditctl -e
+   0</code> as <code class="systemitem">root</code>.
+  </p><p>
+   The audit contexts are enabled by default. To turn this feature off
+   temporarily, use <code class="command">auditctl -e 0</code>.
+  </p></section><section class="sect1" id="sec-audit-aurules" data-id-title="Setting up audit rules"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">45.4 </span><span class="title-name">Setting up audit rules</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#sec-audit-aurules">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Using audit rules, determine which aspects of the system should be
+   analyzed by audit. Normally this includes important databases and
+   security-relevant configuration files. You may also analyze various
+   system calls in detail if a broad analysis of your system is required. A
+   detailed example configuration that includes most of the rules that
+   are needed in a CAPP compliant environment is available in
+   <a class="xref" href="cha-audit-scenarios.html" title="Chapter 46. Introducing an audit rule set">Chapter 46, <em>Introducing an audit rule set</em></a>.
+  </p><p>
+   Audit rules can be passed to the audit daemon on the
+   <code class="command">auditctl</code> command line and by composing a rule
+   set in <code class="filename">/etc/audit/audit.rules</code> which is processed
+   whenever the audit daemon is started. To customize
+   <code class="filename">/etc/audit/audit.rules</code> either edit it directly, or
+   use YaST: <span class="guimenu">Security and Users</span> › <span class="guimenu">Linux Audit Framework (LAF)</span> › <span class="guimenu">Rules for
+   'auditctl'</span>. Rules passed on the command line are
+   not persistent and need to be re-entered when the audit daemon is
+   restarted.
+  </p><p>
+   A simple rule set for basic auditing on a few important files and
+   directories could look like this:
+  </p><div class="verbatim-wrap"><pre class="screen"># basic audit system parameters
+-D
+-b 8192
+-f 1
+-e 1
+
+# some file and directory watches with keys
+-w /var/log/audit/ -k LOG_audit
+-w /etc/audit/auditd.conf -k CFG_audit_conf -p rxwa
+-w /etc/audit/audit.rules -k CFG_audit_rules -p rxwa
+
+-w /etc/passwd -k CFG_passwd -p rwxa
+-w /etc/sysconfig/ -k CFG_sysconfig
+
+# an example system call rule
+-a entry,always -S umask
+
+### add your own rules</pre></div><p>
+   When configuring the basic audit system parameters (such as the backlog
+   parameter <code class="literal">-b</code>) test these settings with your intended
+   audit rule set to determine whether the backlog size is appropriate for
+   the level of logging activity caused by your audit rule set. If your
+   chosen backlog size is too small, your system might not be able to handle
+   the audit load and consult the failure flag (<code class="literal">-f</code>) when
+   the backlog limit is exceeded.
+  </p><div id="id-1.8.10.4.10.7" data-id-title="Choosing the failure flag" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Choosing the failure flag</div><p>
+    When choosing the failure flag, <code class="option">-f 2</code> tells
+    your system to perform an immediate shutdown without flushing any
+    pending data to disk when the limits of your audit system are exceeded.
+    Because this shutdown is not a clean shutdown, restrict the use of
+    <code class="option">-f 2</code> to the most security-conscious environments
+    and use <code class="option">-f 1</code> (system continues to run, issues a warning
+    and audit stops) for any other setup to avoid loss of data or data
+    corruption.
+   </p></div><p>
+   Directory watches produce less verbose output than separate file watches
+   for the files under these directories. To get detailed logging for your
+   system configuration in <code class="filename">/etc/sysconfig</code>, for example,
+   add watches for each file. Audit does not support globbing,
+   which means you cannot create a rule that says <code class="literal">-w
+   /etc/*</code> and watches all files and directories below
+   <code class="filename">/etc</code>.
+  </p><p>
+   For better identification in the log file, a key has been added to each
+   of the file and directory watches. Using the key, it is easier to comb
+   the logs for events related to a certain rule. When creating keys,
+   distinguish between mere log file watches and configuration file watches
+   by using an appropriate prefix with the key, in this case
+   <code class="literal">LOG</code> for a log file watch and <code class="literal">CFG</code>
+   for a configuration file watch. Using the file name as part of the key
+   also makes it easier for you to identify events of this type in the log
+   file.
+  </p><p>
+   Another thing to keep in mind when creating file and directory watches is
+   that audit cannot deal with files that do not exist when the rules are
+   created. Any file that is added to your system while audit is already
+   running is not watched unless you extend the rule set to watch this new
+   file.
+  </p><p>
+   For more information about creating custom rules, refer to
+   <a class="xref" href="cha-audit-comp.html#sec-audit-rules" title="44.4. Passing parameters to the audit system">Section 44.4, “Passing parameters to the audit system”</a>.
+  </p><div id="id-1.8.10.4.10.13" data-id-title="Changing audit rules" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Changing audit rules</div><p>
+    After you change audit rules, always restart the audit daemon with
+    <code class="command">systemctl restart auditd</code> to reread the
+    changed rules.
+   </p></div></section><section class="sect1" id="sec-audit-aurepo" data-id-title="Configuring audit reports"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">45.5 </span><span class="title-name">Configuring audit reports</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#sec-audit-aurepo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To avoid having to dig through the raw audit logs to get an impression of
+   what your system is currently doing, run custom audit reports at certain
+   intervals. Custom audit reports enable you to focus on areas of interest
+   and get meaningful statistics on the nature and frequency of the events
+   you are monitoring. To analyze individual events in detail, use the
+   ausearch tool.
+  </p><p>
+   Before setting up audit reporting, consider the following:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     What types of events do you want to monitor by generating regular
+     reports? Select the appropriate aureport command lines as described in
+     <a class="xref" href="cha-audit-comp.html#sec-audit-aureport-gen" title="44.5.2. Generating custom audit reports">Section 44.5.2, “Generating custom audit reports”</a>.
+    </p></li><li class="listitem"><p>
+     What do you want to do with the audit reports? Decide whether to create
+     graphical charts from the data accumulated or whether it should be
+     transferred into any sort of spreadsheet or database. Set up the
+     aureport command line and further processing similar to the examples
+     shown in <a class="xref" href="cha-audit-setup.html#sec-audit-viz" title="45.6. Configuring log visualization">Section 45.6, “Configuring log visualization”</a> to visualize your
+     reports.
+    </p></li><li class="listitem"><p>
+     When and at which intervals should the reports run? Set up appropriate
+     automated reporting using cron.
+    </p></li></ul></div><p>
+   For this example, assume that you are interested in finding out about any
+   attempts to access your audit, PAM and system configuration. Proceed as
+   follows to find out about file events on your system:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Generate a full summary report of all events and check for any
+     anomalies in the summary report, for example, have a look at the
+     <span class="quote">“<span class="quote">failed syscalls</span>”</span> record, because these might have failed
+     because of insufficient permissions to access a file or a file not
+     being there:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport</code>
+
+Summary Report
+======================
+Range of time in logs: 03/02/09 14:13:38.225 - 17/02/09 16:30:10.352
+Selected time for report: 03/02/09 14:13:38 - 17/02/09 16:30:10.352
+Number of changes in configuration: 24
+Number of changes to accounts, groups, or roles: 0
+Number of logins: 9
+Number of failed logins: 15
+Number of authentications: 19
+Number of failed authentications: 578
+Number of users: 3
+Number of terminals: 15
+Number of host names: 4
+Number of executables: 20
+Number of files: 279
+Number of AVC's: 0
+Number of MAC events: 0
+Number of failed syscalls: 994
+Number of anomaly events: 0
+Number of responses to anomaly events: 0
+Number of crypto events: 0
+Number of keys: 2
+Number of process IDs: 1238
+Number of events: 5435</pre></div></li><li class="step"><p>
+     Run a summary report for failed events and check the
+     <span class="quote">“<span class="quote">files</span>”</span> record for the number of failed file access
+     events:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport</code> <code class="option">--failed</code>
+
+Failed Summary Report
+======================
+Range of time in logs: 03/02/09 14:13:38.225 - 17/02/09 16:30:10.352
+Selected time for report: 03/02/09 14:13:38 - 17/02/09 16:30:10.352
+Number of changes in configuration: 0
+Number of changes to accounts, groups, or roles: 0
+Number of logins: 0
+Number of failed logins: 15
+Number of authentications: 0
+Number of failed authentications: 578
+Number of users: 1
+Number of terminals: 7
+Number of host names: 4
+Number of executables: 12
+Number of files: 77
+Number of AVC's: 0
+Number of MAC events: 0
+Number of failed syscalls: 994
+Number of anomaly events: 0
+Number of responses to anomaly events: 0
+Number of crypto events: 0
+Number of keys: 2
+Number of process IDs: 713
+Number of events: 1589</pre></div></li><li class="step"><p>
+     To list the files that could not be accessed, run a summary report of
+     failed file events:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport</code> <code class="option">-f -i --failed --summary</code>
+
+Failed File Summary Report
+===========================
+total  file
+===========================
+80  /var
+80  spool
+80  cron
+80  lastrun
+46  /usr/lib/locale/en_GB.UTF-8/LC_CTYPE
+45  /usr/lib/locale/locale-archive
+38  /usr/lib/locale/en_GB.UTF-8/LC_IDENTIFICATION
+38  /usr/lib/locale/en_GB.UTF-8/LC_MEASUREMENT
+38  /usr/lib/locale/en_GB.UTF-8/LC_TELEPHONE
+38  /usr/lib/locale/en_GB.UTF-8/LC_ADDRESS
+38  /usr/lib/locale/en_GB.UTF-8/LC_NAME
+38  /usr/lib/locale/en_GB.UTF-8/LC_PAPER
+38  /usr/lib/locale/en_GB.UTF-8/LC_MESSAGES
+38  /usr/lib/locale/en_GB.UTF-8/LC_MONETARY
+38  /usr/lib/locale/en_GB.UTF-8/LC_COLLATE
+38  /usr/lib/locale/en_GB.UTF-8/LC_TIME
+38  /usr/lib/locale/en_GB.UTF-8/LC_NUMERIC
+8  /etc/magic.mgc
+...</pre></div><p>
+     To focus this summary report on a few files or directories of interest,
+     such as <code class="filename">/etc/audit/auditd.conf</code>,
+     <code class="filename">/etc/pam.d</code>, and
+     <code class="filename">/etc/sysconfig</code>, use a command similar to the
+     following:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -f -i --failed --summary |grep -e "/etc/audit/auditd.conf" -e "/etc/pam.d/" -e "/etc/sysconfig"</code>
+
+1  /etc/sysconfig/displaymanager</pre></div></li><li class="step"><p>
+     From the summary report, then proceed to isolate these items of
+     interest from the log and find out their event IDs for further
+     analysis:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -f -i --failed |grep -e "/etc/audit/auditd.conf" -e "/etc/pam.d/" -e "/etc/sysconfig"</code>
+
+993. 17/02/09 16:47:34 /etc/sysconfig/displaymanager readlink no /bin/vim-normal root 7887
+994. 17/02/09 16:48:23 /etc/sysconfig/displaymanager getxattr no /bin/vim-normal root 7889</pre></div></li><li class="step"><p>
+     Use the event ID to get a detailed record for each item of interest:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ausearch -a</code> <em class="replaceable">7887</em> -i
+----
+time-&gt;Tue Feb 17 16:48:23 2009
+type=PATH msg=audit(1234885703.090:7889): item=0 name="/etc/sysconfig/displaymanager" inode=369282 dev=08:06 mode=0100644 ouid=0 ogid=0 rdev=00:00
+type=CWD msg=audit(1234885703.090:7889):  cwd="/root"
+type=SYSCALL msg=audit(1234885703.090:7889): arch=c000003e syscall=191 success=no exit=-61 a0=7e1e20 a1=7f90e4cf9187 a2=7fffed5b57d0 a3=84 items=1 ppid=25548 pid=23045 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts2 ses=1166 comm="vim" exe="/bin/vim-normal" key=(null)</pre></div></li></ol></div></div><div id="id-1.8.10.4.11.7" data-id-title="Focusing on a certain time frame" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Focusing on a certain time frame</div><p>
+    If you are interested in events during a particular period of time, trim
+    down the reports by using start and end dates and times with your
+    <code class="command">aureport</code> commands (<code class="option">-ts</code> and
+    <code class="option">-te</code>). For more information, refer to
+    <a class="xref" href="cha-audit-comp.html#sec-audit-aureport-gen" title="44.5.2. Generating custom audit reports">Section 44.5.2, “Generating custom audit reports”</a>.
+   </p></div><p>
+   All steps (except for the last one) can be run automatically and would
+   easily be scriptable and configured as cron jobs. Any of the
+   <code class="literal">--failed --summary</code> reports could be transformed easily
+   into a bar chart that plots files versus failed access attempts. For more
+   information about visualizing audit report data, refer to
+   <a class="xref" href="cha-audit-setup.html#sec-audit-viz" title="45.6. Configuring log visualization">Section 45.6, “Configuring log visualization”</a>.
+  </p></section><section class="sect1" id="sec-audit-viz" data-id-title="Configuring log visualization"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">45.6 </span><span class="title-name">Configuring log visualization</span></span> <a title="Permalink" class="permalink" href="cha-audit-setup.html#sec-audit-viz">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_setup.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Using the scripts <code class="command">mkbar</code> and <code class="command">mkgraph</code>
+   you can illustrate your audit statistics with various graphs and charts.
+   As with any other <code class="command">aureport</code> command, the plotting
+   commands are scriptable and can easily be configured to run as cron jobs.
+  </p><p>
+   <code class="command">mkbar</code> and <code class="command">mkgraph</code> were created by
+   Steve Grubb at Red Hat. They are available from
+   <a class="link" href="https://people.redhat.com/sgrubb/audit/visualize/" target="_blank">https://people.redhat.com/sgrubb/audit/visualize/</a>.
+   Because the current version of audit in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> does not ship
+   with these scripts, proceed as follows to make them available on your
+   system:
+  </p><div id="id-1.8.10.4.12.4" data-id-title="Downloaded content is dangerous" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Downloaded content is dangerous</div><p>
+    Use <code class="command">mkbar</code> and <code class="command">mkgraph</code> at your own
+    risk. Any content downloaded from the Web is potentially dangerous
+    to your system, even more so when run with <code class="systemitem">root</code> privileges.
+   </p></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Download the scripts to <code class="systemitem">root</code>'s <code class="filename">~/bin</code>
+     directory:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> wget http://people.redhat.com/sgrubb/audit/visualize/mkbar -O ~/bin/mkbar
+<code class="prompt user">&gt; </code><code class="command">sudo</code> wget http://people.redhat.com/sgrubb/audit/visualize/mkgraph -O ~/bin/mkgraph</pre></div></li><li class="step"><p>
+     Adjust the file permissions to read, write, and execute for
+     <code class="systemitem">root</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> chmod 744 ~/bin/mk{bar,graph}</pre></div></li></ol></div></div><p>
+   To plot summary reports, such as the ones discussed in
+   <a class="xref" href="cha-audit-setup.html#sec-audit-aurepo" title="45.5. Configuring audit reports">Section 45.5, “Configuring audit reports”</a>, use the script
+   <code class="command">mkbar</code>. Some example commands could look like the
+   following:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.10.4.12.7.1"><span class="term">Create a summary of events</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -e -i --summary | mkbar events</pre></div></dd><dt id="id-1.8.10.4.12.7.2"><span class="term">Create a summary of file events</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -f -i --summary | mkbar files</pre></div></dd><dt id="id-1.8.10.4.12.7.3"><span class="term">Create a summary of login events</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -l -i --summary | mkbar login</pre></div></dd><dt id="id-1.8.10.4.12.7.4"><span class="term">Create a summary of user events</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -u -i --summary | mkbar users</pre></div></dd><dt id="id-1.8.10.4.12.7.5"><span class="term">Create a summary of system call events</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -s -i --summary | mkbar syscalls</pre></div></dd></dl></div><p>
+   To create a summary chart of failed events of any of the above event
+   types, add the <code class="option">--failed</code> option to the respective
+   <code class="command">aureport</code> command. To cover a certain period of time,
+   use the <code class="option">-ts</code> and <code class="option">-te</code> options on
+   aureport. Any of these commands can be tweaked further by narrowing down
+   its scope using grep or egrep and regular expressions. See the comments
+   in the <code class="command">mkbar</code> script for an example. Any of the above
+   commands produces a PNG file containing a bar chart of the requested
+   data.
+  </p><p>
+   To illustrate the relationship between different kinds of audit objects,
+   such as users and system calls, use the script
+   <code class="command">mkgraph</code>. Some example commands could look like the
+   following:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.10.4.12.10.1"><span class="term">Users versus executables</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> LC_ALL=C aureport -u -i | awk '/^[0-9]/ { print $4" "$7 }' | sort | uniq | mkgraph users_vs_exec</pre></div></dd><dt id="id-1.8.10.4.12.10.2"><span class="term">Users versus files</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> LC_ALL=C aureport -f -i | awk '/^[0-9]/ { print $8" "$4 }' | sort | uniq | mkgraph users_vs_files</pre></div></dd><dt id="id-1.8.10.4.12.10.3"><span class="term">System calls versus commands</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> LC_ALL=C aureport -s -i | awk '/^[0-9]/ { print $4" "$6 }' | sort | uniq | mkgraph syscall_vs_com</pre></div></dd><dt id="id-1.8.10.4.12.10.4"><span class="term">System calls versus files</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> LC_ALL=C aureport -s -i | awk '/^[0-9]/ { print $5" "$4 }' | sort | uniq | mkgraph | syscall_vs_file</pre></div></dd></dl></div><p>
+   Graphs can also be combined to illustrate complex relationships. See the
+   comments in the <code class="command">mkgraph</code> script for further information
+   and an example. The graphs produced by this script are created in
+   PostScript format by default, but you can change the output format by
+   changing the <code class="envar">EXT</code> variable in the script from
+   <code class="literal">ps</code> to <code class="literal">png</code> or
+   <code class="literal">jpg</code>.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-audit-comp.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 44 </span>Understanding Linux audit</span></a> </div><div><a class="pagination-link next" href="cha-audit-scenarios.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 46 </span>Introducing an audit rule set</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-audit-setup.html#sec-audit-choose"><span class="title-number">45.1 </span><span class="title-name">Determining the components to audit</span></a></span></li><li><span class="sect1"><a href="cha-audit-setup.html#sec-audit-config"><span class="title-number">45.2 </span><span class="title-name">Configuring the audit daemon</span></a></span></li><li><span class="sect1"><a href="cha-audit-setup.html#sec-audit-syscall"><span class="title-number">45.3 </span><span class="title-name">Enabling audit for system calls</span></a></span></li><li><span class="sect1"><a href="cha-audit-setup.html#sec-audit-aurules"><span class="title-number">45.4 </span><span class="title-name">Setting up audit rules</span></a></span></li><li><span class="sect1"><a href="cha-audit-setup.html#sec-audit-aurepo"><span class="title-number">45.5 </span><span class="title-name">Configuring audit reports</span></a></span></li><li><span class="sect1"><a href="cha-audit-setup.html#sec-audit-viz"><span class="title-number">45.6 </span><span class="title-name">Configuring log visualization</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

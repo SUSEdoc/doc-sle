@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP3 | System Analysis and Tuning Guide | Kernel probes</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Kernel probes | SLES 15 SP3"/>
+<meta name="description" content="Kernel probes are a set of tools to collect Linux kernel debugging and performance information. Developers and system administrators usually use them…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP3"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 5. Kernel probes"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLES systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLES systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Kernel probes",
+  
+    "description": "Kernel probes",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-03-12T00:00+02:00",
+      
+    "datePublished": "2021-06-22T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-tuning-systemtap.html" title="Chapter 4. SystemTap—filtering and analyzing system data"/><link rel="next" href="cha-perf.html" title="Chapter 6. Hardware-based performance monitoring with Perf"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-kerneltrace.html">Kernel monitoring</a><span> / </span><a class="crumb" href="cha-tuning-kprobes.html">Kernel probes</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General notes on system tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System monitoring utilities</span></a></li><li><a href="cha-tuning-syslog.html" class=" "><span class="title-number">3 </span><span class="title-name">System log files</span></a></li></ol></li><li class="active"><a href="part-tuning-kerneltrace.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Kernel monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—filtering and analyzing system data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" you-are-here"><span class="title-number">5 </span><span class="title-name">Kernel probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-based performance monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—system-wide profiler</span></a></li><li><a href="cha-tuning-dynamic-debug.html" class=" "><span class="title-number">8 </span><span class="title-name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li><a href="part-tuning-resources.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Resource management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">9 </span><span class="title-name">General system resource management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">10 </span><span class="title-name">Kernel control groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">11 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">12 </span><span class="title-name">Power management</span></a></li><li><a href="cha-tuning-tuned.html" class=" "><span class="title-number">13 </span><span class="title-name">Adaptive and dynamic tuning using TuneD</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning I/O performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the task scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">16 </span><span class="title-name">Tuning the memory management subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">17 </span><span class="title-name">Tuning the network</span></a></li><li><a href="cha-tuning-sapconf.html" class=" "><span class="title-number">18 </span><span class="title-name">Tuning SUSE Linux Enterprise for SAP</span></a></li></ol></li><li><a href="part-tuning-dumps.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Handling system dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">19 </span><span class="title-name">Tracing tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">20 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">21 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to debug application crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">22 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk07apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-kprobes" data-id-title="Kernel probes"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">5 </span><span class="title-name">Kernel probes</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Kernel probes are a set of tools to collect Linux kernel debugging and
+  performance information. Developers and system administrators usually use
+  them either to debug the kernel, or to find system performance
+  bottlenecks. The reported data can then be used to tune the system for
+  better performance.
+ </p><p>
+  You can insert these probes into any kernel routine, and specify a handler
+  to be invoked after a particular break-point is hit. The main advantage of
+  kernel probes is that you no longer need to rebuild the kernel and reboot
+  the system after you make changes in a probe.
+ </p><p>
+  To use kernel probes, you typically need to write or obtain a specific
+  kernel module. Such modules include both the <span class="emphasis"><em>init</em></span> and
+  the <span class="emphasis"><em>exit</em></span> function. The init function (such as
+  <code class="systemitem">register_kprobe()</code>) registers one or more probes,
+  while the exit function unregisters them. The registration function
+  defines <span class="emphasis"><em>where</em></span> the probe will be inserted and
+  <span class="emphasis"><em>which handler</em></span> will be called after the probe is hit.
+  To register or unregister a group of probes at one time, you can use
+  relevant
+  <code class="literal">register_&lt;<em class="replaceable">PROBE_TYPE</em>&gt;probes()</code>
+  or
+  <code class="literal">unregister_&lt;<em class="replaceable">PROBE_TYPE</em>&gt;probes()</code>
+  functions.
+ </p><p>
+  Debugging and status messages are typically reported with the
+  <code class="systemitem">printk</code> kernel routine.
+  <code class="systemitem">printk</code> is a kernel space equivalent of a
+  user space <code class="systemitem">printf</code> routine. For more information
+  on <code class="systemitem">printk</code>, see
+  <a class="link" href="https://www.win.tue.nl/~aeb/linux/lk/lk-2.html#ss2.8" target="_blank">Logging
+  kernel messages</a>. Normally, you can view these messages by
+  inspecting the output of the <code class="systemitem">systemd</code> journal (see
+  <span class="intraxref">Book “Administration Guide”, Chapter 17 “<code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> journal”</span>). For more information on log files, see
+  <a class="xref" href="cha-tuning-syslog.html" title="Chapter 3. System log files">Chapter 3, <em>System log files</em></a>.
+ </p><section class="sect1" id="cha-tuning-kprobes-supparch" data-id-title="Supported architectures"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.1 </span><span class="title-name">Supported architectures</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-supparch">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Kernel probes are <span class="emphasis"><em>fully</em></span> implemented on the following
+   architectures:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     x86
+    </p></li><li class="listitem"><p>
+     AMD64/Intel 64
+    </p></li><li class="listitem"><p>
+     Arm
+    </p></li><li class="listitem"><p>
+     POWER
+    </p></li></ul></div><p>
+   Kernel probes are <span class="emphasis"><em>partially</em></span> implemented on the
+   following architectures:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     IA64 (does not support probes on instruction
+     <code class="systemitem">slot1</code>)
+    </p></li><li class="listitem"><p>
+     sparc64 (return probes not yet implemented)
+    </p></li></ul></div></section><section class="sect1" id="cha-tuning-kprobes-types" data-id-title="Types of kernel probes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.2 </span><span class="title-name">Types of kernel probes</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-types">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   There are three types of kernel probes: <span class="emphasis"><em>Kprobes</em></span>,
+   <span class="emphasis"><em>Jprobes</em></span>, and <span class="emphasis"><em>Kretprobes</em></span>.
+   Kretprobes are sometimes called <span class="emphasis"><em>return
+   probes</em></span>. You can find source code examples of all three type of
+   probes in the Linux kernel. See the directory
+   <code class="filename">/usr/src/linux/samples/kprobes/</code> (package
+   <code class="systemitem">kernel-source</code>).
+   
+  </p><section class="sect2" id="cha-tuning-kprobes-types-kprobe" data-id-title="Kprobes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.1 </span><span class="title-name">Kprobes</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-types-kprobe">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Kprobes can be attached to any instruction in the Linux kernel.
+    When Kprobes is registered, it inserts a break-point at the first
+    byte of the probed instruction. When the processor hits this
+    break-point, the processor registers are saved, and the processing
+    passes to Kprobes. First, a <span class="emphasis"><em>pre-handler</em></span> is
+    executed, then the probed instruction is stepped, and, finally a
+    <span class="emphasis"><em>post-handler</em></span> is executed. The control is then passed
+    to the instruction following the probe point.
+   </p></section><section class="sect2" id="cha-tuning-kprobes-types-jprobe" data-id-title="Jprobes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.2 </span><span class="title-name">Jprobes</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-types-jprobe">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Jprobes is implemented through the Kprobes mechanism. It is
+    inserted on a function's entry point and allows direct access to the
+    arguments of the function which is being probed. Its handler routine
+    must have the same argument list and return value as the probed
+    function. To end it, call the <code class="systemitem">jprobe_return()</code>
+    function.
+   </p><p>
+    When a jprobe is hit, the processor registers are saved, and the
+    instruction pointer is directed to the jprobe handler routine. The
+    control then passes to the handler with the same register contents as the
+    function being probed. Finally, the handler calls the
+    <code class="systemitem">jprobe_return()</code> function, and switches the
+    control back to the control function.
+   </p><p>
+    In general, you can insert multiple probes on one function. Jprobe is,
+    however, limited to only one instance per function.
+   </p></section><section class="sect2" id="cha-tuning-kprobes-types-kretprobe" data-id-title="Return probe"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.3 </span><span class="title-name">Return probe</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-types-kretprobe">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Return probes are also implemented through Kprobes. When the
+    <code class="systemitem">register_kretprobe()</code> function is called, a
+    kprobe is attached to the entry of the probed function.
+    After hitting the probe, the kernel probes mechanism saves the probed
+    function return address and calls a user-defined return handler. The
+    control is then passed back to the probed function.
+   </p><p>
+    Before you call <code class="systemitem">register_kretprobe()</code>, you need
+    to set a <code class="systemitem">maxactive</code> argument, which specifies
+    how many instances of the function can be probed at the same time. If
+    set too low, you will miss a certain number of probes.
+   </p></section></section><section class="sect1" id="cha-tuning-kprobes-api" data-id-title="Kprobes API"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.3 </span><span class="title-name">Kprobes API</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-api">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The programming interface of Kprobes consists of functions which are
+   used to register and unregister all used kernel probes, and associated
+   probe handlers. For a more detailed description of these functions and
+   their arguments, see the information sources in
+   <a class="xref" href="cha-tuning-kprobes.html#cha-tuning-kprobes-moreinfo" title="5.5. More information">Section 5.5, “More information”</a>.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.9.5.3.9.3.1"><span class="term"><code class="systemitem">register_kprobe()</code>
+    </span></dt><dd><p>
+      Inserts a break-point on a specified address. When the break-point is
+      hit, the <code class="systemitem">pre_handler</code> and
+      <code class="systemitem">post_handler</code> are called.
+     </p></dd><dt id="id-1.9.5.3.9.3.2"><span class="term"><code class="systemitem">register_jprobe()</code>
+    </span></dt><dd><p>
+      Inserts a break-point in the specified address. The address needs to
+      be the address of the first instruction of the probed function. When
+      the break-point is hit, the specified handler is run. The handler
+      should have the same argument list and return type as the probed.
+     </p></dd><dt id="id-1.9.5.3.9.3.3"><span class="term"><code class="systemitem">register_kretprobe()</code>
+    </span></dt><dd><p>
+      Inserts a return probe for the specified function. When the probed
+      function returns, a specified handler is run. This function returns 0
+      on success, or a negative error number on failure.
+     </p></dd><dt id="id-1.9.5.3.9.3.4"><span class="term"><code class="systemitem">unregister_kprobe()</code>, <code class="systemitem">unregister_jprobe()</code>, <code class="systemitem">unregister_kretprobe()</code>
+    </span></dt><dd><p>
+      Removes the specified probe. You can use it any time after the probe
+      has been registered.
+     </p></dd><dt id="id-1.9.5.3.9.3.5"><span class="term"><code class="systemitem">register_kprobes()</code>, <code class="systemitem">register_jprobes()</code>, <code class="systemitem">register_kretprobes()</code>
+    </span></dt><dd><p>
+      Inserts each of the probes in the specified array.
+     </p></dd><dt id="id-1.9.5.3.9.3.6"><span class="term"><code class="systemitem">unregister_kprobes()</code>, <code class="systemitem">unregister_jprobes()</code>, <code class="systemitem">unregister_kretprobes()</code>
+    </span></dt><dd><p>
+      Removes each of the probes in the specified array.
+     </p></dd><dt id="id-1.9.5.3.9.3.7"><span class="term"><code class="systemitem">disable_kprobe()</code>, <code class="systemitem">disable_jprobe()</code>, <code class="systemitem">disable_kretprobe()</code>
+    </span></dt><dd><p>
+      Disables the specified probe temporarily.
+     </p></dd><dt id="id-1.9.5.3.9.3.8"><span class="term"><code class="systemitem">enable_kprobe()</code>, <code class="systemitem">enable_jprobe()</code>, <code class="systemitem">enable_kretprobe()</code>
+    </span></dt><dd><p>
+      Temporarily enables disabled probes.
+     </p></dd></dl></div></section><section class="sect1" id="cha-tuning-kprobes-debugfs" data-id-title="debugfs Interface"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.4 </span><span class="title-name"><code class="systemitem">debugfs</code> Interface</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-debugfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   In recent Linux kernels, the Kprobes instrumentation uses the
+   kernel's <code class="systemitem">debugfs</code> interface. It can list all
+   registered probes and globally switch all probes on or off.
+  </p><section class="sect2" id="cha-tuning-kprobes-debugfs-list" data-id-title="Listing registered kernel probes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.4.1 </span><span class="title-name">Listing registered kernel probes</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-debugfs-list">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The list of all currently registered probes is in the
+    <code class="filename">/sys/kernel/debug/kprobes/list</code> file.
+   </p><div class="verbatim-wrap"><pre class="screen">saturn.example.com:~ # cat /sys/kernel/debug/kprobes/list
+c015d71a  k  vfs_read+0x0   [DISABLED]
+c011a316  j  do_fork+0x0
+c03dedc5  r  tcp_v4_rcv+0x0</pre></div><p>
+    The first column lists the address in the kernel where the probe is
+    inserted. The second column prints the type of the probe:
+    <code class="literal">k</code> for kprobe, <code class="literal">j</code> for jprobe, and
+    <code class="literal">r</code> for return probe. The third column specifies the
+    symbol, offset and optional module name of the probe. The following
+    optional columns include the status information of the probe. If the
+    probe is inserted on a virtual address which is not valid anymore, it is
+    marked with <code class="literal">[GONE]</code>. If the probe is temporarily
+    disabled, it is marked with <code class="literal">[DISABLED]</code>.
+   </p></section><section class="sect2" id="cha-tuning-kprobes-debugfs-switch" data-id-title="Globally enabling/disabling kernel probes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.4.2 </span><span class="title-name">Globally enabling/disabling kernel probes</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-debugfs-switch">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="filename">/sys/kernel/debug/kprobes/enabled</code> file
+    represents a switch with which you can globally and forcibly turn on or
+    off all the registered kernel probes. To turn them off, simply enter
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>echo "0" &gt; /sys/kernel/debug/kprobes/enabled</pre></div><p>
+    on the command line as <code class="systemitem">root</code>. To turn them on again, enter
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>echo "1" &gt; /sys/kernel/debug/kprobes/enabled</pre></div><p>
+    Note that this way you do not change the status of the probes. If a
+    probe is temporarily disabled, it will not be enabled automatically but
+    will remain in the <code class="literal">[DISABLED]</code> state after entering
+    the latter command.
+   </p></section></section><section class="sect1" id="cha-tuning-kprobes-moreinfo" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.5 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kprobes.html#cha-tuning-kprobes-moreinfo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/tuning_kprobes.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To learn more about kernel probes, look at the following sources of
+   information:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Thorough but more technically oriented information about kernel probes
+     is in <code class="filename">/usr/src/linux/Documentation/kprobes.txt</code>
+     (package <code class="systemitem">kernel-source</code>).
+    </p></li><li class="listitem"><p>
+     Examples of all three types of probes (together with related
+     <code class="filename">Makefile</code>) are in the
+     <code class="filename">/usr/src/linux/samples/kprobes/</code> directory (package
+     <code class="systemitem">kernel-source</code>).
+    </p></li><li class="listitem"><p>
+     In-depth information about Linux kernel modules and
+     <code class="systemitem">printk</code> kernel routine can be found at
+     <a class="link" href="https://tldp.org/LDP/lkmpg/2.6/html/lkmpg.html" target="_blank">The
+     Linux Kernel Module Programming Guide</a>
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-tuning-systemtap.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 4 </span>SystemTap—filtering and analyzing system data</span></a> </div><div><a class="pagination-link next" href="cha-perf.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>Hardware-based performance monitoring with Perf</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-kprobes.html#cha-tuning-kprobes-supparch"><span class="title-number">5.1 </span><span class="title-name">Supported architectures</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kprobes.html#cha-tuning-kprobes-types"><span class="title-number">5.2 </span><span class="title-name">Types of kernel probes</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kprobes.html#cha-tuning-kprobes-api"><span class="title-number">5.3 </span><span class="title-name">Kprobes API</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kprobes.html#cha-tuning-kprobes-debugfs"><span class="title-number">5.4 </span><span class="title-name"><code class="systemitem">debugfs</code> Interface</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kprobes.html#cha-tuning-kprobes-moreinfo"><span class="title-number">5.5 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP4 | Security and Hardening Guide | Encrypting Partitions and Files</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Encrypting Partitions and Files | SLES 12 SP4"/>
+<meta name="description" content="Encrypting files, partitions, and entire disks prevent…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP4"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 11. Encrypting Partitions and Files"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Encrypting Partitions and Files | SLES 12 SP4"/>
+<meta property="og:description" content="Encrypting files, partitions, and entire disks prevents unauthorized access to your data and protects your confidential file…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Encrypting Partitions and Files | SLES 12 SP4"/>
+<meta name="twitter:description" content="Encrypting files, partitions, and entire disks prevents unauthorized access to your data and protects your confidential file…"/>
+<link rel="prev" href="cha-security-acls.html" title="Chapter 10. Access Control Lists in Linux"/><link rel="next" href="cha-certstore.html" title="Chapter 12. Certificate Store"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-local-security.html">Local Security</a><span> / </span><a class="crumb" href="cha-security-cryptofs.html">Encrypting Partitions and Files</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and Confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting Up Authentication Servers and Clients Using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP—A Directory Service</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network Authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></a></li></ol></li><li class="active"><a href="part-local-security.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Local Security</span></a><ol><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring Security Settings with YaST</span></a></li><li><a href="cha-security-policykit.html" class=" "><span class="title-number">9 </span><span class="title-name">Authorization with Polkit</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">10 </span><span class="title-name">Access Control Lists in Linux</span></a></li><li><a href="cha-security-cryptofs.html" class=" you-are-here"><span class="title-number">11 </span><span class="title-name">Encrypting Partitions and Files</span></a></li><li><a href="cha-certstore.html" class=" "><span class="title-number">12 </span><span class="title-name">Certificate Store</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">13 </span><span class="title-name">Intrusion Detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network Security</span></a><ol><li><a href="cha-ssh.html" class=" "><span class="title-number">14 </span><span class="title-name">SSH: Secure Network Operations</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">15 </span><span class="title-name">Masquerading and Firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">16 </span><span class="title-name">Configuring a VPN Server</span></a></li><li><a href="cha-security-yast-ca.html" class=" "><span class="title-number">17 </span><span class="title-name">Managing X.509 Certification</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">18 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">19 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">20 </span><span class="title-name">Getting Started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">21 </span><span class="title-name">Immunizing Programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">22 </span><span class="title-name">Profile Components and Syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">23 </span><span class="title-name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">24 </span><span class="title-name">Building and Managing Profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">25 </span><span class="title-name">Building Profiles from the Command Line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">26 </span><span class="title-name">Profiling Your Web Applications Using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">27 </span><span class="title-name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing Profiled Applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">29 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">30 </span><span class="title-name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li><a href="bk05pt05.html" class="has-children "><span class="title-number">V </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">31 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">32 </span><span class="title-name">Understanding Linux Audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting Up the Linux Audit Framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">34 </span><span class="title-name">Introducing an Audit Rule Set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">35 </span><span class="title-name">Useful Resources</span></a></li></ol></li><li><a href="app-pcidss.html" class=" "><span class="title-number">A </span><span class="title-name">Achieving PCI DSS Compliance</span></a></li><li><a href="app-security-docupdates.html" class=" "><span class="title-number">B </span><span class="title-name">Documentation Updates</span></a></li><li><a href="bk05apc.html" class=" "><span class="title-number">C </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-cryptofs" data-id-title="Encrypting Partitions and Files"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">12 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">11 </span><span class="title-name">Encrypting Partitions and Files</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Encrypting files, partitions, and entire disks prevents unauthorized access to your data and protects your confidential files and documents.
+ </p><p>
+  You can choose between the following encryption options:
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.5.5.1"><span class="term">Encrypting a Hard Disk Partition</span></dt><dd><p>
+     It is possible to create an encrypted partition with YaST during
+     installation or in an already installed system. For further info, see
+     <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-inst" title="11.1.1. Creating an Encrypted Partition during Installation">Section 11.1.1, “Creating an Encrypted Partition during Installation”</a> and
+     <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-run" title="11.1.2. Creating an Encrypted Partition on a Running System">Section 11.1.2, “Creating an Encrypted Partition on a Running System”</a>. This
+     option can also be used for removable media, such as external hard
+     disks, as described in
+     <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-removables" title="11.1.4. Encrypting the Content of Removable Media">Section 11.1.4, “Encrypting the Content of Removable Media”</a>.
+    </p></dd><dt id="id-1.7.5.5.5.2"><span class="term">Creating an Encrypted Virtual Disk</span></dt><dd><p>
+     You can create a file-based encrypted virtual disk on your hard disk or a removable
+     medium with YaST. The encrypted virtual disk can then be used
+     as a regular folder for storing files or directories. For more
+     information, refer to
+     <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-vdisk" title="11.1.3. Creating an Encrypted Virtual Disk">Section 11.1.3, “Creating an Encrypted Virtual Disk”</a>.
+    </p></dd><dt id="id-1.7.5.5.5.3"><span class="term">Encrypting Home Directories</span></dt><dd><p>
+     With <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, you can also create encrypted user home
+     directories. When the user logs in to the system, the encrypted home
+     directory is mounted and the contents are made available to the user.
+     Refer to <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-homes" title="11.2. Using Encrypted Home Directories">Section 11.2, “Using Encrypted Home Directories”</a> for more
+     information.
+    </p></dd><dt id="id-1.7.5.5.5.4"><span class="term">Encrypting Single Files with GPG</span></dt><dd><p>
+     To quickly encrypt one or more files, you can use the GPG tool. See
+     <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-gpg" title="11.3. Encrypting Files with GPG">Section 11.3, “Encrypting Files with GPG”</a> for more information.
+    </p></dd></dl></div><div id="id-1.7.5.5.6" data-id-title="Encryption Offers Limited Protection" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Encryption Offers Limited Protection</div><p>
+   Encryption methods described in this chapter cannot protect your running
+   system from being compromised. After the encrypted volume is successfully
+   mounted, everybody with appropriate permissions can access it. However,
+   encrypted media are useful in case of loss or theft of your computer, or to
+   prevent unauthorized individuals from reading your confidential data.
+  </p></div><section class="sect1" id="sec-security-cryptofs-y2" data-id-title="Setting Up an Encrypted File System with YaST"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.1 </span><span class="title-name">Setting Up an Encrypted File System with YaST</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-y2">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Use YaST to encrypt partitions or parts of your file system during
+   installation or in an already installed system. However, encrypting a
+   partition in an already-installed system is more difficult, because you
+   need to resize and change existing partitions. In such cases, it may be
+   more convenient to create an encrypted file of a defined size, in which
+   to <span class="emphasis"><em>store</em></span> other files or parts of your file system.
+   To encrypt an entire partition, dedicate a partition for encryption in
+   the partition layout. The standard partitioning proposal as suggested by
+   YaST, does not include an encrypted partition by default. Add it
+   manually in the partitioning dialog.
+  </p><section class="sect2" id="sec-security-cryptofs-y2-part-inst" data-id-title="Creating an Encrypted Partition during Installation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.1 </span><span class="title-name">Creating an Encrypted Partition during Installation</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-inst">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.7.5.5.7.3.2" data-id-title="Password Input" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Password Input</div><p>
+     Make sure to memorize the password for your encrypted partitions well.
+     Without that password, you cannot access or restore the encrypted data.
+    </p></div><p>
+    The YaST expert dialog for partitioning offers the options needed
+    for creating an encrypted partition. To create a new encrypted partition
+    proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Run the YaST Expert Partitioner with <span class="guimenu">System</span> › <span class="guimenu">Partitioner</span>.
+     </p></li><li class="step"><p>
+      Select a hard disk, click <span class="guimenu">Add</span>, and select a primary
+      or an extended partition.
+     </p></li><li class="step"><p>
+      Select the partition size or the region to use on the disk.
+     </p></li><li class="step"><p>
+      Select the file system, and mount point of this partition.
+     </p></li><li class="step"><p>
+       Activate both the <span class="guimenu">Encrypt device</span> and
+       <span class="guimenu">Format partition</span> check boxes.
+     </p><div id="id-1.7.5.5.7.3.4.5.2" data-id-title="Additional Software Required" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Additional Software Required</div><p>
+       After checking <span class="guimenu">Encrypt device</span>, a pop-up window
+       asking for installing additional software may appear. Confirm to
+       install all the required packages to ensure that the encrypted
+       partition works well.
+      </p></div></li><li class="step"><p>
+      If the encrypted file system needs to be mounted only when necessary,
+      enable <span class="guimenu">Do not mount partition</span> in the <span class="guimenu">Fstab
+      Options</span>. Otherwise enable <span class="guimenu">Mount partition</span>
+      and enter the mount point.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">Next</span> and enter a password which is used to
+      encrypt this partition. This password is not displayed. To prevent
+      typing errors, you need to enter the password twice.
+     </p></li><li class="step"><p>
+      Complete the process by clicking <span class="guimenu">Finish</span>. The
+      newly-encrypted partition is now created.
+     </p></li></ol></div></div><p>
+    During the boot process, the operating system asks for the password
+    before mounting any encrypted partition which is set to be auto-mounted
+    in <code class="filename">/etc/fstab</code>. Such a partition is then available
+    to all users when it has been mounted.
+   </p><p>
+    To skip mounting the encrypted partition during start-up, press
+    <span class="keycap">Enter</span> when prompted for the password. Then decline
+    the offer to enter the password again. In this case, the encrypted file
+    system is not mounted and the operating system continues booting,
+    blocking access to your data.
+   </p><p>
+    To mount an encrypted partition which is not mounted
+    during the boot process, open a file manager and click the partition
+    entry in the pane listing common places on your file system. You will be
+    prompted for a password and the partition will be mounted.
+   </p><p>
+    When you are installing your system on a machine where partitions
+    already exist, you can also decide to encrypt an existing partition
+    during installation. In this case follow the description in
+    <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-run" title="11.1.2. Creating an Encrypted Partition on a Running System">Section 11.1.2, “Creating an Encrypted Partition on a Running System”</a> and be aware that
+    this action destroys all data on the existing partition.
+   </p></section><section class="sect2" id="sec-security-cryptofs-y2-part-run" data-id-title="Creating an Encrypted Partition on a Running System"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.2 </span><span class="title-name">Creating an Encrypted Partition on a Running System</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-run">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.7.5.5.7.4.2" data-id-title="Activating Encryption on a Running System" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Activating Encryption on a Running System</div><p>
+     It is also possible to create encrypted partitions on a running system.
+     However, encrypting an existing partition destroys all data on it, and
+     requires re-sizing and restructuring of existing partitions.
+    </p></div><p>
+    On a running system, select <span class="guimenu">System</span> › <span class="guimenu">Partitioner</span> in the YaST control
+    center. Click <span class="guimenu">Yes</span> to proceed. In the <span class="guimenu">Expert
+    Partitioner</span>, select the partition to encrypt and click
+    <span class="guimenu">Edit</span>. The rest of the procedure is the same as
+    described in <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-inst" title="11.1.1. Creating an Encrypted Partition during Installation">Section 11.1.1, “Creating an Encrypted Partition during Installation”</a>.
+   </p></section><section class="sect2" id="sec-security-cryptofs-y2-vdisk" data-id-title="Creating an Encrypted Virtual Disk"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.3 </span><span class="title-name">Creating an Encrypted Virtual Disk</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-vdisk">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Instead of encrypting an entire disk or partition, you can use YaST to set up a file-based encrypted virtual disk. It will appear as a regular file in the file system, but can be mounted and used like a regular folder. Unlike encrypted partitions, encrypted virtual disks can be created without re-partitioning the hard disk.
+   </p><p>
+     To set up an encrypted virtual disk, you need to create an empty file
+     first (this file is called a loop file). In the terminal, switch to the
+     desired directory and run the <code class="command">touch
+     <em class="replaceable">FILE</em></code> command (where
+     <em class="replaceable">FILE</em> is the desired name, for example: <code class="filename">secret</code>). It is also recommended to create an empty
+     directory that will act as a mount point for the encrypted virtual
+     disk. To do this, use the <code class="command">mkdir
+     <em class="replaceable">DIR</em></code> command (replace
+     <em class="replaceable">DIR</em> with the actual path and directory name,
+     for example: <code class="filename">~/my_docs</code>).
+   </p><p>
+     To set up an encrypted virtual disk, launch YaST, switch to the
+     <span class="guimenu">System</span> section, and start Partitioner. Switch to
+     the <span class="guimenu">Crypt Files</span> section and press <span class="guimenu">Add Crypt
+     File</span>. Enter the path to the created loop file into the
+     <span class="guimenu">Path Name of Loop File</span> field. Enable the
+     <span class="guimenu">Create Loop File</span> option, specify the desired size, and
+     press <span class="guimenu">Next</span>. In the <span class="guimenu">Mount Point</span> field,
+     enter the path to the directory that serves as a mount point (in this
+     example, it is <code class="filename">~/my_docs</code>). Make sure that the
+     <span class="guimenu">Encrypt Device</span> option is enabled and press
+     <span class="guimenu">Next</span>. Provide the desired password and press
+     <span class="guimenu">Finish</span>.
+   </p></section><section class="sect2" id="sec-security-cryptofs-y2-removables" data-id-title="Encrypting the Content of Removable Media"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.4 </span><span class="title-name">Encrypting the Content of Removable Media</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-removables">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    YaST treats removable media (like external hard disks or flash
+    disks) the same as any other storage device. Virtual disks or partitions on
+    external media can be encrypted as described above. However, you should disable
+    mounting at boot time, because removable media is usually connected only
+    when the system is up and running.
+   </p><p>
+    If you encrypted your removable device with YaST, the GNOME desktop
+    automatically recognizes the encrypted partition and prompts for the
+    password when the device is detected. If you plug in a FAT-formatted
+    removable device when running GNOME, the desktop user entering the
+    password automatically becomes the owner of the device.
+    For devices with a file system other than FAT, change the
+    ownership explicitly for users other than <code class="systemitem">root</code> to give them
+    read-write access to the device.
+   </p><p>
+     If you have created a virtual disk as described in <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-vdisk" title="11.1.3. Creating an Encrypted Virtual Disk">Section 11.1.3, “Creating an Encrypted Virtual Disk”</a> but with the loop file on a
+     removable disk, then you need to mount the file manually as follows:
+   </p><div class="verbatim-wrap"><pre class="screen">sudo cryptsetup luksOpen  <em class="replaceable">FILE</em> <em class="replaceable">NAME</em>
+sudo mount /dev/mapper/<em class="replaceable">NAME</em> <em class="replaceable">DIR</em></pre></div><p>
+     In the commands above, the <em class="replaceable">FILE</em> refers to the
+     path to the loop file, <em class="replaceable">NAME</em> is a user-defined
+     name, and <em class="replaceable">DIR</em> is the path to the mount
+     point. For example:
+   </p><div class="verbatim-wrap"><pre class="screen">sudo cryptsetup luksOpen /run/media/tux/usbstick/secret my_secret
+sudo mount /dev/mapper/my_secret /home/tux/my_docs</pre></div></section></section><section class="sect1" id="sec-security-cryptofs-y2-homes" data-id-title="Using Encrypted Home Directories"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.2 </span><span class="title-name">Using Encrypted Home Directories</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-homes">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To protect data in home directories from unauthorized access, use the
+   YaST user management module to encrypt home directories. You can create
+   encrypted home directories for new or existing users. To encrypt or decrypt
+   home directories of already existing users, you need to know their login password. See
+   <span class="intraxref">Book “Deployment Guide”, Chapter 16 “Managing Users with YaST”, Section 16.3.3 “Managing Encrypted Home Directories”</span> for instructions.
+  </p><p>
+   Encrypted home partitions are created within a virtual disk as
+   described in <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-vdisk" title="11.1.3. Creating an Encrypted Virtual Disk">Section 11.1.3, “Creating an Encrypted Virtual Disk”</a>. Two
+   files are created under <code class="filename">/home</code> for each encrypted
+   home directory:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.5.8.4.1"><span class="term"><code class="filename"><em class="replaceable">LOGIN</em>.img</code>
+    </span></dt><dd><p>
+      The image holding the directory
+     </p></dd><dt id="id-1.7.5.5.8.4.2"><span class="term"><code class="filename"><em class="replaceable">LOGIN</em>.key</code>
+    </span></dt><dd><p>
+      The image key, protected with the user's login password.
+     </p></dd></dl></div><p>
+   On login, the home directory automatically gets decrypted. Internally, it
+   works through the PAM module called <span class="emphasis"><em>pam_mount</em></span>. If
+   you need to add an additional login method that provides encrypted home
+   directories, you need to add this module to the respective configuration
+   file in <code class="filename">/etc/pam.d/</code>. For more information, see
+   <a class="xref" href="cha-pam.html" title="Chapter 2. Authentication with PAM">Chapter 2, <em>Authentication with PAM</em></a> and the man page of <code class="option">pam_mount</code>.
+  </p><div id="id-1.7.5.5.8.6" data-id-title="Security Restrictions" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Security Restrictions</div><p>
+    Encrypting a user's home directory does not provide strong security from
+    other users. If strong security is required, the system should not be
+    shared physically.
+   </p><p>
+    To enhance security, also encrypt the <code class="filename">swap</code>
+    partition and the <code class="filename">/tmp</code> and
+    <code class="filename">/var/tmp</code> directories, because these may contain
+    temporary images of critical data. You can encrypt
+    <code class="filename">swap</code>, <code class="filename">/tmp</code>, and
+    <code class="filename">/var/tmp</code> with the YaST partitioner as
+    described in <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-part-inst" title="11.1.1. Creating an Encrypted Partition during Installation">Section 11.1.1, “Creating an Encrypted Partition during Installation”</a> or
+    <a class="xref" href="cha-security-cryptofs.html#sec-security-cryptofs-y2-vdisk" title="11.1.3. Creating an Encrypted Virtual Disk">Section 11.1.3, “Creating an Encrypted Virtual Disk”</a>.
+   </p></div></section><section class="sect1" id="sec-security-cryptofs-gpg" data-id-title="Encrypting Files with GPG"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.3 </span><span class="title-name">Encrypting Files with GPG</span></span> <a title="Permalink" class="permalink" href="cha-security-cryptofs.html#sec-security-cryptofs-gpg">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_cryptofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The GPG encryption software can be used to encrypt individual files and documents.
+  </p><p>
+   To encrypt a file with GPG, you need to generate a key pair first. To do
+   this, run the <code class="command">gpg --gen-key</code> and follow the on-screen
+   instructions. When generating the key pair, GPG creates a user ID (UID) to
+   identify the key based on your real name, comments, and email address. You
+   need this UID (or just a part of it like your first name or email address)
+   to specify the key you want to use to encrypt a file. To find the UID of an
+   existing key, use the <code class="command">gpg --list-keys</code> command. To encrypt
+   a file use the following command:
+  </p><div class="verbatim-wrap"><pre class="screen">gpg -e -r <em class="replaceable">UID</em>
+  <em class="replaceable">FILE</em></pre></div><p>
+    Replace <em class="replaceable">UID</em> with part of the UID (for example,
+    your first name) and <em class="replaceable">FILE</em> with the file you want
+    to encrypt. For example:
+  </p><div class="verbatim-wrap"><pre class="screen">gpg -e -r Tux secret.txt</pre></div><p>
+    This command creates an encrypted version of the specified file
+    recognizable by the <code class="filename">.gpg</code> file extension (in
+    this example, it is <code class="filename">secret.txt.gpg</code>).
+  </p><p>
+    To decrypt an encrypted file, use the following command:
+  </p><div class="verbatim-wrap"><pre class="screen">gpg -d -o <em class="replaceable">DECRYPTED_FILE</em>
+  <em class="replaceable">ENCRYPTED_FILE</em></pre></div><p>
+    Replace <em class="replaceable">DECRYPTED_FILE</em> with the desired name for
+    the decrypted file and <em class="replaceable">ENCRYPTED_FILE</em> with the
+    encrypted file you want to decrypt.
+  </p><p>
+    Keep in mind that the encrypted file can only be decrypted using the same
+    key that was used for encryption. If you want to share an encrypted file
+    with another person, you have to use that person's public key to encrypt
+    the file. 
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-acls.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 10 </span>Access Control Lists in Linux</span></a> </div><div><a class="pagination-link next" href="cha-certstore.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 12 </span>Certificate Store</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-cryptofs.html#sec-security-cryptofs-y2"><span class="title-number">11.1 </span><span class="title-name">Setting Up an Encrypted File System with YaST</span></a></span></li><li><span class="sect1"><a href="cha-security-cryptofs.html#sec-security-cryptofs-y2-homes"><span class="title-number">11.2 </span><span class="title-name">Using Encrypted Home Directories</span></a></span></li><li><span class="sect1"><a href="cha-security-cryptofs.html#sec-security-cryptofs-gpg"><span class="title-number">11.3 </span><span class="title-name">Encrypting Files with GPG</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

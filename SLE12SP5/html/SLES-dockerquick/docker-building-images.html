@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Docker Open Source Engine Guide | Creating Custom Images</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Creating Custom Images | SLES 12 SP5"/>
+<meta name="description" content="For creating your custom image you need a base Docker image of SLES. You can use any of the pre-built SLES images that you can obtain as described in…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Docker Open Source Engine Guide"/>
+<meta name="chapter-title" content="Chapter 5. Creating Custom Images"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Docker Open Source Engine Guide"/>
+<meta property="og:description" content="Run virtual machines using Docker Open Source Engine"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Docker Open Source Engine Guide"/>
+<meta name="twitter:description" content="Run virtual machines using Docker Open Source Engine"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Creating Custom Images",
+  
+    "description": "Creating Custom Images",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-registry-installation.html" title="Chapter 4. Storing Images"/><link rel="next" href="docker-dockerizing-application.html" title="Chapter 6. Creating Docker Images of Applications"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Docker Open Source Engine Guide</a><span> / </span><a class="crumb" href="docker-building-images.html">Creating Custom Images</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Docker Open Source Engine Guide</div><ol><li><a href="cha-docker-overview.html" class=" "><span class="title-number">1 </span><span class="title-name">Docker Open Source Engine Overview</span></a></li><li><a href="cha-docker-installation.html" class=" "><span class="title-number">2 </span><span class="title-name">Docker Open Source Engine Installation</span></a></li><li><a href="cha-sle2docker-installation.html" class=" "><span class="title-number">3 </span><span class="title-name">Installing <code class="literal">sle2docker</code></span></a></li><li><a href="cha-registry-installation.html" class=" "><span class="title-number">4 </span><span class="title-name">Storing Images</span></a></li><li><a href="docker-building-images.html" class=" you-are-here"><span class="title-number">5 </span><span class="title-name">Creating Custom Images</span></a></li><li><a href="docker-dockerizing-application.html" class=" "><span class="title-number">6 </span><span class="title-name">Creating Docker Images of Applications</span></a></li><li><a href="cha-working-with-containers.html" class=" "><span class="title-number">7 </span><span class="title-name">Working with Containers</span></a></li><li><a href="cha-containers-troubleshoot.html" class=" "><span class="title-number">8 </span><span class="title-name">Troubleshooting</span></a></li><li><a href="bk11apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="docker-building-images" data-id-title="Creating Custom Images"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">5 </span><span class="title-name">Creating Custom Images</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  For creating your custom image you need a base Docker image of SLES. You
+  can use any of the pre-built SLES images that you can obtain as described
+  in <a class="xref" href="docker-building-images.html#Customizing-Pre-build-Images" title="5.2. Customizing SLES Docker Images">Section 5.2, “Customizing SLES Docker Images”</a>.
+ </p><div id="id-1.13.6.3" data-id-title="No SLES Images in Docker Hub" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: No SLES Images in Docker Hub</div><p>
+   Usually you can pull a variety of base Docker images from the
+   <a class="link" href="https://hub.docker.com/" target="_blank">docker hub</a> but that does
+   not apply for SLES. Currently we cannot distribute SLES images for
+   Docker Open Source Engine because there is no way to associate an End-User License Agreement
+   (EULA) to a Docker image. <code class="literal">sle2docker</code> enables you to
+   import pre-built SLES images that you can use for creating base SLES
+   images.
+  </p></div><p>
+  After you obtain your base docker image, you can modify the image by using a
+  <code class="filename">Dockerfile</code> (usually placed in the build directory). Then
+  use the standard building tool to create your custom image:
+ </p><div class="verbatim-wrap"><pre class="screen">docker build <em class="replaceable">PATH_TO_BUILD_DIRECTORY</em></pre></div><p>
+  For more <code class="literal">docker build</code> options, refer to the
+  <a class="link" href="https://docs.docker.com/engine/reference/commandline/build/" target="_blank">official
+  Docker documentation</a>.
+ </p><div id="id-1.13.6.7" data-id-title="Dockerizing Your Applications" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Dockerizing Your Applications</div><p>
+   You may want to write a dockerfile for your own application that should be
+   run inside a docker container. For a procedure refer to
+   <a class="xref" href="docker-dockerizing-application.html" title="Chapter 6. Creating Docker Images of Applications">Chapter 6, <em>Creating Docker Images of Applications</em></a>.
+  </p></div><section class="sect1" id="Building-Pre-build-Images" data-id-title="Obtaining Base SLES Images"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.1 </span><span class="title-name">Obtaining Base SLES Images</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#Building-Pre-build-Images">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   How to obtain a pre-built base image depends on the <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> version:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.13.6.8.3.1"><span class="term">Up to SLES 12 SP2</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> zypper in sles11sp4-docker-image</pre></div></dd><dt id="id-1.13.6.8.3.2"><span class="term">SLES 12 SP3 and higher</span></dt><dd><div class="verbatim-wrap"><pre class="screen">docker pull registry.suse.com/suse/sles12sp4</pre></div></dd></dl></div><p>
+   Pre-built images do not have repositories configured. But when the Docker
+   host has an SLE subscription that provides access to the product used in the
+   image, Zypper will automatically have access to the right repositories.
+  </p><div id="id-1.13.6.8.5" data-id-title="Docker Image Packages are no Longer supported" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Docker Image Packages are no Longer supported</div><p>
+      Pre-built base images like
+      <span class="package">sles11sp4-docker-image</span> and
+      <span class="package">suse-sles12sp3-image</span> that ship with the
+      SUSE Linux Enterprise12 Containers module do not receive updates. We recommend
+      to use SUSE Linux Enterprise12SP3 and newer images that can be obtained through
+      the <code class="uri">registry.suse.com</code> Docker registry.
+    </p></div><p>
+   If you have obtained the image with Zypper, you need to activate it. Proceed as follows:
+  </p><div class="procedure" id="id-1.13.6.8.7" data-id-title="Activating the Base Image for up to SLES 12 SP2"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 5.1: </span><span class="title-name">Activating the Base Image for up to SLES 12 SP2 </span></span><a title="Permalink" class="permalink" href="docker-building-images.html#id-1.13.6.8.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Get the proper image name with <code class="literal">sle2docker</code> by running
+    </p><div class="verbatim-wrap"><pre class="screen">sle2docker list</pre></div></li><li class="step"><p>
+     Activate the image by using the image name from the previous step:
+    </p><div class="verbatim-wrap"><pre class="screen">sle2docker activate <span class="emphasis"><em>PRE-BUILT_IMAGE_NAME</em></span></pre></div></li><li class="step"><p>
+     Check if the image was successfully activated by running
+    </p><div class="verbatim-wrap"><pre class="screen">sle2docker</pre></div></li></ol></div></div><p>
+   You can customize the docker image as described in
+   <a class="xref" href="docker-building-images.html#Customizing-Pre-build-Images" title="5.2. Customizing SLES Docker Images">Section 5.2, “Customizing SLES Docker Images”</a>.
+  </p><p>
+    The <code class="literal">latest</code> tag refers to the most recently built and
+    published image for the newest Service Pack release, while builds for a
+    specific Service Pack can be referenced by
+    <code class="literal"><em class="replaceable">MAJOR</em>.<em class="replaceable">SP</em></code>.
+    To refer to a specific image build, the build identification numbers need
+    to be appended, e.g. <code class="literal">15.0.3.2.1</code> or
+    <code class="literal">15.1.2.3</code>. The full reference including the tag to a
+    specific image is part of the meta information, see
+    <a class="xref" href="docker-building-images.html#sec-docker-sle-images-metainfo" title="5.2.3. Meta Information in SLE Container Images">Section 5.2.3, “Meta Information in SLE Container Images”</a>.
+   </p></section><section class="sect1" id="Customizing-Pre-build-Images" data-id-title="Customizing SLES Docker Images"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.2 </span><span class="title-name">Customizing SLES Docker Images</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#Customizing-Pre-build-Images">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The pre-built images do not have any repository configured and do not
+   include any modules or extensions. They contain a
+   <a class="link" href="https://github.com/SUSE/container-suseconnect" target="_blank">zypper
+   service</a> that contacts either the SUSE Customer Center (SCC) or your Subscription Management Tool
+   (SMT) server, according to the configuration of
+   the SLE host that runs the Docker container. The service obtains the list of
+   repositories available for the product used by the Docker image. You can
+   also directly declare extensions in your <code class="filename">Dockerfile</code>
+   (for details refer to
+   <a class="xref" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-extensions" title="5.2.4. Adding SLE Extensions and Modules to Images">Section 5.2.4, “Adding SLE Extensions and Modules to Images”</a>.
+  </p><p>
+   You do not need to add any credentials to the Docker image because the
+   machine credentials are automatically injected into the container by the
+   Docker daemon. They are injected inside of the
+   <code class="literal">/run/secrets</code> directory. The same applies to the
+   <code class="filename">/etc/SUSEConnect</code> file of the host system, which is
+   automatically injected into the <code class="filename">/run/secrets</code> directory.
+  </p><div id="id-1.13.6.9.4" data-id-title="Credentials and Security" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Credentials and Security</div><p>
+    The contents of the <code class="filename">/run/secrets</code> directory are never
+    committed to a Docker image, hence there is no risk of your credentials
+    leaking.
+   </p></div><div id="build-images-different-codebase" data-id-title="Building Images on Systems Registered with RMT" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Building Images on Systems Registered with RMT</div><p>
+     When the host system used for building Docker images is registered
+    against RMT, the default behavior allows only building containers of the 
+    same code base as the host. For example, if your Docker host is a
+    SLE 15 system you can only build SLE 15-based images
+    on that host by default. To build images for a different SLE version, for 
+    example SLE 12 on a SLE 15 host,
+    the host machine credentials for the target release can be injected into
+    the container as outlined below.
+</p><p>    
+    When the host system is registered again SUSE Customer Center this
+    restriction does not apply.
+   </p></div><div id="id-1.13.6.9.6" data-id-title="Building Container Images in On-Demand SLE Instances in the Public Cloud" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Building Container Images in On-Demand SLE Instances in the Public Cloud</div><p>
+      When building container images on SLE instances that were launched as
+      so-called "on-demand" or "pay as you go" instances on a Public Cloud 
+      (AWS, GCE, or Azure), some additional steps have to be performed.
+      For installing packages and updates, the "on-demand" public cloud
+      instances are connected to a public cloud-specific update infrastructure,
+      which is based on RMT servers operated by SUSE on the various Public
+      Cloud Providers. Some additional steps are required to locate the required 
+      services and authenticate with them.
+    </p><p>
+      A new service was introduced to enable this, called 
+      <code class="literal">containerbuild-regionsrv</code>. This service is available 
+      in the public cloud images provided through the
+      Marketplaces of the various Public Cloud Providers. So before building
+      an image, this service has to be started on the public cloud instance by
+      running the following command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl start containerbuild-regionsrv</pre></div><p>
+      To start it automatically after system startup, enable it with
+      <code class="command">systemctl</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl enable containerbuild-regionsrv</pre></div><p>
+      The Zypper plugins provided by the SLE base images will then connect
+      to this service for retrieving authentication details and information about
+      which update server to talk to. In order for that to work the container
+      has to be built with host networking enabled, like the following example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>docker build --network host <em class="replaceable">build-directory/</em></pre></div><p>
+      Since update infrastructure in the Public Clouds is based upon RMT,
+      the same restrictions with regard to building SLE images for SLE
+      versions differing from the SLE version of the host apply here as well
+      (see <a class="xref" href="docker-building-images.html#build-images-different-codebase" title="Note: Building Images on Systems Registered with RMT">Note: Building Images on Systems Registered with RMT</a>).
+    </p></div><p>
+   To obtain the list of repositories use the following command:
+  </p><div class="verbatim-wrap"><pre class="screen">zypper ref -s</pre></div><p>
+   It will automatically add all the repositories to your container. For each
+   repository added to the system a new file will be created under
+   <code class="command">/etc/zypp/repos.d</code>. The URLs of these repositories include
+   an access token that automatically expires after 12 hours. To renew the
+   token call the <code class="command">zypper ref -s</code> command. It is secure to
+   commit these files to a Docker image.
+  </p><p>
+   If you want to use a different set of credentials, place a custom
+   <code class="filename">/etc/zypp/credentials.d/SCCcredentials</code> file inside of
+   the Docker image. It contains the machine credentials that have the
+   subscription you want to use. The same applies to the
+   <code class="filename">SUSEConnect</code> file: to override the file available on the
+   host system that is running the Docker container, add a custom
+   <code class="filename">/etc/SUSEConnect</code> file inside of the Docker image.
+  </p><p>
+   Now you can create a custom Docker image by using a
+   <code class="literal">Dockerfile</code>. If you want to create a custom image, refer to
+   <code class="literal">Dockerfile</code> as described in <a class="xref" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-sles12" title="5.2.2. Creating a Custom SLE 12 Image">Section 5.2.2</a>. In
+   case you would like to move your application to a Docker container,
+   refer to <a class="xref" href="docker-dockerizing-application.html" title="Chapter 6. Creating Docker Images of Applications">Chapter 6, <em>Creating Docker Images of Applications</em></a>.
+   After you have edited the <code class="filename">Dockerfile</code>, build the image by
+   running the following command in the same directory in which the
+   <code class="filename">Dockerfile</code> resides:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <a class="xref" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-sles11sp4" title="5.2.1. Creating a Custom SLE 11 SP4 Image">Section 5.2.1, “Creating a Custom SLE 11 SP4 Image”</a>
+        for SLE 11 SP4
+      </p></li><li class="listitem"><p>
+        <a class="xref" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-sles12" title="5.2.2. Creating a Custom SLE 12 Image">Section 5.2.2, “Creating a Custom SLE 12 Image”</a> for SLE 12
+      </p></li></ul></div><p>
+  In case you would like to move your application to a Docker container, refer
+  to <a class="xref" href="docker-dockerizing-application.html" title="Chapter 6. Creating Docker Images of Applications">Chapter 6, <em>Creating Docker Images of Applications</em></a>.
+ </p><section class="sect2" id="sec-docker-sle-images-customizing-the-images-sles11sp4" data-id-title="Creating a Custom SLE 11 SP4 Image"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.1 </span><span class="title-name">Creating a Custom SLE 11 SP4 Image</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-sles11sp4">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following <code class="filename">Dockerfile</code> creates a simple Docker image based on
+    SLE 11 SP4:
+   </p><div class="verbatim-wrap"><pre class="screen">FROM suse/sles11sp4:latest
+
+RUN zypper ref -s
+RUN zypper -n in vim</pre></div><p>
+    When the Docker host machine is registered against an internal SMT
+    server, the Docker image requires the SSL certificate used by SMT:
+   </p><div class="verbatim-wrap"><pre class="screen">FROM suse/sles11sp4:latest
+
+# Import the crt file of our private SMT server
+ADD http://smt.test.lan/smt.crt /etc/ssl/certs/smt.pem
+RUN c_rehash /etc/ssl/certs
+
+RUN zypper ref -s
+RUN zypper -n in vim</pre></div></section><section class="sect2" id="sec-docker-sle-images-customizing-the-images-sles12" data-id-title="Creating a Custom SLE 12 Image"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.2 </span><span class="title-name">Creating a Custom SLE 12 Image</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-sles12">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following <code class="filename">Dockerfile</code> creates a simple Docker image based on
+    SLE 12 SP4:
+   </p><div class="verbatim-wrap"><pre class="screen">FROM registry.suse.com/suse/sles12sp4:latest
+
+RUN zypper ref -s
+RUN zypper -n in vim</pre></div><p>
+    When the Docker host machine is registered against an internal SMT
+    server, the Docker image requires the SSL certificate used by SMT:
+   </p><div class="verbatim-wrap"><pre class="screen">FROM registry.suse.com/suse/sles12sp4:latest
+
+# Import the crt file of our private SMT server
+ADD http://smt.test.lan/smt.crt /etc/pki/trust/anchors/smt.crt
+RUN update-ca-certificates
+
+RUN zypper ref -s
+RUN zypper -n in vim</pre></div></section><section class="sect2" id="sec-docker-sle-images-metainfo" data-id-title="Meta Information in SLE Container Images"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.3 </span><span class="title-name">Meta Information in SLE Container Images</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#sec-docker-sle-images-metainfo">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Starting from SUSE Linux Enterprise 12 SP3, all base container images include information
+    such as a build time stamp and description. This information is provided in the form of
+    labels attached to the base images and is thus available for derived images and
+    containers as well. It can be displayed with <code class="command">docker inspect</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>docker inspect registry.suse.com/suse/sle15
+[...]
+            "Labels": {
+                "com.suse.sle.base.created": "2019-06-20T18:21:37.729383880Z",
+                "com.suse.sle.base.description": "Image containing a minimal environment for containers based on SUSE Linux Enterprise Server 15 SP1.",
+                "com.suse.sle.base.disturl": "obs://build.suse.de/SUSE:SLE-15-SP1:Update:CR/images/20efed47827dc48da9537c1aeed4dbe2-sles15-image",
+                "com.suse.sle.base.reference": "registry.suse.com/suse/sle15:15.1.6.2.31",
+                "com.suse.sle.base.title": "SUSE Linux Enterprise Server 15 SP1 Base Container",
+                "com.suse.sle.base.url": "https://www.suse.com/products/server/",
+                "com.suse.sle.base.vendor": "SUSE LLC",
+                "com.suse.sle.base.version": "15.1.6.2.31",
+                "org.openbuildservice.disturl": "obs://build.suse.de/SUSE:SLE-15-SP1:Update:CR/images/20efed47827dc48da9537c1aeed4dbe2-sles15-image",
+                "org.opencontainers.image.created": "2019-06-20T18:21:37.729383880Z",
+                "org.opencontainers.image.description": "Image containing a minimal environment for containers based on SUSE Linux Enterprise Server 15 SP1.",
+                "org.opencontainers.image.title": "SUSE Linux Enterprise Server 15 SP1 Base Container",
+                "org.opencontainers.image.url": "https://www.suse.com/products/server/",
+                "org.opencontainers.image.vendor": "SUSE LLC",
+                "org.opencontainers.image.version": "15.1.6.2.31",
+                "org.opensuse.reference": "registry.suse.com/suse/sle15:15.1.6.2.31"
+            }
+[...]</pre></div><p>
+   All labels are shown twice. This is necessary to ensure that in derived images the
+   information about the original base image is still visible and not overwritten.
+  </p></section><section class="sect2" id="sec-docker-sle-images-customizing-the-images-extensions" data-id-title="Adding SLE Extensions and Modules to Images"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.2.4 </span><span class="title-name">Adding SLE Extensions and Modules to Images</span></span> <a title="Permalink" class="permalink" href="docker-building-images.html#sec-docker-sle-images-customizing-the-images-extensions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You may have subscriptions to SLE extensions or modules that you would like
+    to use in your custom image. To add them to the Docker image, proceed as
+    follows:
+   </p><div class="procedure" id="id-1.13.6.9.17.3" data-id-title="Adding Extension and Modules"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 5.2: </span><span class="title-name">Adding Extension and Modules </span></span><a title="Permalink" class="permalink" href="docker-building-images.html#id-1.13.6.9.17.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/docker_building_images.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Add the following into your <code class="filename">Dockerfile</code>:
+     </p><div class="verbatim-wrap"><pre class="screen">ADD *.repo /etc/zypp/repos.d/
+ADD *.service /etc/zypp/services.d
+RUN zypper refs &amp;&amp; zypper refresh</pre></div></li><li class="step"><p>
+      Copy all <code class="filename">.service</code> and <code class="filename">.repo</code>
+      files that you will use into the directory where you will build the
+      Docker image from the <code class="filename">Dockerfile</code>.
+     </p></li></ol></div></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-registry-installation.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 4 </span>Storing Images</span></a> </div><div><a class="pagination-link next" href="docker-dockerizing-application.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>Creating Docker Images of Applications</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="docker-building-images.html#Building-Pre-build-Images"><span class="title-number">5.1 </span><span class="title-name">Obtaining Base SLES Images</span></a></span></li><li><span class="sect1"><a href="docker-building-images.html#Customizing-Pre-build-Images"><span class="title-number">5.2 </span><span class="title-name">Customizing SLES Docker Images</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

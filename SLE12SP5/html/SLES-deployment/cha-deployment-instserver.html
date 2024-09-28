@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Deployment Guide | Setting Up the Server Holding the Installation Sources</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Setting Up the Server Holding the Installation Sources…"/>
+<meta name="description" content="There are several methods of installing the target SUSE® Linux Enterprise Server via network, for example by using any of NFS, FTP, HTTP, or SMB prot…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Deployment Guide"/>
+<meta name="chapter-title" content="Chapter 8. Setting Up the Server Holding the Installation Sources"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Deployment Guide"/>
+<meta property="og:description" content="Install single or multiple systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Deployment Guide"/>
+<meta name="twitter:description" content="Install single or multiple systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Setting Up the Server Holding the Installation Sources",
+  
+    "description": "Setting Up the Server Holding the Installation Sources",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-installserver.html" title="Part III. Setting Up an Installation Server"/><link rel="next" href="cha-deployment-prep-boot.html" title="Chapter 9. Preparing the Boot of the Target System"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Deployment Guide</a><span> / </span><a class="crumb" href="part-installserver.html">Setting Up an Installation Server</a><span> / </span><a class="crumb" href="cha-deployment-instserver.html">Setting Up the Server Holding the Installation Sources</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Deployment Guide</div><ol><li><a href="preface-deployment.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-planning.html" class=" "><span class="title-number">1 </span><span class="title-name">Planning for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span></a></li><li><a href="part-prep.html" class="has-children "><span class="title-number">I </span><span class="title-name">Installation Preparation</span></a><ol><li><a href="cha-x86.html" class=" "><span class="title-number">2 </span><span class="title-name">Installation on AMD64 and Intel 64</span></a></li><li><a href="cha-power.html" class=" "><span class="title-number">3 </span><span class="title-name">Installation on IBM POWER</span></a></li><li><a href="cha-zseries.html" class=" "><span class="title-number">4 </span><span class="title-name">Installation on IBM IBM Z and LinuxONE</span></a></li><li><a href="cha-aarch64.html" class=" "><span class="title-number">5 </span><span class="title-name">Installation on Arm AArch64</span></a></li></ol></li><li><a href="part-mandeploy.html" class="has-children "><span class="title-number">II </span><span class="title-name">The Installation Workflow</span></a><ol><li><a href="cha-inst.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation with YaST</span></a></li><li><a href="cha-deployment-clone-image.html" class=" "><span class="title-number">7 </span><span class="title-name">Cloning Disk Images</span></a></li></ol></li><li class="active"><a href="part-installserver.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Setting Up an Installation Server</span></a><ol><li><a href="cha-deployment-instserver.html" class=" you-are-here"><span class="title-number">8 </span><span class="title-name">Setting Up the Server Holding the Installation Sources</span></a></li><li><a href="cha-deployment-prep-boot.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the Boot of the Target System</span></a></li><li><a href="cha-deployment-firstboot.html" class=" "><span class="title-number">10 </span><span class="title-name">Deploying Customized Preinstallations</span></a></li></ol></li><li><a href="part-remoteinstall.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Remote Installation</span></a><ol><li><a href="cha-deployment-remoteinst.html" class=" "><span class="title-number">11 </span><span class="title-name">Remote Installation</span></a></li></ol></li><li><a href="part-sysconfig.html" class="has-children "><span class="title-number">V </span><span class="title-name">Initial System Configuration</span></a><ol><li><a href="cha-y2-hw.html" class=" "><span class="title-number">12 </span><span class="title-name">Setting Up Hardware Components with YaST</span></a></li><li><a href="cha-advdisk.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced Disk Setup</span></a></li><li><a href="cha-y2-sw.html" class=" "><span class="title-number">14 </span><span class="title-name">Installing or Removing Software</span></a></li><li><a href="cha-add-ons.html" class=" "><span class="title-number">15 </span><span class="title-name">Installing Modules, Extensions, and Third Party Add-On Products</span></a></li><li><a href="cha-tuning-multikernel.html" class=" "><span class="title-number">16 </span><span class="title-name">Installing Multiple Kernel Versions</span></a></li><li><a href="cha-y2-userman.html" class=" "><span class="title-number">17 </span><span class="title-name">Managing Users with YaST</span></a></li><li><a href="cha-y2-lang.html" class=" "><span class="title-number">18 </span><span class="title-name">Changing Language and Country Settings with YaST</span></a></li></ol></li><li><a href="part-update.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Updating and Upgrading SUSE Linux Enterprise</span></a><ol><li><a href="cha-update-background.html" class=" "><span class="title-number">19 </span><span class="title-name">Lifecycle and Support</span></a></li><li><a href="cha-update-sle.html" class=" "><span class="title-number">20 </span><span class="title-name">Upgrading SUSE Linux Enterprise</span></a></li><li><a href="cha-update-offline.html" class=" "><span class="title-number">21 </span><span class="title-name">Upgrading Offline</span></a></li><li><a href="cha-update-online.html" class=" "><span class="title-number">22 </span><span class="title-name">Upgrading Online</span></a></li><li><a href="cha-update-backporting.html" class=" "><span class="title-number">23 </span><span class="title-name">Backporting Source Code</span></a></li></ol></li><li><a href="bk02apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-deployment-instserver" data-id-title="Setting Up the Server Holding the Installation Sources"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">8 </span><span class="title-name">Setting Up the Server Holding the Installation Sources</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  There are several methods of installing the target <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span> via network,
+  for example by using any of NFS, FTP, HTTP, or SMB protocols.
+  This chapter describes how to set up the installation server depending on the
+  preferred network protocol.
+ </p><p>
+  Each method is introduced by means of two short checklists: one listing the
+  prerequisites for this method and the other illustrating the basic procedure.
+  More detail is then provided for all the techniques used in these
+  installation scenarios.
+ </p><div id="id-1.4.6.2.5" data-id-title="Terminology" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Terminology</div><p>
+   In the following sections, the system to hold your new <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+   installation is called <span class="emphasis"><em>target system</em></span> or
+   <span class="emphasis"><em>installation target</em></span>. The term
+   <span class="emphasis"><em>repository</em></span> (previously called <span class="quote">“<span class="quote">installation
+   source</span>”</span>) is used for all sources of installation data. This includes
+   physical media, such as CD and DVD, and network servers distributing the
+   installation data in your network.
+  </p></div><p>
+  Depending on the operating system of the machine used as the
+  network installation source for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, there are several options for
+  the server configuration. The easiest way to set up an installation server is
+  to use YaST on SUSE Linux Enterprise Server or openSUSE.
+ </p><div id="id-1.4.6.2.7" data-id-title="Installation Server Operating System" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Installation Server Operating System</div><p>
+   You can even use a Microsoft Windows machine as the installation server for
+   your Linux deployment. See <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-smb" title="8.5. Managing an SMB Repository">Section 8.5, “Managing an SMB Repository”</a>
+   for details.
+  </p></div><section class="sect1" id="sec-deployment-instserver-sles9" data-id-title="Setting Up an Installation Server Using YaST"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.1 </span><span class="title-name">Setting Up an Installation Server Using YaST</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#sec-deployment-instserver-sles9">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   YaST offers a graphical tool for creating network repositories. It
+   supports HTTP, FTP, and NFS network installation servers.
+  </p><div class="procedure" id="proc-deployment-instserver-sles9"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Log in as <code class="systemitem">root</code> to the machine that should act as installation
+     server.
+    </p></li><li class="step"><p>
+     Start <span class="guimenu">YaST</span> › <span class="guimenu">Miscellaneous</span> › <span class="guimenu">Installation
+     Server</span>.
+    </p></li><li class="step"><p>
+     Select the repository type (HTTP, FTP, or NFS). The selected service is
+     started automatically every time the system starts. If a service of the
+     selected type is already running on your system and you want to configure
+     it manually for the server, deactivate the automatic configuration of the
+     server service with <span class="guimenu">Do Not Configure Any Network
+     Services</span>. In both cases, define the directory in which the
+     installation data should be made available on the server.
+    </p></li><li class="step"><p>
+     Configure the required repository type. This step relates to the automatic
+     configuration of server services. It is skipped when automatic
+     configuration is deactivated.
+    </p><p>
+
+     Define an alias for the root directory of the FTP or HTTP server on which
+     the installation data should be found. The repository will later be
+     located under
+     <code class="literal">ftp://<em class="replaceable">Server-IP</em>/<em class="replaceable">Alias</em>/<em class="replaceable">Name</em></code>
+     (FTP) or under
+     <code class="literal">http://<em class="replaceable">Server-IP</em>/<em class="replaceable">Alias</em>/<em class="replaceable">Name</em></code>
+     (HTTP). <em class="replaceable">Name</em> stands for the name of the
+     repository, which is defined in the following step. If you selected NFS in
+     the previous step, define wild cards and export options. The NFS server
+     will be accessible under
+     <code class="literal">nfs://<em class="replaceable">Server-IP</em>/<em class="replaceable">Name</em></code>.
+     Details of NFS and exports can be found in <span class="intraxref">Book “Administration Guide”, Chapter 29 “Sharing File Systems with NFS”</span>.
+    </p><div id="id-1.4.6.2.8.3.4.3" data-id-title="Firewall Settings" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Firewall Settings</div><p>
+      Make sure that the firewall settings of your server system allow traffic
+      on the ports for HTTP, NFS, and FTP. If they currently do not, enable
+      <span class="guimenu">Open Port in Firewall</span> or check <span class="guimenu">Firewall
+      Details</span> first.
+     </p></div></li><li class="step"><p>
+     Configure the repository. Before the installation media are copied to
+     their destination, define the name of the repository (ideally, an easily
+     remembered abbreviation of the product and version). YaST allows
+     providing ISO images of the media instead of copies of the installation
+     DVDs. If you want this, activate the relevant check box and specify the
+     directory path under which the ISO files can be found locally. Depending
+     on the product to distribute using this installation server, it might be
+     necessary to add additional media, such as service pack DVDs as extra
+     repositories. To announce your installation server in the network via
+     OpenSLP, activate the appropriate option.
+    </p><div id="id-1.4.6.2.8.3.5.2" data-id-title="Announcing the Repository" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Announcing the Repository</div><p>
+      Consider announcing your repository via OpenSLP if your network setup
+      supports this option. This saves you from entering the network
+      installation path on every target machine. The target systems are booted
+      using the SLP boot option and find the network repository without any
+      further configuration. For details on this option, refer to
+      <a class="xref" href="cha-deployment-remoteinst.html#sec-deployment-remoteinst-bootinst" title="11.2. Booting the Target System for Installation">Section 11.2, “Booting the Target System for Installation”</a>.
+     </p></div></li><li class="step"><p>
+     Configuring extra repositories. YaST follows a specific naming
+     convention to configure add-on CDs or service pack CDs repositories.
+     Configuration is accepted only if the repository name of the add-on CDs
+     starts with the repository name of the installation media. In other
+     words, if you chose <code class="literal">SLES12SP1</code> as the repository name
+     for DVD1, then you should choose <code class="literal">SLES12SP1addon</code> as the
+     repository name for DVD2. The same applies to SDK CDs.
+    </p></li><li class="step"><p>
+     Upload the installation data. The most lengthy step in configuring an
+     installation server is copying the actual installation media. Insert the
+     media in the sequence requested by YaST and wait for the copying
+     procedure to end. When the sources have been fully copied, return to the
+     overview of existing repositories and close the configuration by selecting
+     <span class="guimenu">Finish</span>.
+    </p><p>
+     Your installation server is now fully configured and ready for service. It
+     is automatically started every time the system is started. No further
+     intervention is required. You only need to configure and start this
+     service correctly by hand if you have deactivated the automatic
+     configuration of the selected network service with YaST as an initial
+     step.
+    </p></li></ol></div></div><p>
+   To deactivate a repository, select the repository to remove then select
+   <span class="guimenu">Delete</span>. The installation data are removed from the
+   system. To deactivate the network service, use the respective YaST module.
+  </p><p>
+   If your installation server needs to provide the installation data for more
+   than one product of the product version, start the YaST installation
+   server module and select <span class="guimenu">Add</span> in the overview of existing
+   repositories to configure the new repository.
+  </p></section><section class="sect1" id="sec-deployment-instserver-nfs" data-id-title="Setting Up an NFS Repository Manually"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.2 </span><span class="title-name">Setting Up an NFS Repository Manually</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#sec-deployment-instserver-nfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.4.6.2.9.2" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+    This assumes that you are a SLE-based operating
+    system on the machine that will serve as installation server. If this is
+    not the case, turn to the other vendor's documentation on NFS instead of
+    following these instructions.
+   </p></div><p>
+   Setting up an NFS source for installation is done in two main steps. In the
+   first step, create the directory structure holding the installation data and
+   copy the installation media over to this structure. Second, export the
+   directory holding the installation data to the network.
+  </p><div class="procedure" id="proc-deployment-instserver-nfs-cdir"><div class="procedure-contents"><p>
+    To create a directory to hold the installation data, proceed as follows:
+   </p><ol class="procedure" type="1"><li class="step"><p>
+     Log in as <code class="systemitem">root</code>.
+    </p></li><li class="step"><p>
+     Create a directory that will later hold all installation data and change
+     into this directory. For example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>mkdir -p /srv/install/<em class="replaceable">PRODUCT</em>/<em class="replaceable">PRODUCTVERSION</em>
+<code class="prompt root">root # </code>cd /srv/install/<em class="replaceable">PRODUCT</em>/<em class="replaceable">PRODUCTVERSION</em></pre></div><p>
+     Replace <em class="replaceable">PRODUCT</em> with an abbreviation of the
+     product name and <em class="replaceable">PRODUCTVERSION</em> with a string
+     that contains the product name and version.
+    </p></li><li class="step"><p>
+     For each DVD contained in the media kit execute the following commands:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Copy the entire content of the installation DVD into the installation
+       server directory:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>cp -a /media/<em class="replaceable">PATH_TO_YOUR_DVD_DRIVE</em> .</pre></div><p>
+       Replace <em class="replaceable">PATH_TO_YOUR_DVD_DRIVE</em> with the
+       actual path under which your DVD drive is addressed. Depending on the
+       type of drive used in your system, this can be
+       <code class="filename">cdrom</code>, <code class="filename">cdrecorder</code>,
+       <code class="filename">dvd</code>, or <code class="filename">dvdrecorder</code>.
+      </p></li><li class="step"><p>
+       Rename the directory to the DVD number:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>mv <em class="replaceable">PATH_TO_YOUR_DVD_DRIVE</em> DVD<em class="replaceable">X</em></pre></div><p>
+       Replace <em class="replaceable">X</em> with the actual number of your DVD.
+      </p></li></ol></li></ol></div></div><div class="procedure" id="proc-deployment-instserver-nfs-export"><div class="procedure-contents"><p>
+    On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, you can export the repository with NFS using YaST.
+    Proceed as follows:
+   </p><ol class="procedure" type="1"><li class="step"><p>
+     Log in as <code class="systemitem">root</code>.
+    </p></li><li class="step"><p>
+     Start <span class="guimenu">YaST</span> › <span class="guimenu">Network
+     Services</span> › <span class="guimenu">NFS Server</span>.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Start</span> and <span class="guimenu">Open Port in
+     Firewall</span> and click <span class="guimenu">Next</span>.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Add Directory</span> and browse for the directory
+     containing the installation sources, in this case,
+     <code class="filename"><em class="replaceable">PRODUCTVERSION</em></code>.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Add Host</span> and enter the host names of the
+     machines to which to export the installation data. Instead of specifying
+     host names here, you could also use wild cards, ranges of network
+     addresses, or the domain name of your network. Enter the appropriate
+     export options or leave the default, which works fine in most setups. For
+     more information about the syntax used in exporting NFS shares, read the
+     <code class="systemitem">exports</code> man page.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Finish</span>. The NFS server holding the <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+     repository is automatically started and integrated into the boot process.
+    </p></li></ol></div></div><div class="procedure" id="proc-deployment-instserver-nfs-exportman"><div class="procedure-contents"><p>
+    If you prefer manually exporting the repository via NFS instead of using
+    the YaST NFS Server module, proceed as follows:
+   </p><ol class="procedure" type="1"><li class="step"><p>
+     Log in as <code class="systemitem">root</code>.
+    </p></li><li class="step"><p>
+     Open the file <code class="filename">/etc/exports</code> and enter the following
+     line:
+    </p><div class="verbatim-wrap"><pre class="screen">/<em class="replaceable">PRODUCTVERSION</em> *(ro,root_squash,sync)</pre></div><p>
+     This exports the directory
+     <code class="filename">/<em class="replaceable">PRODUCTVERSION</em></code> to any
+     host that is part of this network or to any host that can connect to this
+     server. To limit the access to this server, use netmasks or domain names
+     instead of the general wild card <code class="literal">*</code>. Refer to the
+     <code class="systemitem">export</code> man page for details. Save and exit this
+     configuration file.
+    </p></li><li class="step"><p>
+     To add the NFS service to the list of servers started during system boot,
+     execute the following commands:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>systemctl enable nfsserver</pre></div></li><li class="step"><p>
+     Start the NFS server with <code class="command">systemctl start nfsserver</code>. If
+     you need to change the configuration of your NFS server later, modify the
+     configuration file and restart the NFS daemon with <code class="command">systemctl
+     restart nfsserver</code>.
+    </p></li></ol></div></div><div class="procedure" id="proc-deployment-instserver-nfs-slpann"><div class="procedure-contents"><p>
+    Announcing the NFS server via OpenSLP makes its address known to all
+    clients in your network.
+   </p><ol class="procedure" type="1"><li class="step"><p>
+     Log in as <code class="systemitem">root</code>.
+    </p></li><li class="step"><p>
+     Create the <code class="filename">/etc/slp.reg.d/install.suse.nfs.reg</code>
+     configuration file with the following lines:
+    </p><div class="verbatim-wrap"><pre class="screen"># Register the NFS Installation Server
+service:install.suse:nfs://$HOSTNAME/<em class="replaceable">PATH_TO_REPOSITORY</em>/DVD1,en,65535
+description=NFS Repository</pre></div><p>
+     Replace <em class="replaceable">PATH_TO_REPOSITORY</em> with the actual path
+     to the installation source on your server.
+    </p></li><li class="step"><p>
+     Start the OpenSLP daemon with <code class="command">systemctl start slpd</code>.
+    </p></li></ol></div></div><p>
+   For more information about OpenSLP, refer to the package documentation
+   located under <code class="filename">/usr/share/doc/packages/openslp/</code> or refer
+   to <span class="intraxref">Book “Administration Guide”, Chapter 32 “SLP”</span>. More Information about NFS, refer to
+   <span class="intraxref">Book “Administration Guide”, Chapter 29 “Sharing File Systems with NFS”</span>.
+  </p></section><section class="sect1" id="sec-deployment-instserver-ftp" data-id-title="Setting Up an FTP Repository Manually"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.3 </span><span class="title-name">Setting Up an FTP Repository Manually</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#sec-deployment-instserver-ftp">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Creating an FTP repository is very similar to creating an NFS repository. An
+   FTP repository can be announced over the network using OpenSLP as well.
+  </p><div class="procedure" id="proc-deployment-instserver-ftp"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Create a directory holding the installation sources as described in
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-nfs" title="8.2. Setting Up an NFS Repository Manually">Section 8.2, “Setting Up an NFS Repository Manually”</a>.
+    </p></li><li class="step"><p>
+     Configure the FTP server to distribute the contents of your installation
+     directory:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Log in as <code class="systemitem">root</code> and install the package
+       <code class="systemitem">vsftpd</code> using the YaST software management.
+      </p></li><li class="step"><p>
+       Enter the FTP server root directory:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>cd <code class="option">/srv/ftp</code></pre></div></li><li class="step"><p>
+       Create a subdirectory holding the installation sources in the FTP root
+       directory:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>mkdir <em class="replaceable">REPOSITORY</em></pre></div><p>
+       Replace <em class="replaceable">REPOSITORY</em> with the product name.
+      </p></li><li class="step"><p>
+       Mount the contents of the installation repository into the change root
+       environment of the FTP server:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>mount --bind <em class="replaceable">PATH_TO_REPOSITORY</em> /srv/ftp/<em class="replaceable">REPOSITORY</em></pre></div><p>
+       Replace <em class="replaceable">PATH_TO_REPOSITORY</em> and
+       <em class="replaceable">REPOSITORY</em> with values matching your setup.
+       If you need to make this permanent, add it to
+       <code class="filename">/etc/fstab</code>.
+      </p></li><li class="step"><p>
+       Start vsftpd with <code class="command">vsftpd</code>.
+      </p></li></ol></li><li class="step"><p>
+     Announce the repository via OpenSLP, if this is supported by your network
+     setup:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Create the <code class="filename">/etc/slp.reg.d/install.suse.ftp.reg</code>
+       configuration file with the following lines:
+      </p><div class="verbatim-wrap"><pre class="screen"># Register the FTP Installation Server
+service:install.suse:ftp://$HOSTNAME/<em class="replaceable">REPOSITORY</em>/DVD1,en,65535
+description=FTP Repository</pre></div><p>
+       Replace <em class="replaceable">REPOSITORY</em> with the actual name to
+       the repository directory on your server. The <code class="literal">service:</code>
+       line should be entered as one continuous line.
+      </p></li><li class="step"><p>
+       Start the OpenSLP daemon with <code class="command">systemctl start slpd</code>.
+      </p></li></ol></li></ol></div></div><div id="id-1.4.6.2.10.4" data-id-title="Configuring an FTP Server with YaST" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Configuring an FTP Server with YaST</div><p>
+    If you prefer to use YaST rather than manually configuring the FTP
+    installation server, refer to <span class="intraxref">Book “Administration Guide”, Chapter 34 “Setting Up an FTP Server with YaST”</span> for more
+    information on how to use the YaST FTP server module.
+   </p></div></section><section class="sect1" id="sec-deployment-instserver-http" data-id-title="Setting Up an HTTP Repository Manually"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.4 </span><span class="title-name">Setting Up an HTTP Repository Manually</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#sec-deployment-instserver-http">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Creating an HTTP repository is very similar to creating an NFS repository.
+   An HTTP repository can be announced over the network using OpenSLP as well.
+  </p><div class="procedure" id="proc-deployment-instserver-http"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Create a directory holding the installation sources as described in
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-nfs" title="8.2. Setting Up an NFS Repository Manually">Section 8.2, “Setting Up an NFS Repository Manually”</a>.
+    </p></li><li class="step"><p>
+     Configure the HTTP server to distribute the contents of your installation
+     directory:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       <span class="phrase">Install the Web server Apache as described in
+       <span class="intraxref">Book “Administration Guide”, Chapter 33 “The Apache HTTP Server”, Section 33.1.2 “Installation”</span></span>.
+      </p></li><li class="step"><p>
+       Enter the root directory of the HTTP server
+       (<code class="filename">/srv/www/htdocs</code>) and create the subdirectory that
+       will hold the installation sources:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>mkdir <em class="replaceable">REPOSITORY</em></pre></div><p>
+       Replace <em class="replaceable">REPOSITORY</em> with the product name.
+      </p></li><li class="step"><p>
+       Create a symbolic link from the location of the installation sources to
+       the root directory of the Web server
+       (<code class="filename">/srv/www/htdocs</code>):
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>ln -s <em class="replaceable">/PATH_TO_REPOSITORY</em>/srv/www/htdocs/<em class="replaceable">REPOSITORY</em></pre></div></li><li class="step"><p>
+       Modify the configuration file of the HTTP server
+       (<code class="filename">/etc/apache2/default-server.conf</code>) to make it
+       follow symbolic links. Replace the following line:
+      </p><div class="verbatim-wrap"><pre class="screen">Options None</pre></div><p>
+       with
+      </p><div class="verbatim-wrap"><pre class="screen">Options Indexes FollowSymLinks</pre></div></li><li class="step"><p>
+       Reload the HTTP server configuration using <code class="command">systemctl reload
+       apache2</code>.
+      </p></li></ol></li><li class="step"><p>
+     Announce the repository via OpenSLP, if this is supported by your network
+     setup:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Create the <code class="filename">/etc/slp.reg.d/install.suse.http.reg</code>
+       configuration file with the following lines:
+      </p><div class="verbatim-wrap"><pre class="screen"># Register the HTTP Installation Server
+service:install.suse:http://$HOSTNAME/<em class="replaceable">REPOSITORY</em>/DVD1/,en,65535
+description=HTTP Repository</pre></div><p>
+       Replace <em class="replaceable">REPOSITORY</em> with the actual path to
+       the repository on your server. The <code class="literal">service:</code> line
+       should be entered as one continuous line.
+      </p></li><li class="step"><p>
+       Start the OpenSLP daemon using <code class="command">systemctl start slpd</code>.
+      </p></li></ol></li></ol></div></div></section><section class="sect1" id="sec-deployment-instserver-smb" data-id-title="Managing an SMB Repository"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.5 </span><span class="title-name">Managing an SMB Repository</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#sec-deployment-instserver-smb">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Using SMB, you can import the installation sources from a Microsoft Windows
+   server and start your Linux deployment even with no Linux machine around.
+  </p><div class="procedure" id="proc-deployment-instserver-smb-export"><div class="procedure-contents"><p>
+    To set up an exported Windows Share holding your <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> repository,
+    proceed as follows:
+   </p><ol class="procedure" type="1"><li class="step"><p>
+     Log in to your Windows machine.
+    </p></li><li class="step"><p>
+     Create a new directory that will hold the entire installation tree and
+     name it <code class="filename">INSTALL</code>, for example.
+    </p></li><li class="step"><p>
+     Export this share according the procedure outlined in your Windows
+     documentation.
+    </p></li><li class="step"><p>
+     Enter this share and create a subdirectory, called
+     <code class="filename"><em class="replaceable">PRODUCT</em></code>. Replace
+     <em class="replaceable">PRODUCT</em> with the actual product name.
+    </p></li><li class="step"><p>
+     Enter the <code class="filename">INSTALL/<em class="replaceable">PRODUCT</em></code>
+     directory and copy each DVD to a separate directory, such as
+     <code class="literal">DVD1</code> and <code class="literal">DVD2</code>.
+    </p></li></ol></div></div><p>
+   To use an SMB mounted share as a repository, proceed as follows:
+  </p><div class="procedure" id="proc-deployment-instserver-smb-use"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Boot the installation target.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Installation</span>.
+    </p></li><li class="step"><p>
+     Press <span class="keycap">F4</span> for a selection of the repository.
+    </p></li><li class="step"><p>
+     Choose SMB and enter the Windows machine's name or IP address, the share
+     name
+     (<code class="filename">INSTALL/<em class="replaceable">PRODUCT</em>/DVD1</code>, in
+     this example), user name, and password. The syntax looks like this:
+    </p><div class="verbatim-wrap"><pre class="screen">smb://workdomain;user:password@server/INSTALL/DVD1</pre></div><p>
+     After you press <span class="keycap">Enter</span>, YaST starts and you can
+     perform the installation.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-deployment-remoteinst-iso" data-id-title="Using ISO Images of the Installation Media on the Server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.6 </span><span class="title-name">Using ISO Images of the Installation Media on the Server</span></span> <a title="Permalink" class="permalink" href="cha-deployment-instserver.html#sec-deployment-remoteinst-iso">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/deployment_installserver.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Instead of copying physical media into your server directory manually, you
+   can also mount the ISO images of the installation media into your
+   installation server and use them as a repository. To set up an HTTP, NFS or
+   FTP server that uses ISO images instead of media copies, proceed as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Download the ISO images and save them to the machine to use as the
+     installation server.
+    </p></li><li class="step"><p>
+     Log in as <code class="systemitem">root</code>.
+    </p></li><li class="step"><p>
+     Choose and create an appropriate location for the installation data, as
+     described in <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-nfs" title="8.2. Setting Up an NFS Repository Manually">Section 8.2, “Setting Up an NFS Repository Manually”</a>,
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-ftp" title="8.3. Setting Up an FTP Repository Manually">Section 8.3, “Setting Up an FTP Repository Manually”</a>, or
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-http" title="8.4. Setting Up an HTTP Repository Manually">Section 8.4, “Setting Up an HTTP Repository Manually”</a>.
+    </p></li><li class="step"><p>
+     Create subdirectories for each DVD.
+    </p></li><li class="step"><p>
+     To mount and unpack each ISO image to the final location, issue the
+     following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>mount -o loop <em class="replaceable">PATH_TO_ISO</em> <em class="replaceable">PATH_TO_REPOSITORY</em>/<em class="replaceable">PRODUCT</em>/<em class="replaceable">MEDIUMX</em></pre></div><p>
+     Replace <em class="replaceable">PATH_TO_ISO</em> with the path to your local
+     copy of the ISO image, <em class="replaceable">PATH_TO_REPOSITORY</em> with
+     the source directory of your server, <em class="replaceable">PRODUCT</em>
+     with the product name, and <em class="replaceable">MEDIUMX</em> with the
+     type (CD or DVD) and number of media you are using.
+    </p></li><li class="step"><p>
+     Repeat the previous step to mount all ISO images needed for your product.
+    </p></li><li class="step"><p>
+     Start your installation server as usual, as described in
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-nfs" title="8.2. Setting Up an NFS Repository Manually">Section 8.2, “Setting Up an NFS Repository Manually”</a>,
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-ftp" title="8.3. Setting Up an FTP Repository Manually">Section 8.3, “Setting Up an FTP Repository Manually”</a>, or
+     <a class="xref" href="cha-deployment-instserver.html#sec-deployment-instserver-http" title="8.4. Setting Up an HTTP Repository Manually">Section 8.4, “Setting Up an HTTP Repository Manually”</a>.
+    </p></li></ol></div></div><p>
+   To automatically mount the ISO images at boot time, add the respective mount
+   entries to <code class="filename">/etc/fstab</code>. An entry according to the
+   previous example would look like the following:
+  </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">PATH_TO_ISO</em> <em class="replaceable">PATH_TO_REPOSITORY</em>/<em class="replaceable">PRODUCT</em><em class="replaceable">MEDIUM</em> auto loop</pre></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-installserver.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part III </span>Setting Up an Installation Server</span></a> </div><div><a class="pagination-link next" href="cha-deployment-prep-boot.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 9 </span>Preparing the Boot of the Target System</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-deployment-instserver.html#sec-deployment-instserver-sles9"><span class="title-number">8.1 </span><span class="title-name">Setting Up an Installation Server Using YaST</span></a></span></li><li><span class="sect1"><a href="cha-deployment-instserver.html#sec-deployment-instserver-nfs"><span class="title-number">8.2 </span><span class="title-name">Setting Up an NFS Repository Manually</span></a></span></li><li><span class="sect1"><a href="cha-deployment-instserver.html#sec-deployment-instserver-ftp"><span class="title-number">8.3 </span><span class="title-name">Setting Up an FTP Repository Manually</span></a></span></li><li><span class="sect1"><a href="cha-deployment-instserver.html#sec-deployment-instserver-http"><span class="title-number">8.4 </span><span class="title-name">Setting Up an HTTP Repository Manually</span></a></span></li><li><span class="sect1"><a href="cha-deployment-instserver.html#sec-deployment-instserver-smb"><span class="title-number">8.5 </span><span class="title-name">Managing an SMB Repository</span></a></span></li><li><span class="sect1"><a href="cha-deployment-instserver.html#sec-deployment-remoteinst-iso"><span class="title-number">8.6 </span><span class="title-name">Using ISO Images of the Installation Media on the Server</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

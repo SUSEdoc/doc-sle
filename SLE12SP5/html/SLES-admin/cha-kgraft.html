@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Administration Guide | Live Patching the Linux Kernel Using kGraft</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Live Patching the Linux Kernel Using kGraft | SLES 12 …"/>
+<meta name="description" content="This document describes the basic principles of the kGraft live patching technology and provides usage guidelines for the SLE Live Patching service. …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 23. Live Patching the Linux Kernel Using kGraft"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Live Patching the Linux Kernel Using kGraft",
+  
+    "description": "This document describes the basic principles of the kGraft live patching technology and provides usage guidelines for the SLE Live Patching service.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-udev.html" title="Chapter 22. Dynamic Kernel Device Management with udev"/><link rel="next" href="cha-suse.html" title="Chapter 24. Special System Features"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-system.html">System</a><span> / </span><a class="crumb" href="cha-kgraft.html">Live Patching the Linux Kernel Using kGraft</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="pre-sle.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="part-administration.html" class="has-children "><span class="title-number">I </span><span class="title-name">Common Tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash Scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name">sudo
+</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">3 </span><span class="title-name">YaST Online Update</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">5 </span><span class="title-name">YaST in Text Mode</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing Software with Command Line Tools</span></a></li><li><a href="cha-snapper.html" class=" "><span class="title-number">7 </span><span class="title-name">System Recovery and Snapshot Management with Snapper</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">8 </span><span class="title-name">Remote Access with VNC</span></a></li><li><a href="cha-net-sync.html" class=" "><span class="title-number">9 </span><span class="title-name">File Copying with RSync</span></a></li><li><a href="cha-gnome-gconf.html" class=" "><span class="title-number">10 </span><span class="title-name">GNOME Configuration for Administrators</span></a></li></ol></li><li><a href="part-boot.html" class="has-children "><span class="title-number">II </span><span class="title-name">Booting a Linux System</span></a><ol><li><a href="cha-boot.html" class=" "><span class="title-number">11 </span><span class="title-name">Introduction to the boot process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">12 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" "><span class="title-number">13 </span><span class="title-name">The Boot Loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">14 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li class="active"><a href="part-system.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">15 </span><span class="title-name">32-Bit and 64-Bit Applications in a 64-Bit System Environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">16 </span><span class="title-name"><code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> Journal</span></a></li><li><a href="cha-basicnet.html" class=" "><span class="title-number">17 </span><span class="title-name">Basic Networking</span></a></li><li><a href="cha-p.html" class=" "><span class="title-number">18 </span><span class="title-name">Printer Operation</span></a></li><li><a href="cha-x11.html" class=" "><span class="title-number">19 </span><span class="title-name">The X Window System</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">20 </span><span class="title-name">Accessing File Systems with FUSE</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">21 </span><span class="title-name">Managing Kernel Modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">22 </span><span class="title-name">Dynamic Kernel Device Management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-kgraft.html" class=" you-are-here"><span class="title-number">23 </span><span class="title-name">Live Patching the Linux Kernel Using kGraft</span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">24 </span><span class="title-name">Special System Features</span></a></li><li><a href="cha-nvdimm.html" class=" "><span class="title-number">25 </span><span class="title-name">Persistent Memory</span></a></li></ol></li><li><a href="part-services.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Services</span></a><ol><li><a href="cha-netz-xntp.html" class=" "><span class="title-number">26 </span><span class="title-name">Time Synchronization with NTP</span></a></li><li><a href="cha-dns.html" class=" "><span class="title-number">27 </span><span class="title-name">The Domain Name System</span></a></li><li><a href="cha-dhcp.html" class=" "><span class="title-number">28 </span><span class="title-name">DHCP</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">29 </span><span class="title-name">Sharing File Systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">30 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">31 </span><span class="title-name">On-Demand Mounting with Autofs</span></a></li><li><a href="cha-slp.html" class=" "><span class="title-number">32 </span><span class="title-name">SLP</span></a></li><li><a href="cha-apache2.html" class=" "><span class="title-number">33 </span><span class="title-name">The Apache HTTP Server</span></a></li><li><a href="cha-ftp.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting Up an FTP Server with YaST</span></a></li><li><a href="cha-squid.html" class=" "><span class="title-number">35 </span><span class="title-name">The Proxy Server Squid</span></a></li><li><a href="cha-wbem.html" class=" "><span class="title-number">36 </span><span class="title-name">Web Based Enterprise Management Using SFCB</span></a></li></ol></li><li><a href="part-mobile.html" class="has-children "><span class="title-number">V </span><span class="title-name">Mobile Computers</span></a><ol><li><a href="cha-mobile.html" class=" "><span class="title-number">37 </span><span class="title-name">Mobile Computing with Linux</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">38 </span><span class="title-name">Using NetworkManager</span></a></li><li><a href="cha-pmanage.html" class=" "><span class="title-number">39 </span><span class="title-name">Power Management</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">40 </span><span class="title-name">Help and Documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Gathering System Information for Support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">42 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An Example Network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-kgraft" data-id-title="Live Patching the Linux Kernel Using kGraft"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">23 </span><span class="title-name">Live Patching the Linux Kernel Using kGraft</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This document describes the basic principles of the kGraft live patching
+    technology and provides usage guidelines for the SLE Live Patching service.
+   </p><p>
+    kGraft is a live patching technology for runtime patching of the Linux
+    kernel, without stopping the kernel. This maximizes system uptime, and thus
+    system availability, which is important for mission-critical systems. By
+    allowing dynamic patching of the kernel, the technology also encourages
+    users to install critical security updates without deferring them to a
+    scheduled downtime.
+   </p><p>
+    A kGraft patch is a kernel module, intended for replacing whole functions in
+    the kernel. kGraft primarily offers in-kernel infrastructure for integration
+    of the patched code with base kernel code at runtime.
+   </p><p>
+    SLE Live Patching is a service provided on top of regular SUSE Linux
+    Enterprise Server maintenance. kGraft patches distributed through SLE Live
+    Patching supplement regular SLES maintenance updates. Common update stack
+    and procedures can be used for SLE Live Patching deployment.
+   </p><p>
+    The information provided in this document relates to the AMD64/Intel 64
+    and POWER architectures. In case you use a different architecture, the
+    procedures may differ.
+   </p></div></div></div></div><section class="sect1" id="sec-kgraft-advantages" data-id-title="Advantages of kGraft"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.1 </span><span class="title-name">Advantages of kGraft</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-advantages">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Live kernel patching using kGraft is especially useful for quick response in
+   emergencies (when serious vulnerabilities are known and should be fixed when
+   possible or there are serious system stability issues with a known fix). It
+   is not used for scheduled updates where time is not critical.
+  </p><p>
+   Typical use cases for kGraft include systems like memory databases with huge
+   amounts of RAM, where boot-up times of 15 minutes or more are not uncommon,
+   large simulations that need weeks or months without a restart, or
+   infrastructure building blocks providing continuous service to many
+   consumers.
+  </p><p>
+   The main advantage of kGraft is that it never requires stopping the kernel,
+   not even for a short time period.
+  </p><p>
+   A kGraft patch is a <code class="filename">.ko</code> kernel module in a RPM
+   package. It is inserted into the kernel using the <code class="command">insmod</code>
+   command when the package is installed or updated. kGraft replaces whole
+   functions in the kernel, even if they are being executed. An updated kGraft
+   module can replace an existing patch if necessary.
+  </p><p>
+   kGraft is also lean—it contains only a small amount of code, because it
+   leverages other standard Linux technologies.
+  </p></section><section class="sect1" id="sec-kgraft-low-level" data-id-title="Low-level Function of kGraft"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.2 </span><span class="title-name">Low-level Function of kGraft</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-low-level">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   kGraft uses the ftrace infrastructure to perform patching. The following
+   describes the implementation on the AMD64/Intel 64 architecture.
+  </p><p>
+   To patch a kernel function, kGraft needs some space at the start of the
+   function to insert a jump to a new function. This space is allocated during
+   kernel compilation by GCC with function profiling turned on. In particular,
+   a 5-byte call instruction is injected to the start of kernel functions. When
+   such instrumented kernel is booting, profiling calls are replaced by 5-byte
+   NOP (no operation) instructions.
+  </p><p>
+   After patching starts, the first byte is replaced by the INT3 (breakpoint)
+   instruction. This ensures atomicity of the 5-byte instruction replacement.
+   The other four bytes are replaced by the address to the new function.
+   Finally, the first byte is replaced by the JMP (long jump) opcode.
+  </p><p>
+   Inter-processor non-maskable interrupts (IPI NMI) are used throughout the
+   process to flush speculative decoding queues of other CPUs in the system.
+   This allows switching to the new function without ever stopping the kernel,
+   not even for a very short moment. The interruptions by IPI NMIs can be
+   measured in microseconds and are not considered service interruptions as
+   they happen while the kernel is running in any case.
+  </p><p>
+   Callers are never patched. Instead, the caller's NOPs are replaced by a JMP
+   to the new function. JMP instructions remain forever. This takes care of
+   function pointers, including in structures, and does not require saving any
+   old data for the possibility of un-patching.
+  </p><p>
+   However, these steps alone would not be good enough: since the functions
+   would be replaced non-atomically, a new fixed function in one part of the
+   kernel could still be calling an old function elsewhere or vice versa. If
+   the semantics of the function interfaces changed in the patch, chaos would
+   ensue.
+  </p><p>
+   Thus, until all functions are replaced, kGraft uses an approach based on
+   trampolines and similar to RCU (read-copy-update), to ensure a consistent
+   view of the world to each user space thread, kernel thread and kernel
+   interrupt. A per-thread flag is set on each kernel entry and exit. This way,
+   an old function would always call another old function and a new function
+   always a new one. Once all processes have the "new universe" flag set,
+   patching is complete, trampolines can be removed and the code can operate at
+   full speed without performance impact other than an extra-long jump for each
+   patched function.
+  </p></section><section class="sect1" id="sec-kgraft-inst-patches" data-id-title="Installing kGraft Patches"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.3 </span><span class="title-name">Installing kGraft Patches</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-inst-patches">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section describes the activation of the SUSE Linux Enterprise Live
+   Patching extension and the installation of kGraft patches.
+  </p><section class="sect2" id="sec-kgraft-inst-patches-activate" data-id-title="Activation of SLE Live Patching"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">23.3.1 </span><span class="title-name">Activation of SLE Live Patching</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-inst-patches-activate">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To activate SLE Live Patching on your system, follow these steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      If your SLES system is not yet registered, register it. Registration can
+      be done during the system installation or later using the YaST
+      <span class="guimenu">Product Registration</span> module (<code class="command">yast2
+      registration</code>). After registration, click <span class="guimenu">Yes</span>
+      to see the list of available online updates.
+     </p><p>
+      If your SLES system is already registered, but SLE Live Patching is not
+      yet activated, open the YaST <span class="guimenu">Product Registration</span>
+      module (<code class="command">yast2 registration</code>) and click <span class="guimenu">Select
+      Extensions</span>.
+     </p></li><li class="step"><p>
+      Select <span class="guimenu">SUSE Linux Enterprise Live Patching 12</span> in the
+      list of available extensions and click <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Confirm the license terms and click <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Enter the SLE Live Patching registration code and click
+      <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Check the <span class="guimenu">Installation Summary</span> and selected
+      <span class="guimenu">Patterns</span>. The pattern <code class="systemitem">Live
+      Patching</code> should be selected for installation.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">Accept</span> to complete the installation. This will
+      install the base kGraft components on your system together with the initial
+      live patch.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-kgraft-inst-patches-update" data-id-title="Updating System"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">23.3.2 </span><span class="title-name">Updating System</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-inst-patches-update">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      SLE Live Patching updates are distributed in a form that allows using
+      standard SLE update stack for patch application. The initial live patch
+      can be updated using <code class="command">zypper patch</code>, YaST Online
+      Update or equivalent method.
+     </p></li><li class="step"><p>
+      The kernel is patched automatically during the package installation.
+      However, invocations of the old kernel functions are not completely
+      eliminated until all sleeping processes wake up and get out of the way.
+      This can take a considerable amount of time. Despite this, sleeping
+      processes that use the old kernel functions are not considered a security
+      issue. Nevertheless, in the current version of kGraft, it is not possible
+      to apply another kGraft patch until all processes cross the kernel-user
+      space boundary to stop using patched functions from the previous patch.
+     </p><p>
+      To see the global status of patching, check the flag in
+      <code class="filename">/sys/kernel/kgraft/in_progress</code>. The value
+      <code class="literal">1</code> signifies the existence of sleeping processes that
+      still need to be woken (the patching is still in progress). The value
+      <code class="literal">0</code> signifies that all processes are using solely the
+      patched functions and patching has finished already. Alternatively, use
+      the <code class="command">kgr status</code> command to obtain the same information.
+     </p><p>
+      The flag can be checked on a per-process basis too. Check the number in
+      <code class="filename">/proc/<em class="replaceable">PROCESS_NUMBER</em>/kgr_in_progress</code>
+      for each process individually. Again, the value <code class="literal">1</code>
+      signifies sleeping process that still needs to be woken. Alternatively,
+      use the <code class="command">kgr blocking</code> command to output the list of
+      sleeping processes.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-kgraft-lifecycle" data-id-title="Patch Life Cycle"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.4 </span><span class="title-name">Patch Life Cycle</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-lifecycle">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>Expiration dates of live patches can be accessed with <code class="command">zypper
+   lifecycle</code>. Make sure that the package
+   <span class="package">lifecycle-data-sle-live-patching</span> is installed.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">zypper lifecycle</code>
+
+Product end of support
+Codestream: SUSE Linux Enterprise Server 12             2024-10-31
+SUSE Linux Enterprise Server 12 SP2                     n/a*
+
+Extension end of support
+SUSE Linux Enterprise Live Patching                     2017-10-31
+
+Package end of support if different from product:
+SUSEConnect                              Now, installed 0.2.41-18.1, update available 0.2.42-19.3.1
+apache2-utils                            Now
+
+
+*) See https://www.suse.com/lifecycle  for latest information</pre></div><p>When the expiration date of a patch is reached, no
+   further live patches for this kernel version will be supplied.
+   Plan an update of your kernel before the end of the live patch
+   life cycle period.</p></section><section class="sect1" id="sec-kgraft-remove" data-id-title="Removing a kGraft Patch"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.5 </span><span class="title-name">Removing a kGraft Patch</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-remove">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To remove a kGraft patch, use the following procedure:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     First remove the patch itself using Zypper:
+    </p><div class="verbatim-wrap"><pre class="screen">zypper rm kgraft-patch-<em class="replaceable">3_12_32-25-default</em></pre></div></li><li class="step"><p>
+     Then reboot the machine.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-kgraft-exec-threads" data-id-title="Stuck Kernel Execution Threads"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.6 </span><span class="title-name">Stuck Kernel Execution Threads</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-exec-threads">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Kernel threads need to be prepared to handle kGraft. Third-party software may
+   not be ready for kGraft adoption and its kernel modules may spawn
+   kernel execution threads. These threads will block the patching process
+   indefinitely. As an emergency measure kGraft offers the possibility to force
+   finishing of the patching process without waiting for all execution threads
+   to cross the safety checkpoint. This can be achieved by writing
+   <code class="literal">0</code> into
+   <code class="filename">/sys/kernel/kgraft/in_progress</code>. Consult SUSE Support
+   before performing this procedure.
+  </p></section><section class="sect1" id="sec-kgraft-kgr" data-id-title="The kgr Tool"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.7 </span><span class="title-name">The <code class="command">kgr</code> Tool</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-kgr">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Several kGraft management tasks can be simplified with the
+   <code class="command">kgr</code> tool. The available commands are:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.5.10.9.3.1"><span class="term"><code class="command">kgr status</code>
+    </span></dt><dd><p>
+      Displays the overall status of kGraft patching (<code class="literal">ready</code> or
+      <code class="literal">in_progress</code>).
+
+     </p></dd><dt id="id-1.3.5.10.9.3.2"><span class="term"><code class="command">kgr patches</code>
+    </span></dt><dd><p>
+      Displays the list of loaded kGraft patches.
+     </p></dd><dt id="id-1.3.5.10.9.3.3"><span class="term"><code class="command">kgr blocking</code>
+    </span></dt><dd><p>
+      Lists processes that are preventing kGraft patching from finishing. By
+      default only the PIDs are listed. Specifying <code class="option">-v</code> prints
+      command lines if available. Another <code class="option">-v</code> displays also
+      stack traces.
+     </p></dd></dl></div><p>
+   For detailed information, see <code class="command">man kgr</code>.
+  </p></section><section class="sect1" id="sec-kgraft-scope" data-id-title="Scope of kGraft Technology"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.8 </span><span class="title-name">Scope of kGraft Technology</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-scope">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   kGraft is based on replacing functions. Data structure alteration can be
+   accomplished only indirectly with kGraft. As a result, changes to kernel data
+   structure require special care and, if the change is too large, rebooting
+   might be required. kGraft also might not be able to handle situations where
+   one compiler is used to compile the old kernel and another compiler is used
+   for compiling the patch.
+  </p><p>
+   Because of the way kGraft works, support for third-party modules that are
+   spawning kernel threads is limited.
+
+  </p></section><section class="sect1" id="sec-kgraft-scope-patching" data-id-title="Scope of SLE Live Patching"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.9 </span><span class="title-name">Scope of SLE Live Patching</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-scope-patching">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Fixes for SUSE Common Vulnerability Scoring System (CVSS)
+   level 7+ vulnerabilities and bug fixes
+   related to system stability or data corruption will be shipped in the
+   scope of SLE Live Patching. It might not be possible to produce a live
+   patch for all kinds of fixes fulfilling the above criteria. SUSE reserves
+   the right to skip fixes where production of a kernel live patch is
+   unviable because of technical reasons. For more information on CVSS 3.0,
+   which is the base for the SUSE CVSS rating, see
+   <a class="link" href="https://www.first.org/cvss/" target="_blank">https://www.first.org/cvss/</a>.
+  </p></section><section class="sect1" id="sec-kgraft-support-interaction" data-id-title="Interaction with the Support Processes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">23.10 </span><span class="title-name">Interaction with the Support Processes</span></span> <a title="Permalink" class="permalink" href="cha-kgraft.html#sec-kgraft-support-interaction">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/kgraft.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   While resolving a technical difficulty with SUSE Support, you may receive a
+   so-called Program Temporary Fix (PTF). PTFs may be issued for various
+   packages including those forming the base of SLE Live Patching.
+  </p><p>
+   kGraft PTFs complying with the conditions described in the previous section
+   can be installed as usual and SUSE will ensure that the system in question
+   does not need to be rebooted and that future live updates are applied
+   cleanly.
+  </p><p>
+   PTFs issued for the base kernel disrupt the live patching process. First,
+   installing the PTF kernel means a reboot as the kernel cannot be replaced as
+   a whole at runtime. Second, another reboot is needed to replace the PTF with
+   any regular maintenance updates for which the live patches are issued.
+  </p><p>
+   PTFs for other packages in SLE Live Patching can be treated like regular
+   PTFs with the usual guarantees.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-udev.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 22 </span>Dynamic Kernel Device Management with <code class="systemitem">udev</code></span></a> </div><div><a class="pagination-link next" href="cha-suse.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 24 </span>Special System Features</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-advantages"><span class="title-number">23.1 </span><span class="title-name">Advantages of kGraft</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-low-level"><span class="title-number">23.2 </span><span class="title-name">Low-level Function of kGraft</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-inst-patches"><span class="title-number">23.3 </span><span class="title-name">Installing kGraft Patches</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-lifecycle"><span class="title-number">23.4 </span><span class="title-name">Patch Life Cycle</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-remove"><span class="title-number">23.5 </span><span class="title-name">Removing a kGraft Patch</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-exec-threads"><span class="title-number">23.6 </span><span class="title-name">Stuck Kernel Execution Threads</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-kgr"><span class="title-number">23.7 </span><span class="title-name">The <code class="command">kgr</code> Tool</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-scope"><span class="title-number">23.8 </span><span class="title-name">Scope of kGraft Technology</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-scope-patching"><span class="title-number">23.9 </span><span class="title-name">Scope of SLE Live Patching</span></a></span></li><li><span class="sect1"><a href="cha-kgraft.html#sec-kgraft-support-interaction"><span class="title-number">23.10 </span><span class="title-name">Interaction with the Support Processes</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Virtualization Guide | Migrating VM Guests</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Migrating VM Guests | SLES 15 SP5"/>
+<meta name="description" content="One of the major advantages of virtualization is that VM Guests are portable. When a VM Host Server needs maintenance, or when the host becomes overl…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 16. Migrating VM Guests"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Migrating VM Guests",
+  
+    "description": "Migrating VM Guests",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-29T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-libvirt-config-virsh.html" title="Chapter 15. Configuring virtual machines with virsh"/><link rel="next" href="xen2kvm-migration.html" title="Chapter 17. Xen to KVM migration guide"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-libvirt.html">Managing virtual machines with libvirt</a><span> / </span><a class="crumb" href="sec-libvirt-admin-migrate.html">Migrating VM Guests</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li class="active"><a href="part-virt-libvirt.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name"><code class="systemitem">libvirt</code> daemons</span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="sec-libvirt-admin-migrate.html" class=" you-are-here"><span class="title-number">16 </span><span class="title-name">Migrating VM Guests</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">17 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">18 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">19 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">20 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">21 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">23 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">24 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">26 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">27 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">28 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">29 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">30 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">32 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">33 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">35 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">36 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">37 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">38 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">39 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="sec-libvirt-admin-migrate" data-id-title="Migrating VM Guests"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">16 </span><span class="title-name">Migrating VM Guests</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    One of the major advantages of virtualization is that VM Guests are
+    portable. When a VM Host Server needs maintenance, or when the host becomes
+    overloaded, the guests can be moved to another VM Host Server. KVM and Xen
+    even support <span class="quote">“<span class="quote">live</span>”</span> migrations during which the VM Guest is
+    constantly available.
+  </p><section class="sect1" id="libvirt-migration-types" data-id-title="Types of migration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.1 </span><span class="title-name">Types of migration</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#libvirt-migration-types">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Depending on the required scenario, there are three ways you can migrate
+      virtual machines (VM).
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.10.4.3.1"><span class="term">Live migration</span></dt><dd><p>
+            The source VM continues to run while its configuration and memory is
+            transferred to the target host. When the transfer is complete, the
+            source VM is suspended and the target VM is resumed.
+          </p><p>
+            Live migration is useful for VMs that need to be online without any
+            downtime.
+          </p><div id="id-1.12.4.10.4.3.1.2.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+              VMs experiencing heavy I/O load or frequent memory page writes are
+              challenging to live migrate. In such cases, consider using
+              non-live or offline migration.
+            </p></div></dd><dt id="id-1.12.4.10.4.3.2"><span class="term">Non-live migration</span></dt><dd><p>
+            The source VM is suspended and its configuration and memory
+            transferred to the target host. Then the target VM is resumed.
+          </p><p>
+            Non-live migration is more reliable than live migration, although it
+            creates downtime for the VM. If downtime is tolerable, non-live
+            migration can be an option for VMs that are difficult to live
+            migrate.
+          </p></dd><dt id="id-1.12.4.10.4.3.3"><span class="term">Offline migration</span></dt><dd><p>
+            The VM definition is transferred to the target host. The source VM
+            is not stopped and the target VM is not resumed.
+          </p><p>
+            Offline migration can be used to migrate inactive VMs.
+          </p><div id="id-1.12.4.10.4.3.3.2.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+              The <code class="option">--persistent</code> option must be used together
+              with offline migration.
+            </p></div></dd></dl></div></section><section class="sect1" id="libvirt-admin-live-migration-requirements" data-id-title="Migration requirements"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.2 </span><span class="title-name">Migration requirements</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#libvirt-admin-live-migration-requirements">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To successfully migrate a VM Guest to another VM Host Server, the following
+      requirements need to be met:
+    </p><div id="id-1.12.4.10.5.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+        The post-copy live migration (not supported or recommended for
+        production) requires setting the
+        <code class="varname">unprivileged_userfaultfd</code> system value to
+        <code class="literal">1</code> from kernel version 5.11 onward.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> sysctl -w vm.unprivileged_userfaultfd=1</pre></div><p>
+        Since kernel versions before 5.11 did not require setting
+        unprivileged_userfaultfd to use the post-copy option, <code class="systemitem">libvirt</code> provides
+        the setting in
+        <code class="filename">/usr/lib/sysctl.d/60-qemu-postcopy-migration.conf</code>
+        file to preserve the old behavior.
+      </p></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          The source and target systems must have the same architecture.
+        </p></li><li class="listitem"><p>
+          Storage devices must be accessible from both machines, for example,
+          via NFS or iSCSI. For more information, see
+          <a class="xref" href="cha-libvirt-storage.html" title="Chapter 13. Advanced storage topics">Chapter 13, <em>Advanced storage topics</em></a>.
+        </p><p>
+          This is also true for CD-ROM or floppy images that are connected
+          during the move. However, you can disconnect them before the move as
+          described in <a class="xref" href="cha-libvirt-config-gui.html#sec-libvirt-config-cdrom-media-change" title="14.11. Ejecting and changing floppy or CD/DVD-ROM media with Virtual Machine Manager">Section 14.11, “Ejecting and changing floppy or CD/DVD-ROM media with Virtual Machine Manager”</a>.
+        </p></li><li class="listitem"><p>
+          <code class="systemitem">libvirtd</code> needs to run on both VM Host Servers and you must be able to open
+          a remote <code class="systemitem">libvirt</code> connection between the target and the source host
+          (or vice versa). Refer to <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote" title="12.3. Configuring remote connections">Section 12.3, “Configuring remote connections”</a>
+          for details.
+        </p></li><li class="listitem"><p>
+          If a firewall is running on the target host, ports need to be opened
+          to allow the migration. If you do not specify a port during the
+          migration process, <code class="systemitem">libvirt</code> chooses one from the range 49152:49215.
+          Make sure that either this range (recommended) or a dedicated port of
+          your choice is opened in the firewall on the <span class="emphasis"><em>target
+          host</em></span>.
+        </p></li><li class="listitem"><p>
+          The source and target machines should be in the same subnet on the
+          network, otherwise networking fails after the migration.
+        </p></li><li class="listitem"><p>
+          All VM Host Servers participating in migration must have the same UID for
+          the qemu user and the same GIDs for the kvm, qemu and libvirt groups.
+        </p></li><li class="listitem"><p>
+          No running or paused VM Guest with the same name must exist on the
+          target host. If a shut-down machine with the same name exists, its
+          configuration is overwritten.
+        </p></li><li class="listitem"><p>
+          All CPU models, except the <span class="emphasis"><em>host cpu</em></span> model, are
+          supported when migrating VM Guests.
+        </p></li><li class="listitem"><p>
+          The <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-sata" title="SATA">SATA</a> disk device type is not
+          migratable.
+        </p></li><li class="listitem"><p>
+          File system pass-through feature is incompatible with migration.
+        </p></li><li class="listitem"><p>
+          The VM Host Server and VM Guest need to have proper timekeeping installed.
+          See <a class="xref" href="sec-kvm-managing-clock.html" title="Chapter 19. VM Guest clock settings">Chapter 19, <em>VM Guest clock settings</em></a>.
+        </p></li><li class="listitem"><p>
+          No physical devices can be passed from host to guest. Live migration
+          is currently not supported when using devices with PCI pass-through or
+          <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>. If live migration needs to be
+          supported, use software virtualization (paravirtualization or full
+          virtualization).
+        </p></li><li class="listitem"><p>
+          The cache mode setting is an important setting for migration. See:
+          <a class="xref" href="cha-cachemodes.html#sec-cache-mode-live-migration" title="18.6. Cache modes and live migration">Section 18.6, “Cache modes and live migration”</a>.
+        </p></li><li class="listitem"><p>
+          Backward migration, for example, from SLES 15 SP2 to 15 SP1, is not
+          supported.
+        </p></li><li class="listitem"><p>
+          SUSE strives to support live migration of VM Guests from a VM Host Server
+          running a service pack under LTSS to a VM Host Server running a newer
+          service pack within the same SLES major version. For example,
+          VM Guest migration from a SLES 12 SP2 host to a SLES 12 SP5 host.
+          SUSE only performs minimal testing of LTSS-to-newer migration
+          scenarios and recommends thorough on-site testing before attempting to
+          migrate critical VM Guests.
+        </p></li><li class="listitem"><p>
+          The image directory should be located in the same path on both hosts.
+        </p></li><li class="listitem"><p>
+          All hosts should be on the same level of microcode (especially the
+          Spectre microcode updates). This can be achieved by installing the
+          latest updates of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> on all hosts.
+        </p></li></ul></div></section><section class="sect1" id="sec-libvirt-admin-migrate-virtmanager" data-id-title="Live-migrating with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.3 </span><span class="title-name">Live-migrating with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-libvirt-admin-migrate-virtmanager">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      When using the Virtual Machine Manager to migrate VM Guests, it does not matter on which
+      machine it is started. You can start Virtual Machine Manager on the source or the target
+      host or even on a third host. In the latter case, you need to be able to
+      open remote connections to both the target and the source host.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Start Virtual Machine Manager and establish a connection to the target or the source
+          host. If the Virtual Machine Manager was started neither on the target nor the source
+          host, connections to both hosts need to be opened.
+        </p></li><li class="step"><p>
+          Right-click the VM Guest that you want to migrate and choose
+          <span class="guimenu">Migrate</span>. Make sure the guest is running or
+          paused—it is not possible to migrate guests that are shut down.
+        </p><div id="id-1.12.4.10.6.3.2.2" data-id-title="Increasing the speed of the migration" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Increasing the speed of the migration</div><p>
+            To increase the speed of the migration, pause the VM Guest. This is
+            the equivalent of <span class="quote">“<span class="quote">non-live migration</span>”</span> described in
+            <a class="xref" href="sec-libvirt-admin-migrate.html#libvirt-migration-types" title="16.1. Types of migration">Section 16.1, “Types of migration”</a>.
+          </p></div></li><li class="step"><p>
+          Choose a <span class="guimenu">New Host</span> for the VM Guest. If the desired
+          target host does not show up, make sure that you are connected to the
+          host.
+        </p><p>
+          To change the default options for connecting to the remote host, under
+          <span class="guimenu">Connection</span>, set the <span class="guimenu">Mode</span>, and
+          the target host's <span class="guimenu">Address</span> (IP address or host name)
+          and <span class="guimenu">Port</span>. If you specify a <span class="guimenu">Port</span>,
+          you must also specify an <span class="guimenu">Address</span>.
+        </p><p>
+          Under <span class="guimenu">Advanced options</span>, choose whether the move
+          should be permanent (default) or temporary, using <span class="guimenu">Temporary
+          move</span>.
+        </p><p>
+          Additionally, there is the option <span class="guimenu">Allow unsafe</span>,
+          which allows migrating without disabling the cache of the VM Host Server.
+          This can speed up the migration but only works when the current
+          configuration allows for a consistent view of the VM Guest storage
+          without using
+          <code class="literal">cache="none"</code>/<code class="literal">0_DIRECT</code>.
+        </p><div id="id-1.12.4.10.6.3.3.5" data-id-title="Bandwidth option" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Bandwidth option</div><p>
+            In recent versions of Virtual Machine Manager, the option of setting a bandwidth for
+            the migration has been removed. To set a specific bandwidth, use
+            <code class="command">virsh</code> instead.
+          </p></div></li><li class="step"><p>
+          To perform the migration, click <span class="guimenu">Migrate</span>.
+        </p><p>
+          When the migration is complete, the <span class="guimenu">Migrate</span> window
+          closes and the VM Guest is now listed on the new host in the Virtual Machine Manager
+          window. The original VM Guest is still available on the source host
+          in the shut-down state.
+        </p></li></ol></div></div></section><section class="sect1" id="sec-libvirt-admin-migrate-virsh" data-id-title="Migrating with virsh"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.4 </span><span class="title-name">Migrating with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-libvirt-admin-migrate-virsh">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To migrate a VM Guest with <code class="command">virsh</code>
+      <code class="option">migrate</code>, you need to have direct or remote shell access
+      to the VM Host Server, because the command needs to be run on the host. The
+      migration command looks like this:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh migrate [OPTIONS] <em class="replaceable">VM_ID_or_NAME</em> <em class="replaceable">CONNECTION_URI</em> [--migrateuri tcp://<em class="replaceable">REMOTE_HOST:PORT</em>]</pre></div><p>
+      The most important options are listed below. See <code class="command">virsh help
+      migrate</code> for a full list.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.10.7.5.1"><span class="term"><code class="option">--live</code></span></dt><dd><p>
+            Does a live migration. If not specified, the guest is paused during
+            the migration (<span class="quote">“<span class="quote">non-live migration</span>”</span>).
+          </p></dd><dt id="id-1.12.4.10.7.5.2"><span class="term"><code class="option">--suspend</code></span></dt><dd><p>
+            Leaves the VM paused on the target host during live or non-live
+            migration.
+          </p></dd><dt id="id-1.12.4.10.7.5.3"><span class="term"><code class="option">--persistent</code></span></dt><dd><p>
+            Persists the migrated VM on the target host. Without this option,
+            the VM is not be included in the list of domains reported by
+            <code class="command">virsh list --all</code> when shut down.
+          </p></dd><dt id="id-1.12.4.10.7.5.4"><span class="term"><code class="option">--undefinesource</code></span></dt><dd><p>
+            When specified, the VM Guest definition on the source host is
+            deleted after a successful migration. However, virtual disks
+            attached to this guest are <span class="emphasis"><em>not</em></span> deleted.
+          </p></dd><dt id="id-1.12.4.10.7.5.5"><span class="term"><code class="option">--parallel --parallel-connections <em class="replaceable">NUM_OF_CONNECTIONS</em></code></span></dt><dd><p>
+            Parallel migration can be used to increase migration data throughput
+            in cases where a single migration thread is not capable of
+            saturating the network link between source and target hosts. On
+            hosts with 40 GB network interfaces, it may require four
+            migration threads to saturate the link. With parallel migration, the
+            time required to migrate large memory VMs can be reduced.
+          </p></dd></dl></div><p>
+      The following examples use mercury.example.com as the source system and jupiter.example.com
+      as the target system; the VM Guest's name is
+      <code class="literal">opensuse131</code> with ID <code class="literal">37</code>.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.10.7.7.1"><span class="term">Non-live migration with default parameters</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh migrate 37 qemu+ssh://tux@jupiter.example.com/system</pre></div></dd><dt id="id-1.12.4.10.7.7.2"><span class="term">Transient live migration with default parameters</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh migrate --live opensuse131 qemu+ssh://tux@jupiter.example.com/system</pre></div></dd><dt id="id-1.12.4.10.7.7.3"><span class="term">Persistent live migration; delete VM definition on source</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh migrate --live --persistent --undefinesource 37 \
+qemu+tls://tux@jupiter.example.com/system</pre></div></dd><dt id="id-1.12.4.10.7.7.4"><span class="term">Non-live migration using port 49152</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh migrate opensuse131 qemu+ssh://tux@jupiter.example.com/system \
+--migrateuri tcp://@jupiter.example.com:49152</pre></div></dd><dt id="id-1.12.4.10.7.7.5"><span class="term">Live migration transferring all used storage</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh migrate --live --persistent --copy-storage-all \
+opensuse156 qemu+ssh://tux@jupiter.example.com/system</pre></div><div id="id-1.12.4.10.7.7.5.2.2" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+              When migrating VM's storage using the
+              <code class="option">--copy-storage-all</code> option, the storage must be
+              placed in a <code class="systemitem">libvirt</code> storage pool. The target storage pool must
+              exist with identical type and name as the source pool.
+            </p><p>
+              To obtain the XML representation of the source pool, use the
+              following command:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh pool-dumpxml <em class="replaceable">EXAMPLE_VM</em> &gt; <em class="replaceable">EXAMPLE_POOL.xml</em></pre></div><p>
+              To create and start the storage pool on the target host, copy its
+              XML representation there and use the following commands:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh pool-define <em class="replaceable">EXAMPLE_POOL.xml</em>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> virsh pool-start <em class="replaceable">EXAMPLE_VM</em></pre></div></div></dd></dl></div><div id="id-1.12.4.10.7.8" data-id-title="Transient compared to persistent migrations" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Transient compared to persistent migrations</div><p>
+        By default, <code class="command">virsh migrate</code> creates a temporary
+        (transient) copy of the VM Guest on the target host. A shut-down
+        version of the original guest description remains on the source host. A
+        transient copy is deleted from the server after it is shut down.
+      </p><p>
+        To create a permanent copy of a guest on the target host, use the switch
+        <code class="option">--persistent</code>. A shut-down version of the original guest
+        description remains on the source host, too. Use the option
+        <code class="option">--undefinesource</code> together with
+        <code class="option">--persistent</code> for a <span class="quote">“<span class="quote">real</span>”</span> move where a
+        permanent copy is created on the target host and the version on the
+        source host is deleted.
+      </p><p>
+        It is not recommended to use <code class="option">--undefinesource</code> without
+        the <code class="option">--persistent</code> option, since this results in the loss
+        of both VM Guest definitions when the guest is shut down on the target
+        host.
+      </p></div></section><section class="sect1" id="sec-libvirt-migrate-stepbstep" data-id-title="Step-by-step example"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.5 </span><span class="title-name">Step-by-step example</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-libvirt-migrate-stepbstep">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-migrate-stepbstep-export" data-id-title="Exporting the storage"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.5.1 </span><span class="title-name">Exporting the storage</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-migrate-stepbstep-export">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        First, you need to export the storage to share the guest image between
+        hosts. This can be done by an NFS server. In the following example, we
+        want to share the <code class="filename">/volume1/VM</code> directory for all
+        machines that are on the network 10.0.1.0/24. We are using a SUSE Linux Enterprise NFS
+        server. As root user, edit the <code class="filename">/etc/exports</code> file
+        and add:
+      </p><div class="verbatim-wrap"><pre class="screen">/volume1/VM 10.0.1.0/24  (rw,sync,no_root_squash)</pre></div><p>
+        You need to restart the NFS server:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart nfsserver
+<code class="prompt user">&gt; </code><code class="command">sudo</code> exportfs
+/volume1/VM      10.0.1.0/24</pre></div></section><section class="sect2" id="sec-migrate-stepbstep-pool" data-id-title="Defining the pool on the target hosts"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.5.2 </span><span class="title-name">Defining the pool on the target hosts</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-migrate-stepbstep-pool">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        On each host where you want to migrate the VM Guest, the pool must be
+        defined to be able to access the volume (that contains the Guest image).
+        Our NFS server IP address is 10.0.1.99, its share is the
+        <code class="filename">/volume1/VM</code> directory, and we want to get it
+        mounted in the <code class="filename">/var/lib/libvirt/images/VM</code>
+        directory. The pool name is <span class="emphasis"><em>VM</em></span>. To define this
+        pool, create a <code class="filename">VM.xml</code> file with the following
+        content:
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;pool type='netfs'&gt;
+  &lt;name&gt;VM&lt;/name&gt;
+  &lt;source&gt;
+    &lt;host name='10.0.1.99'/&gt;
+    &lt;dir path='/volume1/VM'/&gt;
+    &lt;format type='auto'/&gt;
+  &lt;/source&gt;
+  &lt;target&gt;
+    &lt;path&gt;/var/lib/libvirt/images/VM&lt;/path&gt;
+    &lt;permissions&gt;
+      &lt;mode&gt;0755&lt;/mode&gt;
+      &lt;owner&gt;-1&lt;/owner&gt;
+      &lt;group&gt;-1&lt;/group&gt;
+    &lt;/permissions&gt;
+  &lt;/target&gt;
+  &lt;/pool&gt;</pre></div><p>
+        Then load it into <code class="systemitem">libvirt</code> using the <code class="command">pool-define</code>
+        command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh pool-define VM.xml</pre></div><p>
+        An alternative way to define this pool is to use the
+        <code class="command">virsh</code> command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh pool-define-as VM --type netfs --source-host 10.0.1.99 \
+     --source-path /volume1/VM --target /var/lib/libvirt/images/VM
+Pool VM created</pre></div><p>
+        The following commands assume that you are in the interactive shell of
+        <code class="command">virsh</code>, which can also be reached by using the command
+        <code class="command">virsh</code> without any arguments. Then the pool can be set
+        to start automatically at host boot (autostart option):
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>pool-autostart VM
+Pool VM marked as autostarted</pre></div><p>
+        To disable the autostart:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>pool-autostart VM --disable
+Pool VM unmarked as autostarted</pre></div><p>
+        Check if the pool is present:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>pool-list --all
+ Name                 State      Autostart
+-------------------------------------------
+ default              active     yes
+ VM                   active     yes
+
+<code class="prompt user">virsh # </code>pool-info VM
+Name:           VM
+UUID:           42efe1b3-7eaa-4e24-a06a-ba7c9ee29741
+State:          running
+Persistent:     yes
+Autostart:      yes
+Capacity:       2,68 TiB
+Allocation:     2,38 TiB
+Available:      306,05 GiB</pre></div><div id="id-1.12.4.10.8.3.14" data-id-title="Pool needs to exist on all target hosts" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Pool needs to exist on all target hosts</div><p>
+          Remember: this pool must be defined on each host where you want to be
+          able to migrate your VM Guest.
+        </p></div></section><section class="sect2" id="sec-migrate-stepbstep-volume" data-id-title="Creating the volume"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.5.3 </span><span class="title-name">Creating the volume</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-migrate-stepbstep-volume">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The pool has been defined—now we need a volume which contains the
+        disk image:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>vol-create-as VM sled12.qcow2 8G --format qcow2
+Vol sled12.qcow2 created</pre></div><p>
+        The volume names shown are used later to install the guest with
+        virt-install.
+      </p></section><section class="sect2" id="sec-migrate-stepbstep-guest" data-id-title="Creating the VM Guest"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.5.4 </span><span class="title-name">Creating the VM Guest</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-migrate-stepbstep-guest">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Let us create a <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> VM Guest with the
+        <code class="command">virt-install</code> command. The <span class="emphasis"><em>VM</em></span>
+        pool is specified with the <code class="command">--disk</code> option,
+        <span class="emphasis"><em>cache=none</em></span> is recommended if you do not want to use
+        the <code class="command">--unsafe</code> option while doing the migration.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virt-install --connect qemu:///system --virt-type kvm --name \
+   sles15 --memory 1024 --disk vol=VM/sled12.qcow2,cache=none --cdrom \
+   /mnt/install/ISO/SLE-15-Server-DVD-x86_64-Build0327-Media1.iso --graphics \
+   vnc --os-variant sled15
+Starting install...
+Creating domain...</pre></div></section><section class="sect2" id="sec-migrate-stepbstep-migrate" data-id-title="Migrate the VM Guest"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.5.5 </span><span class="title-name">Migrate the VM Guest</span></span> <a title="Permalink" class="permalink" href="sec-libvirt-admin-migrate.html#sec-migrate-stepbstep-migrate">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_migrating_vms.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Everything is ready to do the migration now. Run the
+        <code class="command">migrate</code> command on the VM Host Server that is currently
+        hosting the VM Guest, and choose the target.
+      </p><div class="verbatim-wrap"><pre class="screen">virsh # migrate --live sled12 --verbose qemu+ssh://<em class="replaceable">IP/Hostname</em>/system
+Password:
+Migration: [ 12 %]</pre></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-libvirt-config-virsh.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 15 </span>Configuring virtual machines with <code class="command">virsh</code></span></a> </div><div><a class="pagination-link next" href="xen2kvm-migration.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 17 </span>Xen to KVM migration guide</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="sec-libvirt-admin-migrate.html#libvirt-migration-types"><span class="title-number">16.1 </span><span class="title-name">Types of migration</span></a></span></li><li><span class="sect1"><a href="sec-libvirt-admin-migrate.html#libvirt-admin-live-migration-requirements"><span class="title-number">16.2 </span><span class="title-name">Migration requirements</span></a></span></li><li><span class="sect1"><a href="sec-libvirt-admin-migrate.html#sec-libvirt-admin-migrate-virtmanager"><span class="title-number">16.3 </span><span class="title-name">Live-migrating with Virtual Machine Manager</span></a></span></li><li><span class="sect1"><a href="sec-libvirt-admin-migrate.html#sec-libvirt-admin-migrate-virsh"><span class="title-number">16.4 </span><span class="title-name">Migrating with <code class="command">virsh</code></span></a></span></li><li><span class="sect1"><a href="sec-libvirt-admin-migrate.html#sec-libvirt-migrate-stepbstep"><span class="title-number">16.5 </span><span class="title-name">Step-by-step example</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

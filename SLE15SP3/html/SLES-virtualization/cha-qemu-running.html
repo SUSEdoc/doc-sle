@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP3 | Virtualization Guide | Running virtual machines with qemu-system-ARCH</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Running virtual machines with qemu-system-ARCH | SLES …"/>
+<meta name="description" content="Once you have a virtual disk image ready (for more information on disk images, see Section 34.2, “Managing disk images with qemu-img”), it is time to…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP3"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 35. Running virtual machines with qemu-system-ARCH"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Running virtual machines with qemu-system-ARCH",
+  
+    "description": "Running virtual machines with qemu-system-ARCH",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-29T00:00+02:00",
+      
+    "datePublished": "2021-06-22T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-qemu-guest-inst.html" title="Chapter 34. Guest installation"/><link rel="next" href="cha-qemu-monitor.html" title="Chapter 36. Virtual machine administration using QEMU monitor"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-qemu.html">Managing virtual machines with QEMU</a><span> / </span><a class="crumb" href="cha-qemu-running.html">Running virtual machines with qemu-system-ARCH</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">16 </span><span class="title-name">Managing virtual machines with Vagrant</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">17 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">18 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">19 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">20 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">21 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">23 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">24 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">26 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">27 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">28 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">29 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">30 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li class="active"><a href="part-virt-qemu.html" class="has-children you-are-here"><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">32 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">34 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" you-are-here"><span class="title-number">35 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">36 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">37 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">38 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-qemu-running" data-id-title="Running virtual machines with qemu-system-ARCH"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">35 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Once you have a virtual disk image ready (for more information on disk
+  images, see <a class="xref" href="cha-qemu-guest-inst.html#cha-qemu-guest-inst-qemu-img" title="34.2. Managing disk images with qemu-img">Section 34.2, “Managing disk images with <code class="command">qemu-img</code>”</a>), it is time to
+  start the related virtual machine.
+  <a class="xref" href="cha-qemu-guest-inst.html#cha-qemu-guest-inst-qemu-kvm" title="34.1. Basic installation with qemu-system-ARCH">Section 34.1, “Basic installation with <code class="command">qemu-system-ARCH</code>”</a> introduced simple commands to
+  install and run a VM Guest. This chapter focuses on a more detailed
+  explanation of <code class="command">qemu-system-ARCH</code> usage, and shows solutions
+  for more specific tasks. For a complete list of
+  <code class="command">qemu-system-ARCH</code>'s options, see its manual page
+  (<code class="command">man 1 qemu</code>).
+ </p><section class="sect1" id="cha-qemu-running-basic" data-id-title="Basic qemu-system-ARCH invocation"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.1 </span><span class="title-name">Basic <code class="command">qemu-system-ARCH</code> invocation</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-basic">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <code class="command">qemu-system-ARCH</code> command uses the following syntax:
+  </p><div class="verbatim-wrap"><pre class="screen">qemu-system-ARCH <em class="replaceable">OPTIONS</em><span class="callout" id="co-qemu-running-basic-opts">1</span> -drive file=<em class="replaceable">DISK_IMAGE</em><span class="callout" id="co-qemu-running-basic-img">2</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-running-basic-opts"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     <code class="command">qemu-system-ARCH</code> understands many options. Most of them
+     define parameters of the emulated hardware, while others affect more
+     general emulator behavior. If you do not supply any options, default
+     values are used, and you need to supply the path to a disk image to be
+     run.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-running-basic-img"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Path to the disk image holding the guest system you want to virtualize.
+     <code class="command">qemu-system-ARCH</code> supports many image formats. Use
+     <code class="command">qemu-img</code> <code class="option">--help</code> to list them.
+    </p></td></tr></table></div><div id="id-1.12.7.5.4.5" data-id-title="AArch64 architecture" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: AArch64 architecture</div><p>
+    KVM support is available only for 64-bit ARM architecture (AArch64).
+    Running QEMU on the AArch64 architecture requires you to specify:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      A machine type designed for QEMU ARM virtual machines using the
+      <code class="option">-machine virt-<em class="replaceable">VERSION_NUMBER</em></code>
+      option.
+     </p></li><li class="listitem"><p>
+      A firmware image file using the <code class="option">-bios</code> option.
+     </p><p>
+       You can specify the firmware image files alternatively using the
+       <code class="option">-drive</code> options, for example:
+      </p><div class="verbatim-wrap"><pre class="screen">-drive file=/usr/share/edk2/aarch64/QEMU_EFI-pflash.raw,if=pflash,format=raw
+-drive file=/var/lib/libvirt/qemu/nvram/opensuse_VARS.fd,if=pflash,format=raw</pre></div></li><li class="listitem"><p>
+      A CPU of the VM Host Server using the <code class="option">-cpu host</code> option
+      (default is <code class="option">cortex-15</code>).
+     </p></li><li class="listitem"><p>
+      The same Generic Interrupt Controller (GIC) version as the host using
+      the <code class="option">-machine gic-version=host</code> option (default is
+      <code class="option">2</code>).
+     </p></li><li class="listitem"><p>
+      If a graphic mode is needed, a graphic device of type
+      <code class="literal">virtio-gpu-pci</code>.
+     </p></li></ul></div><p>
+    For example:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-aarch64 [...] \
+ -bios /usr/share/qemu/qemu-uefi-aarch64.bin \
+ -cpu host \
+ -device virtio-gpu-pci \
+ -machine virt,accel=kvm,gic-version=host</pre></div></div></section><section class="sect1" id="cha-qemu-running-gen-opts" data-id-title="General qemu-system-ARCH options"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.2 </span><span class="title-name">General <code class="command">qemu-system-ARCH</code> options</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-gen-opts">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section introduces general <code class="command">qemu-system-ARCH</code> options
+   and options related to the basic emulated hardware, such as the virtual
+   machine's processor, memory, model type, or time processing methods.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.5.3.1"><span class="term"><code class="literal">-name <em class="replaceable">NAME_OF_GUEST</em></code>
+    </span></dt><dd><p>
+      Specifies the name of the running guest system. The name is displayed in
+      the window caption and used for the VNC server.
+     </p></dd><dt id="id-1.12.7.5.5.3.2"><span class="term"><code class="literal">-boot <em class="replaceable">OPTIONS</em></code>
+    </span></dt><dd><p>
+      Specifies the order in which the defined drives will be booted. Drives
+      are represented by letters, where <code class="literal">a</code> and
+      <code class="literal">b</code> stand for the floppy drives 1 and 2,
+      <code class="literal">c</code> stands for the first hard disk, <code class="literal">d</code>
+      stands for the first CD-ROM drive, and <code class="literal">n</code> to
+      <code class="literal">p</code> stand for Ether-boot network adapters.
+     </p><p>
+      For example, <code class="literal">qemu-system-ARCH [...] -boot order=ndc</code>
+      first tries to boot from the network, then from the first CD-ROM drive,
+      and finally from the first hard disk.
+     </p></dd><dt id="id-1.12.7.5.5.3.3"><span class="term"><code class="literal">-pidfile <em class="replaceable">FILENAME</em></code>
+    </span></dt><dd><p>
+      Stores the QEMU's process identification number (PID) in a file. This
+      is useful if you run QEMU from a script.
+     </p></dd><dt id="id-1.12.7.5.5.3.4"><span class="term"><code class="literal">-nodefaults</code>
+    </span></dt><dd><p>
+      By default QEMU creates basic virtual devices even if you do not
+      specify them on the command line. This option turns this feature off, and
+      you must specify every single device manually, including graphical and
+      network cards, parallel or serial ports, or virtual consoles. Even QEMU
+      monitor is not attached by default.
+     </p></dd><dt id="id-1.12.7.5.5.3.5"><span class="term"><code class="literal">-daemonize</code>
+    </span></dt><dd><p>
+      <span class="quote">“<span class="quote">Daemonizes</span>”</span> the QEMU process after it is started. QEMU
+      will detach from the standard input and standard output after it is ready
+      to receive connections on any of its devices.
+     </p></dd></dl></div><div id="id-1.12.7.5.5.4" data-id-title="SeaBIOS BIOS implementation" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: SeaBIOS BIOS implementation</div><p>
+    SeaBIOS is the default BIOS used. You can boot USB devices, any drive
+    (CD-ROM, Floppy, or a hard disk). It has USB mouse and keyboard support and
+    supports multiple VGA cards. For more information about SeaBIOS, refer to
+    the <a class="link" href="https://www.seabios.org/SeaBIOS" target="_blank">SeaBIOS
+    Website</a>.
+   </p></div><section class="sect2" id="cha-qemu-running-gen-opts-basic" data-id-title="Basic virtual hardware"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.2.1 </span><span class="title-name">Basic virtual hardware</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-gen-opts-basic">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect3" id="sec-qemu-running-gen-opts-machine" data-id-title="Machine type"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.2.1.1 </span><span class="title-name">Machine type</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#sec-qemu-running-gen-opts-machine">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     You can specify the type of the emulated machine. Run
+     <code class="command">qemu-system-ARCH -M help</code> to view a list of supported
+     machine types.
+    </p><div id="id-1.12.7.5.5.5.3.3" data-id-title="ISA-PC" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: ISA-PC</div><p>
+      The machine type <span class="emphasis"><em>isapc: ISA-only-PC</em></span> is unsupported.
+     </p></div></section><section class="sect3" id="cha-qemu-running-gen-opts-basic-cpu" data-id-title="CPU model"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.2.1.2 </span><span class="title-name">CPU model</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-gen-opts-basic-cpu">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To specify the type of the processor (CPU) model, run
+     <code class="command">qemu-system-ARCH -cpu</code> <em class="replaceable">MODEL</em>.
+     Use <code class="command">qemu-system-ARCH -cpu help</code> to view a list of
+     supported CPU models.
+    </p></section><section class="sect3" id="cha-qemu-running-gen-opts-basic-others" data-id-title="Other basic options"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.2.1.3 </span><span class="title-name">Other basic options</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-gen-opts-basic-others">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The following is a list of most commonly used options while launching
+     <span class="emphasis"><em>qemu</em></span> from command line. To see all options available
+     refer to <span class="emphasis"><em>qemu-doc</em></span> man page.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.5.5.5.3.1"><span class="term"><code class="literal">-m <em class="replaceable">MEGABYTES</em></code>
+      </span></dt><dd><p>
+        Specifies how many megabytes are used for the virtual RAM size.
+       </p></dd><dt id="id-1.12.7.5.5.5.5.3.2"><span class="term"><code class="literal">-balloon virtio</code>
+      </span></dt><dd><p>
+        Specifies a paravirtualized device to dynamically change the amount of
+        virtual RAM memory assigned to VM Guest. The top limit is the amount
+        of memory specified with <code class="literal">-m</code>.
+       </p></dd><dt id="id-1.12.7.5.5.5.5.3.3"><span class="term"><code class="literal">-smp <em class="replaceable">NUMBER_OF_CPUS</em></code>
+      </span></dt><dd><p>
+        Specifies how many CPUs will be emulated. QEMU supports up to 255
+        CPUs on the PC platform (up to 64 with KVM acceleration used). This
+        option also takes other CPU-related parameters, such as number of
+        <span class="emphasis"><em>sockets</em></span>, number of <span class="emphasis"><em>cores</em></span> per
+        socket, or number of <span class="emphasis"><em>threads</em></span> per core.
+       </p></dd></dl></div><p>
+     The following is an example of a working
+     <code class="command">qemu-system-ARCH</code> command line:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 \
+ -name "SLES <span class="productnumber"><span class="phrase">15 SP3</span></span>" \
+ -M pc-i440fx-2.7 -m 512 \
+ -machine accel=kvm -cpu kvm64 -smp 2 \
+ -drive format=raw,file=/images/sles.raw</pre></div><div class="figure" id="id-1.12.7.5.5.5.5.6"><div class="figure-contents"><div class="mediaobject"><a href="images/qemu_win_sles.png"><img src="images/qemu_win_sles.png" width="70%" alt="QEMU window with SLES as VM Guest" title="QEMU window with SLES as VM Guest"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 35.1: </span><span class="title-name">QEMU window with SLES as VM Guest </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#id-1.12.7.5.5.5.5.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.5.5.5.7.1"><span class="term"><code class="literal">-no-acpi</code>
+      </span></dt><dd><p>
+        Disables <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acpi" title="ACPI">ACPI</a> support.
+       </p></dd><dt id="id-1.12.7.5.5.5.5.7.2"><span class="term"><code class="literal">-S</code>
+      </span></dt><dd><p>
+        QEMU starts with CPU stopped. To start CPU, enter
+        <code class="literal">c</code> in QEMU monitor. For more information, see
+        <a class="xref" href="cha-qemu-monitor.html" title="Chapter 36. Virtual machine administration using QEMU monitor">Chapter 36, <em>Virtual machine administration using QEMU monitor</em></a>.
+       </p></dd></dl></div></section></section><section class="sect2" id="cha-qemu-running-gen-opts-storing-cong" data-id-title="Storing and reading configuration of virtual devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.2.2 </span><span class="title-name">Storing and reading configuration of virtual devices</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-gen-opts-storing-cong">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.5.6.2.1"><span class="term"><code class="literal">-readconfig <em class="replaceable">CFG_FILE</em></code>
+     </span></dt><dd><p>
+       Instead of entering the devices configuration options on the command
+       line each time you want to run VM Guest,
+       <code class="command">qemu-system-ARCH</code> can read it from a file that was
+       either previously saved with <code class="literal">-writeconfig</code> or edited
+       manually.
+      </p></dd><dt id="id-1.12.7.5.5.6.2.2"><span class="term"><code class="literal">-writeconfig <em class="replaceable">CFG_FILE</em></code>
+     </span></dt><dd><p>
+       Dumps the current virtual machine's devices configuration to a text
+       file. It can be consequently re-used with the
+       <code class="literal">-readconfig</code> option.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -name "SLES <span class="productnumber"><span class="phrase">15 SP3</span></span>" \
+ -machine accel=kvm -M pc-i440fx-2.7 -m 512 -cpu kvm64 \
+ -smp 2 /images/sles.raw -writeconfig /images/sles.cfg
+(exited)
+<code class="prompt user">&gt; </code>cat /images/sles.cfg
+# qemu config file
+
+[drive]
+  index = "0"
+  media = "disk"
+  file = "/images/sles_base.raw"</pre></div><p>
+       This way you can effectively manage the configuration of your virtual
+       machines' devices in a well-arranged way.
+      </p></dd></dl></div></section><section class="sect2" id="cha-qemu-running-gen-opts-rtc" data-id-title="Guest real-time clock"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.2.3 </span><span class="title-name">Guest real-time clock</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-gen-opts-rtc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.5.7.2.1"><span class="term"><code class="literal">-rtc <em class="replaceable">OPTIONS</em></code>
+     </span></dt><dd><p>
+       Specifies the way the RTC is handled inside a VM Guest. By default, the
+       clock of the guest is derived from that of the host system. Therefore,
+       it is recommended that the host system clock is synchronized with an
+       accurate external clock (for example, via NTP service).
+      </p><p>
+       If you need to isolate the VM Guest clock from the host one, specify
+       <code class="literal">clock=vm</code> instead of the default
+       <code class="literal">clock=host</code>.
+      </p><p>
+       You can also specify the initial time of the VM Guest's clock with the
+       <code class="literal">base</code> option:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -rtc clock=vm,base=2010-12-03T01:02:00</pre></div><p>
+       Instead of a time stamp, you can specify <code class="literal">utc</code> or
+       <code class="literal">localtime</code>. The former instructs VM Guest to start at
+       the current UTC value (Coordinated Universal Time, see
+       <a class="link" href="http://en.wikipedia.org/wiki/UTC" target="_blank">http://en.wikipedia.org/wiki/UTC</a>), while the latter
+       applies the local time setting.
+      </p></dd></dl></div></section></section><section class="sect1" id="cha-qemu-running-devices" data-id-title="Using devices in QEMU"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.3 </span><span class="title-name">Using devices in QEMU</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   QEMU virtual machines emulate all devices needed to run a VM Guest.
+   QEMU supports, for example, several types of network cards, block devices
+   (hard and removable drives), USB devices,
+   character devices (serial and parallel
+   ports), or multimedia devices (graphic and sound
+   cards). This section introduces options to configure various types
+   of supported devices.
+  </p><div id="id-1.12.7.5.6.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+    If your device, such as <code class="literal">-drive</code>, needs a special driver
+    and driver properties to be set, specify them with the
+    <code class="literal">-device</code> option, and identify with
+    <code class="literal">drive=</code> suboption. For example:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -drive if=none,id=drive0,format=raw \
+-device virtio-blk-pci,drive=drive0,scsi=off ...</pre></div><p>
+    To get help on available drivers and their properties, use <code class="option">-device
+    ?</code> and <code class="option">-device
+    <em class="replaceable">DRIVER</em>,?</code>.
+   </p></div><section class="sect2" id="cha-qemu-running-devices-block" data-id-title="Block devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.3.1 </span><span class="title-name">Block devices</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices-block">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Block devices are vital for virtual machines. In general, these are fixed
+    or removable storage media usually called <span class="emphasis"><em>drives</em></span>. One
+    of the connected hard disks typically holds the guest operating system to
+    be virtualized.
+   </p><p>
+    <a class="xref" href="gloss-vt-glossary.html#gloss-vt-vm" title="Virtual Machine">Virtual Machine</a> drives are defined with
+    <code class="literal">-drive</code>. This option has many sub-options, some of which
+    are described in this section. For the complete list, see the manual page
+    (<code class="command">man 1 qemu</code>).
+   </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Sub-options for the <code class="literal">-drive</code> option </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#id-1.12.7.5.6.4.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.7.5.6.4.4.2"><span class="term"><code class="literal">file=image_fname</code>
+     </span></dt><dd><p>
+       Specifies the path to the disk image that will be used with this drive.
+       If not specified, an empty (removable) drive is assumed.
+      </p></dd><dt id="id-1.12.7.5.6.4.4.3"><span class="term"><code class="literal">if=drive_interface</code>
+     </span></dt><dd><p>
+       Specifies the type of interface to which the drive is connected.
+       Currently only <code class="literal">floppy</code>, <code class="literal">scsi</code>,
+       <code class="literal">ide</code>, or <code class="literal">virtio</code> are supported by
+       SUSE. <code class="literal">virtio</code> defines a paravirtualized disk driver.
+       Default is <code class="literal">ide</code>.
+      </p></dd><dt id="id-1.12.7.5.6.4.4.4"><span class="term"><code class="literal">index=index_of_connector</code>
+     </span></dt><dd><p>
+       Specifies the index number of a connector on the disk interface (see the
+       <code class="literal">if</code> option) where the drive is connected. If not
+       specified, the index is automatically incremented.
+      </p></dd><dt id="id-1.12.7.5.6.4.4.5"><span class="term"><code class="literal">media=type</code>
+     </span></dt><dd><p>
+       Specifies the type of media. Can be <code class="literal">disk</code> for hard
+       disks, or <code class="literal">cdrom</code> for removable CD-ROM drives.
+      </p></dd><dt id="id-1.12.7.5.6.4.4.6"><span class="term"><code class="literal">format=img_fmt</code>
+     </span></dt><dd><p>
+       Specifies the format of the connected disk image. If not specified, the
+       format is autodetected. Currently, SUSE supports
+       <code class="literal">raw</code> and <code class="literal">qcow2</code> formats.
+      </p></dd><dt id="id-1.12.7.5.6.4.4.7"><span class="term"><code class="literal">cache=method</code>
+     </span></dt><dd><p>
+       Specifies the caching method for the drive. Possible values are
+       <code class="literal">unsafe</code>, <code class="literal">writethrough</code>,
+       <code class="literal">writeback</code>, <code class="literal">directsync</code>, or
+       <code class="literal">none</code>. To improve performance when using the
+       <code class="literal">qcow2</code> image format, select
+       <code class="literal">writeback</code>.
+       <code class="literal">none</code> disables the host page cache and, therefore, is
+       the safest option. Default for image files is
+       <code class="literal">writeback</code>. For more information, see
+       <a class="xref" href="cha-cachemodes.html" title="Chapter 18. Disk cache modes">Chapter 18, <em>Disk cache modes</em></a>.
+      </p></dd></dl></div><div id="id-1.12.7.5.6.4.5" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+     To simplify defining block devices, QEMU understands several shortcuts
+     which you may find handy when entering the
+     <code class="literal">qemu-system-ARCH</code> command line.
+    </p><p>
+     You can use
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -cdrom /images/cdrom.iso</pre></div><p>
+     instead of
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -drive format=raw,file=/images/cdrom.iso,index=2,media=cdrom</pre></div><p>
+     and
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -hda /images/imagei1.raw -hdb /images/image2.raw -hdc \
+/images/image3.raw -hdd /images/image4.raw</pre></div><p>
+     instead of
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -drive format=raw,file=/images/image1.raw,index=0,media=disk \
+-drive format=raw,file=/images/image2.raw,index=1,media=disk \
+-drive format=raw,file=/images/image3.raw,index=2,media=disk \
+-drive format=raw,file=/images/image4.raw,index=3,media=disk</pre></div></div><div id="id-1.12.7.5.6.4.6" data-id-title="Using host drives instead of images" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Using host drives instead of images</div><p>
+     As an alternative to using disk images (see
+     <a class="xref" href="cha-qemu-guest-inst.html#cha-qemu-guest-inst-qemu-img" title="34.2. Managing disk images with qemu-img">Section 34.2, “Managing disk images with <code class="command">qemu-img</code>”</a>) you can also use existing
+     VM Host Server disks, connect them as drives, and access them from VM Guest.
+     Use the host disk device directly instead of disk image file names.
+    </p><p>
+     To access the host CD-ROM drive, use
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -drive file=/dev/cdrom,media=cdrom</pre></div><p>
+     To access the host hard disk, use
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -drive file=/dev/hdb,media=disk</pre></div><p>
+     A host drive used by a VM Guest must not be accessed concurrently by the
+     VM Host Server or another VM Guest.
+    </p></div><section class="sect3" id="kvm-freedisk" data-id-title="Freeing unused guest disk space"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.1.1 </span><span class="title-name">Freeing unused guest disk space</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#kvm-freedisk">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     A <a class="xref" href="gloss-vt-glossary.html#gloss-vt-storage-sparse" title="Sparse image file">Sparse image file</a> is a type of disk image file
+     that grows in size as the user adds data to it, taking up only as much
+     disk space as is stored in it. For example, if you copy 1 GB of data
+     inside the sparse disk image, its size grows by 1 GB. If you then delete
+     for example 500 MB of the data, the image size does not by default
+     decrease as expected.
+    </p><p>
+     That is why the <code class="option">discard=on</code> option is introduced on the
+     KVM command line. It tells the hypervisor to automatically free the
+     <span class="quote">“<span class="quote">holes</span>”</span> after deleting data from the sparse guest image. Note
+     that this option is valid only for the <code class="literal">if=scsi</code> drive
+     interface:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -drive format=<em class="replaceable">img_format</em>,file=<em class="replaceable">/path/to/file.img</em>,if=scsi,discard=on</pre></div><div id="id-1.12.7.5.6.4.7.5" data-id-title="Support status" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Support status</div><p>
+      <code class="option">if=scsi</code> is not supported. This interface does not map to
+      <span class="emphasis"><em>virtio-scsi</em></span>, but rather to the <span class="emphasis"><em>lsi SCSI
+      adapter</em></span>.
+     </p></div></section><section class="sect3" id="kvm-iothreads" data-id-title="IOThreads"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.1.2 </span><span class="title-name">IOThreads</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#kvm-iothreads">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     IOThreads are dedicated event loop threads for virtio devices to perform
+     I/O requests in order to improve scalability, especially on an SMP
+     VM Host Server with SMP VM Guests using many disk devices. Instead of using
+     QEMU's main event loop for I/O processing, IOThreads allow spreading
+     I/O work across multiple CPUs and can improve latency when properly
+     configured.
+    </p><p>
+     IOThreads are enabled by defining IOThread objects. virtio devices can
+     then use the objects for their I/O event loops. Many virtio devices can
+     use a single IOThread object, or virtio devices and IOThread objects
+     can be configured in a 1:1 mapping. The following example creates a
+     single IOThread with ID <code class="literal">iothread0</code> which is then used
+     as the event loop for two virtio-blk devices.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -object iothread,id=iothread0\
+-drive if=none,id=drive0,cache=none,aio=native,\
+format=raw,file=filename -device virtio-blk-pci,drive=drive0,scsi=off,\
+iothread=iothread0 -drive if=none,id=drive1,cache=none,aio=native,\
+format=raw,file=filename -device virtio-blk-pci,drive=drive1,scsi=off,\
+iothread=iothread0 [...]</pre></div><p>
+      The following qemu command line example illustrates a 1:1 virtio device
+      to IOThread mapping:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -object iothread,id=iothread0\
+-object iothread,id=iothread1 -drive if=none,id=drive0,cache=none,aio=native,\
+format=raw,file=filename -device virtio-blk-pci,drive=drive0,scsi=off,\
+iothread=iothread0 -drive if=none,id=drive1,cache=none,aio=native,\
+format=raw,file=filename -device virtio-blk-pci,drive=drive1,scsi=off,\
+    iothread=iothread1 [...]</pre></div></section><section class="sect3" id="kvm-virtio-blk-use-bio" data-id-title="Bio-based I/O path for virtio-blk"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.1.3 </span><span class="title-name">Bio-based I/O path for virtio-blk</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#kvm-virtio-blk-use-bio">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     For better performance of I/O-intensive applications, a new I/O path was
+     introduced for the virtio-blk interface in kernel version 3.7. This
+     bio-based block device driver skips the I/O scheduler, and thus shortens
+     the I/O path in guest and has lower latency. It is especially useful for
+     high-speed storage devices, such as SSD disks.
+    </p><p>
+     The driver is disabled by default. To use it, do the following:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Append <code class="option">virtio_blk.use_bio=1</code> to the kernel command
+       line on the guest. You can do so via
+       <span class="guimenu">YaST</span> › <span class="guimenu">System</span> › <span class="guimenu">Boot
+       Loader</span>.
+      </p><p>
+       You can do it also by editing <code class="filename">/etc/default/grub</code>,
+       searching for the line that contains
+       <code class="option">GRUB_CMDLINE_LINUX_DEFAULT=</code>, and adding the kernel
+       parameter at the end. Then run <code class="command">grub2-mkconfig
+       &gt;/boot/grub2/grub.cfg</code> to update the grub2 boot menu.
+      </p></li><li class="step"><p>
+       Reboot the guest with the new kernel command line active.
+      </p></li></ol></div></div><div id="id-1.12.7.5.6.4.9.5" data-id-title="Bio-based driver on slow devices" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Bio-based driver on slow devices</div><p>
+      The bio-based virtio-blk driver does not help on slow devices such as
+      spin hard disks. The reason is that the benefit of scheduling is larger
+      than what the shortened bio path offers. Do not use the bio-based driver
+      on slow devices.
+     </p></div></section><section class="sect3" id="sec-qemu-running-devices-block-iscsi" data-id-title="Accessing iSCSI resources directly"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.1.4 </span><span class="title-name">Accessing iSCSI resources directly</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#sec-qemu-running-devices-block-iscsi">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     QEMU now integrates with <code class="literal">libiscsi</code>. This allows
+     QEMU to access iSCSI resources directly and use them as virtual
+     machine block devices.
+
+     This feature does not require any host iSCSI initiator
+     configuration, as is needed for a libvirt iSCSI target based storage
+     pool setup. Instead it directly connects guest storage interfaces
+     to an iSCSI target LUN by means of the user space library libiscsi.
+
+     iSCSI-based disk devices can also be
+     specified in the libvirt XML configuration.
+    </p><div id="id-1.12.7.5.6.4.10.3" data-id-title="RAW image format" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: RAW image format</div><p>
+     This feature is only available using the RAW image format, as the
+     iSCSI protocol has some technical limitations.
+     </p></div><p>
+     The following is the QEMU command line interface for iSCSI connectivity.
+    </p><div id="id-1.12.7.5.6.4.10.5" data-id-title="virt-manager limitation" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: virt-manager limitation</div><p>
+      The use of libiscsi based storage provisioning is not yet exposed by
+      the virt-manager interface, but instead it would be configured by
+      directly editing the guest xml. This new way of accessing iSCSI
+      based storage is to be done at the command line.
+     </p></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -machine accel=kvm \
+  -drive file=iscsi://192.168.100.1:3260/iqn.2016-08.com.example:314605ab-a88e-49af-b4eb-664808a3443b/0,\
+  format=raw,if=none,id=mydrive,cache=none \
+  -device ide-hd,bus=ide.0,unit=0,drive=mydrive ...</pre></div><p>
+Here is an example snippet of guest domain xml which uses the protocol
+based iSCSI:
+</p><div class="verbatim-wrap"><pre class="screen">&lt;devices&gt;
+...
+  &lt;disk type='network' device='disk'&gt;
+    &lt;driver name='qemu' type='raw'/&gt;
+    &lt;source protocol='iscsi' name='iqn.2013-07.com.example:iscsi-nopool/2'&gt;
+      &lt;host name='example.com' port='3260'/&gt;
+    &lt;/source&gt;
+    &lt;auth username='myuser'&gt;
+      &lt;secret type='iscsi' usage='libvirtiscsi'/&gt;
+    &lt;/auth&gt;
+    &lt;target dev='vda' bus='virtio'/&gt;
+  &lt;/disk&gt;
+&lt;/devices&gt;</pre></div><p>
+   Contrast that with an example which uses the host based iSCSI
+   initiator which virt-manager sets up:
+  </p><div class="verbatim-wrap"><pre class="screen">&lt;devices&gt;
+...
+  &lt;disk type='block' device='disk'&gt;
+    &lt;driver name='qemu' type='raw' cache='none' io='native'/&gt;
+    &lt;source dev='/dev/disk/by-path/scsi-0:0:0:0'/&gt;
+    &lt;target dev='hda' bus='ide'/&gt;
+    &lt;address type='drive' controller='0' bus='0' target='0' unit='0'/&gt;
+  &lt;/disk&gt;
+  &lt;controller type='ide' index='0'&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x01'
+             function='0x1'/&gt;
+  &lt;/controller&gt;
+&lt;/devices&gt;</pre></div></section><section class="sect3" id="qemu-devices-block-rbd" data-id-title="Using RADOS block devices with QEMU"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.1.5 </span><span class="title-name">Using RADOS block devices with QEMU</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#qemu-devices-block-rbd">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      RADOS Block Devices (RBD) store data in a Ceph cluster. They allow snapshotting,
+      replication, and data consistency. You can use an RBD from your
+      KVM-managed VM Guests similarly to how you use other block devices.
+     </p><p>For more details, refer to the <a class="link" href="https://documentation.suse.com/ses/6/html/ses-all/cha-ceph-kvm.html" target="_blank">SUSE Enterprise Storage
+      <em class="citetitle">Administration Guide</em>, chapter
+      <em class="citetitle">Ceph as a Back-end for QEMU KVM Instance</em></a>.
+     </p></section></section><section class="sect2" id="cha-qemu-running-devices-graphic" data-id-title="Graphic devices and display options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.3.2 </span><span class="title-name">Graphic devices and display options</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices-graphic">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This section describes QEMU options affecting the type of the emulated
+    video card and the way VM Guest graphical output is displayed.
+   </p><section class="sect3" id="cha-qemu-running-devices-graphic-vga" data-id-title="Defining video cards"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.2.1 </span><span class="title-name">Defining video cards</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices-graphic-vga">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     QEMU uses <code class="literal">-vga</code> to define a video card used to display
+     VM Guest graphical output. The <code class="literal">-vga</code> option understands
+     the following values:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.6.5.3.3.1"><span class="term"><code class="literal">none</code>
+      </span></dt><dd><p>
+        Disables video cards on VM Guest (no video card is emulated). You can
+        still access the running VM Guest via the serial console.
+       </p></dd><dt id="id-1.12.7.5.6.5.3.3.2"><span class="term"><code class="literal">std</code>
+      </span></dt><dd><p>
+        Emulates a standard VESA 2.0 VBE video card. Use it if you intend to
+        use high display resolution on VM Guest.
+       </p></dd><dt id="id-1.12.7.5.6.5.3.3.3"><span class="term"><code class="literal">cirrus</code>
+      </span></dt><dd><p>
+        Emulates Cirrus Logic GD5446 video card. Good choice if you insist on
+        high compatibility of the emulated video hardware. Most operating
+        systems (even Windows 95) recognize this type of card.
+       </p><div id="id-1.12.7.5.6.5.3.3.3.2.2" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+         For best video performance with the <code class="literal">cirrus</code> type,
+         use 16-bit color depth both on VM Guest and VM Host Server.
+        </p></div></dd></dl></div></section><section class="sect3" id="cha-qemu-running-devices-graphic-display" data-id-title="Display options"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.2.2 </span><span class="title-name">Display options</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices-graphic-display">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The following options affect the way VM Guest graphical output is
+     displayed.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.6.5.4.3.1"><span class="term"><code class="literal">-display gtk</code>
+      </span></dt><dd><p>
+        Display video output in a GTK window. This interface provides UI
+        elements to configure and control the VM during runtime.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.2"><span class="term"><code class="literal">-display sdl</code>
+      </span></dt><dd><p>
+        Display video output via SDL, usually in a separate graphics window.
+        For more information, see the SDL documentation.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.3"><span class="term"><code class="literal">-spice option[,option[,...]]</code>
+      </span></dt><dd><p>
+        Enables the spice remote desktop protocol.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.4"><span class="term"><code class="literal">-display vnc</code>
+      </span></dt><dd><p>
+        Refer to <a class="xref" href="cha-qemu-running.html#cha-qemu-running-vnc" title="35.5. Viewing a VM Guest with VNC">Section 35.5, “Viewing a VM Guest with VNC”</a> for more information.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.5"><span class="term"><code class="literal">-nographic</code>
+      </span></dt><dd><p>
+        Disables QEMU's graphical output. The emulated serial port is
+        redirected to the console.
+       </p><p>
+        After starting the virtual machine with <code class="literal">-nographic</code>,
+        press
+        <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">A</span>
+        <span class="keycap">H</span> in the virtual console to view the list of other
+        useful shortcuts, for example, to toggle between the console and the
+        QEMU monitor.
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -hda /images/sles_base.raw -nographic
+
+C-a h    print this help
+C-a x    exit emulator
+C-a s    save disk data back to file (if -snapshot)
+C-a t    toggle console timestamps
+C-a b    send break (magic sysrq)
+C-a c    switch between console and monitor
+C-a C-a  sends C-a
+(pressed C-a c)
+
+QEMU 2.3.1 monitor - type 'help' for more information
+(qemu)</pre></div></dd><dt id="id-1.12.7.5.6.5.4.3.6"><span class="term"><code class="literal">-no-frame</code>
+      </span></dt><dd><p>
+        Disables decorations for the QEMU window. Convenient for dedicated
+        desktop work space.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.7"><span class="term"><code class="literal">-full-screen</code>
+      </span></dt><dd><p>
+        Starts QEMU graphical output in full screen mode.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.8"><span class="term"><code class="literal">-no-quit</code>
+      </span></dt><dd><p>
+        Disables the close button of the QEMU window and prevents it from
+        being closed by force.
+       </p></dd><dt id="id-1.12.7.5.6.5.4.3.9"><span class="term"><code class="literal">-alt-grab</code>, <code class="literal">-ctrl-grab</code>
+      </span></dt><dd><p>
+        By default, the QEMU window releases the <span class="quote">“<span class="quote">captured</span>”</span> mouse
+        after pressing
+        <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">Alt</span>. You can change the key combination to either
+        <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">Shift</span>
+        (<code class="literal">-alt-grab</code>), or the right
+        <span class="keycap">Ctrl</span> key (<code class="literal">-ctrl-grab</code>).
+       </p></dd></dl></div></section></section><section class="sect2" id="cha-qemu-running-devices-usb" data-id-title="USB devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.3.3 </span><span class="title-name">USB devices</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices-usb">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    There are two ways to create USB devices usable by the VM Guest in KVM:
+    you can either emulate new USB devices inside a VM Guest, or assign an
+    existing host USB device to a VM Guest. To use USB devices in QEMU you
+    first need to enable the generic USB driver with the <code class="option">-usb</code>
+    option. Then you can specify individual devices with the
+    <code class="option">-usbdevice</code> option.
+   </p><section class="sect3" id="kvm-usb-emulate" data-id-title="Emulating USB devices in VM Guest"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.3.3.1 </span><span class="title-name">Emulating USB devices in VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#kvm-usb-emulate">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     SUSE currently supports the following types of USB devices:
+     <code class="literal">disk</code>, <code class="literal">host</code>,
+     <code class="literal">serial</code>, <code class="literal">braille</code>,
+     <code class="literal">net</code>, <code class="literal">mouse</code>, and
+     <code class="literal">tablet</code>.
+    </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Types of USB devices for the <code class="literal">-usbdevice</code> option </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#id-1.12.7.5.6.6.3.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.7.5.6.6.3.3.2"><span class="term"><code class="literal">disk</code>
+      </span></dt><dd><p>
+        Emulates a mass storage device based on file. The optional
+        <code class="literal">format</code> option is used rather than detecting the
+        format.
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -usbdevice
+        disk:format=raw:/virt/usb_disk.raw</pre></div></dd><dt id="id-1.12.7.5.6.6.3.3.3"><span class="term"><code class="literal">host</code>
+      </span></dt><dd><p>
+        Pass through the host device (identified by bus.addr).
+       </p></dd><dt id="id-1.12.7.5.6.6.3.3.4"><span class="term"><code class="literal">serial</code>
+      </span></dt><dd><p>
+        Serial converter to a host character device.
+       </p></dd><dt id="id-1.12.7.5.6.6.3.3.5"><span class="term"><code class="literal">braille</code>
+      </span></dt><dd><p>
+        Emulates a braille device using BrlAPI to display the braille output.
+       </p></dd><dt id="id-1.12.7.5.6.6.3.3.6"><span class="term"><code class="literal">net</code>
+      </span></dt><dd><p>
+        Emulates a network adapter that supports CDC Ethernet and RNDIS
+        protocols.
+       </p></dd><dt id="id-1.12.7.5.6.6.3.3.7"><span class="term"><code class="literal">mouse</code>
+      </span></dt><dd><p>
+        Emulates a virtual USB mouse. This option overrides the default PS/2
+        mouse emulation. The following example shows the hardware status of a
+        mouse on VM Guest started with <code class="literal">qemu-system-ARCH [...]
+        -usbdevice mouse</code>:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> hwinfo --mouse
+20: USB 00.0: 10503 USB Mouse
+[Created at usb.122]
+UDI: /org/freedesktop/Hal/devices/usb_device_627_1_1_if0
+[...]
+Hardware Class: mouse
+Model: "Adomax QEMU USB Mouse"
+Hotplug: USB
+Vendor: usb 0x0627 "Adomax Technology Co., Ltd"
+Device: usb 0x0001 "QEMU USB Mouse"
+[...]</pre></div></dd><dt id="id-1.12.7.5.6.6.3.3.8"><span class="term"><code class="literal">tablet</code>
+      </span></dt><dd><p>
+        Emulates a pointer device that uses absolute coordinates (such as
+        touchscreen). This option overrides the default PS/2 mouse emulation.
+        The tablet device is useful if you are viewing VM Guest via the VNC
+        protocol. See <a class="xref" href="cha-qemu-running.html#cha-qemu-running-vnc" title="35.5. Viewing a VM Guest with VNC">Section 35.5, “Viewing a VM Guest with VNC”</a> for more
+        information.
+       </p></dd></dl></div></section></section><section class="sect2" id="cha-qemu-running-devices-char" data-id-title="Character devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.3.4 </span><span class="title-name">Character devices</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-devices-char">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Use <code class="literal">-chardev</code> to create a new character device. The
+    option uses the following general syntax:
+   </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] -chardev <em class="replaceable">BACKEND_TYPE</em>,id=<em class="replaceable">ID_STRING</em></pre></div><p>
+    where <em class="replaceable">BACKEND_TYPE</em> can be one of
+    <code class="literal">null</code>, <code class="literal">socket</code>, <code class="literal">udp</code>,
+    <code class="literal">msmouse</code>, <code class="literal">vc</code>, <code class="literal">file</code>,
+    <code class="literal">pipe</code>, <code class="literal">console</code>,
+    <code class="literal">serial</code>, <code class="literal">pty</code>,
+    <code class="literal">stdio</code>, <code class="literal">braille</code>,
+    <code class="literal">tty</code>, or <code class="literal">parport</code>. All character
+    devices must have a unique identification string up to 127 characters long.
+    It is used to identify the device in other related directives. For the
+    complete description of all back-end's sub-options, see the manual page
+    (<code class="command">man 1 qemu</code>). A brief description of the available
+    <code class="literal">back-ends</code> follows:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.6.7.5.1"><span class="term"><code class="literal">null</code>
+     </span></dt><dd><p>
+       Creates an empty device that outputs no data and drops any data it
+       receives.
+      </p></dd><dt id="id-1.12.7.5.6.7.5.2"><span class="term"><code class="literal">stdio</code>
+     </span></dt><dd><p>
+       Connects to QEMU's process standard input and standard output.
+      </p></dd><dt id="id-1.12.7.5.6.7.5.3"><span class="term"><code class="literal">socket</code>
+     </span></dt><dd><p>
+       Creates a two-way stream socket. If <em class="replaceable">PATH</em> is
+       specified, a Unix socket is created:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -chardev \
+socket,id=unix_socket1,path=/tmp/unix_socket1,server</pre></div><p>
+       The <em class="replaceable">SERVER</em> suboption specifies that the
+       socket is a listening socket.
+      </p><p>
+       If <em class="replaceable">PORT</em> is specified, a TCP socket is
+       created:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -chardev \
+socket,id=tcp_socket1,host=localhost,port=7777,server,nowait</pre></div><p>
+       The command creates a local listening (<code class="literal">server</code>) TCP
+       socket on port 7777. QEMU will not block waiting for a client to
+       connect to the listening port (<code class="literal">nowait</code>).
+      </p></dd><dt id="id-1.12.7.5.6.7.5.4"><span class="term"><code class="literal">udp</code>
+     </span></dt><dd><p>
+       Sends all network traffic from VM Guest to a remote host over the UDP
+       protocol.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-chardev udp,id=udp_fwd,host=mercury.example.com,port=7777</pre></div><p>
+       The command binds port 7777 on the remote host mercury.example.com and sends
+       VM Guest network traffic there.
+      </p></dd><dt id="id-1.12.7.5.6.7.5.5"><span class="term"><code class="literal">vc</code>
+     </span></dt><dd><p>
+       Creates a new QEMU text console. You can optionally specify the
+       dimensions of the virtual console:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -chardev vc,id=vc1,width=640,height=480 \
+-mon chardev=vc1</pre></div><p>
+       The command creates a new virtual console called <code class="literal">vc1</code>
+       of the specified size, and connects the QEMU monitor to it.
+      </p></dd><dt id="id-1.12.7.5.6.7.5.6"><span class="term"><code class="literal">file</code>
+     </span></dt><dd><p>
+       Logs all traffic from VM Guest to a file on VM Host Server. The
+       <code class="literal">path</code> is required and will be created if it does not
+       exist.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-chardev file,id=qemu_log1,path=/var/log/qemu/guest1.log</pre></div></dd></dl></div><p>
+    By default QEMU creates a set of character devices for serial and
+    parallel ports, and a special console for QEMU monitor. However, you can
+    create your own character devices and use them for the mentioned
+    purposes. The following options will help you:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.6.7.7.1"><span class="term"><code class="literal">-serial <em class="replaceable">CHAR_DEV</em></code>
+     </span></dt><dd><p>
+       Redirects the VM Guest's virtual serial port to a character device
+       <em class="replaceable">CHAR_DEV</em> on VM Host Server. By default, it is a
+       virtual console (<code class="literal">vc</code>) in graphical mode, and
+       <code class="literal">stdio</code> in non-graphical mode. The
+       <code class="literal">-serial</code> understands many sub-options. See the manual
+       page <code class="command">man 1 qemu</code> for a complete list of them.
+      </p><p>
+       You can emulate up to four serial ports. Use <code class="literal">-serial
+       none</code> to disable all serial ports.
+      </p></dd><dt id="id-1.12.7.5.6.7.7.2"><span class="term"><code class="literal">-parallel <em class="replaceable">DEVICE</em></code>
+     </span></dt><dd><p>
+       Redirects the VM Guest's parallel port to a
+       <em class="replaceable">DEVICE</em>. This option supports the same devices
+       as <code class="literal">-serial</code>.
+      </p><div id="id-1.12.7.5.6.7.7.2.2.2" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+        With <span class="phrase">SUSE Linux Enterprise Server</span> as a VM Host Server, you can directly use the hardware parallel
+        port devices <code class="filename">/dev/parportN</code> where
+        <code class="literal">N</code> is the number of the port.
+       </p></div><p>
+       You can emulate up to three parallel ports. Use <code class="literal">-parallel
+       none</code> to disable all parallel ports.
+      </p></dd><dt id="id-1.12.7.5.6.7.7.3"><span class="term"><code class="literal">-monitor <em class="replaceable">CHAR_DEV</em></code>
+     </span></dt><dd><p>
+       Redirects the QEMU monitor to a character device
+       <em class="replaceable">CHAR_DEV</em> on VM Host Server. This option supports
+       the same devices as <code class="literal">-serial</code>. By default, it is a
+       virtual console (<code class="literal">vc</code>) in a graphical mode, and
+       <code class="literal">stdio</code> in non-graphical mode.
+      </p></dd></dl></div><p>
+    For a complete list of available character devices back-ends, see the man
+    page (<code class="command">man 1 qemu</code>).
+   </p></section></section><section class="sect1" id="cha-qemu-running-networking" data-id-title="Networking in QEMU"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.4 </span><span class="title-name">Networking in QEMU</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-networking">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Use the <code class="literal">-netdev</code> option in combination with
+   <code class="option">-device</code> to define a specific type of networking and a
+   network interface card for your VM Guest. The syntax for the
+   <code class="option">-netdev</code> option is
+  </p><div class="verbatim-wrap"><pre class="screen">-netdev type[,prop[=value][,...]]</pre></div><p>
+   Currently, SUSE supports the following network types:
+   <code class="literal">user</code>, <code class="literal">bridge</code>, and
+   <code class="literal">tap</code>. For a complete list of <code class="literal">-netdev</code>
+   sub-options, see the manual page (<code class="command">man 1 qemu</code>).
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Supported <code class="literal">-netdev</code> sub-options </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#id-1.12.7.5.7.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.12.7.5.7.5.2"><span class="term"><code class="literal">bridge</code>
+    </span></dt><dd><p>
+      Uses a specified network helper to configure the TAP interface and attach
+      it to a specified bridge. For more information, see
+      <a class="xref" href="cha-qemu-running.html#cha-qemu-running-networking-bridge" title="35.4.3. Bridged networking">Section 35.4.3, “Bridged networking”</a>.
+     </p></dd><dt id="id-1.12.7.5.7.5.3"><span class="term"><code class="literal">user</code>
+    </span></dt><dd><p>
+      Specifies user-mode networking. For more information, see
+      <a class="xref" href="cha-qemu-running.html#cha-qemu-running-networking-usermode" title="35.4.2. User-mode networking">Section 35.4.2, “User-mode networking”</a>.
+     </p></dd><dt id="id-1.12.7.5.7.5.4"><span class="term"><code class="literal">tap</code>
+    </span></dt><dd><p>
+      Specifies bridged or routed networking. For more information, see
+      <a class="xref" href="cha-qemu-running.html#cha-qemu-running-networking-bridge" title="35.4.3. Bridged networking">Section 35.4.3, “Bridged networking”</a>.
+     </p></dd></dl></div><section class="sect2" id="cha-qemu-running-networking-nic" data-id-title="Defining a network interface card"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.4.1 </span><span class="title-name">Defining a network interface card</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-networking-nic">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Use <code class="literal">-netdev</code> together with the related
+    <code class="option">-device</code> option to add a new emulated network card:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-netdev tap<span class="callout" id="co-qemu-running-networking-nic-tap">1</span>,id=hostnet0 \
+-device virtio-net-pci<span class="callout" id="co-qemu-running-networking-nic-drv">2</span>,netdev=hostnet0,vlan=1<span class="callout" id="co-qemu-running-networking-nic-vlan">3</span>,\
+macaddr=00:16:35:AF:94:4B<span class="callout" id="co-qemu-running-networking-nic-mac">4</span>,name=ncard1</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-running-networking-nic-tap"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Specifies the network device type.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-running-networking-nic-drv"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Specifies the model of the network card. Use
+      <code class="command">qemu-system-ARCH -device help</code> and search for the
+      <code class="literal">Network devices:</code>section to get the list of all network
+      card models supported by QEMU on your platform.
+     </p><p>
+      Currently, SUSE supports the models <code class="literal">rtl8139</code>,
+      <code class="literal">e1000</code> and its variants
+      <code class="literal">e1000-82540em</code>, <code class="literal">e1000-82544gc</code> and
+      <code class="literal">e1000-82545em</code>, and <code class="literal">virtio-net-pci</code>.
+      To view a list of options for a specific driver, add
+      <code class="option">help</code> as a driver option:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -device e1000,help
+e1000.mac=macaddr
+e1000.vlan=vlan
+e1000.netdev=netdev
+e1000.bootindex=int32
+e1000.autonegotiation=on/off
+e1000.mitigation=on/off
+e1000.addr=pci-devfn
+e1000.romfile=str
+e1000.rombar=uint32
+e1000.multifunction=on/off
+e1000.command_serr_enable=on/off</pre></div></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-running-networking-nic-vlan"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Connects the network interface to VLAN number 1. You can specify your own
+      number—it is mainly useful for identification purpose. If you omit
+      this suboption, QEMU uses the default 0.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-running-networking-nic-mac"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Specifies the Media Access Control (MAC) address for the network card. It
+      is a unique identifier and you are advised to always specify it. If not,
+      QEMU supplies its own default MAC address and creates a possible MAC
+      address conflict within the related VLAN.
+     </p></td></tr></table></div></section><section class="sect2" id="cha-qemu-running-networking-usermode" data-id-title="User-mode networking"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.4.2 </span><span class="title-name">User-mode networking</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-networking-usermode">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="literal">-netdev user</code> option instructs QEMU to use
+    user-mode networking. This is the default if no networking mode is
+    selected. Therefore, these command lines are equivalent:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -hda /images/sles_base.raw</pre></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 -hda /images/sles_base.raw -netdev user,id=hostnet0</pre></div><p>
+    This mode is useful if you want to allow the VM Guest to access the
+    external network resources, such as the Internet. By default, no incoming
+    traffic is permitted and therefore, the VM Guest is not visible to other
+    machines on the network. No administrator privileges are required in this
+    networking mode. The user-mode is also useful for doing a network boot on
+    your VM Guest from a local directory on VM Host Server.
+   </p><p>
+    The VM Guest allocates an IP address from a virtual DHCP server. VM Host Server
+    (the DHCP server) is reachable at 10.0.2.2, while the IP address range for
+    allocation starts from 10.0.2.15. You can use <code class="command">ssh</code> to
+    connect to VM Host Server at 10.0.2.2, and <code class="command">scp</code> to copy files
+    back and forth.
+   </p><section class="sect3" id="cha-qemu-running-networking-usermode-examples" data-id-title="Command line examples"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.4.2.1 </span><span class="title-name">Command line examples</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-networking-usermode-examples">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     This section shows several examples on how to set up user-mode networking
+     with QEMU.
+    </p><div class="example" id="ex-qemu-net-usermode-resctrict" data-id-title="Restricted user-mode networking"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.1: </span><span class="title-name">Restricted user-mode networking </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-qemu-net-usermode-resctrict">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-netdev user<span class="callout" id="co-usermode-user">1</span>,id=hostnet0 \
+-device virtio-net-pci,netdev=hostnet0,vlan=1<span class="callout" id="co-usermode-vlan">2</span>,name=user_net1<span class="callout" id="co-usermode-name">3</span>,restrict=yes<span class="callout" id="co-usermode-restrict">4</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-user"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Specifies user-mode networking.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-vlan"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Connects to VLAN number 1. If omitted, defaults to 0.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-name"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Specifies a human-readable name of the network stack. Useful when
+        identifying it in the QEMU monitor.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-restrict"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Isolates VM Guest. It then cannot communicate with VM Host Server
+        and no network packets will be routed to the external network.
+       </p></td></tr></table></div></div></div><div class="example" id="ex-qemu-net-usermode-iprange" data-id-title="User-mode networking with custom IP range"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.2: </span><span class="title-name">User-mode networking with custom IP range </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-qemu-net-usermode-iprange">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-netdev user,id=hostnet0 \
+-device virtio-net-pci,netdev=hostnet0,net=10.2.0.0/8<span class="callout" id="co-usermode-net">1</span>,host=10.2.0.6<span class="callout" id="co-usermode-host">2</span>,\
+dhcpstart=10.2.0.20<span class="callout" id="co-usermode-dhcpstart">3</span>,hostname=tux_kvm_guest<span class="callout" id="co-usermode-hostname">4</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-net"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Specifies the IP address of the network that VM Guest sees and
+        optionally the netmask. Default is 10.0.2.0/8.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-host"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Specifies the VM Host Server IP address that VM Guest sees. Default is
+        10.0.2.2.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-dhcpstart"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Specifies the first of the 16 IP addresses that the built-in DHCP
+        server can assign to VM Guest. Default is 10.0.2.15.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-hostname"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Specifies the host name that the built-in DHCP server will assign to
+        VM Guest.
+       </p></td></tr></table></div></div></div><div class="example" id="ex-qemu-net-usermode-netboot-tftp" data-id-title="User-mode networking with network-boot and TFTP"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.3: </span><span class="title-name">User-mode networking with network-boot and TFTP </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-qemu-net-usermode-netboot-tftp">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-netdev user,id=hostnet0 \
+-device virtio-net-pci,netdev=hostnet0,tftp=/images/tftp_dir<span class="callout" id="co-usermode-tftp">1</span>,\
+bootfile=/images/boot/pxelinux.0<span class="callout" id="co-usermode-bootfile">2</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-tftp"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Activates a built-in TFTP (a file transfer protocol with the
+        functionality of a very basic FTP) server. The files in the specified
+        directory will be visible to a VM Guest as the root of a TFTP server.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-usermode-bootfile"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Broadcasts the specified file as a BOOTP (a network protocol that
+        offers an IP address and a network location of a boot image, often used
+        in diskless workstations) file. When used together with
+        <code class="literal">tftp</code>, the VM Guest can boot via the network from
+        the local directory on the host.
+       </p></td></tr></table></div></div></div><div class="complex-example"><div class="example" id="ex-qemu-net-usermode-hostfwd" data-id-title="User-mode networking with host port forwarding"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.4: </span><span class="title-name">User-mode networking with host port forwarding </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-qemu-net-usermode-hostfwd">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] \
+-netdev user,id=hostnet0 \
+-device virtio-net-pci,netdev=hostnet0,hostfwd=tcp::2222-:22</pre></div><p>
+      Forwards incoming TCP connections to the port 2222 on the host to the
+      port 22 (<code class="systemitem">SSH</code>) on VM Guest. If
+      <code class="systemitem">sshd</code> is running on VM Guest,
+      enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ssh qemu_host -p 2222</pre></div><p>
+      where <code class="literal">qemu_host</code> is the host name or IP address of the
+      host system, to get a <code class="systemitem">SSH</code> prompt
+      from VM Guest.
+     </p></div></div></div></section></section><section class="sect2" id="cha-qemu-running-networking-bridge" data-id-title="Bridged networking"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.4.3 </span><span class="title-name">Bridged networking</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-networking-bridge">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    With the <code class="literal">-netdev tap</code> option, QEMU creates a network
+    bridge by connecting the host TAP network device to a specified VLAN of
+    VM Guest. Its network interface is then visible to the rest of the
+    network. This method does not work by default and needs to be explicitly
+    specified.
+   </p><p>
+    First, create a network bridge and add a VM Host Server physical network
+    interface (usually <code class="literal">eth0</code>) to it:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start <span class="guimenu">YaST Control Center</span> and select
+      <span class="guimenu">System</span> › <span class="guimenu">Network
+      Settings</span>.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">Add</span> and select <span class="guimenu">Bridge</span> from
+      the <span class="guimenu">Device Type</span> drop-down box in the
+      <span class="guimenu">Hardware Dialog</span> window. Click <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Choose whether you need a dynamically or statically assigned IP address,
+      and fill the related network settings if applicable.
+     </p></li><li class="step"><p>
+      In the <span class="guimenu">Bridged Devices</span> pane, select the Ethernet
+      device to add to the bridge.
+     </p><p>
+      Click <span class="guimenu">Next</span>. When asked about adapting an already
+      configured device, click <span class="guimenu">Continue</span>.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">OK</span> to apply the changes. Check if the bridge is
+      created:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>bridge link
+2: eth0 state UP : &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 master br0 \
+ state forwarding priority 32 cost 100</pre></div></li></ol></div></div><section class="sect3" id="cha-qemu-running-networking-bridge-manually" data-id-title="Connecting to a bridge manually"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.4.3.1 </span><span class="title-name">Connecting to a bridge manually</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-networking-bridge-manually">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Use the following example script to connect VM Guest to the newly created
+     bridge interface <code class="literal">br0</code>. Several commands in the script
+     are run via the <code class="command">sudo</code> mechanism because they require
+     <code class="systemitem">root</code> privileges.
+    </p><div id="id-1.12.7.5.7.8.5.3" data-id-title="Required software" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Required software</div><p>
+      To manage a network bridge, you need to have the
+      <span class="package">tunctl</span> package installed.
+     </p></div><div class="verbatim-wrap"><pre class="screen">#!/bin/bash
+bridge=br0<span class="callout" id="co-qemu-net-bridge-br">1</span>
+tap=$(sudo tunctl -u $(whoami) -b)<span class="callout" id="co-qemu-net-bridge-tap">2</span>
+sudo ip link set $tap up<span class="callout" id="co-qemu-net-bridge-up">3</span>
+sleep 1s<span class="callout" id="co-qemu-net-bridge-sleep">4</span>
+sudo ip link add name $bridge type bridge
+sudo ip link set $bridge up
+sudo ip link set $tap master $bridge<span class="callout" id="co-qemu-net-bridge-br3">5</span>
+qemu-system-x86_64 -machine accel=kvm -m 512 -hda /images/sles_base.raw \
+ -netdev tap,id=hostnet0 \
+ -device virtio-net-pci,netdev=hostnet0,vlan=0,macaddr=00:16:35:AF:94:4B,\
+ ifname=$tap<span class="callout" id="co-qemu-net-bridge-ifname">6</span>,script=no<span class="callout" id="co-qemu-net-bridge-script">7</span>,downscript=no
+sudo ip link set $tap nomaster<span class="callout" id="co-qemu-net-bridge-delif">8</span>
+sudo ip link set $tap down<span class="callout" id="co-qemu-net-bridge-linkdown">9</span>
+sudo tunctl -d $tap<span class="callout" id="co-qemu-net-bridge-deltap">10</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-br"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Name of the bridge device.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-tap"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Prepare a new TAP device and assign it to the user who runs the script.
+       TAP devices are virtual network devices often used for virtualization
+       and emulation setups.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-up"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Bring up the newly created TAP network interface.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-sleep"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Make a 1-second pause to make sure the new TAP network interface is
+       really up.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-br3"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Add the new <code class="literal">TAP</code> device to the network bridge
+       <code class="literal">br0</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-ifname"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       The <code class="literal">ifname=</code> suboption specifies the name of the TAP
+       network interface used for bridging.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-script"><span class="callout">7</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Before <code class="command">qemu-system-ARCH</code> connects to a network bridge,
+       it checks the <code class="literal">script</code> and
+       <code class="literal">downscript</code> values. If it finds the specified scripts
+       on the VM Host Server file system, it runs the <code class="literal">script</code>
+       before it connects to the network bridge and
+       <code class="literal">downscript</code> after it exits the network environment.
+       You can use these scripts to set up and tear down the bridged interfaces.
+       By default,
+       <code class="filename">/etc/qemu-ifup</code> and
+       <code class="filename">/etc/qemu-ifdown</code> are examined. If
+       <code class="literal">script=no</code> and <code class="literal">downscript=no</code> are
+       specified, the script execution is disabled and you need to take care of
+       it manually.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-delif"><span class="callout">8</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Deletes the TAP interface from a network bridge <code class="literal">br0</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-linkdown"><span class="callout">9</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Sets the state of the TAP device to <code class="literal">down</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-qemu-net-bridge-deltap"><span class="callout">10</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Tear down the TAP device.
+      </p></td></tr></table></div></section><section class="sect3" id="qemu-bridge-helper" data-id-title="Connecting to a bridge with qemu-bridge-helper"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">35.4.3.2 </span><span class="title-name">Connecting to a bridge with qemu-bridge-helper</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#qemu-bridge-helper">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Another way to connect VM Guest to a network through a network bridge is
+     by means of the <code class="filename">qemu-bridge-helper</code> helper program. It
+     configures the TAP interface for you, and attaches it to the specified
+     bridge. The default helper executable is
+     <code class="filename">/usr/lib/qemu-bridge-helper</code>. The helper executable is
+     setuid root, which is only executable by the members of the virtualization
+     group (<code class="literal">kvm</code>). Therefore the
+     <code class="command">qemu-system-ARCH</code> command itself does not need to be run
+     under <code class="systemitem">root</code> privileges.
+    </p><p>
+     The helper is automatically called when you specify a network bridge:
+    </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] \
+ -netdev bridge,id=hostnet0,vlan=0,br=br0 \
+ -device virtio-net-pci,netdev=hostnet0</pre></div><p>
+     You can specify your own custom helper script that will take care of the
+     TAP device (de)configuration, with the
+     <code class="option">helper=/path/to/your/helper</code> option:
+    </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] \
+ -netdev bridge,id=hostnet0,vlan=0,br=br0,helper=/path/to/bridge-helper \
+ -device virtio-net-pci,netdev=hostnet0</pre></div><div id="id-1.12.7.5.7.8.6.7" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+      To define access privileges to <code class="literal">qemu-bridge-helper</code>,
+      inspect the <code class="filename">/etc/qemu/bridge.conf</code> file. For example
+      the following directive
+     </p><div class="verbatim-wrap"><pre class="screen">allow br0</pre></div><p>
+      allows the <code class="command">qemu-system-ARCH</code> command to connect its
+      VM Guest to the network bridge <code class="literal">br0</code>.
+     </p></div></section></section></section><section class="sect1" id="cha-qemu-running-vnc" data-id-title="Viewing a VM Guest with VNC"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.5 </span><span class="title-name">Viewing a VM Guest with VNC</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-vnc">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   By default QEMU uses a GTK (a cross-platform toolkit library) window to
+   display the graphical output of a VM Guest.
+   
+   With the <code class="literal">-vnc</code> option specified, you can make QEMU
+   listen on a specified VNC display and redirect its graphical output to the
+   VNC session.
+  </p><div id="id-1.12.7.5.8.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+    When working with QEMU's virtual machine via VNC session, it is useful to
+    work with the <code class="literal">-usbdevice tablet</code> option.
+   </p><p>
+    Moreover, if you need to use another keyboard layout than the default
+    <code class="literal">en-us</code>, specify it with the <code class="literal">-k</code> option.
+   </p></div><p>
+   The first suboption of <code class="literal">-vnc</code> must be a
+   <span class="emphasis"><em>display</em></span> value. The <code class="literal">-vnc</code> option
+   understands the following display specifications:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.8.5.1"><span class="term"><code class="literal">host:display</code>
+    </span></dt><dd><p>
+      Only connections from <code class="literal">host</code> on the display number
+      <code class="literal">display</code> will be accepted. The TCP port on which the
+      VNC session is then running is normally a 5900 +
+      <code class="literal">display</code> number. If you do not specify
+      <code class="literal">host</code>, connections will be accepted from any host.
+     </p></dd><dt id="id-1.12.7.5.8.5.2"><span class="term"><code class="literal">unix:path</code>
+    </span></dt><dd><p>
+      The VNC server listens for connections on Unix domain sockets. The
+      <code class="literal">path</code> option specifies the location of the related Unix
+      socket.
+     </p></dd><dt id="id-1.12.7.5.8.5.3"><span class="term"><code class="literal">none</code>
+    </span></dt><dd><p>
+      The VNC server functionality is initialized, but the server itself is not
+      started. You can start the VNC server later with the QEMU monitor. For
+      more information, see <a class="xref" href="cha-qemu-monitor.html" title="Chapter 36. Virtual machine administration using QEMU monitor">Chapter 36, <em>Virtual machine administration using QEMU monitor</em></a>.
+     </p></dd></dl></div><p>
+   Following the display value there may be one or more option flags separated
+   by commas. Valid options are:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.5.8.7.1"><span class="term"><code class="literal">reverse</code>
+    </span></dt><dd><p>
+      Connect to a listening VNC client via a <span class="emphasis"><em>reverse</em></span>
+      connection.
+     </p></dd><dt id="id-1.12.7.5.8.7.2"><span class="term"><code class="literal">websocket</code>
+    </span></dt><dd><p>
+      Opens an additional TCP listening port dedicated to VNC Websocket
+      connections. By definition the Websocket port is 5700+display.
+     </p></dd><dt id="id-1.12.7.5.8.7.3"><span class="term"><code class="literal">password</code>
+    </span></dt><dd><p>
+      Require that password-based authentication is used for client
+      connections.
+     </p></dd><dt id="id-1.12.7.5.8.7.4"><span class="term"><code class="literal">tls</code>
+    </span></dt><dd><p>
+      Require that clients use TLS when communicating with the VNC server.
+     </p></dd><dt id="id-1.12.7.5.8.7.5"><span class="term"><code class="literal">x509=/path/to/certificate/dir</code>
+    </span></dt><dd><p>
+      Valid if TLS is specified. Require that x509 credentials are used for
+      negotiating the TLS session.
+     </p></dd><dt id="id-1.12.7.5.8.7.6"><span class="term"><code class="literal">x509verify=/path/to/certificate/dir</code>
+    </span></dt><dd><p>
+      Valid if TLS is specified. Require that x509 credentials are used for
+      negotiating the TLS session.
+     </p></dd><dt id="id-1.12.7.5.8.7.7"><span class="term"><code class="literal">sasl</code>
+    </span></dt><dd><p>
+      Require that the client uses SASL to authenticate with the VNC server.
+     </p></dd><dt id="id-1.12.7.5.8.7.8"><span class="term"><code class="literal">acl</code>
+    </span></dt><dd><p>
+      Turn on access control lists for checking of the x509 client certificate
+      and SASL party.
+     </p></dd><dt id="id-1.12.7.5.8.7.9"><span class="term"><code class="literal">lossy</code>
+    </span></dt><dd><p>
+      Enable lossy compression methods (gradient, JPEG, ...).
+     </p></dd><dt id="id-1.12.7.5.8.7.10"><span class="term"><code class="literal">non-adaptive</code>
+    </span></dt><dd><p>
+      Disable adaptive encodings. Adaptive encodings are enabled by default.
+     </p></dd><dt id="id-1.12.7.5.8.7.11"><span class="term"><code class="literal">share=[allow-exclusive|force-shared|ignore]</code>
+    </span></dt><dd><p>
+      Set display sharing policy.
+     </p></dd></dl></div><div id="id-1.12.7.5.8.8" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+    For more details about the display options, see the
+    <span class="emphasis"><em>qemu-doc</em></span> man page.
+   </p></div><p>
+   An example VNC usage:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> qemu-system-x86_64 [...] -vnc :5
+# (on the client:)
+<code class="prompt user">wilber &gt; </code>vncviewer venus:5 &amp;</pre></div><div class="figure" id="id-1.12.7.5.8.11"><div class="figure-contents"><div class="mediaobject"><a href="images/qemu_sles_vnc.png"><img src="images/qemu_sles_vnc.png" width="70%" alt="QEMU VNC session" title="QEMU VNC session"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 35.2: </span><span class="title-name">QEMU VNC session </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#id-1.12.7.5.8.11">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div><section class="sect2" id="cha-qemu-running-vnc-secure" data-id-title="Secure VNC connections"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">35.5.1 </span><span class="title-name">Secure VNC connections</span></span> <a title="Permalink" class="permalink" href="cha-qemu-running.html#cha-qemu-running-vnc-secure">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The default VNC server setup does not use any form of authentication. In
+    the previous example, any user can connect and view the QEMU VNC session
+    from any host on the network.
+   </p><p>
+    There are several levels of security that you can apply to your VNC
+    client/server connection. You can either protect your connection with a
+    password, use x509 certificates, use SASL authentication, or even combine
+    some authentication methods in one QEMU command.
+   </p><p>
+    
+    For more information about configuring x509
+    certificates on a VM Host Server and the client, see
+    <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls" title="12.3.2. Remote TLS/SSL connection with x509 certificate (qemu+tls or xen+tls)">Section 12.3.2, “Remote TLS/SSL connection with x509 certificate (<code class="literal">qemu+tls</code> or <code class="literal">xen+tls</code>)”</a> and
+    <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote-tls-client" title="12.3.2.3. Configuring the client and testing the setup">Section 12.3.2.3, “Configuring the client and testing the setup”</a>.
+   </p><p>
+    The Remmina VNC viewer supports advanced authentication mechanisms.
+    Therefore, it will be used to view the graphical output of VM Guest in the
+    following examples. For this example, let us assume that the server x509
+    certificates <code class="filename">ca-cert.pem</code>,
+    <code class="filename">server-cert.pem</code>, and
+    <code class="filename">server-key.pem</code> are located in the
+    <code class="filename">/etc/pki/qemu</code> directory on the host.
+    The client certificates can be placed in any custom directory, as Remmina
+    asks for their path on the connection start-up.
+   </p><div class="complex-example"><div class="example" id="ex-running-vnc-secure-pwd" data-id-title="Password authentication"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.5: </span><span class="title-name">Password authentication </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-running-vnc-secure-pwd">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] -vnc :5,password -monitor stdio</pre></div><p>
+     Starts the VM Guest graphical output on VNC display number 5 (usually
+     port 5905). The <code class="literal">password</code> suboption initializes a simple
+     password-based authentication method. There is no password set by default
+     and you need to set one with the <code class="command">change vnc password</code>
+     command in QEMU monitor:
+    </p><div class="verbatim-wrap"><pre class="screen">QEMU 2.3.1 monitor - type 'help' for more information
+(qemu) change vnc password
+Password: ****</pre></div><p>
+     You need the <code class="literal">-monitor stdio</code> option here, because you
+     would not be able to manage the QEMU monitor without redirecting its
+     input/output.
+    </p></div></div></div><div class="figure" id="id-1.12.7.5.8.12.7"><div class="figure-contents"><div class="mediaobject"><a href="images/qemu_vnc_pwd.png"><img src="images/qemu_vnc_pwd.png" width="70%" alt="Authentication dialog in Remmina" title="Authentication dialog in Remmina"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 35.3: </span><span class="title-name">Authentication dialog in Remmina </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#id-1.12.7.5.8.12.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div></div><div class="complex-example"><div class="example" id="ex-running-vnc-secure-x509" data-id-title="x509 certificate authentication"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.6: </span><span class="title-name">x509 certificate authentication </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-running-vnc-secure-x509">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+     The QEMU VNC server can use TLS encryption for the session and x509
+     certificates for authentication. The server asks the client for a
+     certificate and validates it against the CA certificate. Use this
+     authentication type if your company provides an internal certificate
+     authority.
+    </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] -vnc :5,tls,x509verify=/etc/pki/qemu</pre></div></div></div></div><div class="complex-example"><div class="example" id="ex-running-vnc-secure-pwd-x509" data-id-title="x509 certificate and password authentication"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.7: </span><span class="title-name">x509 certificate and password authentication </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-running-vnc-secure-pwd-x509">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+     You can combine the password authentication with TLS encryption and x509
+     certificate authentication to create a two-layer authentication model for
+     clients. Remember to set the password in the QEMU monitor after you run
+     the following command:
+    </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] -vnc :5,password,tls,x509verify=/etc/pki/qemu \
+-monitor stdio</pre></div></div></div></div><div class="complex-example"><div class="example" id="ex-running-vnc-secure-sasl" data-id-title="SASL authentication"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 35.8: </span><span class="title-name">SASL authentication </span></span><a title="Permalink" class="permalink" href="cha-qemu-running.html#ex-running-vnc-secure-sasl">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/qemu_running_vms_qemukvm.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+     Simple Authentication and Security Layer (SASL) is a framework for
+     authentication and data security in Internet protocols. It integrates
+     several authentication mechanisms, like PAM, Kerberos, LDAP and more. SASL
+     keeps its own user database, so the connecting user accounts do not need
+     to exist on VM Host Server.
+    </p><p>
+     For security reasons, you are advised to combine SASL authentication with
+     TLS encryption and x509 certificates:
+    </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] -vnc :5,tls,x509,sasl -monitor stdio</pre></div></div></div></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-qemu-guest-inst.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 34 </span>Guest installation</span></a> </div><div><a class="pagination-link next" href="cha-qemu-monitor.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 36 </span>Virtual machine administration using QEMU monitor</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-qemu-running.html#cha-qemu-running-basic"><span class="title-number">35.1 </span><span class="title-name">Basic <code class="command">qemu-system-ARCH</code> invocation</span></a></span></li><li><span class="sect1"><a href="cha-qemu-running.html#cha-qemu-running-gen-opts"><span class="title-number">35.2 </span><span class="title-name">General <code class="command">qemu-system-ARCH</code> options</span></a></span></li><li><span class="sect1"><a href="cha-qemu-running.html#cha-qemu-running-devices"><span class="title-number">35.3 </span><span class="title-name">Using devices in QEMU</span></a></span></li><li><span class="sect1"><a href="cha-qemu-running.html#cha-qemu-running-networking"><span class="title-number">35.4 </span><span class="title-name">Networking in QEMU</span></a></span></li><li><span class="sect1"><a href="cha-qemu-running.html#cha-qemu-running-vnc"><span class="title-number">35.5 </span><span class="title-name">Viewing a VM Guest with VNC</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

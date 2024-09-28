@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Kernel control groups | System Analysis and Tuning Guide | openSUSE Leap 15.6</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="Kernel control groups | openSUSE Leap 15.6" />
+<meta name="description" content="Kernel Control Groups (cgroups) are a kernel feature for assigning and limiting hardware and system resources for processes. Processes can also be organized in…" />
+<meta name="product-name" content="openSUSE Leap" />
+<meta name="product-number" content="15.6" />
+<meta name="book-title" content="System Analysis and Tuning Guide" />
+<meta name="chapter-title" content="Chapter 10. Kernel control groups" />
+<meta name="tracker-url" content="https://bugzilla.opensuse.org/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="fs@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="openSUSE Distribution" />
+<meta name="tracker-bsc-version" content="Leap 15.4" />
+<meta property="og:title" content="Kernel control groups | openSUSE Leap 15.6" />
+<meta property="og:description" content="Kernel Control Groups (cgroups) are a kernel feature for assigning and limiting hardware and system resources for processes. Processes can also be organized in…" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Kernel control groups | openSUSE Leap 15.6" />
+<meta name="twitter:description" content="Kernel Control Groups (cgroups) are a kernel feature for assigning and limiting hardware and system resources for processes. Processes can also be organized in…" />
+<link rel="home" href="index.html" title="openSUSE Leap Documentation" /><link rel="up" href="part-tuning-resources.html" title="Part IV. Resource management" /><link rel="prev" href="cha-tuning-resources.html" title="Chapter 9. General system resource management" /><link rel="next" href="cha-tuning-numactl.html" title="Chapter 11. Automatic Non-Uniform Memory Access (NUMA) balancing" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="System Analysis and Tuning Guide"><span class="book-icon">System Analysis and Tuning Guide</span></a><span> › </span><a class="crumb" href="part-tuning-resources.html">Resource management</a><span> › </span><a class="crumb" href="cha-tuning-cgroups.html">Kernel control groups</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>System Analysis and Tuning Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-tuning.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="part-tuning-basics.html"><span class="number">I </span><span class="name">Basics</span></a><ol><li class="inactive"><a href="cha-tuning-basics.html"><span class="number">1 </span><span class="name">General notes on system tuning</span></a></li></ol></li><li class="inactive"><a href="part-tuning-monitoring.html"><span class="number">II </span><span class="name">System monitoring</span></a><ol><li class="inactive"><a href="cha-util.html"><span class="number">2 </span><span class="name">System monitoring utilities</span></a></li><li class="inactive"><a href="cha-tuning-syslog.html"><span class="number">3 </span><span class="name">System log files</span></a></li></ol></li><li class="inactive"><a href="part-tuning-kerneltrace.html"><span class="number">III </span><span class="name">Kernel monitoring</span></a><ol><li class="inactive"><a href="cha-tuning-systemtap.html"><span class="number">4 </span><span class="name">SystemTap—filtering and analyzing system data</span></a></li><li class="inactive"><a href="cha-tuning-kprobes.html"><span class="number">5 </span><span class="name">Kernel probes</span></a></li><li class="inactive"><a href="cha-perf.html"><span class="number">6 </span><span class="name">Hardware-based performance monitoring with Perf</span></a></li><li class="inactive"><a href="cha-tuning-oprofile.html"><span class="number">7 </span><span class="name">OProfile—system-wide profiler</span></a></li><li class="inactive"><a href="cha-tuning-dynamic-debug.html"><span class="number">8 </span><span class="name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li class="inactive"><a href="part-tuning-resources.html"><span class="number">IV </span><span class="name">Resource management</span></a><ol><li class="inactive"><a href="cha-tuning-resources.html"><span class="number">9 </span><span class="name">General system resource management</span></a></li><li class="inactive"><a href="cha-tuning-cgroups.html"><span class="number">10 </span><span class="name">Kernel control groups</span></a></li><li class="inactive"><a href="cha-tuning-numactl.html"><span class="number">11 </span><span class="name">Automatic Non-Uniform Memory Access (NUMA) balancing</span></a></li><li class="inactive"><a href="cha-tuning-power.html"><span class="number">12 </span><span class="name">Power management</span></a></li></ol></li><li class="inactive"><a href="part-tuning-kernel.html"><span class="number">V </span><span class="name">Kernel tuning</span></a><ol><li class="inactive"><a href="cha-tuning-io.html"><span class="number">13 </span><span class="name">Tuning I/O performance</span></a></li><li class="inactive"><a href="cha-tuning-taskscheduler.html"><span class="number">14 </span><span class="name">Tuning the task scheduler</span></a></li><li class="inactive"><a href="cha-tuning-memory.html"><span class="number">15 </span><span class="name">Tuning the memory management subsystem</span></a></li><li class="inactive"><a href="cha-tuning-network.html"><span class="number">16 </span><span class="name">Tuning the network</span></a></li></ol></li><li class="inactive"><a href="part-tuning-dumps.html"><span class="number">VI </span><span class="name">Handling system dumps</span></a><ol><li class="inactive"><a href="cha-tuning-tracing.html"><span class="number">17 </span><span class="name">Tracing tools</span></a></li><li class="inactive"><a href="cha-tuning-kexec.html"><span class="number">18 </span><span class="name">Kexec and Kdump</span></a></li><li class="inactive"><a href="cha-tuning-systemd-coredump.html"><span class="number">19 </span><span class="name">Using <code class="systemitem">systemd-coredump</code> to debug application crashes</span></a></li></ol></li><li class="inactive"><a href="part-tuning-ptp.html"><span class="number">VII </span><span class="name">Synchronized clocks with Precision Time Protocol</span></a><ol><li class="inactive"><a href="cha-tuning-ptp.html"><span class="number">20 </span><span class="name">Precision Time Protocol</span></a></li></ol></li><li class="inactive"><a href="bk05apa.html"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 9. General system resource management" href="cha-tuning-resources.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 11. Automatic Non-Uniform Memory Access (NUMA) balancing" href="cha-tuning-numactl.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="System Analysis and Tuning Guide"><span class="book-icon">System Analysis and Tuning Guide</span></a><span> › </span><a class="crumb" href="part-tuning-resources.html">Resource management</a><span> › </span><a class="crumb" href="cha-tuning-cgroups.html">Kernel control groups</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 9. General system resource management" href="cha-tuning-resources.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 11. Automatic Non-Uniform Memory Access (NUMA) balancing" href="cha-tuning-numactl.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-tuning-cgroups"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">openSUSE Leap</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15.6</span></span></span></div><div><h2 class="title"><span class="number">10 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Kernel control groups</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>cha-tuning-cgroups</li></ul></div></div><div><div class="abstract"><div class="abstract-title-wrap"><h6 class="abstract-title">Abstract<a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#id-1.7.6.3.2.1">#</a></h6></div><p>
+        Kernel Control Groups (<span class="quote">“<span class="quote ">cgroups</span>”</span>) are a kernel feature for
+        assigning and limiting hardware and system resources for processes.
+        Processes can also be organized in a hierarchical tree structure.
+      </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-overview"><span class="number">10.1 </span><span class="name">Overview</span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-accounting"><span class="number">10.2 </span><span class="name">Resource accounting</span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-usage"><span class="number">10.3 </span><span class="name">Setting resource limits</span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-tasksmax"><span class="number">10.4 </span><span class="name">Preventing fork bombs with <code class="literal">TasksMax</code></span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-cgroups.html#sec-control-io-cgroups"><span class="number">10.5 </span><span class="name">I/O control with cgroups</span></a></span></dt><dt><span class="sect1"><a href="cha-tuning-cgroups.html#id-1.7.6.3.8"><span class="number">10.6 </span><span class="name">More information</span></a></span></dt></dl></div></div><div class="sect1 " id="sec-tuning-cgroups-overview"><div class="titlepage"><div><div><h2 class="title"><span class="number">10.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Overview</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-overview">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-tuning-cgroups-overview</li></ul></div></div></div></div><p>
+      Every process is assigned exactly one administrative cgroup. cgroups are
+      ordered in a hierarchical tree structure. You can set resource
+      limitations, such as CPU, memory, disk I/O or network bandwidth usage,
+      for single processes or for whole branches of the hierarchy tree.
+    </p><p>
+      On <span class="productname"><span class="phrase">openSUSE Leap</span></span>, <code class="systemitem">systemd</code> uses cgroups to organize all processes in
+      groups, which <code class="systemitem">systemd</code> calls slices. <code class="systemitem">systemd</code> also provides an
+      interface for setting cgroup properties.
+    </p><p>
+      The command <code class="command">systemd-cgls</code> displays the hierarchy tree.
+    </p><p>
+      The kernel cgroup API comes in two variants—v1 and v2.
+      Additionally, there can be multiple cgroup hierarchies exposing different
+      APIs. From many possible combinations, there are two practical choices:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          unified: v2 hierarchy with controllers
+        </p></li><li class="listitem "><p>
+          hybrid: v2 hierarchy without controllers, and the controllers are on
+          v1 hierarchies (deprecated)
+        </p></li></ul></div><p>
+      The default mode is unified. There is a hybrid mode that provides
+      backward compatibility for applications that need it.
+    </p><p>
+      You may set only one mode.
+    </p><div class="sect2 " id="sec-cgroups-hybrid-hierarchy"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.1.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Hybrid cgroup hierarchy</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-hybrid-hierarchy">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-hybrid-hierarchy</li></ul></div></div></div></div><div id="id-1.7.6.3.3.9.2" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Deprecation notice</h6><p>
+          cgroup v1 has been deprecated, and might be removed in a future
+          release.
+        </p></div><p>
+        To enable the hybrid control group hierarchy, append
+        <code class="option">systemd.unified_cgroup_hierarchy=0</code> as a kernel
+        command-line parameter to the GRUB 2 boot loader. For more details
+        about configuring GRUB 2, refer to <span class="intraxref">Book “Reference”, Chapter 12 “The boot loader GRUB 2”</span>.
+      </p></div></div><div class="sect1 " id="sec-tuning-cgroups-accounting"><div class="titlepage"><div><div><h2 class="title"><span class="number">10.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Resource accounting</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-accounting">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-tuning-cgroups-accounting</li></ul></div></div></div></div><p>
+      Organizing processes into different cgroups can be used to obtain
+      per-cgroup resource consumption data.
+    </p><p>
+      The accounting has comparatively small but non-zero overhead, whose
+      impact depends on the workload. Activating accounting for one unit also
+      implicitly activates it for all units in the same slice, and for all its
+      parent slices, and the units contained in them.
+    </p><p>
+      The accounting can be set on a per-unit basis with directives such as
+      <code class="literal">MemoryAccounting=</code> or globally for all units in
+      <code class="filename">/etc/systemd/system.conf</code> with the directive
+      <code class="literal">DefaultMemoryAccounting=</code>. Refer to <code class="command">man
+      systemd.resource-control</code> for the exhaustive list of possible
+      directives.
+    </p></div><div class="sect1 " id="sec-tuning-cgroups-usage"><div class="titlepage"><div><div><h2 class="title"><span class="number">10.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Setting resource limits</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-usage">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-tuning-cgroups-usage</li></ul></div></div></div></div><div id="id-1.7.6.3.5.2" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Implicit resource consumption</h6><p>
+        Be aware that resource consumption implicitly depends on the
+        environment where your workload executes (for example, size of data
+        structures in libraries/kernel, forking behavior of utilities,
+        computational efficiency). Hence it is recommended to (re)calibrate
+        your limits should the environment change.
+      </p></div><p>
+      Limitations to cgroups can be set with the <code class="command">systemctl
+      set-property</code> command. The syntax is:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">systemctl set-property [--runtime] <em class="replaceable ">NAME</em> <em class="replaceable ">PROPERTY1</em>=<em class="replaceable ">VALUE</em> [<em class="replaceable ">PROPERTY2</em>=<em class="replaceable ">VALUE</em>]</code></pre></div><p>
+      The configured value is applied immediately. Optionally, use the
+      <code class="option">--runtime</code> option, so that the new values do not persist
+      after reboot.
+    </p><p>
+      Replace <em class="replaceable ">NAME</em> with a <code class="systemitem">systemd</code> service, scope,
+      or slice name.
+    </p><p>
+      For a complete list of properties and more details, see <code class="command">man
+      systemd.resource-control</code>.
+    </p></div><div class="sect1 " id="sec-tuning-cgroups-tasksmax"><div class="titlepage"><div><div><h2 class="title"><span class="number">10.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Preventing fork bombs with <code class="literal">TasksMax</code></span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-tasksmax">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-tuning-cgroups-tasksmax</li></ul></div></div></div></div><p>
+      <code class="systemitem">systemd</code> supports configuring task count limits both for each individual
+      leaf unit, or aggregated on slices. Upstream <code class="systemitem">systemd</code> ships with
+      defaults that limit the number of tasks in each unit (15% of the kernel
+      global limit, run <code class="command">/usr/sbin/sysctl kernel.pid_max</code> to
+      see the total limit). Each user's slice is limited to 33% of the kernel
+      limit. However, this is different for <span class="productname"><span class="phrase">openSUSE Leap</span></span>.
+    </p><div class="sect2 " id="sec-tasksmax-defaults"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Finding the current default <code class="literal">TasksMax</code> values</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tasksmax-defaults">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-tasksmax-defaults</li></ul></div></div></div></div><p>
+        It became apparent, in practice, that there is not a single default
+        that applies to all use cases. <span class="productname"><span class="phrase">openSUSE Leap</span></span> ships with two custom
+        configurations that override the upstream defaults for system units and
+        for user slices, and sets them both to <code class="literal">infinity</code>.
+        <code class="filename">/usr/lib/systemd/system.conf.d/__20-defaults-SUSE.conf</code>
+        contains these lines:
+      </p><div class="verbatim-wrap"><pre class="screen">[Manager]
+DefaultTasksMax=infinity</pre></div><p>
+        <code class="filename">/usr/lib/systemd/system/user-.slice.d/10-defaults.conf
+        </code> contains these lines:
+      </p><div class="verbatim-wrap"><pre class="screen">[Slice]
+TasksMax=infinity</pre></div><p>
+        Use <code class="command">systemctl</code> to verify the DefaultTasksMax value:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">systemctl show --property DefaultTasksMax</code>
+DefaultTasksMax=infinity</pre></div><p>
+        <code class="literal">infinity</code> means having no limit. It is not a
+        requirement to change the default, but setting certain limits may help
+        to prevent system crashes from runaway processes.
+      </p></div><div class="sect2 " id="sec-edit-taskmax-default"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Overriding the <code class="literal">DefaultTasksMax</code> value</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-edit-taskmax-default">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-edit-taskmax-default</li></ul></div></div></div></div><p>
+        Change the global <code class="literal">DefaultTasksMax</code> value by creating
+        a new override file,
+        <code class="filename">/etc/systemd/system.conf.d/90-system-tasksmax.conf</code>,
+        and write the following lines to set a new default limit of 256 tasks
+        per system unit:
+      </p><div class="verbatim-wrap"><pre class="screen">[Manager]
+DefaultTasksMax=256</pre></div><p>
+        Load the new setting, then verify that it changed:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl daemon-reload</code>
+<code class="prompt user">&gt; </code><code class="command">systemctl show --property DefaultTasksMax</code>
+DefaultTasksMax=256</pre></div><p>
+        Adjust this default value to suit your needs. You can set different
+        limits on individual services as needed. This example is for MariaDB.
+        First check the current active value:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">systemctl status mariadb.service</code>
+  ● mariadb.service - MariaDB database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; disabled; vendor preset&gt;
+   Active: active (running) since Tue 2020-05-26 14:15:03 PDT; 27min ago
+     Docs: man:mysqld(8)
+           https://mariadb.com/kb/en/library/systemd/
+ Main PID: 11845 (mysqld)
+   Status: "Taking your SQL requests now..."
+    Tasks: 30 (limit: 256)
+   CGroup: /system.slice/mariadb.service
+           └─11845 /usr/sbin/mysqld --defaults-file=/etc/my.cnf --user=mysql</pre></div><p>
+        The Tasks line shows that MariaDB currently has 30 tasks running, and
+        has an upper limit of the default 256, which is inadequate for a
+        database. The following example demonstrates how to raise MariaDB's
+        limit to 8192.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl set-property mariadb.service TasksMax=8192</code>
+<code class="prompt user">&gt; </code><code class="command">systemctl status mariadb.service</code>
+● mariadb.service - MariaDB database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; disabled; vendor preset: disab&gt;
+  Drop-In: /etc/systemd/system/mariadb.service.d
+           └─50-TasksMax.conf
+   Active: active (running) since Tue 2020-06-02 17:57:48 PDT; 7min ago
+     Docs: man:mysqld(8)
+           https://mariadb.com/kb/en/library/systemd/
+  Process: 3446 ExecStartPre=/usr/lib/mysql/mysql-systemd-helper upgrade (code=exited, sta&gt;
+  Process: 3440 ExecStartPre=/usr/lib/mysql/mysql-systemd-helper install (code=exited, sta&gt;
+ Main PID: 3452 (mysqld)
+   Status: "Taking your SQL requests now..."
+    Tasks: 30 (limit: 8192)
+   CGroup: /system.slice/mariadb.service
+           └─3452 /usr/sbin/mysqld --defaults-file=/etc/my.cnf --user=mysql</pre></div><p>
+        <code class="command">systemctl set-property</code> applies the new limit and
+        creates a drop-in file for persistence,
+        <code class="filename">/etc/systemd/system/mariadb.service.d/50-TasksMax.conf</code>,
+        that contains only the changes you want to apply to the existing unit
+        file. The value does not have to be 8192, but should be whatever limit
+        is appropriate for your workloads.
+      </p></div><div class="sect2 " id="id-1.7.6.3.6.5"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.4.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Default <code class="literal">TasksMax</code> limit on users</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#id-1.7.6.3.6.5">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span><span class="ds-message">no ID found</span></li></ul></div></div></div></div><p>
+        The default limit on users should be high, because user sessions need
+        more resources. Set your own default for any user by creating a new
+        file, for example
+        <code class="filename">/etc/systemd/system/user-.slice.d/40-user-taskmask.conf</code>.
+        The following example sets a default of 16284:
+      </p><div class="verbatim-wrap"><pre class="screen">[Slice]
+TasksMax=16284</pre></div><div id="id-1.7.6.3.6.5.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Numeric prefixes reference</h6><p>
+          See <span class="intraxref">Book “Reference”, Chapter 10 “The <code class="systemitem">systemd</code> daemon”, Section 10.5.3 “Creating drop-in files manually”</span> to learn what
+          numeric prefixes are expected for drop-in files.
+        </p></div><p>
+        Then reload systemd to load the new value, and verify the change:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl daemon-reload</code>
+<code class="prompt user">&gt; </code><code class="command">systemctl show --property TasksMax user-1000.slice</code>
+TasksMax=16284</pre></div><p>
+        How do you know what values to use? This varies according to your
+        workloads, system resources, and other resource configurations. When
+        your <code class="literal">TasksMax</code> value is too low, you may see error
+        messages such as <span class="emphasis"><em>Failed to fork (Resources temporarily
+        unavailable)</em></span>, <span class="emphasis"><em>Can't create thread to handle new
+        connection</em></span>, and <span class="emphasis"><em>Error: Function call 'fork' failed
+        with error code 11, 'Resource temporarily unavailable'</em></span>.
+      </p><p>
+        For more information on configuring system resources in systemd, see
+        <code class="literal">systemd.resource-control (5)</code>.
+      </p></div></div><div class="sect1 " id="sec-control-io-cgroups"><div class="titlepage"><div><div><h2 class="title"><span class="number">10.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">I/O control with cgroups</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-control-io-cgroups">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-control-io-cgroups</li></ul></div></div></div></div><p>
+      This section introduces using the Linux kernel's block I/O controller to
+      prioritize or throttle I/O operations. This leverages the means provided
+      by systemd to configure cgroups, and discusses probable pitfalls when
+      dealing with proportional I/O control.
+    </p><div class="sect2 " id="sec-cgroups-prerequisites"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.5.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Prerequisites</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-prerequisites">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-prerequisites</li></ul></div></div></div></div><p>
+        The following subsections describe steps that you must take in advance
+        when you design and configure your system, since those aspects cannot
+        be changed during runtime.
+      </p><div class="sect3 " id="sec-cgroups-filesystems"><div class="titlepage"><div><div><h4 class="title"><span class="number">10.5.1.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">File system</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-filesystems">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-filesystems</li></ul></div></div></div></div><p>
+          You should use a cgroup-writeback-aware file system (otherwise
+          writeback charging is not possible). The recommended <span class="productname"><span class="phrase">openSUSE Leap</span></span>
+          file systems added support in the following upstream releases:
+          
+        </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+              Btrfs (v4.3)
+            </p></li><li class="listitem "><p>
+              Ext4 (v4.3)
+            </p></li><li class="listitem "><p>
+              XFS (v5.3)
+            </p></li></ul></div><p>
+          As of
+          <span class="productname"><span class="phrase">openSUSE Leap</span></span> 15<span class="phrase">.3</span>,
+          any of the named file systems can be used.
+        </p></div><div class="sect3 " id="sec-cgroups-block-io-scheduler"><div class="titlepage"><div><div><h4 class="title"><span class="number">10.5.1.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Block I/O scheduler</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-block-io-scheduler">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-block-io-scheduler</li></ul></div></div></div></div><p>
+          The throttling policy is implemented higher in the stack, therefore
+          it does not require any additional adjustments. The proportional I/O
+          control policies have two different implementations: the BFQ
+          controller, and the cost-based model. We describe the BFQ controller
+          here. To exert its proportional implementation for a particular
+          device, we must make sure that BFQ is the chosen scheduler. Check the
+          current scheduler:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">cat /sys/class/block/<em class="replaceable ">sda</em>/queue/scheduler</code>
+mq-deadline kyber bfq [none]</pre></div><p>
+          Switch the scheduler to BFQ:
+        </p><div class="verbatim-wrap"><pre class="screen"> <code class="prompt root"># </code><code class="command">echo bfq &gt; /sys/class/block/<em class="replaceable ">sda</em>/queue/scheduler</code></pre></div><p>
+          You must specify the disk device (not a partition). The optimal way
+          to set this attribute is a udev rule specific to the device.
+          <span class="productname"><span class="phrase">openSUSE Leap</span></span> ships udev rules that already enable BFQ for rotational
+          disk drives.
+        </p></div><div class="sect3 " id="sec-cgroups-hierarchy"><div class="titlepage"><div><div><h4 class="title"><span class="number">10.5.1.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Cgroup hierarchy layout</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-hierarchy">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-hierarchy</li></ul></div></div></div></div><p>
+          Normally, all tasks reside in the root cgroup and they compete
+          against each other. When the tasks are distributed into the cgroup
+          tree the competition occurs between sibling cgroups only. This
+          applies to the proportional I/O control; the throttling
+          hierarchically aggregates throughput of all descendants (see the
+          following diagram).
+        </p><div class="verbatim-wrap"><pre class="screen">r
+`-  a      IOWeight=100
+    `- [c] IOWeight=300
+    `-  d  IOWeight=100
+`- [b]     IOWeight=200</pre></div><p>
+          I/O is originating only from cgroups c and b. Even though c has a
+          higher weight, it is treated with lower priority because it is
+          level-competing with b.
+        </p></div></div><div class="sect2 " id="sec-cgroups-configure-control-quantities"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.5.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring control quantities</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-configure-control-quantities">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-configure-control-quantities</li></ul></div></div></div></div><p>
+        You can apply the values to (long running) services permanently.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl set-property <em class="replaceable ">fast.service</em> IOWeight=<em class="replaceable ">400</em></code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl set-property <em class="replaceable ">slow.service</em> IOWeight=<em class="replaceable ">50</em></code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl set-property <em class="replaceable ">throttled.service</em> IOReadBandwidthMax="<em class="replaceable ">/dev/sda 1M</em>"</code></pre></div><p>
+        Alternatively, you can apply I/O control to individual commands, for
+        example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemd-run --scope -p IOWeight=<em class="replaceable ">400</em> <em class="replaceable ">high_prioritized_command</em></code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemd-run --scope -p IOWeight=<em class="replaceable ">50</em> <em class="replaceable ">low_prioritized_command</em></code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemd-run --scope -p IOReadBandwidthMax="<em class="replaceable ">/dev/sda 1M</em>" <em class="replaceable ">dd if=/dev/sda of=/dev/null bs=1M count=10</em></code></pre></div></div><div class="sect2 " id="sec-cgroups-control-behavior"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.5.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">I/O control behavior and setting expectations</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-control-behavior">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-control-behavior</li></ul></div></div></div></div><p>
+        The following list items describe I/O control behavior, and what you
+        should expect under different conditions.
+      </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            I/O control works best for direct I/O operations (bypassing page
+            cache), the situations where the actual I/O is decoupled from the
+            caller (typically writeback via page cache) may manifest variously.
+            For example, delayed I/O control or even no observed I/O control
+            (consider little bursts or competing workloads that happen to never
+            <span class="quote">“<span class="quote ">meet,</span>”</span> submitting I/O at the same time, and
+            saturating the bandwidth). For these reasons, the resulting ratio
+            of I/O throughputs does not strictly follow the ratio of configured
+            weights.
+          </p></li><li class="listitem "><p>
+            systemd performs scaling of configured weights (to adjust for
+            narrower BFQ weight range), hence the resulting throughput ratios
+            also differ.
+          </p></li><li class="listitem "><p>
+            The writeback activity depends on the amount of dirty pages,
+            besides the global sysctl knobs
+            (<code class="filename">vm.dirty_background_ratio</code> and
+            <code class="filename">vm.dirty_ratio</code>)). Memory limits of individual
+            cgroups come into play when the dirty limits are distributed among
+            cgroups, and this in turn may affect I/O intensity of affected
+            cgroups.
+          </p></li><li class="listitem "><p>
+            Not all storages are equal. The I/O control happens at the I/O
+            scheduler layer, which has ramifications for setups with devices
+            stacked on these that do no actual scheduling. Consider device
+            mapper logical volumes spanning multiple physical devices, MD RAID,
+            or even Btrfs RAID. I/O control over such setups may be
+            challenging.
+          </p></li><li class="listitem "><p>
+            There is no separate setting for proportional I/O control of reads
+            and writes.
+          </p></li><li class="listitem "><p>
+            Proportional I/O control is only one of the policies that can
+            interact with each other (but responsible resource design perhaps
+            avoids that).
+          </p></li><li class="listitem "><p>
+            The I/O device bandwidth is not the only shared resource on the I/O
+            path. Global file system structures are involved, which is relevant
+            when I/O control is meant to guarantee certain bandwidth; it does
+            not, and it may even lead to priority inversion (prioritized cgroup
+            waiting for a transaction of slower cgroup).
+          </p></li><li class="listitem "><p>
+            So far, we have been discussing only explicit I/O of file system
+            data, but swap-in and swap-out can also be controlled. Although if
+            such a need arises, it points out to improperly provisioned memory
+            (or memory limits).
+          </p></li></ul></div></div><div class="sect2 " id="sec-cgroups-user-sessions"><div class="titlepage"><div><div><h3 class="title"><span class="number">10.5.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Resource control in user sessions</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-cgroups-user-sessions">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span>sec-cgroups-user-sessions</li></ul></div></div></div></div><p>
+        In order to apply cgroup resource control within user sessions,
+        controllers must be delegated user instances of <code class="systemitem">systemd</code>.
+        <span class="productname"><span class="phrase">openSUSE Leap</span></span> ships <code class="systemitem">systemd</code> default configuration that delegates
+        <span class="emphasis"><em>no</em></span> controllers.
+      </p><p>
+        You can use drop-in files to change the set of delegated controllers.
+        For instance,
+        <code class="filename">/etc/systemd/system/user@.service.d/60-delegate.conf</code>
+        adds controllers to all users, while
+        <code class="filename">/etc/systemd/system/user@<em class="replaceable ">uid</em>.service.d/60-delegate.conf</code>
+        adds controllers only to a particular user. The content of the file
+        should be like the following:
+      </p><div class="verbatim-wrap"><pre class="screen">[Service]
+Delegate=pids memory</pre></div><p>
+        Both the <code class="systemitem">systemd</code> instance and the affected user instance must be notified
+        to reload the new configuration.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl daemon-reload</code>
+<code class="prompt user">&gt; </code><code class="command">systemctl --user daemon-reexec</code></pre></div><p>
+        Alternatively, the affected user may log out and log in instead of applying
+        the second line to restart their user instance.
+      </p></div></div><div class="sect1 " id="id-1.7.6.3.8"><div class="titlepage"><div><div><h2 class="title"><span class="number">10.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">More information</span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#id-1.7.6.3.8">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_cgroups.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>tuning_cgroups.xml</li><li><span class="ds-label">ID: </span><span class="ds-message">no ID found</span></li></ul></div></div></div></div><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          Kernel documentation (package
+          <code class="systemitem">kernel-source</code>): files in
+          <code class="filename">/usr/src/linux/Documentation/admin-guide/cgroup-v1</code>
+          and file
+          <code class="filename">/usr/src/linux/Documentation/admin-guide/cgroup-v2.rst</code>.
+        </p></li><li class="listitem "><p>
+          <code class="command">man systemd.resource-control</code>
+        </p></li><li class="listitem "><p>
+          <a class="link" href="https://lwn.net/Articles/604609/" target="_blank">https://lwn.net/Articles/604609/</a>—Brown,
+          Neil: Control Groups Series (2014, 7 parts).
+        </p></li><li class="listitem "><p>
+          <a class="link" href="https://lwn.net/Articles/243795/" target="_blank">https://lwn.net/Articles/243795/</a>—Corbet,
+          Jonathan: Controlling memory use in containers (2007).
+        </p></li><li class="listitem "><p>
+          <a class="link" href="https://lwn.net/Articles/236038/" target="_blank">https://lwn.net/Articles/236038/</a>—Corbet,
+          Jonathan: Process containers (2007).
+        </p></li></ul></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-tuning-numactl.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 11 </span>Automatic Non-Uniform Memory Access (NUMA) balancing</span></a><a class="nav-link" href="cha-tuning-resources.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 9 </span>General system resource management</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

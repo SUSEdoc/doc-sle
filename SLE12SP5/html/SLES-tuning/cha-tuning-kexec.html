@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | System Analysis and Tuning Guide | Kexec and Kdump</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Kexec and Kdump | SLES 12 SP5"/>
+<meta name="description" content="Kexec is a tool to boot to another kernel from the currently running one. You can perform faster system reboots without any hardware initialization. …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 17. Kexec and Kdump"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLES systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLES systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Kexec and Kdump",
+  
+    "description": "Kexec and Kdump",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-tuning-tracing.html" title="Chapter 16. Tracing Tools"/><link rel="next" href="cha-tuning-systemd-coredump.html" title="Chapter 18. Using systemd-coredump to Debug Application Crashes"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-dumps.html">Handling System Dumps</a><span> / </span><a class="crumb" href="cha-tuning-kexec.html">Kexec and Kdump</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General Notes on System Tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System Monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System Monitoring Utilities</span></a></li><li><a href="cha-tuning-logfiles.html" class=" "><span class="title-number">3 </span><span class="title-name">Analyzing and Managing System Log Files</span></a></li></ol></li><li><a href="part-tuning-kerneltrace.html" class="has-children "><span class="title-number">III </span><span class="title-name">Kernel Monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—Filtering and Analyzing System Data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel Probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-Based Performance Monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—System-Wide Profiler</span></a></li></ol></li><li><a href="part-tuning-resources.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Resource Management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">8 </span><span class="title-name">General System Resource Management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">9 </span><span class="title-name">Kernel Control Groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">10 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) Balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">11 </span><span class="title-name">Power Management</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel Tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">12 </span><span class="title-name">Tuning I/O Performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">13 </span><span class="title-name">Tuning the Task Scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning the Memory Management Subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the Network</span></a></li></ol></li><li class="active"><a href="part-tuning-dumps.html" class="has-children you-are-here"><span class="title-number">VI </span><span class="title-name">Handling System Dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">16 </span><span class="title-name">Tracing Tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" you-are-here"><span class="title-number">17 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">18 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to Debug Application Crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized Clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">19 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-kexec" data-id-title="Kexec and Kdump"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">17 </span><span class="title-name">Kexec and Kdump</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Kexec is a tool to boot to another kernel from the currently running
+  one. You can perform faster system reboots without any hardware
+  initialization. You can also prepare the system to boot to another kernel
+  if the system crashes.
+ </p><section class="sect1" id="cha-tuning-kexec-intro" data-id-title="Introduction"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.1 </span><span class="title-name">Introduction</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kexec-intro">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   With Kexec, you can replace the running kernel with another one
+   without a hard reboot. The tool is useful for several reasons:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Faster system rebooting
+    </p><p>
+     If you need to reboot the system frequently, Kexec can save you
+     significant time.
+    </p></li><li class="listitem"><p>
+     Avoiding unreliable firmware and hardware
+    </p><p>
+     Computer hardware is complex and serious problems may occur during the
+     system start-up. You cannot always replace unreliable hardware
+     immediately. Kexec boots the kernel to a controlled environment
+     with the hardware already initialized. The risk of unsuccessful system
+     start is then minimized.
+    </p></li><li class="listitem"><p>
+     Saving the dump of a crashed kernel
+    </p><p>
+     Kexec preserves the contents of the physical memory. After the
+     <span class="emphasis"><em>production</em></span> kernel fails, the
+     <span class="emphasis"><em>capture</em></span> kernel (an additional kernel running in a
+     reserved memory range) saves the state of the failed kernel. The saved
+     image can help you with the subsequent analysis.
+    </p></li><li class="listitem"><p>
+     Booting without GRUB 2 configuration
+    </p><p>
+     When the system boots a kernel with Kexec, it skips the boot
+     loader stage. The normal booting procedure can fail because of an error
+     in the boot loader configuration. With Kexec, you do not depend on
+     a working boot loader configuration.
+    </p></li></ul></div></section><section class="sect1" id="cha-tuning-kexec-pkgs" data-id-title="Required Packages"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.2 </span><span class="title-name">Required Packages</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kexec-pkgs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To use Kexec on <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span> to speed up reboots or avoid potential
+   hardware problems, make sure that the package
+   <code class="systemitem">kexec-tools</code> is installed.
+   It contains a script called
+   <code class="command">kexec-bootloader</code>, which reads the boot loader
+   configuration and runs Kexec using the same kernel options as the
+   normal boot loader.
+  </p><p>
+   To set up an environment that helps you obtain debug information
+   in case of a kernel crash, make sure that the package
+   <code class="systemitem">makedumpfile</code> is installed.
+  </p><p>
+   The preferred method of using Kdump in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is through
+   the YaST Kdump module.
+   To use the YaST module, make sure that the package
+   <code class="literal">yast2-kdump</code> is installed.
+  </p></section><section class="sect1" id="cha-tuning-kexec-internals" data-id-title="Kexec Internals"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.3 </span><span class="title-name">Kexec Internals</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kexec-internals">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The most important component of Kexec is the
+   <code class="filename">/sbin/kexec</code> command. You can load a kernel with
+   Kexec in two different ways:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Load the kernel to the address space of a production kernel for a regular
+     reboot:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">kexec</code> <code class="option">-l</code> <em class="replaceable">KERNEL_IMAGE</em></pre></div><p>
+     You can later boot to this kernel with
+     <code class="command">kexec</code> <code class="option">-e</code>.
+    </p></li><li class="listitem"><p>
+     Load the kernel to a reserved area of memory:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">kexec</code> <code class="option">-p</code> <em class="replaceable">KERNEL_IMAGE</em></pre></div><p>
+     This kernel will be booted automatically when the system crashes.
+    </p></li></ul></div><p>
+   If you want to boot another kernel and preserve the data of the
+   production kernel when the system crashes, you need to reserve a
+   dedicated area of the system memory. The production kernel never loads to
+   this area because it must be always available. It is used for the capture
+   kernel so that the memory pages of the production kernel can be
+   preserved.
+  </p><p>
+   To reserve the area, append the option <code class="option">crashkernel</code>
+   to the boot command line of the production kernel.
+   To determine the necessary values for <code class="option">crashkernel</code>, follow
+   the instructions in <a class="xref" href="cha-tuning-kexec.html#sec-tuning-kexec-crashkernel" title="17.4. Calculating crashkernel Allocation Size">Section 17.4, “Calculating <code class="option">crashkernel</code> Allocation Size”</a>.
+  </p><p>
+   Note that this is not a parameter of the capture
+   kernel. The capture kernel does not use Kexec.
+  </p><p>
+   The capture kernel is loaded to the reserved area and waits for the
+   kernel to crash. Then, Kdump tries to invoke the capture kernel
+   because the production kernel is no longer reliable at this stage. This
+   means that even Kdump can fail.
+  </p><p>
+   To load the capture kernel, you need to include the kernel boot
+   parameters. Usually, the initial RAM file system is used for booting. You
+   can specify it with
+   <code class="option">--initrd</code><code class="literal">=</code><em class="replaceable">FILENAME</em>.
+   With
+   <code class="option">--append</code><code class="literal">=</code><em class="replaceable">CMDLINE</em>,
+   you append options to the command line of the kernel to boot.
+  </p><p>
+   It is helpful to include the command line of
+   the production kernel if these options are necessary for the kernel to
+   boot. You can simply copy the command line with
+   <code class="option">--append</code><code class="literal">=</code><em class="replaceable">"$(cat /proc/cmdline)"</em>
+   or add more options with
+   <code class="option">--append</code><code class="literal">=</code><em class="replaceable">"$(cat /proc/cmdline) more_options"</em>.
+  </p><p>
+   You can always unload the previously loaded kernel. To unload a kernel
+   that was loaded with the <code class="option">-l</code> option, use the
+   <code class="command">kexec</code> <code class="option">-u</code> command. To unload a crash
+   kernel loaded with the <code class="option">-p</code> option, use
+   <code class="command">kexec</code> <code class="option">-p</code> <code class="option">-u</code> command.
+  </p></section><section class="sect1" id="sec-tuning-kexec-crashkernel" data-id-title="Calculating crashkernel Allocation Size"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.4 </span><span class="title-name">Calculating <code class="option">crashkernel</code> Allocation Size</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#sec-tuning-kexec-crashkernel">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To use Kexec with a capture kernel and to use Kdump in any way, RAM needs
+   to be allocated for the capture kernel.
+   The allocation size depends on the expected hardware configuration of
+   the computer, therefore you need to specify it.
+  </p><p>
+   The allocation size also depends on the hardware architecture of your
+   computer.
+   Make sure to follow the procedure intended for your system architecture.
+  </p><div class="procedure" id="id-1.8.8.3.7.4" data-id-title="Allocation Size on AMD64/Intel 64"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 17.1: </span><span class="title-name">Allocation Size on AMD64/Intel 64 </span></span><a title="Permalink" class="permalink" href="cha-tuning-kexec.html#id-1.8.8.3.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     To find out the base value for the computer, run the following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">kdumptool</code> calibrate
+Total: 49074
+Low: 72
+High: 180
+MinLow: 72
+MaxLow: 3085
+MinHigh: 0
+MaxHigh: 45824</pre></div><p>
+     All values are given in megabytes.
+    </p></li><li class="step"><p>
+     Take note of the values of <code class="literal">Low</code> and
+     <code class="literal">High</code>.
+    </p><div id="id-1.8.8.3.7.4.3.2" data-id-title="Significance of Low and High Values" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: 
+      Significance of <code class="literal">Low</code> and <code class="literal">High</code> Values
+     </div><p>
+      On AMD64/Intel 64 computers, the <code class="literal">High</code> value stands
+      for the memory reservation for all available memory.
+      The <code class="literal">Low</code> value stands for the memory reservation
+      in the DMA32 zone, that is, all the memory up to the 4 GB mark. 
+      
+     </p><p>
+            
+      SIZE_LOW is the amount of memory required by 32-bit-only devices. The kernel 
+      will allocate 64M for DMA32 bounce buffers. If your server does not have any 32-bit-only 
+      devices, everything should work with the default allocation of 72M for
+      <code class="literal">SIZE_LOW</code>. A possible exception to this is on NUMA machines, which
+      may make it appear that more <code class="literal">Low</code> memory is needed. The
+      Kdump kernel may be booted with <code class="literal">numa=off</code> to make sure normal 
+      kernel allocations do not use <code class="literal">Low</code> memory.      
+     </p></div></li><li class="step"><p>
+      Adapt the <code class="literal">High</code> value from the previous step for
+      the number of LUN kernel paths (paths to storage devices) attached to the
+      computer.
+      A sensible value in megabytes can be calculated using this formula:
+     </p><div class="verbatim-wrap"><pre class="screen">SIZE_HIGH = <em class="replaceable">RECOMMENDATION</em> + (<em class="replaceable">LUNs</em> / 2)</pre></div><p>
+      The following parameters are used in this formula:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">SIZE_HIGH. </span>
+         The resulting value for <code class="literal">High</code>.
+        </p></li><li class="listitem"><p><span class="formalpara-title">RECOMMENDATION. </span>
+         The value recommended by <code class="command">kdumptool calibrate</code>
+         for <code class="literal">High</code>.
+        </p></li><li class="listitem"><p><span class="formalpara-title">LUNs. </span>
+         The maximum number of LUN kernel paths that you expect to ever create
+         on the computer.
+         Exclude multipath devices from this number, as these are
+         ignored.
+        </p></li></ul></div></li><li class="step"><p>
+      If the drivers for your device make many reservations in the DMA32 zone,
+      the <code class="literal">Low</code> value also needs to be adjusted.
+      However, there is no simple formula to calculate these.
+      Finding the right size can therefore be a process of trial and error.
+     </p><p>
+      For the beginning, use the <code class="literal">Low</code> value recommended by
+      <code class="command">kdumptool calibrate</code>.
+     </p></li><li class="step"><p>
+      The values now need to be set in the correct location.
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.8.3.7.4.6.2.1"><span class="term">If you are changing the kernel command line directly</span></dt><dd><p>
+         Append the following kernel option to your boot loader
+         configuration:
+        </p><div class="verbatim-wrap"><pre class="screen">crashkernel=<em class="replaceable">SIZE_HIGH</em>,high crashkernel=<em class="replaceable">SIZE_LOW</em>,low</pre></div><p>
+         Replace the placeholders <em class="replaceable">SIZE_HIGH</em> and
+         <em class="replaceable">SIZE_LOW</em> with the appropriate value from the
+         previous steps and append the letter <code class="literal">M</code>
+         (for megabytes).
+        </p><p>
+         As an example, the following is valid:
+        </p><div class="verbatim-wrap"><pre class="screen">crashkernel=<em class="replaceable">36M</em>,high crashkernel=<em class="replaceable">72M</em>,low</pre></div></dd><dt id="id-1.8.8.3.7.4.6.2.2"><span class="term">If you are using the YaST GUI:</span></dt><dd><p>
+         Set <span class="guimenu">Kdump Low Memory</span> to the determined
+         <code class="literal">Low</code> value.
+        </p><p>
+         Set <span class="guimenu">Kdump High Memory</span> to the determined
+         <code class="literal">High</code> value.
+        </p></dd><dt id="id-1.8.8.3.7.4.6.2.3"><span class="term">If you are using the YaST command line interface:</span></dt><dd><p>
+         Use the following command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>yast kdump startup enable alloc_mem=<em class="replaceable">LOW</em>,<em class="replaceable">HIGH</em></pre></div><p>
+         Replace <em class="replaceable">LOW</em> with the determined
+         <code class="literal">Low</code> value. Replace
+         <em class="replaceable">HIGH</em> with the determined
+         <code class="literal">HIGH</code> value.
+        </p></dd></dl></div></li></ol></div></div><div class="procedure" id="id-1.8.8.3.7.5" data-id-title="Allocation Size on IBM POWER and IBM Z"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 17.2: </span><span class="title-name">Allocation Size on IBM POWER and IBM Z </span></span><a title="Permalink" class="permalink" href="cha-tuning-kexec.html#id-1.8.8.3.7.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     To find out the basis value for the computer, run the following in a
+     terminal:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">kdumptool</code> calibrate</pre></div><p>
+     This command returns a list of values.
+     All values are given in megabytes.
+    </p></li><li class="step"><p>
+     Write down the value of <code class="literal">Low</code>.
+    </p></li><li class="step"><p>
+     Adapt the <code class="literal">Low</code> value from the previous step for
+     the number of LUN kernel paths (paths to storage devices) attached to the
+     computer.
+     A sensible value in megabytes can be calculated using this formula:
+    </p><div class="verbatim-wrap"><pre class="screen">SIZE_LOW = <em class="replaceable">RECOMMENDATION</em> + (<em class="replaceable">LUNs</em> / 2)</pre></div><p>
+     The following parameters are used in this formula:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">SIZE_LOW. </span>
+        The resulting value for <code class="literal">Low</code>.
+       </p></li><li class="listitem"><p><span class="formalpara-title">RECOMMENDATION. </span>
+        The value recommended by <code class="command">kdumptool calibrate</code>
+        for <code class="literal">Low</code>.
+       </p></li><li class="listitem"><p><span class="formalpara-title">LUNs. </span>
+        The maximum number of LUN kernel paths that you expect to ever create
+        on the computer.
+        Exclude multipath devices from this number, as these are
+        ignored.
+       </p></li></ul></div></li><li class="step"><p>
+     The values now need to be set in the correct location.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.8.3.7.5.5.2.1"><span class="term">If you are working on the command line</span></dt><dd><p>
+        Append the following kernel option to your boot loader
+        configuration:
+       </p><div class="verbatim-wrap"><pre class="screen">crashkernel=<em class="replaceable">SIZE_LOW</em></pre></div><p>
+        Replace the placeholder<em class="replaceable">SIZE_LOW</em> with the
+        appropriate value from the previous step and append the letter
+        <code class="literal">M</code> (for megabytes).
+       </p><p>
+        As an example, the following is valid:
+       </p><div class="verbatim-wrap"><pre class="screen">crashkernel=<em class="replaceable">108M</em></pre></div></dd><dt id="id-1.8.8.3.7.5.5.2.2"><span class="term">If you are working in YaST</span></dt><dd><p>
+        Set <span class="guimenu">Kdump Memory</span> to the determined
+        <code class="literal">Low</code> value.
+       </p></dd></dl></div></li></ol></div></div><div id="id-1.8.8.3.7.6" data-id-title="Excluding Unused and Inactive CCW Devices on IBM IBM Z" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Excluding Unused and Inactive CCW Devices on IBM IBM Z</div><p>
+    Depending on the number of available devices the calculated amount of
+    memory specified by the <code class="option">crashkernel</code> kernel parameter may
+    not be sufficient. Instead of increasing the value, you may alternatively
+    limit the amount of devices visible to the kernel. This will lower the
+    required amount of memory for the "crashkernel" setting.
+   </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+      To ignore devices you can run the <code class="command">cio_ignore</code> tool to
+      generate an appropriate stanza to ignore all devices, except the ones
+      currently active or in use.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>sudo cio_ignore -u -k
+cio_ignore=all,!da5d,!f500-f502</pre></div><p>
+      When you run <code class="command">cio_ignore -u -k</code>, the blacklist will
+      become active and replace any existing blacklist immediately. Unused
+      devices are not being purged, so they still appear in the channel
+      subsystem. But adding new channel devices (via CP ATTACH under z/VM or
+      dynamic I/O configuration change in LPAR) will treat them as
+      blacklisted. To prevent this, preserve the original setting by running
+      <code class="command">sudo cio_ignore -l</code> first and reverting to that
+      state after running <code class="command">cio_ignore -u -k</code>. As an
+      alternative, add the generated stanza to the regular kernel boot
+      parameters.
+     </p></li><li class="listitem"><p>
+      Now add the <code class="option">cio_ignore</code> kernel parameter with the stanza
+      from above to <code class="envar">KDUMP_CMDLINE_APPEND</code> in
+      <code class="filename">/etc/sysconfig/kdump</code>, for example:
+     </p><div class="verbatim-wrap"><pre class="screen">KDUMP_COMMANDLINE_APPEND="cio_ignore=all,!da5d,!f500-f502"</pre></div></li><li class="listitem"><p>
+      Activate the setting by restarting <code class="systemitem">kdump</code>:
+     </p><div class="verbatim-wrap"><pre class="screen">systemctl restart kdump.service</pre></div></li></ol></div></div></section><section class="sect1" id="cha-tuning-kexec-basic-usage" data-id-title="Basic Kexec Usage"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.5 </span><span class="title-name">Basic Kexec Usage</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kexec-basic-usage">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To use Kexec, ensure the respective service is enabled and running:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Make sure the Kexec service is loaded at system start:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl enable kexec-load.service</pre></div></li><li class="listitem"><p>
+     Make sure the Kexec service is running:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl start kexec-load.service</pre></div></li></ul></div><p>
+   To verify if your Kexec environment works properly, try rebooting into a
+   new Kernel with Kexec. Make sure no users are currently logged in and no
+   important services are running on the system. If this is the case, run the
+   following command:
+  </p><div class="verbatim-wrap"><pre class="screen">systemctl kexec</pre></div><p>
+   The new kernel previously loaded to the address space of the older kernel
+   rewrites it and takes control immediately. It displays the usual start-up
+   messages. When the new kernel boots, it skips all hardware and firmware
+   checks. Make sure no warning messages appear.
+  </p><div id="id-1.8.8.3.8.7" data-id-title="Using Kexec with the reboot Command" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Using Kexec with the reboot Command</div><p>
+    To make <code class="command">reboot</code> use Kexec rather than performing a
+    regular reboot, run the following command:
+   </p><div class="verbatim-wrap"><pre class="screen">ln -s /usr/lib/systemd/system/kexec.target /etc/systemd/system/reboot.target</pre></div><p>
+    You can revert this at any time by deleting
+    <code class="filename">etc/systemd/system/reboot.target</code>.
+   </p></div></section><section class="sect1" id="cha-tuning-kexec-config" data-id-title="How to Configure Kexec for Routine Reboots"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.6 </span><span class="title-name">How to Configure Kexec for Routine Reboots</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kexec-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Kexec is often used for frequent reboots. For example, if it takes a
+   long time to run through the hardware detection routines or if the
+   start-up is not reliable.
+  </p><p>
+   Note that firmware and the boot loader are not used when the
+   system reboots with Kexec. Any changes you make to the boot loader
+   configuration will be ignored until the computer performs a hard reboot.
+  </p></section><section class="sect1" id="cha-tuning-kdump-basic" data-id-title="Basic Kdump Configuration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.7 </span><span class="title-name">Basic Kdump Configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-basic">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   You can use Kdump to save kernel dumps. If the kernel crashes, it is
+   useful to copy the memory image of the crashed environment to the file
+   system. You can then debug the dump file to find the cause of the kernel
+   crash. This is called <span class="quote">“<span class="quote">core dump</span>”</span>.
+  </p><p>
+   Kdump works similarly to Kexec (see
+   <a class="xref" href="cha-tuning-kexec.html" title="Chapter 17. Kexec and Kdump">Chapter 17, <em>Kexec and Kdump</em></a>). The capture kernel is executed after
+   the running production kernel crashes. The difference is that Kexec
+   replaces the production kernel with the capture kernel. With Kdump,
+   you still have access to the memory space of the crashed production
+   kernel. You can save the memory snapshot of the crashed kernel in the
+   environment of the Kdump kernel.
+  </p><div id="id-1.8.8.3.10.4" data-id-title="Dumps over Network" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Dumps over Network</div><p>
+    In environments with limited local storage, you need to set up kernel
+    dumps over the network. Kdump supports configuring the specified
+    network interface and bringing it up via
+    <code class="systemitem">initrd</code>. Both LAN and VLAN interfaces are
+    supported. Specify the network interface and the mode (DHCP or static)
+    either with YaST, or using the <code class="option">KDUMP_NETCONFIG</code>
+    option in the <code class="filename">/etc/sysconfig/kdump</code> file.
+   </p></div><div id="id-1.8.8.3.10.5" data-id-title="Target File System for Kdump Must Be Mounted During Configuration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Target File System for Kdump Must Be Mounted During Configuration</div><p>
+    When configuring Kdump, you can specify a location to which the
+    dumped images will be saved (default: <code class="filename">/var/crash</code>).
+    This location must be mounted when configuring Kdump, otherwise the
+    configuration will fail.
+   </p></div><section class="sect2" id="cha-tuning-kdump-basic-manual" data-id-title="Manual Kdump Configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.7.1 </span><span class="title-name">Manual Kdump Configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-basic-manual">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Kdump reads its configuration from the
+    <code class="filename">/etc/sysconfig/kdump</code> file. To make sure that
+    Kdump works on your system, its default configuration is
+    sufficient. To use Kdump with the default settings, follow these
+    steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Determine the amount of memory needed for Kdump by following the
+      instructions in <a class="xref" href="cha-tuning-kexec.html#sec-tuning-kexec-crashkernel" title="17.4. Calculating crashkernel Allocation Size">Section 17.4, “Calculating <code class="option">crashkernel</code> Allocation Size”</a>.
+      Make sure to set the kernel parameter <code class="option">crashkernel</code>.
+     </p></li><li class="step"><p>
+      Reboot the computer.
+     </p></li><li class="step"><p>
+      Enable the Kdump service:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl</code> enable kdump</pre></div></li><li class="step"><p>
+      You can edit the options in <code class="filename">/etc/sysconfig/kdump</code>.
+      Reading the comments will help you understand the meaning of
+      individual options.
+     </p></li><li class="step"><p>
+      Execute the init script once with <code class="command">sudo systemctl start
+      kdump</code>, or reboot the system.
+     </p></li></ol></div></div><p>
+    After configuring Kdump with the default values, check if it works
+    as expected. Make sure that no users are currently logged in and no
+    important services are running on your system. Then follow these steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Switch to the rescue target with <code class="command">systemctl isolate
+      rescue.target</code>
+     </p></li><li class="step"><p>
+      Restart the Kdump service:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl</code> start kdump</pre></div></li><li class="step"><p>
+      Unmount all the disk file systems except the root file system with:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">umount</code> -a</pre></div></li><li class="step"><p>
+      Remount the root file system in read-only mode:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">mount</code> -o remount,ro /</pre></div></li><li class="step"><p>
+      Invoke a <span class="quote">“<span class="quote">kernel panic</span>”</span> with the <code class="literal">procfs</code>
+      interface to Magic SysRq keys:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">echo</code> c &gt; /proc/sysrq-trigger</pre></div></li></ol></div></div><div id="id-1.8.8.3.10.6.6" data-id-title="Size of Kernel Dumps" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Size of Kernel Dumps</div><p>
+     The <code class="literal">KDUMP_KEEP_OLD_DUMPS</code> option controls the number
+     of preserved kernel dumps (default is 5). Without compression, the size
+     of the dump can take up to the size of the physical RAM memory. Make
+     sure you have sufficient space on the <code class="filename">/var</code>
+     partition.
+    </p></div><p>
+    The capture kernel boots and the crashed kernel memory snapshot is saved
+    to the file system. The save path is given by the
+    <code class="literal">KDUMP_SAVEDIR</code> option and it defaults to
+    <code class="filename">/var/crash</code>. If
+    <code class="literal">KDUMP_IMMEDIATE_REBOOT</code> is set to
+    <code class="literal">yes</code> , the system automatically reboots the production
+    kernel. Log in and check that the dump has been created under
+    <code class="filename">/var/crash</code>.
+   </p><section class="sect3" id="sec-tuning-kdump-basic-manual-static-ip" data-id-title="Static IP Configuration for Kdump"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">17.7.1.1 </span><span class="title-name">Static IP Configuration for Kdump</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#sec-tuning-kdump-basic-manual-static-ip">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     In case Kdump is configured to use a static IP configuration from a
+     network device, you need to add the network configuration to the
+     <code class="envar">KDUMP_COMMANDLINE_APPEND</code> variable in
+     <code class="filename">/etc/sysconfig/kdump</code>.
+    </p><div id="id-1.8.8.3.10.6.8.3" data-id-title="Changes to the Kdump Configuration File" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Changes to the Kdump Configuration File</div><p>
+      After making changes to the <code class="filename">/etc/sysconfig/kdump</code>
+      file, you need to run <code class="command">systemctl restart kdump.service</code>.
+      Otherwise, the changes will only take effect next time you reboot the
+      system.
+     </p></div><div class="complex-example"><div class="example" id="id-1.8.8.3.10.6.8.4" data-id-title="Kdump: Example Configuration Using a Static IP Setup"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 17.1: </span><span class="title-name">Kdump: Example Configuration Using a Static IP Setup </span></span><a title="Permalink" class="permalink" href="cha-tuning-kexec.html#id-1.8.8.3.10.6.8.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+      The following setup has been configured:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        eth0 has been configured with the static IP address <code class="systemitem">192.168.1.1/24</code>
+       </p></li><li class="listitem"><p>
+        eth1 has been configured with the static IP address <code class="systemitem">10.50.50.100/20</code>
+       </p></li><li class="listitem"><p>
+        The Kdump configuration in <code class="filename">/etc/sysconfig/kdump</code>
+        looks like:
+       </p><div class="verbatim-wrap"><pre class="screen">KDUMP_CPUS=1
+KDUMP_IMMEDIATE_REBOOT=yes
+KDUMP_SAVEDIR=ftp://anonymous@10.50.50.140/crashdump/
+KDUMP_KEEP_OLD_DUMPS=5
+KDUMP_FREE_DISK_SIZE=64
+KDUMP_VERBOSE=3
+KDUMP_DUMPLEVEL=31
+KDUMP_DUMPFORMAT=lzo
+KDUMP_CONTINUE_ON_ERROR=yes
+KDUMP_NETCONFIG=eth1:static
+KDUMP_NET_TIMEOUT=30</pre></div></li></ul></div><p>
+      Using this configuration, Kdump fails to reach the network when trying
+      to write the dump to the FTP server. To solve this issue, add the network
+      configuration to <code class="envar">KDUMP_COMMANDLINE_APPEND</code> in
+      <code class="filename">/etc/sysconfig/kdump</code>. The general pattern for this
+      looks like the following:
+     </p><div class="verbatim-wrap"><pre class="screen">KDUMP_COMMANDLINE_APPEND='ip=<em class="replaceable">CLIENT IP</em>:<em class="replaceable">SERVER IP</em>:<em class="replaceable">GATEWAY IP</em>:<em class="replaceable">NETMASK</em>:<em class="replaceable">CLIENT HOSTNAME</em>:<em class="replaceable">DEVICE</em>:<em class="replaceable">PROTOCOL</em>'</pre></div><p>
+      For the example configuration this would result in:
+     </p><div class="verbatim-wrap"><pre class="screen">KDUMP_COMMANDLINE_APPEND='ip=10.50.50.100:10.50.50.140:10.60.48.1:255.255.240.0:dump-client:eth1:none'</pre></div></div></div></div></section></section><section class="sect2" id="cha-tuning-kdump-basic-yast" data-id-title="YaST Configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.7.2 </span><span class="title-name">YaST Configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-basic-yast">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To configure Kdump with YaST, you need to install the
+    <code class="systemitem">yast2-kdump</code> package. Then either start the
+    <span class="guimenu">Kernel Kdump</span> module in the <span class="guimenu">System</span>
+    category of <span class="guimenu">YaST Control Center</span>, or enter <code class="command">yast2 kdump</code> in the
+    command line as <code class="systemitem">root</code>.
+   </p><div class="figure" id="fig-tuning-kdump-basic-yast-kdump1"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_kdump_startup.png"><img src="images/yast2_kdump_startup.png" width="70%" alt="Screenshot of the YaST Kdump Module" title="Screenshot of the YaST Kdump Module"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 17.1: </span><span class="title-name">YaST Kdump Module: Start-Up Page </span></span><a title="Permalink" class="permalink" href="cha-tuning-kexec.html#fig-tuning-kdump-basic-yast-kdump1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div><p>
+    In the <span class="guimenu">Start-Up</span> window, select <span class="guimenu">Enable
+    Kdump</span>.
+   </p><p>
+    The values for <span class="guimenu">Kdump Memory</span> are automatically generated
+    the first time you open the window.
+    However, that does not mean that they are always sufficient.
+    To set the right values, follow the instructions in
+    <a class="xref" href="cha-tuning-kexec.html#sec-tuning-kexec-crashkernel" title="17.4. Calculating crashkernel Allocation Size">Section 17.4, “Calculating <code class="option">crashkernel</code> Allocation Size”</a>.
+   </p><div id="id-1.8.8.3.10.7.6" data-id-title="After Hardware Changes, Set Kdump Memory Values Again" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: 
+     After Hardware Changes, Set <span class="guimenu">Kdump Memory</span> Values Again
+    </div><p>
+     If you have set up Kdump on a computer and later decide to change the
+     amount of RAM or hard disks available to it, YaST will continue to
+     display and use outdated memory values.
+    </p><p>
+     To work around this, determine the necessary memory again, as described in
+     <a class="xref" href="cha-tuning-kexec.html#sec-tuning-kexec-crashkernel" title="17.4. Calculating crashkernel Allocation Size">Section 17.4, “Calculating <code class="option">crashkernel</code> Allocation Size”</a>.
+     Then set it manually in YaST.
+    </p></div><p>
+    Click <span class="guimenu">Dump Filtering</span> in the left pane, and check what
+    pages to include in the dump. You do not need to include the following
+    memory content to be able to debug kernel problems:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Pages filled with zero
+     </p></li><li class="listitem"><p>
+      Cache pages
+     </p></li><li class="listitem"><p>
+      User data pages
+     </p></li><li class="listitem"><p>
+      Free pages
+     </p></li></ul></div><p>
+    In the <span class="guimenu">Dump Target</span> window, select the type of the
+    dump target and the URL where you want to save the dump. If you selected
+    a network protocol, such as FTP or SSH, you need to enter relevant
+    access information as well.
+   </p><div id="id-1.8.8.3.10.7.10" data-id-title="Sharing the Dump Directory with Other Applications" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Sharing the Dump Directory with Other Applications</div><p>
+     It is possible to specify a path for saving Kdump dumps where
+     other applications also save their dumps. When cleaning its old dump
+     files, Kdump will safely ignore other applications' dump files.
+    </p></div><p>
+    Fill the <span class="guimenu">Email Notification</span> window information if you
+    want Kdump to inform you about its events via e-mail and confirm
+    your changes with <span class="guimenu">OK</span> after fine tuning Kdump in
+    the <span class="guimenu">Expert Settings</span> window. Kdump is now
+    configured.
+   </p></section></section><section class="sect1" id="cha-tuning-kdump-analyze" data-id-title="Analyzing the Crash Dump"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.8 </span><span class="title-name">Analyzing the Crash Dump</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-analyze">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   After you obtain the dump, it is time to analyze it. There are several
+   options.
+  </p><p>
+   The original tool to analyze the dumps is GDB. You can even use it in the
+   latest environments, although it has several disadvantages and
+   limitations:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     GDB was not specifically designed to debug kernel dumps.
+    </p></li><li class="listitem"><p>
+     GDB does not support ELF64 binaries on 32-bit platforms.
+    </p></li><li class="listitem"><p>
+     GDB does not understand other formats than ELF dumps (it cannot debug
+     compressed dumps).
+    </p></li></ul></div><p>
+   That is why the <code class="command">crash</code> utility was implemented. It
+   analyzes crash dumps and debugs the running system as well. It provides
+   functionality specific to debugging the Linux kernel and is much more
+   suitable for advanced debugging.
+  </p><p>
+   If you want to debug the Linux kernel, you need to install its debugging
+   information package in addition. Check if the package is installed on
+   your system with:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">zypper</code> se kernel | <code class="command">grep</code> debug</pre></div><div id="id-1.8.8.3.11.8" data-id-title="Repository for Packages with Debugging Information" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Repository for Packages with Debugging Information</div><p>
+    If you subscribed your system for online updates, you can find
+    <span class="quote">“<span class="quote">debuginfo</span>”</span> packages in the
+    <code class="literal">*-Debuginfo-Updates</code> online installation repository
+    relevant for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber">12 SP5</span>. Use YaST to
+    enable the repository.
+   </p></div><p>
+   To open the captured dump in <code class="command">crash</code> on the machine that
+   produced the dump, use a command like this:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="command">crash</code> <em class="replaceable">/boot/vmlinux-4.12.14-94.37-default.gz</em> \
+<em class="replaceable">/var/crash/2010-04-23-11\:17/vmcore</em></pre></div><p>
+   The first parameter represents the kernel image. The second parameter is
+   the dump file captured by Kdump. You can find this file under
+   <code class="filename">/var/crash</code> by default.
+  </p><div id="id-1.8.8.3.11.12" data-id-title="Getting Basic Information from a Kernel Crash Dump" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Getting Basic Information from a Kernel Crash Dump</div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> ships with the utility <code class="command">kdumpid</code>
+    (included in a package with the same name) for identifying unknown
+    kernel dumps. It can be used to extract basic information such as
+    architecture and kernel release. It supports lkcd, diskdump, Kdump
+    files and ELF dumps. When called with the <code class="option">-v</code>
+    switch it tries to extract additional information such as machine type,
+    kernel banner string and kernel configuration flavor.
+   </p></div><section class="sect2" id="cha-tuning-kdump-analyze-binformat" data-id-title="Kernel Binary Formats"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.8.1 </span><span class="title-name">Kernel Binary Formats</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-analyze-binformat">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The Linux kernel comes in Executable and Linkable Format (ELF). This
+    file is usually called <code class="literal">vmlinux</code> and is directly
+    generated in the compilation process. Not all boot loaders support
+    ELF binaries, especially on the AMD64/Intel 64 architecture.
+    The following solutions exist on different architectures supported by
+    <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span>.
+   </p><section class="sect3" id="cha-tuning-kdump-analyze-binformat-x86" data-id-title="AMD64/Intel 64"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">17.8.1.1 </span><span class="title-name">AMD64/Intel 64</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-analyze-binformat-x86">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Kernel packages for AMD64/Intel 64 from SUSE contain two kernel
+     files: <code class="filename">vmlinuz</code> and <code class="filename">vmlinux.gz</code>.
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title"><code class="filename">vmlinuz</code>. </span>
+        This is the file executed by the boot loader.
+       </p><p>
+       The Linux kernel consists of two parts:
+       the kernel itself (<code class="literal">vmlinux</code>) and the setup code
+       run by the boot loader.
+       These two parts are linked together to create
+       <code class="filename">vmlinuz</code>
+       (note the distinction: <code class="literal">z</code> compared to <code class="literal">x</code>).
+      </p><p>
+       In the kernel source tree, the file is called
+       <code class="filename">bzImage</code>.
+      </p></li><li class="listitem"><p><span class="formalpara-title"><code class="filename">vmlinux.gz</code>. </span>
+        This is a compressed ELF image that can be used by
+        <code class="command">crash</code> and GDB.
+        The ELF image is never used by the boot loader itself on AMD64/Intel 64.
+        Therefore, only a compressed version is shipped.
+       </p></li></ul></div></section><section class="sect3" id="cha-tuning-kdump-analyze-binformat-ppc" data-id-title="POWER"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">17.8.1.2 </span><span class="title-name">POWER</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-analyze-binformat-ppc">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The <code class="systemitem">yaboot</code> boot loader on POWER also supports
+     loading ELF images, but not compressed ones. In the POWER kernel package,
+     there is an ELF Linux kernel file <code class="filename">vmlinux</code>.
+     Considering <code class="command">crash</code>, this is the easiest
+     architecture.
+    </p><p>
+     If you decide to analyze the dump on another machine, you must check
+     both the architecture of the computer and the files necessary for
+     debugging.
+    </p><p>
+     You can analyze the dump on another computer only if it runs a Linux
+     system of the same architecture. To check the compatibility, use the
+     command <code class="command">uname</code> <code class="option">-i</code> on both computers
+     and compare the outputs.
+    </p><p>
+     If you are going to analyze the dump on another computer, you also need
+     the appropriate files from the <code class="systemitem">kernel</code> and
+     <code class="systemitem">kernel debug</code> packages.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Put the kernel dump, the kernel image from
+       <code class="filename">/boot</code>, and its associated debugging info file
+       from <code class="filename">/usr/lib/debug/boot</code> into a single empty
+       directory.
+      </p></li><li class="step"><p>
+       Additionally, copy the kernel modules from
+       <code class="filename">/lib/modules/$(uname -r)/kernel/</code> and the
+       associated debug info files from
+       <code class="filename">/usr/lib/debug/lib/modules/$(uname -r)/kernel/</code>
+       into a subdirectory named <code class="filename">modules</code>.
+      </p></li><li class="step"><p>
+       In the directory with the dump, the kernel image, its debug info
+       file, and the <code class="filename">modules</code> subdirectory, start the
+       <code class="command">crash</code> utility:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">crash</code> <em class="replaceable">VMLINUX-VERSION vmcore</em></pre></div></li></ol></div></div><p>
+     Regardless of the computer on which you analyze the dump, the crash
+     utility will produce output similar to this:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">crash</code> <em class="replaceable">/boot/vmlinux-4.12.14-94.37-default.gz</em> \
+<em class="replaceable">/var/crash/2010-04-23-11\:17/vmcore</em>
+
+crash 4.0-7.6
+Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008  Red Hat, Inc.
+Copyright (C) 2004, 2005, 2006  IBM Corporation
+Copyright (C) 1999-2006  Hewlett-Packard Co
+Copyright (C) 2005, 2006  Fujitsu Limited
+Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+Copyright (C) 2005  NEC Corporation
+Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+This program is free software, covered by the GNU General Public License,
+and you are welcome to change it and/or distribute copies of it under
+certain conditions.  Enter "help copying" to see the conditions.
+This program has absolutely no warranty.  Enter "help warranty" for details.
+
+GNU gdb 6.1
+Copyright 2004 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "x86_64-unknown-linux-gnu"...
+
+      KERNEL: /boot/vmlinux-4.12.14-94.37-default.gz
+   DEBUGINFO: /usr/lib/debug/boot/vmlinux-4.12.14-94.37-default.debug
+    DUMPFILE: /var/crash/2009-04-23-11:17/vmcore
+        CPUS: 2
+        DATE: Thu Apr 23 13:17:01 2010
+      UPTIME: 00:10:41
+LOAD AVERAGE: 0.01, 0.09, 0.09
+       TASKS: 42
+    NODENAME: eros
+     RELEASE: 4.12.14-94.37-default
+     VERSION: #1 SMP 2010-03-31 14:50:44 +0200
+     MACHINE: x86_64  (2999 Mhz)
+      MEMORY: 1 GB
+       PANIC: "SysRq : Trigger a crashdump"
+         PID: 9446
+     COMMAND: "bash"
+        TASK: ffff88003a57c3c0  [THREAD_INFO: ffff880037168000]
+         CPU: 1
+       STATE: TASK_RUNNING (SYSRQ)
+<code class="prompt user">crash&gt; </code></pre></div><p>
+     The command output prints first useful data: There were 42 tasks
+     running at the moment of the kernel crash. The cause of the crash was a
+     SysRq trigger invoked by the task with PID 9446. It was a Bash process
+     because the <code class="command">echo</code> that has been used is an internal
+     command of the Bash shell.
+    </p><p>
+     The <code class="command">crash</code> utility builds upon GDB and provides
+     many additional commands. If you enter <code class="command">bt</code>
+     without any parameters, the backtrace of the task running at the moment
+     of the crash is printed:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">crash&gt; </code><code class="command">bt</code>
+PID: 9446   TASK: ffff88003a57c3c0  CPU: 1   COMMAND: "bash"
+ #0 [ffff880037169db0] crash_kexec at ffffffff80268fd6
+ #1 [ffff880037169e80] __handle_sysrq at ffffffff803d50ed
+ #2 [ffff880037169ec0] write_sysrq_trigger at ffffffff802f6fc5
+ #3 [ffff880037169ed0] proc_reg_write at ffffffff802f068b
+ #4 [ffff880037169f10] vfs_write at ffffffff802b1aba
+ #5 [ffff880037169f40] sys_write at ffffffff802b1c1f
+ #6 [ffff880037169f80] system_call_fastpath at ffffffff8020bfbb
+    RIP: 00007fa958991f60  RSP: 00007fff61330390  RFLAGS: 00010246
+    RAX: 0000000000000001  RBX: ffffffff8020bfbb  RCX: 0000000000000001
+    RDX: 0000000000000002  RSI: 00007fa959284000  RDI: 0000000000000001
+    RBP: 0000000000000002   R8: 00007fa9592516f0   R9: 00007fa958c209c0
+    R10: 00007fa958c209c0  R11: 0000000000000246  R12: 00007fa958c1f780
+    R13: 00007fa959284000  R14: 0000000000000002  R15: 00000000595569d0
+    ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+<code class="prompt user">crash&gt; </code></pre></div><p>
+     Now it is clear what happened: The internal <code class="command">echo</code>
+     command of Bash shell sent a character to
+     <code class="filename">/proc/sysrq-trigger</code>. After the corresponding
+     handler recognized this character, it invoked the
+     <code class="literal">crash_kexec()</code> function. This function called
+     <code class="literal">panic()</code> and Kdump saved a dump.
+    </p><p>
+     In addition to the basic GDB commands and the extended version of
+     <code class="command">bt</code>, the crash utility defines other commands
+     related to the structure of the Linux kernel. These commands understand
+     the internal data structures of the Linux kernel and present their
+     contents in a human readable format. For example, you can list the
+     tasks running at the moment of the crash with <code class="command">ps</code>.
+     With <code class="command">sym</code>, you can list all the kernel symbols with
+     the corresponding addresses, or inquire an individual symbol for its
+     value. With <code class="command">files</code>, you can display all the open file
+     descriptors of a process. With <code class="command">kmem</code>, you can display
+     details about the kernel memory usage. With <code class="command">vm</code>, you
+     can inspect the virtual memory of a process, even at the level of
+     individual page mappings. The list of useful commands is very long and
+     many of these accept a wide range of options.
+    </p><p>
+     The commands that we mentioned reflect the functionality of the common
+     Linux commands, such as <code class="command">ps</code> and
+     <code class="command">lsof</code>. To find out the exact sequence of
+     events with the debugger, you need to know how to use GDB and to have
+     strong debugging skills. Both of these are out of the scope of this
+     document. In addition, you need to understand the Linux kernel. Several
+     useful reference information sources are given at the end of this
+     document.
+    </p></section></section></section><section class="sect1" id="cha-tuning-kdump-advanced" data-id-title="Advanced Kdump Configuration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.9 </span><span class="title-name">Advanced Kdump Configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-advanced">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The configuration for Kdump is stored in
+   <code class="filename">/etc/sysconfig/kdump</code>. You can also use YaST to
+   configure it. Kdump configuration options are available under
+   <span class="guimenu">System</span> › <span class="guimenu">Kernel
+   Kdump</span> in <span class="guimenu">YaST Control Center</span>. The following Kdump
+   options may be useful for you.
+  </p><p>
+   You can change the directory for the kernel dumps with the
+   <code class="option">KDUMP_SAVEDIR</code> option. Keep in mind that the size of
+   kernel dumps can be very large. Kdump will refuse to save the dump
+   if the free disk space, subtracted by the estimated dump size, drops
+   below the value specified by the <code class="option">KDUMP_FREE_DISK_SIZE</code>
+   option. Note that <code class="option">KDUMP_SAVEDIR</code> understands the URL format
+   <em class="replaceable">PROTOCOL://SPECIFICATION</em>, where
+   <em class="replaceable">PROTOCOL</em> is one of <code class="option">file</code>,
+   <code class="option">ftp</code>, <code class="option">sftp</code>, <code class="option">nfs</code> or
+   <code class="option">cifs</code>, and <code class="option">specification</code> varies for each
+   protocol. For example, to save kernel dump on an FTP server, use the
+   following URL as a template:
+   <code class="option">ftp://username:password@ftp.example.com:123/var/crash</code>.
+  </p><p>
+   Kernel dumps are usually huge and contain many pages that are not
+   necessary for analysis. With <code class="option">KDUMP_DUMPLEVEL</code> option,
+   you can omit such pages. The option understands numeric value between 0
+   and 31. If you specify <em class="replaceable">0</em>, the dump size will
+   be largest. If you specify <em class="replaceable">31</em>, it will produce
+   the smallest dump. For a complete table of possible values, see the
+   manual page of <code class="command">kdump</code> (<code class="command">man 7 kdump</code>).
+  </p><p>
+   Sometimes it is very useful to make the size of the kernel dump smaller.
+   For example, if you want to transfer the dump over the network, or if you
+   need to save some disk space in the dump directory. This can be done with
+   <code class="option">KDUMP_DUMPFORMAT</code> set to <code class="literal">compressed</code>. The
+   <code class="command">crash</code> utility supports dynamic decompression of the
+   compressed dumps.
+  </p><div id="id-1.8.8.3.12.6" data-id-title="Changes to the Kdump Configuration File" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Changes to the Kdump Configuration File</div><p>
+    After making changes to the <code class="filename">/etc/sysconfig/kdump</code>
+    file, you need to run <code class="command">systemctl restart kdump.service</code>.
+    Otherwise, the changes will only take effect next time you reboot the
+    system.
+    </p></div></section><section class="sect1" id="cha-tuning-kdump-moreinfo" data-id-title="For More Information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.10 </span><span class="title-name">For More Information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-kexec.html#cha-tuning-kdump-moreinfo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/tuning_kexec.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   There is no single comprehensive reference to Kexec and Kdump
+   usage. However, there are helpful resources that deal with certain
+   aspects:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     For the Kexec utility usage, see the manual page of
+     <code class="command">kexec</code> (<code class="command">man 8 kexec</code>).
+    </p></li><li class="listitem"><p>
+     IBM provides a comprehensive documentation on how to use dump tools on
+     the IBM IBM Z architecture at
+     <a class="link" href="http://www.ibm.com/developerworks/linux/linux390/development_documentation.html" target="_blank">http://www.ibm.com/developerworks/linux/linux390/development_documentation.html</a>.
+    </p></li><li class="listitem"><p>
+     You can find general information about Kexec at
+     <a class="link" href="http://www.ibm.com/developerworks/linux/library/l-kexec.html" target="_blank">http://www.ibm.com/developerworks/linux/library/l-kexec.html</a>
+     . Might be slightly outdated.
+    </p></li><li class="listitem"><p>
+     For more details on Kdump specific to <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, see
+     <a class="link" href="http://ftp.suse.com/pub/people/tiwai/kdump-training/kdump-training.pdf" target="_blank">http://ftp.suse.com/pub/people/tiwai/kdump-training/kdump-training.pdf</a>
+     .
+    </p></li><li class="listitem"><p>
+     An in-depth description of Kdump internals can be found at
+     <a class="link" href="http://lse.sourceforge.net/kdump/documentation/ols2oo5-kdump-paper.pdf" target="_blank">http://lse.sourceforge.net/kdump/documentation/ols2oo5-kdump-paper.pdf</a>
+     .
+    </p></li></ul></div><p>
+   For more details on <code class="command">crash</code> dump analysis and
+   debugging tools, use the following resources:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     In addition to the info page of GDB (<code class="command">info gdb</code>),
+     there are printable guides at
+     <a class="link" href="https://sourceware.org/gdb/documentation/" target="_blank">https://sourceware.org/gdb/documentation/</a>.
+    </p></li><li class="listitem"><p>
+     A white paper with a comprehensive description of the crash utility
+     usage can be found at
+     <a class="link" href="https://crash-utility.github.io/crash_whitepaper.html" target="_blank">https://crash-utility.github.io/crash_whitepaper.html</a>.
+    </p></li><li class="listitem"><p>
+     The crash utility also features a comprehensive online help. Use
+     <code class="command">help</code> <em class="replaceable">COMMAND</em> to display
+     the online help for <code class="command">command</code>.
+    </p></li><li class="listitem"><p>
+     If you have the necessary Perl skills, you can use Alicia to make the
+     debugging easier. This Perl-based front-end to the crash utility can be
+     found at <a class="link" href="http://alicia.sourceforge.net/" target="_blank">http://alicia.sourceforge.net/</a> .
+    </p></li><li class="listitem"><p>
+     If you prefer to use Python instead, you should install Pykdump. This
+     package helps you control GDB through Python scripts and can be
+     downloaded from <a class="link" href="http://sf.net/projects/pykdump" target="_blank">http://sf.net/projects/pykdump</a> .
+    </p></li><li class="listitem"><p>
+     A very comprehensive overview of the Linux kernel internals is given in
+     <em class="citetitle">Understanding the Linux Kernel</em> by Daniel P.
+     Bovet and Marco Cesati (ISBN 978-0-596-00565-8).
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-tuning-tracing.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 16 </span>Tracing Tools</span></a> </div><div><a class="pagination-link next" href="cha-tuning-systemd-coredump.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 18 </span>Using <code class="systemitem">systemd-coredump</code> to Debug Application Crashes</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kexec-intro"><span class="title-number">17.1 </span><span class="title-name">Introduction</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kexec-pkgs"><span class="title-number">17.2 </span><span class="title-name">Required Packages</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kexec-internals"><span class="title-number">17.3 </span><span class="title-name">Kexec Internals</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#sec-tuning-kexec-crashkernel"><span class="title-number">17.4 </span><span class="title-name">Calculating <code class="option">crashkernel</code> Allocation Size</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kexec-basic-usage"><span class="title-number">17.5 </span><span class="title-name">Basic Kexec Usage</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kexec-config"><span class="title-number">17.6 </span><span class="title-name">How to Configure Kexec for Routine Reboots</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kdump-basic"><span class="title-number">17.7 </span><span class="title-name">Basic Kdump Configuration</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kdump-analyze"><span class="title-number">17.8 </span><span class="title-name">Analyzing the Crash Dump</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kdump-advanced"><span class="title-number">17.9 </span><span class="title-name">Advanced Kdump Configuration</span></a></span></li><li><span class="sect1"><a href="cha-tuning-kexec.html#cha-tuning-kdump-moreinfo"><span class="title-number">17.10 </span><span class="title-name">For More Information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

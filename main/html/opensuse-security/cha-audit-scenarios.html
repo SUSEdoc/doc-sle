@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Introducing an audit rule set | Security and Hardening Guide | openSUSE Leap 15.6</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="Introducing an audit rule set | openSUSE Leap 15.6" />
+<meta name="description" content="The following example configuration illustrates how audit can be used to monitor your system. It highlights the most important items that need to be audited to…" />
+<meta name="product-name" content="openSUSE Leap" />
+<meta name="product-number" content="15.6" />
+<meta name="book-title" content="Security and Hardening Guide" />
+<meta name="chapter-title" content="Chapter 42. Introducing an audit rule set" />
+<meta name="tracker-url" content="https://bugzilla.opensuse.org/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="fs@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="openSUSE Distribution" />
+<meta name="tracker-bsc-version" content="Leap 15.4" />
+<meta property="og:title" content="Introducing an audit rule set | openSUSE Leap 15.6" />
+<meta property="og:description" content="The following example configuration illustrates how audit can be used to monitor your system. It highlights the most important items that need to be audited to…" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Introducing an audit rule set | openSUSE Leap 15.6" />
+<meta name="twitter:description" content="The following example configuration illustrates how audit can be used to monitor your system. It highlights the most important items that need to be audited to…" />
+<link rel="home" href="index.html" title="openSUSE Leap Documentation" /><link rel="up" href="part-audit.html" title="Part VI. The Linux Audit Framework" /><link rel="prev" href="cha-audit-setup.html" title="Chapter 41. Setting up the Linux audit framework" /><link rel="next" href="cha-audit-moreinfo.html" title="Chapter 43. Useful resources" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="Security and Hardening Guide"><span class="book-icon">Security and Hardening Guide</span></a><span> › </span><a class="crumb" href="part-audit.html">The Linux Audit Framework</a><span> › </span><a class="crumb" href="cha-audit-scenarios.html">Introducing an audit rule set</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and confidentiality</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">2 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">3 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">4 </span><span class="name">Setting up authentication clients using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">5 </span><span class="name">LDAP with 389 Directory Server</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">6 </span><span class="name">Network authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">7 </span><span class="name">Active Directory support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">8 </span><span class="name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">9 </span><span class="name">Physical security</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">10 </span><span class="name">Software management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">11 </span><span class="name">File management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">12 </span><span class="name">Encrypting partitions and files</span></a></li><li class="inactive"><a href="cha-configure-cryptctl.html"><span class="number">13 </span><span class="name">Storage encryption for hosted applications with cryptctl</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">14 </span><span class="name">User management</span></a></li><li class="inactive"><a href="cha-sec-cron-at.html"><span class="number">15 </span><span class="name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li class="inactive"><a href="cha-spectre.html"><span class="number">16 </span><span class="name">Spectre/Meltdown checker</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">17 </span><span class="name">Configuring security settings with YaST</span></a></li><li class="inactive"><a href="cha-security-polkit.html"><span class="number">18 </span><span class="name">The Polkit authentication framework</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">19 </span><span class="name">Access control lists in Linux</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">20 </span><span class="name">Intrusion detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">21 </span><span class="name">X Window System and X authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">22 </span><span class="name">Securing network operations with OpenSSH</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">23 </span><span class="name">Masquerading and firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">24 </span><span class="name">Configuring a VPN server</span></a></li><li class="inactive"><a href="cha-security-xca.html"><span class="number">25 </span><span class="name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li class="inactive"><a href="cha-sec-sysctl.html"><span class="number">26 </span><span class="name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">27 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">28 </span><span class="name">Getting started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">29 </span><span class="name">Immunizing programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">30 </span><span class="name">Profile components and syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">31 </span><span class="name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">32 </span><span class="name">Building and managing profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">33 </span><span class="name">Building profiles from the command line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">34 </span><span class="name">Profiling your Web applications using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">35 </span><span class="name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">36 </span><span class="name">Managing profiled applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">37 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">38 </span><span class="name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="inactive"><a href="part-selinux.html"><span class="number">V </span><span class="name">SELinux</span></a><ol><li class="inactive"><a href="cha-selinux.html"><span class="number">39 </span><span class="name">Configuring SELinux</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">VI </span><span class="name">The Linux Audit Framework</span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">40 </span><span class="name">Understanding Linux audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">41 </span><span class="name">Setting up the Linux audit framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">42 </span><span class="name">Introducing an audit rule set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">43 </span><span class="name">Useful resources</span></a></li></ol></li><li class="inactive"><a href="bk04apa.html"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 41. Setting up the Linux audit framework" href="cha-audit-setup.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 43. Useful resources" href="cha-audit-moreinfo.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="Security and Hardening Guide"><span class="book-icon">Security and Hardening Guide</span></a><span> › </span><a class="crumb" href="part-audit.html">The Linux Audit Framework</a><span> › </span><a class="crumb" href="cha-audit-scenarios.html">Introducing an audit rule set</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 41. Setting up the Linux audit framework" href="cha-audit-setup.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 43. Useful resources" href="cha-audit-moreinfo.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-audit-scenarios"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">openSUSE Leap</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15.6</span></span></span></div><div><h2 class="title"><span class="number">42 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Introducing an audit rule set</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>cha-audit-scenarios</li></ul></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scenbasic"><span class="number">42.1 </span><span class="name">Adding basic audit configuration parameters</span></a></span></dt><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scenauconf"><span class="number">42.2 </span><span class="name">Adding watches on audit log files and configuration files</span></a></span></dt><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scenfs"><span class="number">42.3 </span><span class="name">Monitoring file system objects</span></a></span></dt><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scensecurity"><span class="number">42.4 </span><span class="name">Monitoring security configuration files and databases</span></a></span></dt><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scenmisc"><span class="number">42.5 </span><span class="name">Monitoring miscellaneous system calls</span></a></span></dt><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scenipc"><span class="number">42.6 </span><span class="name">Filtering system call arguments</span></a></span></dt><dt><span class="sect1"><a href="cha-audit-scenarios.html#sec-audit-scenkeys"><span class="number">42.7 </span><span class="name">Managing audit event records using keys</span></a></span></dt></dl></div></div><p>
+  The following example configuration illustrates how audit can be used to
+  monitor your system. It highlights the most important items that need to
+  be audited to cover the list of auditable events specified by Controlled
+  Access Protection Profile (CAPP).
+ </p><p>
+  The example rule set is divided into the following sections:
+ </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+    Basic audit configuration (see <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenbasic" title="42.1. Adding basic audit configuration parameters">Section 42.1, “Adding basic audit configuration parameters”</a>)
+   </p></li><li class="listitem "><p>
+    Watches on audit log files and configuration files (see
+    <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenauconf" title="42.2. Adding watches on audit log files and configuration files">Section 42.2, “Adding watches on audit log files and configuration files”</a>)
+   </p></li><li class="listitem "><p>
+    Monitoring operations on file system objects (see
+    <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenfs" title="42.3. Monitoring file system objects">Section 42.3, “Monitoring file system objects”</a>)
+   </p></li><li class="listitem "><p>
+    Monitoring security databases (see
+    <a class="xref" href="cha-audit-scenarios.html#sec-audit-scensecurity" title="42.4. Monitoring security configuration files and databases">Section 42.4, “Monitoring security configuration files and databases”</a>)
+   </p></li><li class="listitem "><p>
+    Monitoring miscellaneous system calls
+    (<a class="xref" href="cha-audit-scenarios.html#sec-audit-scenmisc" title="42.5. Monitoring miscellaneous system calls">Section 42.5, “Monitoring miscellaneous system calls”</a>)
+   </p></li><li class="listitem "><p>
+    Filtering system call arguments (see
+    <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenipc" title="42.6. Filtering system call arguments">Section 42.6, “Filtering system call arguments”</a>)
+   </p></li></ul></div><p>
+  To transform this example into a configuration file to use in your live
+  setup, proceed as follows:
+ </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+    Choose the appropriate settings for your setup and adjust them.
+   </p></li><li class="step "><p>
+    Adjust the file <code class="filename">/etc/audit/audit.rules</code> by adding
+    rules from the examples below or by modifying existing rules.
+   </p></li></ol></div></div><div id="id-1.6.9.5.8" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Adjusting the level of audit logging</h6><p>
+   Do not copy the example below into your audit setup without adjusting it
+   to your needs. Determine what and to what extent to audit.
+  </p></div><p>
+  The entire <code class="filename">audit.rules</code> is a collection of
+  <code class="command">auditctl</code> commands. Every line in this file expands to a
+  full <code class="command">auditctl</code> command line. The syntax used in the rule
+  set is the same as that of the <code class="command">auditctl</code> command.
+ </p><div class="sect1 " id="sec-audit-scenbasic"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding basic audit configuration parameters</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scenbasic">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scenbasic</li></ul></div></div></div></div><div class="verbatim-wrap"><pre class="screen">-D<span id="co-auctld"></span><span class="callout">1</span>
+-b 8192<span id="co-auctlb"></span><span class="callout">2</span>
+-f 2<span id="co-auctlf"></span><span class="callout">3</span></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctld"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Delete any preexisting rules before starting to define new ones.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlb"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Set the number of buffers to take the audit messages. Depending on the
+     level of audit logging on your system, increase or decrease this
+     figure.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlf"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     Set the failure flag to use when the kernel needs to handle critical
+     errors. Possible values are <code class="literal">0</code> (silent),
+     <code class="literal">1</code> (printk, print a failure message), and
+     <code class="literal">2</code> (panic, halt the system).
+    </p></td></tr></table></div><p>
+   By emptying the rule queue with the <code class="option">-D</code> option, you make
+   sure that audit does not use any other rule set than what you are
+   offering it via this file. Choosing an appropriate buffer number
+   (<code class="option">-b</code>) is vital to avoid having your system fail because
+   of too high an audit load. Choosing the panic failure flag <code class="option">-f
+   2</code> ensures that your audit records are complete even if the
+   system is encountering critical errors. By shutting down the system on a
+   critical error, audit makes sure that no process escapes from its control
+   as it otherwise might if level 1 (<code class="option">printk</code>) were chosen.
+  </p><div id="id-1.6.9.5.10.5" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: Choosing the failure flag</h6><p>
+    Before using your audit rule set on a live system, make sure that the
+    setup has been thoroughly evaluated on test systems using the
+    <span class="emphasis"><em>worst case production workload</em></span>. It is even more
+    critical that you do this when specifying the <code class="option">-f 2</code>
+    flag, because this instructs the kernel to panic (perform an immediate
+    halt without flushing pending data to disk) if any thresholds are
+    exceeded. Consider the use of the <code class="option">-f 2</code> flag for only
+    the most security-conscious environments.
+   </p></div></div><div class="sect1 " id="sec-audit-scenauconf"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding watches on audit log files and configuration files</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scenauconf">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scenauconf</li></ul></div></div></div></div><p>
+   Adding watches on your audit configuration files and the log files
+   themselves ensures that you can track any attempt to tamper with the
+   configuration files or detect any attempted accesses to the log files.
+  </p><div id="id-1.6.9.5.11.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Creating directory and file watches</h6><p>
+    Creating watches on a directory is not necessarily sufficient if you
+    need events for file access. Events on directory access are only
+    triggered when the directory's inode is updated with metadata changes.
+    To trigger events on file access, add watches for each file
+    to monitor.
+   </p></div><div class="verbatim-wrap"><pre class="screen">-w /var/log/audit/ <span id="co-auctllog"></span><span class="callout">1</span>
+-w /var/log/audit/audit.log
+
+-w /var/log/audit/audit_log.1
+-w /var/log/audit/audit_log.2
+-w /var/log/audit/audit_log.3
+-w /var/log/audit/audit_log.4
+
+-w /etc/audit/auditd.conf -p wa<span id="co-auctlconf"></span><span class="callout">2</span>
+-w /etc/audit/audit.rules -p wa
+-w /etc/libaudit.conf -p wa</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctllog"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Set a watch on the directory where the audit log is located. Trigger an
+     event for any type of access attempt to this directory. If you are
+     using log rotation, add watches for the rotated logs as well.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlconf"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Set a watch on an audit configuration file. Log all write and attribute
+     change attempts to this file.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-audit-scenfs"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Monitoring file system objects</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scenfs">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scenfs</li></ul></div></div></div></div><p>
+   Auditing system calls helps track your system's activity well beyond the
+   application level. By tracking file system–related system calls,
+   get an idea of how your applications are using these system calls and
+   determine whether that use is appropriate. By tracking mount and unmount
+   operations, track the use of external resources (removable media, remote
+   file systems, etc.).
+  </p><div id="id-1.6.9.5.12.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: Auditing system calls</h6><p>
+    Auditing system calls results in a high logging activity. This activity,
+    in turn, puts a heavy load on the kernel. With a kernel less responsive
+    than usual, the system's backlog and rate limits might be exceeded.
+    Carefully evaluate which system calls to include in your audit rule set
+    and adjust the log settings accordingly. See
+    <a class="xref" href="cha-audit-comp.html#sec-audit-auditd" title="40.2. Configuring the audit daemon">Section 40.2, “Configuring the audit daemon”</a> for details on how to tweak the
+    relevant settings.
+   </p></div><div class="verbatim-wrap"><pre class="screen">-a entry,always -S chmod -S fchmod -S chown -S chown32 -S fchown -S fchown32 -S lchown -S lchown32<span id="co-auctlfso"></span><span class="callout">1</span>
+
+-a entry,always -S creat -S open -S truncate -S truncate64 -S ftruncate -S ftruncate64<span id="co-auctlmod"></span><span class="callout">2</span>
+
+-a entry,always -S mkdir -S rmdir<span id="co-auctlfsdir"></span><span class="callout">3</span>
+
+-a entry,always -S unlink -S rename -S link -S symlink<span id="co-auctlfsmov"></span><span class="callout">4</span>
+
+-a entry,always -S setxattr<span id="co-auctlfsea"></span><span class="callout">5</span>
+-a entry,always -S lsetxattr
+-a entry,always -S fsetxattr
+-a entry,always -S removexattr
+-a entry,always -S lremovexattr
+-a entry,always -S fremovexattr
+
+-a entry,always -S mknod<span id="co-auctlfssf"></span><span class="callout">6</span>
+
+-a entry,always -S mount -S umount -S umount2<span id="co-auctlfsfso"></span><span class="callout">7</span></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlfso"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for system calls related to changing file
+     ownership and permissions. Depending on the hardware architecture of
+     your system, enable or disable the <code class="literal">*32</code> rules. 64-bit
+     systems, like AMD64/Intel 64, require the <code class="literal">*32</code> rules
+     to be removed.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlmod"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for system calls related to file content
+     modification. Depending on the hardware architecture of your system,
+     enable or disable the *64 rules. 64-bit systems, like AMD64/Intel 64,
+     require the *64 rules to be removed.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlfsdir"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for any directory operation, like creating or
+     removing a directory.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlfsmov"><span class="callout">4</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for any linking operation, such as creating a
+     symbolic link, creating a link, unlinking, or renaming.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlfsea"><span class="callout">5</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for any operation related to extended file
+     system attributes.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlfssf"><span class="callout">6</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for the <code class="command">mknod</code> system call,
+     which creates special (device) files.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-auctlfsfso"><span class="callout">7</span></a> </p></td><td valign="top" align="left"><p>
+     Enable an audit context for any mount or umount operation. For the
+     x86 architecture, disable the <code class="literal">umount</code> rule. For
+     the Intel 64 architecture, disable the <code class="literal">umount2</code> rule.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-audit-scensecurity"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Monitoring security configuration files and databases</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scensecurity">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scensecurity</li></ul></div></div></div></div><p>
+   To make sure that your system is not made to do undesired things, track
+   any attempts to change the <code class="systemitem">cron</code> and
+   <code class="systemitem">at</code> configurations or the lists of scheduled
+   jobs. Tracking any write access to the user, group, password and login
+   databases and logs helps you identify any attempts to manipulate your
+   system's user database.
+  </p><p>
+   Tracking changes to your system configuration (kernel, services, time,
+   etc.) helps you spot any attempts of others to manipulate essential
+   functionality of your system. Changes to the PAM configuration should
+   also be monitored in a secure environment, because changes in the
+   authentication stack should not be made by anyone other than the
+   administrator, and it should be logged which applications are using PAM
+   and how it is used. The same applies to any other configuration files
+   related to secure authentication and communication.
+  </p><div class="verbatim-wrap"><pre class="screen"><span id="co-audit-at"></span><span class="callout">1</span>
+-w /var/spool/atspool
+-w /etc/at.allow
+-w /etc/at.deny
+
+-w /etc/cron.allow -p wa
+-w /etc/cron.deny -p wa
+-w /etc/cron.d/ -p wa
+-w /etc/cron.daily/ -p wa
+-w /etc/cron.hourly/ -p wa
+-w /etc/cron.monthly/ -p wa
+-w /etc/cron.weekly/ -p wa
+-w /etc/crontab -p wa
+-w /var/spool/cron/root
+
+<span id="co-audit-security"></span><span class="callout">2</span>
+-w /etc/group -p wa
+-w /etc/passwd -p wa
+-w /etc/shadow
+
+-w /etc/login.defs -p wa
+-w /etc/securetty
+-w /var/log/lastlog
+
+<span id="co-audit-nw"></span><span class="callout">3</span>
+-w /etc/hosts -p wa
+-w /etc/sysconfig/
+w /etc/init.d/
+w /etc/ld.so.conf -p wa
+w /etc/localtime -p wa
+w /etc/sysctl.conf -p wa
+w /etc/modprobe.d/
+w /etc/modprobe.conf.local -p wa
+w /etc/modprobe.conf -p wa
+<span id="co-audit-pam"></span><span class="callout">4</span>
+w /etc/pam.d/
+<span id="co-audit-pfix"></span><span class="callout">5</span>
+-w /etc/aliases -p wa
+-w /etc/postfix/ -p wa
+
+<span id="co-audit-ssh"></span><span class="callout">6</span>
+-w /etc/ssh/sshd_config
+
+-w /etc/stunnel/stunnel.conf
+-w /etc/stunnel/stunnel.pem
+
+-w /etc/vsftpd.ftpusers
+-w /etc/vsftpd.conf
+
+<span id="co-audit-misc"></span><span class="callout">7</span>
+-a exit,always -S sethostname
+-w /etc/issue -p wa
+-w /etc/issue.net -p wa</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-at"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Set watches on the <code class="systemitem">at</code> and
+     <code class="systemitem">cron</code> configuration and the scheduled jobs and
+     assign labels to these events.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-security"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Set watches on the user, group, password, and login databases and logs
+     and set labels to better identify any login-related events, such as
+     failed login attempts.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-nw"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     Set a watch and a label on the static host name configuration in
+     <code class="filename">/etc/hosts</code>. Track changes to the system
+     configuration directory, <code class="filename">/etc/sysconfig</code>. Enable
+     per-file watches if you are interested in file events. Set watches and
+     labels for changes to the boot configuration in
+
+     the <code class="filename">/etc/init.d</code> directory. Enable per-file watches
+     if you are interested in file events. Set watches and labels for any
+     changes to the linker configuration in
+     <code class="filename">/etc/ld.so.conf</code>. Set watches and a label for
+     <code class="filename">/etc/localtime</code>. Set watches and labels for the
+     kernel configuration files <code class="filename">/etc/sysctl.conf</code>,
+     <code class="filename">/etc/modprobe.d/</code>,
+     <code class="filename">/etc/modprobe.conf.local</code>, and
+     <code class="filename">/etc/modprobe.conf</code>.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-pam"><span class="callout">4</span></a> </p></td><td valign="top" align="left"><p>
+     Set watches on the PAM configuration directory. If you are interested
+     in particular files below the directory level, add explicit watches to
+     these files as well.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-pfix"><span class="callout">5</span></a> </p></td><td valign="top" align="left"><p>
+     Set watches to the postfix configuration to log any write attempt or
+     attribute change and use labels for better tracking in the logs.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-ssh"><span class="callout">6</span></a> </p></td><td valign="top" align="left"><p>
+     Set watches and labels on the SSH,
+     <code class="command">stunnel</code>, and <code class="command">vsftpd</code> configuration
+     files.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-misc"><span class="callout">7</span></a> </p></td><td valign="top" align="left"><p>
+     Perform an audit of the <code class="systemitem">sethostname</code> system call and
+     set watches and labels on the system identification configuration in
+     <code class="filename">/etc/issue</code> and
+     <code class="filename">/etc/issue.net</code>.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-audit-scenmisc"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Monitoring miscellaneous system calls</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scenmisc">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scenmisc</li></ul></div></div></div></div><p>
+   Apart from auditing file system related system calls, as described in
+   <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenfs" title="42.3. Monitoring file system objects">Section 42.3, “Monitoring file system objects”</a>, you can also track various other
+   system calls. Tracking task creation helps you understand your
+   applications' behavior. Auditing the <code class="systemitem">umask</code>
+   system call lets you track how processes modify creation mask. Tracking
+   any attempts to change the system time helps you identify anyone or any
+   process trying to manipulate the system time.
+  </p><div class="verbatim-wrap"><pre class="screen"><span id="co-audit-attrib"></span><span class="callout">1</span>
+-a entry,always -S clone -S fork -S vfork
+
+<span id="co-audit-umask"></span><span class="callout">2</span>
+-a entry,always -S umask
+
+<span id="co-audit-time"></span><span class="callout">3</span>
+-a entry,always -S adjtimex -S settimeofday</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-attrib"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Track task creation.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-umask"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Add an audit context to the umask system call.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-time"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     Track attempts to change the system time. <code class="literal">adjtimex</code>
+     can be used to skew the time. <code class="literal">settimeofday</code> sets the
+     absolute time.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-audit-scenipc"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Filtering system call arguments</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scenipc">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scenipc</li></ul></div></div></div></div><p>
+  In addition to the system call auditing introduced in
+   <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenfs" title="42.3. Monitoring file system objects">Section 42.3, “Monitoring file system objects”</a> and
+   <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenmisc" title="42.5. Monitoring miscellaneous system calls">Section 42.5, “Monitoring miscellaneous system calls”</a>, you can track application behavior
+   to an even higher degree. Applying filters helps you focus audit on areas
+   of primary interest to you. This section introduces filtering system call
+   arguments for non-multiplexed system calls like access and for
+   multiplexed ones like socketcall or ipc. Whether system calls are
+   multiplexed depends on the hardware architecture used. Both socketcall
+   and ipc are not multiplexed on 64-bit architectures, such as AMD64/Intel 64.
+  </p><div id="id-1.6.9.5.15.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: Auditing system calls</h6><p>
+    Auditing system calls results in high logging activity, which in turn
+    puts a heavy load on the kernel. With a kernel less responsive than
+    usual, the system's backlog and rate limits might well be exceeded.
+    Carefully evaluate which system calls to include in your audit rule set
+    and adjust the log settings accordingly. See
+    <a class="xref" href="cha-audit-comp.html#sec-audit-auditd" title="40.2. Configuring the audit daemon">Section 40.2, “Configuring the audit daemon”</a> for details on how to tweak the
+    relevant settings.
+   </p></div><p>
+   The access system call checks whether a process would be allowed to read,
+   write or test for the existence of a file or file system object. Using
+   the <code class="option">-F</code> filter flag, build rules matching specific access
+   calls in the format<code class="option">-F
+   a1=<em class="replaceable ">ACCESS_MODE</em></code>. Check
+   <code class="filename">/usr/include/fcntl.h</code> for a list of possible
+   arguments to the access system call.
+  </p><div class="verbatim-wrap"><pre class="screen">-a entry,always -S access -F a1=4<span id="co-audit-accessr"></span><span class="callout">1</span>
+-a entry,always -S access -F a1=6<span id="co-audit-accessrw"></span><span class="callout">2</span>
+-a entry,always -S access -F a1=7<span id="co-audit-accessrwx"></span><span class="callout">3</span></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-accessr"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Audit the access system call, but only if the second argument of the
+     system call (<code class="literal">mode</code>) is <code class="literal">4</code>
+     (<code class="literal">R_OK</code>). This rule filters for all access calls
+     testing for sufficient read permissions to a file or file system object
+     accessed by a user or process.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-accessrw"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Audit the access system call, but only if the second argument of the
+     system call (<code class="literal">mode</code>) is <code class="literal">6</code>, meaning
+     <code class="literal">4 OR 2</code>, which translates to <code class="literal">R_OK OR
+     W_OK</code>. This rule filters for access calls testing for
+     sufficient read and write permissions.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-accessrwx"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     Audit the access system call, but only if the second argument of the
+     system call (<code class="literal">mode</code>) is <code class="literal">7</code>, meaning
+     <code class="literal">4 OR 2 OR 1</code>, which translates to <code class="literal">R_OK OR
+     W_OK OR X_OK</code>. This rule filters for access calls testing for
+     sufficient read, write, and execute permissions.
+    </p></td></tr></table></div><p>
+   The socketcall system call is a multiplexed system call. Multiplexed
+   means that there is only one system call for all possible calls and that
+   libc passes the actual system call to use as the first argument
+   (<code class="literal">a0</code>). Check the manual page of socketcall for possible
+   system calls and refer to
+   <code class="filename">/usr/src/linux/include/linux/net.h</code> for a list of
+   possible argument values and system call names. Audit supports filtering
+   for specific system calls using a <code class="option">-F
+   a0=<em class="replaceable ">SYSCALL_NUMBER</em></code>.
+  </p><div class="verbatim-wrap"><pre class="screen">-a entry,always -S socketcall -F a0=1 -F a1=10<span id="co-audit-socket1"></span><span class="callout">1</span>
+## Use this line on x86_64, ia64 instead
+#-a entry,always -S socket -F a0=10
+
+-a entry,always -S socketcall -F a0=5<span id="co-audit-socket2"></span><span class="callout">2</span>
+## Use this line on x86_64, ia64 instead
+#-a entry, always -S accept</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-socket1"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Audit the socket(PF_INET6) system call. The <code class="option">-F a0=1</code>
+     filter matches all socket system calls and the <code class="option">-F
+     a1=10</code> filter narrows the matches down to socket system calls
+     carrying the IPv6 protocol family domain parameter (PF_INET6). Check
+     <code class="filename">/usr/include/linux/net.h</code> for the first argument
+     (<code class="literal">a0</code>) and
+     <code class="filename">/usr/src/linux/include/linux/socket.h</code> for the
+     second parameter (<code class="literal">a1</code>). 64-bit platforms, like
+     AMD64/Intel 64, do not use multiplexing on socketcall system calls. For
+     these
+     platforms, comment the rule and add the plain system call rules with a
+     filter on PF_INET6.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-socket2"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Audit the socketcall system call. The filter flag is set to filter for
+     <code class="option">a0=5</code> as the first argument to socketcall, which
+     translates to the accept system call if you check
+     <code class="filename">/usr/include/linux/net.h</code>. 64-bit platforms, like
+     AMD64/Intel 64, do not use multiplexing on socketcall system calls.
+     For these platforms, comment the rule and add the plain system call
+     rule without argument filtering.
+    </p></td></tr></table></div><p>
+   The ipc system call is another example of multiplexed system calls. The
+   actual call to invoke is determined by the first argument passed to the
+   ipc system call. Filtering for these arguments helps you focus on those
+   IPC calls of interest to you. Check
+   <code class="filename">/usr/include/linux/ipc.h</code> for possible argument
+   values.
+  </p><div class="verbatim-wrap"><pre class="screen"><span id="co-audit-mqueue"></span><span class="callout">1</span>
+## msgctl
+-a entry,always -S ipc -F a0=14
+## msgget
+-a entry,always -S ipc -F a0=13
+## Use these lines on x86_64, ia64 instead
+#-a entry,always -S msgctl
+#-a entry,always -S msgget
+
+<span id="co-audit-semaph"></span><span class="callout">2</span>
+## semctl
+-a entry,always -S ipc -F a0=3
+## semget
+-a entry,always -S ipc -F a0=2
+## semop
+-a entry,always -S ipc -F a0=1
+## semtimedop
+-a entry,always -S ipc -F a0=4
+## Use these lines on x86_64, ia64 instead
+#-a entry,always -S semctl
+#-a entry,always -S semget
+#-a entry,always -S semop
+#-a entry,always -S semtimedop
+
+<span id="co-audit-sharedmem"></span><span class="callout">3</span>
+## shmctl
+-a entry,always -S ipc -F a0=24
+## shmget
+-a entry,always -S ipc -F a0=23
+## Use these lines on x86_64, ia64 instead
+#-a entry,always -S shmctl
+#-a entry,always -S shmget</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-mqueue"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     Audit system calls related to IPC SYSV message queues. In this case,
+     the <code class="literal">a0</code> values specify that auditing is added for the
+     msgctl and msgget system calls (<code class="literal">14</code> and
+     <code class="literal">13</code>). 64-bit platforms, like AMD64/Intel 64, do not
+     use multiplexing on ipc system calls. For these platforms, comment the
+     first two rules and add the plain system call rules without argument
+     filtering.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-semaph"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     Audit system calls related to IPC SYSV message semaphores. In this
+     case, the <code class="literal">a0</code> values specify that auditing is added
+     for the semctl, semget, semop, and semtimedop system calls
+     (<code class="literal">3</code>, <code class="literal">2</code>, <code class="literal">1</code>, and
+     <code class="literal">4</code>). 64-bit platforms, like AMD64/Intel 64, do not
+     use multiplexing on ipc system calls. For these platforms, comment the
+     first four rules and add the plain system call rules without argument
+     filtering.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-audit-sharedmem"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     Audit system calls related to IPC SYSV shared memory. In this case, the
+     <code class="literal">a0</code> values specify that auditing is added for the
+     shmctl and shmget system calls (<code class="literal">24</code>,
+     <code class="literal">23</code>). 64-bit platforms, like AMD64/Intel 64, do not
+     use multiplexing on ipc system calls. For these platforms, comment the
+     first two rules and add the plain system call rules without argument
+     filtering.
+    </p></td></tr></table></div></div><div class="sect1 " id="sec-audit-scenkeys"><div class="titlepage"><div><div><h2 class="title"><span class="number">42.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Managing audit event records using keys</span> <a title="Permalink" class="permalink" href="cha-audit-scenarios.html#sec-audit-scenkeys">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_scenarios.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>audit_scenarios.xml</li><li><span class="ds-label">ID: </span>sec-audit-scenkeys</li></ul></div></div></div></div><p>
+   After configuring a few rules generating events and populating the logs,
+   you need to find a way to tell one event from the other. Using the
+   <code class="command">ausearch</code> command, you can filter the logs for various
+   criteria. Using <code class="command">ausearch</code> <code class="option">-m
+   <em class="replaceable ">MESSAGE_TYPE</em></code>, you can at least filter
+   for events of a certain type. To be able to filter for events
+   related to a particular rule, you need to add a key to this rule in the
+   <code class="filename">/etc/audit/audit.rules</code> file. This key is then added
+   to the event record every time the rule logs an event. To retrieve these
+   log entries, simply run <code class="command">ausearch</code> <code class="option">-k
+   <em class="replaceable ">YOUR_KEY</em></code> to get a list of records
+   related to the rule carrying this particular key.
+  </p><p>
+   As an example, assume you have added the following rule to your rule
+   file:
+  </p><div class="verbatim-wrap"><pre class="screen">-w /etc/audit/audit.rules -p wa</pre></div><p>
+   Without a key assigned to it, you would need to filter for
+   <code class="literal">SYSCALL</code> or <code class="literal">PATH</code> events then use
+   grep or similar tools to isolate any events related to the above rule.
+   Now, add a key to the above rule, using the <code class="option">-k</code> option:
+  </p><div class="verbatim-wrap"><pre class="screen">-w /etc/audit/audit.rules -p wa -k CFG_audit.rules</pre></div><p>
+   You can specify any text string as key. Distinguish watches related to
+   different types of files (configuration files or log files) from one
+   another using different key prefixes (<code class="literal">CFG</code>,
+   <code class="literal">LOG</code>, etc.) followed by the file name. Finding any
+   records related to the above rule now comes down to the following:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="command">ausearch -k CFG_audit.rules</code>
+----
+time-&gt;Thu Feb 19 09:09:54 2009
+type=PATH msg=audit(1235030994.032:8649): item=3 name="audit.rules~" inode=370603 dev=08:06 mode=0100640 ouid=0 ogid=0 rdev=00:00
+type=PATH msg=audit(1235030994.032:8649): item=2 name="audit.rules" inode=370603 dev=08:06 mode=0100640 ouid=0 ogid=0 rdev=00:00
+type=PATH msg=audit(1235030994.032:8649): item=1  name="/etc/audit" inode=368599 dev=08:06 mode=040750 ouid=0 ogid=0 rdev=00:00
+type=PATH msg=audit(1235030994.032:8649): item=0  name="/etc/audit" inode=368599 dev=08:06 mode=040750 ouid=0 ogid=0 rdev=00:00
+type=CWD msg=audit(1235030994.032:8649):  cwd="/etc/audit"
+type=SYSCALL msg=audit(1235030994.032:8649): arch=c000003e syscall=82 success=yes exit=0 a0=7deeb0 a1=883b30 a2=2 a3=ffffffffffffffff items=4 ppid=25400 pid=32619 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=1164 comm="vim" exe="/bin/vim-normal" key="CFG_audit.rules"</pre></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-audit-moreinfo.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 43 </span>Useful resources</span></a><a class="nav-link" href="cha-audit-setup.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 41 </span>Setting up the Linux audit framework</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

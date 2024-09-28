@@ -1,0 +1,1257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP3 | Security and Hardening Guide | Network authentication with Kerberos</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Network authentication with Kerberos | SLES 15 SP3"/>
+<meta name="description" content="Kerberos is a network authentication protocol which also provides encryption. This chapter describes how to set up Kerberos and integrate services li…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP3"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 6. Network authentication with Kerberos"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Network authentication with Kerberos",
+  
+    "description": "Kerberos is a network authentication protocol which also provides encryption. This chapter describes how to set up Kerberos and integrate services li…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-27T00:00+02:00",
+      
+    "datePublished": "2021-06-22T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-security-ldap.html" title="Chapter 5. LDAP with 389 Directory Server"/><link rel="next" href="cha-security-ad.html" title="Chapter 7. Active Directory support"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-auth.html">Authentication</a><span> / </span><a class="crumb" href="cha-security-kerberos.html">Network authentication with Kerberos</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li class="active"><a href="part-auth.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" you-are-here"><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and Compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li><li><a href="cha-security-pci-dss.html" class=" "><span class="title-number">29 </span><span class="title-name">Payment Card Industry Data Security Standard (PCI DSS)</span></a></li><li><a href="cha-security-stig.html" class=" "><span class="title-number">30 </span><span class="title-name">Hardening SUSE Linux Enterprise with STIG</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">31 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">32 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">33 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">34 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">35 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">36 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">37 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">38 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">39 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">40 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">42 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-selinux.html" class="has-children "><span class="title-number">VI </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">43 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VII </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">44 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">45 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">46 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">47 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-kerberos" data-id-title="Network authentication with Kerberos"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Kerberos is a network authentication protocol which also provides encryption.
+    This chapter describes how to set up Kerberos and integrate services like LDAP
+    and NFS.
+   </p></div></div></div></div><section class="sect1" id="sec-security-kerberos-overview" data-id-title="Conceptual overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.1 </span><span class="title-name">Conceptual overview</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   An open network provides no means of ensuring that a workstation can
+   identify its users properly, except through the usual password mechanisms.
+   In common installations, the user must enter the password each time a
+   service inside the network is accessed. Kerberos provides an authentication
+   method with which a user registers only once and is trusted in the complete
+   network for the rest of the session. To have a secure network, the following
+   requirements must be met:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Have all users prove their identity for each desired service and make sure
+     that no one can take the identity of someone else.
+    </p></li><li class="listitem"><p>
+     Make sure that each network server also proves its identity. Otherwise an
+     attacker might be able to impersonate the server and obtain sensitive
+     information transmitted to the server. This concept is called
+     <span class="emphasis"><em>mutual authentication</em></span>, because the client
+     authenticates to the server and vice versa.
+    </p></li></ul></div><p>
+   Kerberos helps you meet these requirements by providing strongly encrypted
+   authentication. Only the basic principles of Kerberos are discussed here. For
+   detailed technical instruction, refer to the Kerberos documentation.
+  </p></section><section class="sect1" id="sec-security-kerberos-terms" data-id-title="Kerberos terminology"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.2 </span><span class="title-name">Kerberos terminology</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-terms">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The following glossary defines some Kerberos terminology.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.6.4.3.1"><span class="term">credential</span></dt><dd><p>
+      Users or clients need to present some kind of credentials that authorize
+      them to request services. Kerberos knows two kinds of
+      credentials—tickets and authenticators.
+     </p></dd><dt id="id-1.8.4.6.4.3.2"><span class="term">ticket</span></dt><dd><p>
+      A ticket is a per-server credential used by a client to authenticate at a
+      server from which it is requesting a service. It contains the name of the
+      server, the client's name, the client's Internet address, a time stamp, a
+      lifetime, and a random session key. All this data is encrypted using the
+      server's key.
+     </p></dd><dt id="id-1.8.4.6.4.3.3"><span class="term">authenticator</span></dt><dd><p>
+      Combined with the ticket, an authenticator is used to prove that the
+      client presenting a ticket is really the one it claims to be. An
+      authenticator is built using the client's name, the workstation's IP
+      address, and the current workstation's time, all encrypted with the
+      session key known only to the client and the relevant server. An
+      authenticator can only be used once, unlike a ticket. A client can build
+      an authenticator itself.
+     </p></dd><dt id="id-1.8.4.6.4.3.4"><span class="term">principal</span></dt><dd><p>
+      A Kerberos principal is a unique entity (a user or service) to which it can
+      assign a ticket. A principal consists of the following components:
+     </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">USER</em>/<em class="replaceable">INSTANCE</em>@<em class="replaceable">REALM</em></pre></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">primary:</span>
+         The first part of the principal. In the case of users, this is usually
+         the same as the user name.
+        </p></li><li class="listitem"><p><span class="formalpara-title">instance <span class="emphasis"><em>(optional)</em></span>:</span>
+         Additional information characterizing the
+         <span class="emphasis"><em>primary</em></span>. This string is separated from the
+         <span class="emphasis"><em>primary</em></span> by a <code class="literal">/</code>.
+        </p><p>
+        <code class="literal">tux@example.org</code> and
+        <code class="literal">tux/admin@example.org</code> can both exist on the same
+        Kerberos system and are treated as different principals.
+       </p></li><li class="listitem"><p><span class="formalpara-title">realm:</span>
+         Specifies the Kerberos realm. Normally, your realm is your domain name in
+         uppercase letters.
+        </p></li></ul></div></dd><dt id="id-1.8.4.6.4.3.5"><span class="term">mutual authentication</span></dt><dd><p>
+      Kerberos ensures that both client and server can be sure of each other's
+      identity. They share a session key, which they can use to communicate
+      securely.
+     </p></dd><dt id="id-1.8.4.6.4.3.6"><span class="term">session key</span></dt><dd><p>
+      Session keys are temporary private keys generated by Kerberos. They are
+      known to the client and used to encrypt the communication between the
+      client and the server for which it requested and received a ticket.
+     </p></dd><dt id="id-1.8.4.6.4.3.7"><span class="term">replay</span></dt><dd><p>
+      Almost all messages sent in a network can be eavesdropped, stolen, and
+      resent. In the Kerberos context, this would be most dangerous if an attacker
+      manages to obtain your request for a service containing your ticket and
+      authenticator. The attacker could then try to resend it
+      (<span class="emphasis"><em>replay</em></span>) to impersonate you. However, Kerberos
+      implements several mechanisms to deal with this problem.
+     </p></dd><dt id="id-1.8.4.6.4.3.8"><span class="term">server or service</span></dt><dd><p>
+      <span class="emphasis"><em>Service</em></span> is used to refer to a specific action to
+      perform. The process behind this action is called a
+      <span class="emphasis"><em>server</em></span>.
+     </p></dd></dl></div></section><section class="sect1" id="sec-security-kerberos-how" data-id-title="How Kerberos works"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.3 </span><span class="title-name">How Kerberos works</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-how">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Kerberos is often called a third-party trusted authentication service, which
+   means all its clients trust Kerberos's judgment of another client's identity.
+   Kerberos keeps a database of all its users and their private keys.
+  </p><p>
+   To ensure Kerberos is working correctly, run both the authentication and
+   ticket-granting server on a dedicated machine. Make sure that only the
+   administrator can access this machine physically and over the network.
+   Reduce the (networking) services running on it to the absolute
+   minimum—do not even run <code class="systemitem">sshd</code>.
+  </p><section class="sect2" id="sec-security-kerberos-how-contact" data-id-title="First contact"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.3.1 </span><span class="title-name">First contact</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-how-contact">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Your first contact with Kerberos is quite similar to any login procedure at a
+    normal networking system. Enter your user name. This piece of information
+    and the name of the ticket-granting service are sent to the authentication
+    server (Kerberos). If the authentication server knows you, it generates a
+    random session key for further use between your client and the
+    ticket-granting server. Now the authentication server prepares a ticket for
+    the ticket-granting server. The ticket contains the following
+    information—all encrypted with a session key only the authentication
+    server and the ticket-granting server know:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The names of both, the client and the ticket-granting server
+     </p></li><li class="listitem"><p>
+      The current time
+     </p></li><li class="listitem"><p>
+      A lifetime assigned to this ticket
+     </p></li><li class="listitem"><p>
+      The client's IP address
+     </p></li><li class="listitem"><p>
+      The newly-generated session key
+     </p></li></ul></div><p>
+    This ticket is then sent back to the client together with the session key,
+    again in encrypted form, but this time the private key of the client is
+    used. This private key is only known to Kerberos and the client, because it is
+    derived from your user password. Now that the client has received this
+    response, you are prompted for your password. This password is converted
+    into the key that can decrypt the package sent by the authentication
+    server. The package is <span class="quote">“<span class="quote">unwrapped</span>”</span> and password and key are
+    erased from the workstation's memory. As long as the lifetime given to the
+    ticket used to obtain other tickets does not expire, your workstation can
+    prove your identity.
+   </p></section><section class="sect2" id="sec-security-kerberos-how-request" data-id-title="Requesting a service"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.3.2 </span><span class="title-name">Requesting a service</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-how-request">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To request a service from any server in the network, the client application
+    needs to prove its identity to the server. Therefore, the application
+    generates an authenticator. An authenticator consists of the following
+    components:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The client's principal
+     </p></li><li class="listitem"><p>
+      The client's IP address
+     </p></li><li class="listitem"><p>
+      The current time
+     </p></li><li class="listitem"><p>
+      A checksum (chosen by the client)
+     </p></li></ul></div><p>
+    All this information is encrypted using the session key that the client has
+    already received for this special server. The authenticator and the ticket
+    for the server are sent to the server. The server uses its copy of the
+    session key to decrypt the authenticator, which gives it all the
+    information needed about the client requesting its service, to compare it
+    to that contained in the ticket. The server checks if the ticket and the
+    authenticator originate from the same client.
+   </p><p>
+    Without any security measures implemented on the server side, this stage of
+    the process would be an ideal target for replay attacks. Someone could try
+    to resend a request stolen off the net some time before. To prevent this,
+    the server does not accept any request with a time stamp and ticket
+    received previously. In addition to that, a request with a time stamp
+    differing too much from the time the request is received is ignored.
+   </p></section><section class="sect2" id="sec-security-kerberos-how-mutual" data-id-title="Mutual authentication"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.3.3 </span><span class="title-name">Mutual authentication</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-how-mutual">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Kerberos authentication can be used in both directions. It is not only a
+    question of the client being the one it claims to be. The server should
+    also be able to authenticate itself to the client requesting its service.
+    Therefore, it sends an authenticator itself. It adds one to the checksum it
+    received in the client's authenticator and encrypts it with the session
+    key, which is shared between it and the client. The client takes this
+    response as a proof of the server's authenticity and they both start
+    cooperating.
+   </p></section><section class="sect2" id="sec-security-kerberos-how-tgs" data-id-title="Ticket granting—contacting all servers"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.3.4 </span><span class="title-name">Ticket granting—contacting all servers</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-how-tgs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Tickets are designed to be used for one server at a time. Therefore, you
+    need to get a new ticket each time you request another service. Kerberos
+    implements a mechanism to obtain tickets for individual servers. This
+    service is called the <span class="quote">“<span class="quote">ticket-granting service</span>”</span>. The
+    ticket-granting service is a service (like any other service mentioned
+    before) and uses the same access protocols that have already been outlined.
+    Any time an application needs a ticket that has not already been requested,
+    it contacts the ticket-granting server. This request consists of the
+    following components:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The requested principal
+     </p></li><li class="listitem"><p>
+      The ticket-granting ticket
+     </p></li><li class="listitem"><p>
+      An authenticator
+     </p></li></ul></div><p>
+    Like any other server, the ticket-granting server now checks the
+    ticket-granting ticket and the authenticator. If they are considered valid,
+    the ticket-granting server builds a new session key to be used between the
+    original client and the new server. Then the ticket for the new server is
+    built, containing the following information:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The client's principal
+     </p></li><li class="listitem"><p>
+      The server's principal
+     </p></li><li class="listitem"><p>
+      The current time
+     </p></li><li class="listitem"><p>
+      The client's IP address
+     </p></li><li class="listitem"><p>
+      The newly-generated session key
+     </p></li></ul></div><p>
+    The new ticket has a lifetime, which is either the remaining lifetime of
+    the ticket-granting ticket or the default for the service. The lesser of
+    both values is assigned. The client receives this ticket and the session
+    key, which are sent by the ticket-granting service. But this time the
+    answer is encrypted with the session key that came with the original
+    ticket-granting ticket. The client can decrypt the response without
+    requiring the user's password when a new service is contacted. Kerberos can
+    thus acquire ticket after ticket for the client without bothering the user.
+   </p></section></section><section class="sect1" id="sec-security-kerberos-users" data-id-title="User view of Kerberos"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.4 </span><span class="title-name">User view of Kerberos</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-users">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Ideally, a user only contact with Kerberos happens during login at the
+   workstation. The login process includes obtaining a ticket-granting ticket.
+   At logout, a user's Kerberos tickets are automatically destroyed, which makes
+   it difficult for anyone else to impersonate this user.
+  </p><p>
+   The automatic expiration of tickets can lead to a situation when a user's
+   login session lasts longer than the maximum lifespan given to the
+   ticket-granting ticket (a reasonable setting is 10 hours). However, the user
+   can get a new ticket-granting ticket by running <code class="command">kinit</code>.
+   Enter the password again and Kerberos obtains access to desired services
+   without additional authentication. To get a list of all the tickets silently
+   acquired for you by Kerberos, run <code class="command">klist</code>.
+  </p><p>
+   Here is a short list of applications that use Kerberos authentication. These
+   applications can be found under <code class="filename">/usr/lib/mit/bin</code> or
+   <code class="filename">/usr/lib/mit/sbin</code> after installing the package
+   <code class="systemitem">krb5-apps-clients</code>. They all have the full
+   functionality of their common Unix and Linux brothers plus the additional
+   bonus of transparent authentication managed by Kerberos:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <code class="command">telnet</code>, <code class="systemitem">telnetd</code>
+    </p></li><li class="listitem"><p>
+     <code class="command">rlogin</code>
+    </p></li><li class="listitem"><p>
+     <code class="command">rsh</code>, <code class="command">rcp</code>,
+     <code class="systemitem">rshd</code>
+    </p></li><li class="listitem"><p>
+     <code class="command">ftp</code>, <code class="systemitem">ftpd</code>
+    </p></li><li class="listitem"><p>
+     <code class="command">ksu</code>
+    </p></li></ul></div><p>
+   You no longer need to enter your password for using these applications
+   because Kerberos has already proven your identity. <code class="command">ssh</code>, if
+   compiled with Kerberos support, can even forward all the tickets acquired for
+   one workstation to another one. If you use <code class="command">ssh</code> to log in
+   to another workstation, <code class="command">ssh</code> makes sure that the encrypted
+   contents of the tickets are adjusted to the new situation. Simply copying
+   tickets between workstations is not sufficient because the ticket contains
+   workstation-specific information (the IP address). XDM and GDM offer Kerberos
+   support, too. Read more about the Kerberos network applications in
+   <em class="citetitle">Kerberos V5 UNIX User's Guide</em> at
+   <a class="link" href="https://web.mit.edu/kerberos" target="_blank">https://web.mit.edu/kerberos</a>.
+  </p></section><section class="sect1" id="sec-security-kerberos-admin" data-id-title="Installing and administering Kerberos"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.5 </span><span class="title-name">Installing and administering Kerberos</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A Kerberos environment consists of several components. A key distribution
+   center (KDC) holds the central database with all Kerberos-relevant data. All
+   clients rely on the KDC for proper authentication across the network. Both
+   the KDC and the clients need to be configured to match your setup:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.6.7.3.1"><span class="term">General preparations</span></dt><dd><p>
+      Check your network setup and make sure it meets the minimum requirements
+      outlined in <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-top" title="6.5.1. Kerberos network topology">Section 6.5.1, “Kerberos network topology”</a>. Choose an
+      appropriate realm for your Kerberos setup, see
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-realm" title="6.5.2. Choosing the Kerberos realms">Section 6.5.2, “Choosing the Kerberos realms”</a>. Carefully set up the
+      machine that is to serve as the KDC and apply tight security, see
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc" title="6.5.3. Setting up the KDC hardware">Section 6.5.3, “Setting up the KDC hardware”</a>. Set up a reliable time
+      source in your network to make sure all tickets contain valid time
+      stamps, see <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-time" title="6.5.4. Configuring time synchronization">Section 6.5.4, “Configuring time synchronization”</a>.
+     </p></dd><dt id="id-1.8.4.6.7.3.2"><span class="term">Basic configuration</span></dt><dd><p>
+      Configure the KDC and the clients, see
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-instkdc" title="6.5.5. Configuring the KDC">Section 6.5.5, “Configuring the KDC”</a> and
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-client" title="6.5.6. Configuring Kerberos clients">Section 6.5.6, “Configuring Kerberos clients”</a>. Enable remote
+      administration for your Kerberos service, so you do not need physical access
+      to your KDC machine, see
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-remote" title="6.5.7. Configuring remote Kerberos administration">Section 6.5.7, “Configuring remote Kerberos administration”</a>. Create service
+      principals for every service in your realm, see
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-hostprinc" title="6.5.8. Creating Kerberos service principals">Section 6.5.8, “Creating Kerberos service principals”</a>.
+     </p></dd><dt id="id-1.8.4.6.7.3.3"><span class="term">Enabling Kerberos authentication</span></dt><dd><p>
+      Various services in your network can use Kerberos. To add Kerberos
+      password-checking to applications using PAM, proceed as outlined in
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-pam" title="6.5.9. Enabling PAM support for Kerberos">Section 6.5.9, “Enabling PAM support for Kerberos”</a>. To configure SSH or
+      LDAP with Kerberos authentication, proceed as outlined in
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-sshd" title="6.5.10. Configuring SSH for Kerberos authentication">Section 6.5.10, “Configuring SSH for Kerberos authentication”</a> and
+      <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-ldap" title="6.5.11. Using LDAP and Kerberos">Section 6.5.11, “Using LDAP and Kerberos”</a>.
+     </p></dd></dl></div><section class="sect2" id="sec-security-kerberos-admin-top" data-id-title="Kerberos network topology"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.1 </span><span class="title-name">Kerberos network topology</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-top">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Any Kerberos environment must meet the following requirements to be fully
+    functional:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Provide a DNS server for name resolution across your network, so clients
+      and servers can locate each other. Refer to <span class="intraxref">Book “Administration Guide”, Chapter 31 “The domain name system”</span> for
+      information on DNS setup.
+     </p></li><li class="listitem"><p>
+      Provide a time server in your network. Using exact time stamps is crucial
+      to a Kerberos setup, because valid Kerberos tickets must contain correct time
+      stamps. Refer to <span class="intraxref">Book “Administration Guide”, Chapter 30 “Time synchronization with NTP”</span> for information on NTP setup.
+     </p></li><li class="listitem"><p>
+      Provide a key distribution center (KDC) as the center piece of the Kerberos
+      architecture. It holds the Kerberos database. Use the tightest possible
+      security policy on this machine to prevent any attacks on this machine
+      compromising your entire infrastructure.
+     </p></li><li class="listitem"><p>
+      Configure the client machines to use Kerberos authentication.
+     </p></li></ul></div><p>
+    The following figure depicts a simple example network with only the minimum
+    components needed to build a Kerberos infrastructure. Depending on the size
+    and topology of your deployment, your setup may vary.
+   </p><div class="figure" id="fig-netw-kerb"><div class="figure-contents"><div class="mediaobject"><a href="images/network_kerb.png"><img src="images/network_kerb.png" width="73%" alt="Kerberos network topology" title="Kerberos network topology"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 6.1: </span><span class="title-name">Kerberos network topology </span></span><a title="Permalink" class="permalink" href="cha-security-kerberos.html#fig-netw-kerb">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div><div id="id-1.8.4.6.7.4.6" data-id-title="Configuring subnet routing" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Configuring subnet routing</div><p>
+     For a setup similar to the one in <a class="xref" href="cha-security-kerberos.html#fig-netw-kerb" title="Kerberos network topology">Figure 6.1, “Kerberos network topology”</a>,
+     configure routing between the two subnets (192.168.1.0/24 and
+     192.168.2.0/24). Refer to <span class="intraxref">Book “Administration Guide”, Chapter 19 “Basic networking”, Section 19.4.1.5 “Configuring routing”</span>
+     for more information on configuring routing with YaST.
+    </p></div></section><section class="sect2" id="sec-security-kerberos-admin-realm" data-id-title="Choosing the Kerberos realms"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.2 </span><span class="title-name">Choosing the Kerberos realms</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-realm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The domain of a Kerberos installation is called a realm and is identified by a
+    name, such as <code class="literal">EXAMPLE.COM</code> or simply
+    <code class="literal">ACCOUNTING</code>. Kerberos is case-sensitive, so
+    <code class="literal">example.com</code> is actually a different realm than
+    <code class="literal">EXAMPLE.COM</code>. Use the case you prefer. It is common
+    practice, however, to use uppercase realm names.
+   </p><p>
+    It is also a good idea to use your DNS domain name (or a subdomain, such as
+    <code class="literal">ACCOUNTING.EXAMPLE.COM</code>). As shown below, your life as an
+    administrator can be much easier if you configure your Kerberos clients to
+    locate the KDC and other Kerberos services via DNS. To do so, it is helpful if
+    your realm name is a subdomain of your DNS domain name.
+   </p><p>
+    Unlike the DNS name space, Kerberos is not hierarchical. So if you have a
+    realm named <code class="literal">EXAMPLE.COM</code> with two
+    <span class="quote">“<span class="quote">subrealms</span>”</span> named <code class="literal">DEVELOPMENT</code> and
+    <code class="literal">ACCOUNTING</code>, these subordinate realms do not inherit
+    principals from <code class="literal">EXAMPLE.COM</code>. Instead, you would have
+    three separate realms, and you would need to configure cross-realm
+    authentication for each realm, so that users from one realm can interact
+    with servers or other users from another realm.
+   </p><p>
+    For the sake of simplicity, let us assume you are setting up only one realm
+    for your entire organization. For the remainder of this section, the realm
+    name <code class="literal">EXAMPLE.COM</code> is used in all examples.
+   </p></section><section class="sect2" id="sec-security-kerberos-admin-kdc" data-id-title="Setting up the KDC hardware"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.3 </span><span class="title-name">Setting up the KDC hardware</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The first thing required to use Kerberos is a machine that acts as the key
+    distribution center, or KDC for short. This machine holds the entire Kerberos
+    user database with passwords and all information.
+   </p><p>
+    The KDC is the most important part of your security infrastructure—if
+    someone breaks into it, all user accounts and all of your infrastructure
+    protected by Kerberos is compromised. An attacker with access to the Kerberos
+    database can impersonate any principal in the database. Tighten security
+    for this machine as much as possible:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Put the server machine into a physically secured location, such as a
+      locked server room to which only a very few people have access.
+     </p></li><li class="step"><p>
+      Do not run any network applications on it except the KDC. This includes
+      servers and clients—for example, the KDC should not import any file
+      systems via NFS or use DHCP to retrieve its network configuration.
+     </p></li><li class="step"><p>
+      Install a minimal system first then check the list of installed packages
+      and remove any unneeded packages. This includes servers, such as
+      <code class="systemitem">inetd</code>,
+      <code class="systemitem">portmap</code>, and CUPS, plus anything
+      X-based. Even installing an SSH server should be considered a potential
+      security risk.
+     </p></li><li class="step"><p>
+      No graphical login is provided on this machine as an X server is a
+      potential security risk. Kerberos provides its own administration interface.
+     </p></li><li class="step"><p>
+      Configure <code class="filename">/etc/nsswitch.conf</code> to use only local files
+      for user and group lookup. Change the lines for <code class="literal">passwd</code>
+      and <code class="literal">group</code> to look like this:
+     </p><div class="verbatim-wrap"><pre class="screen">passwd:         files
+group:          files</pre></div><p>
+      Edit the <code class="filename">passwd</code>, <code class="filename">group</code>, and
+      <code class="filename">shadow</code> files in <code class="filename">/etc</code> and remove
+      the lines that start with a <code class="literal">+</code> character (these are for
+      NIS lookups).
+     </p></li><li class="step"><p>
+      Disable all user accounts except <code class="systemitem">root</code>'s account by editing
+      <code class="filename">/etc/shadow</code> and replacing the hashed passwords with
+      <code class="literal">*</code> or <code class="literal">!</code> characters.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-security-kerberos-admin-time" data-id-title="Configuring time synchronization"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.4 </span><span class="title-name">Configuring time synchronization</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-time">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To use Kerberos successfully, make sure that all system clocks within your
+    organization are synchronized within a certain range. This is important
+    because Kerberos protects against replayed credentials. An attacker might be
+    able to observe Kerberos credentials on the network and reuse them to attack
+    the server. Kerberos employs several defenses to prevent this. One of them is
+    that it puts time stamps into its tickets. A server receiving a ticket with
+    a time stamp that differs from the current time rejects the ticket.
+   </p><p>
+    Kerberos allows a certain leeway when comparing time stamps. However, computer
+    clocks can be very inaccurate in keeping time—it is not unheard of
+    for PC clocks to lose or gain half an hour during a week. For this reason,
+    configure all hosts on the network to synchronize their clocks with a
+    central time source.
+   </p><p>
+    A simple way to do so is by installing an NTP time server on one machine
+    and having all clients synchronize their clocks with this server. Do this
+    by running an NTP daemon <code class="systemitem">chronyd</code> as a client on all these machines. The
+    KDC itself needs to be synchronized to the common time source as well.
+    Because running an NTP daemon on this machine would be a security risk, it
+    is probably a good idea to do this by running <code class="command">chronyd -q</code>
+    via a cron job. To configure your machine as an NTP client, proceed as
+    outlined in <span class="intraxref">Book “Administration Guide”, Chapter 30 “Time synchronization with NTP”, Section 30.1 “Configuring an NTP client with YaST”</span>.
+   </p><p>
+    A different way to secure the time service and still use the NTP daemon is
+    to attach a hardware reference clock to a dedicated NTP server and an
+    additional hardware reference clock to the KDC.
+   </p><p>
+    It is also possible to adjust the maximum deviation Kerberos allows when
+    checking time stamps. This value (called <span class="emphasis"><em>clock skew</em></span>)
+    can be set in the <code class="filename">krb5.conf</code> file as described in
+    <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-client-clockskew" title="6.5.6.3. Adjusting the clock skew">Section 6.5.6.3, “Adjusting the clock skew”</a>.
+   </p></section><section class="sect2" id="sec-security-kerberos-admin-instkdc" data-id-title="Configuring the KDC"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.5 </span><span class="title-name">Configuring the KDC</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-instkdc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This section covers the initial configuration and installation of the KDC,
+    including the creation of an administrative principal. This procedure
+    consists of several steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p><span class="formalpara-title">Install the RPMs. </span>
+       On a machine designated as the KDC, install the following software
+       packages: <code class="systemitem">krb5</code>,
+       <code class="systemitem">krb5-server</code> and
+       <code class="systemitem">krb5-client</code> packages.
+      </p></li><li class="step"><p><span class="formalpara-title">Adjust the configuration files. </span>
+       The <code class="filename">/etc/krb5.conf</code> and
+       <code class="filename">/var/lib/kerberos/krb5kdc/kdc.conf</code> configuration
+       files must be adjusted for your scenario. These files contain all
+       information on the KDC. See
+       <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-configure" title="6.5.5.1. Configuring the server">Section 6.5.5.1, “Configuring the server”</a>.
+      </p></li><li class="step"><p><span class="formalpara-title">Create the Kerberos database. </span>
+       Kerberos keeps a database of all principal identifiers and the secret keys
+       of all principals that need to be authenticated. Refer to
+       <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-database" title="6.5.5.2. Setting up the database">Section 6.5.5.2, “Setting up the database”</a> for details.
+      </p></li><li class="step"><p><span class="formalpara-title">Adjust the ACL files: add administrators. </span>
+       The Kerberos database on the KDC can be managed remotely. To prevent
+       unauthorized principals from tampering with the database, Kerberos uses
+       access control lists. You must explicitly enable remote access for the
+       administrator principal to enable them to manage the database. The Kerberos
+       ACL file is located under
+       <code class="filename">/var/lib/kerberos/krb5kdc/kadm5.acl</code>. Refer to
+       <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-remote" title="6.5.7. Configuring remote Kerberos administration">Section 6.5.7, “Configuring remote Kerberos administration”</a> for details.
+      </p></li><li class="step"><p><span class="formalpara-title">Adjust the Kerberos database: add administrators. </span>
+       You need at least one administrative principal to run and administer
+       Kerberos. This principal must be added before starting the KDC. Refer to
+       <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-princ" title="6.5.5.3. Creating a principal">Section 6.5.5.3, “Creating a principal”</a> for details.
+      </p></li><li class="step"><p><span class="formalpara-title">Start the Kerberos daemon. </span>
+       After the KDC software is installed and properly configured, start the
+       Kerberos daemon to provide Kerberos service for your realm. Refer to
+       <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-start" title="6.5.5.4. Starting the KDC">Section 6.5.5.4, “Starting the KDC”</a> for details.
+      </p></li><li class="step"><p><span class="formalpara-title">Create a principal for yourself. </span>
+       You need a principal for yourself. Refer to
+       <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-princ" title="6.5.5.3. Creating a principal">Section 6.5.5.3, “Creating a principal”</a> for details.
+      </p></li></ol></div></div><section class="sect3" id="sec-security-kerberos-admin-kdc-configure" data-id-title="Configuring the server"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.5.1 </span><span class="title-name">Configuring the server</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-configure">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Configuring a Kerberos server is highly variable, dependent on your network
+     architecture, DNS and DHCP configuration, realms, and other
+     considerations. You must have a default realm, and domain- to-realm
+     mappings. The following example demonstrates a minimal configuration.
+     This is not a copy-and-paste example; see
+     <a class="link" href="https://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/index.html" target="_blank">https://web.mit.edu/kerberos/krb5-latest/doc/admin/conf_files/index.html</a>
+     for detailed information on Kerberos configuration.
+    </p><div class="example" id="sec-security-kerberos-example-config" data-id-title="Example KDC configuration, /etc/krb5.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 6.1: </span><span class="title-name">Example KDC configuration, <code class="filename">/etc/krb5.conf</code> </span></span><a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-example-config">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[libdefaults]
+ dns_canonicalize_hostname = false
+ rdns = false
+ default_realm = example.com
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+
+[realms]
+  example.com = {
+  kdc = kdc.example.com.:88
+  admin_server = kdc.example.com
+  default_domain = example.com
+ }
+
+ [logging]
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+ default = SYSLOG:NOTICE:DAEMON
+
+[domain_realm]
+ .example.com = example.com
+ example.com = example.com</pre></div></div></div></section><section class="sect3" id="sec-security-kerberos-admin-kdc-database" data-id-title="Setting up the database"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.5.2 </span><span class="title-name">Setting up the database</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-database">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Your next step is to initialize the database where Kerberos keeps all
+     information about principals. Set up the database master key, which is
+     used to protect the database from accidental disclosure (in particular if
+     it is backed up to tape). The master key is derived from a pass phrase and
+     is stored in a file called the stash file. This is so you do not need to
+     enter the password every time the KDC is restarted. Make sure that you
+     choose a good pass phrase, such as a sentence from a book opened to a
+     random page.
+    </p><p>
+     When you make tape backups of the Kerberos database
+     (<code class="filename">/var/lib/kerberos/krb5kdc/principal</code>), do not back up
+     the stash file (which is in
+     <code class="filename">/var/lib/kerberos/krb5kdc/.k5.EXAMPLE.COM</code>).
+     Otherwise, everyone able to read the tape could also decrypt the database.
+     Therefore, keep a copy of the pass phrase in a safe or some other secure
+     location, because you will need it to restore your database from backup
+     tape after a crash.
+    </p><p>
+     To create the stash file and the database, run:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> kdb5_util create -r EXAMPLE.COM -s</pre></div><p>
+     You will see the following output:
+    </p><div class="verbatim-wrap"><pre class="screen">Initializing database '/var/lib/kerberos/krb5kdc/principal' for realm 'EXAMPLE.COM',
+master key name 'K/M@EXAMPLE.COM'
+You will be prompted for the database Master Password.
+It is important that you NOT FORGET this password.
+Enter KDC database master key:  <span class="callout" id="co-kerb-kdb5-pass">1</span>
+Re-enter KDC database master key to verify:  <span class="callout" id="co-kerb-kdb5-pass-repeat">2</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-kerb-kdb5-pass"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Type the master password.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-kerb-kdb5-pass-repeat"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Type the password again.
+      </p></td></tr></table></div><p>
+     To verify, use the list command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kadmin.local
+
+<code class="prompt user">kadmin&gt; </code>listprincs</pre></div><p>
+     You will see several principals in the database, which are for internal
+     use by Kerberos:
+    </p><div class="verbatim-wrap"><pre class="screen">K/M@EXAMPLE.COM
+kadmin/admin@EXAMPLE.COM
+kadmin/changepw@EXAMPLE.COM
+krbtgt/EXAMPLE.COM@EXAMPLE.COM</pre></div></section><section class="sect3" id="sec-security-kerberos-admin-kdc-princ" data-id-title="Creating a principal"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.5.3 </span><span class="title-name">Creating a principal</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-princ">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Create two Kerberos principals for yourself: one normal principal for
+     everyday work and one for administrative tasks relating to Kerberos. Assuming
+     your login name is <code class="systemitem">suzanne</code>, proceed as follows:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kadmin.local
+
+<code class="prompt user">kadmin&gt; </code>ank suzanne</pre></div><p>
+     You will see the following output:
+    </p><div class="verbatim-wrap"><pre class="screen">suzanne@EXAMPLE.COM's Password: <span class="callout" id="co-kerb-geeko-pass">1</span>
+Verifying password: <span class="callout" id="co-kerb-geeko-pass-repeat">2</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-kerb-geeko-pass"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Type <code class="systemitem">&gt;suzanne</code>'s password.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-kerb-geeko-pass"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Type <code class="systemitem">suzanne</code>'s password again.
+      </p></td></tr></table></div><p>
+     Next, create another principal named
+     <code class="literal">suzanne/admin</code> by typing
+     <code class="command">ank</code> <code class="option">suzanne/admin</code> at
+     the <code class="command">kadmin</code> prompt. The <code class="literal">admin</code>
+     suffixed to your user name is a <span class="emphasis"><em>role</em></span>. Later, use this
+     role when administering the Kerberos database. A user can have several roles
+     for different purposes. Roles act like completely different accounts that
+     have similar names.
+    </p></section><section class="sect3" id="sec-security-kerberos-admin-kdc-start" data-id-title="Starting the KDC"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.5.4 </span><span class="title-name">Starting the KDC</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-start">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Start the KDC daemon and the kadmin daemon. To start the daemons manually,
+     enter:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start krb5kdc
+sudo systemctl start kadmind</pre></div><p>
+     Also make sure that the services KDC (<code class="systemitem">krb5kdc</code>)
+     and kadmind (<code class="systemitem">kadmind</code>) are started by default when
+     the server machine is rebooted. Enable them by entering:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl enable krb5kdc kadmind</pre></div><p>
+     or by using the YaST <span class="guimenu">Services Manager</span>.
+    </p></section></section><section class="sect2" id="sec-security-kerberos-admin-client" data-id-title="Configuring Kerberos clients"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.6 </span><span class="title-name">Configuring Kerberos clients</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-client">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When the supporting infrastructure is in place (DNS, NTP) and the KDC has
+    been properly configured and started, configure the client machines. To
+    configure a Kerberos client, use one of the two manual approaches described
+    below.
+   </p><p>
+    When configuring Kerberos, there are two approaches you can take—static
+    configuration in the <code class="filename">/etc/krb5.conf</code> file or dynamic
+    configuration with DNS. With DNS configuration, Kerberos applications try to
+    locate the KDC services using DNS records. With static configuration, add
+    the host names of your KDC server to <code class="filename">krb5.conf</code> (and
+    update the file whenever you move the KDC or reconfigure your realm in
+    other ways).
+   </p><p>
+    DNS-based configuration is generally a lot more flexible and the amount of
+    configuration work per machine is a lot less. However, it requires that
+    your realm name is either the same as your DNS domain or a subdomain of it.
+    Configuring Kerberos via DNS also creates a security issue: An attacker can
+    seriously disrupt your infrastructure through your DNS (by shooting down
+    the name server, spoofing DNS records, etc.). However, this amounts to a
+    denial of service at worst. A similar scenario applies to the static
+    configuration case unless you enter IP addresses in
+    <code class="filename">krb5.conf</code> instead of host names.
+   </p><section class="sect3" id="sec-security-kerberos-admin-client-stat" data-id-title="Static configuration"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.6.1 </span><span class="title-name">Static configuration</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-client-stat">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     One way to configure Kerberos is to edit <code class="filename">/etc/krb5.conf</code>.
+     The file installed by default contains various sample entries. Erase all
+     of these entries before starting. <code class="filename">krb5.conf</code> is made
+     up of several sections (stanzas), each introduced by the section name in
+     brackets like <code class="literal">[this]</code>.
+    </p><p>
+     To configure your Kerberos clients, add the following stanza to
+     <code class="filename">krb5.conf</code> (where
+     <code class="systemitem">kdc.example.com</code> is the host
+     name of the KDC):
+    </p><div class="verbatim-wrap"><pre class="screen">[libdefaults]
+        default_realm = EXAMPLE.COM
+
+[realms]
+        EXAMPLE.COM = {
+                kdc = kdc.example.com
+                admin_server = kdc.example.com
+        }</pre></div><p>
+     The <code class="literal">default_realm</code> line sets the default realm for Kerberos
+     applications. If you have several realms, add additional statements to the
+     <code class="literal">[realms]</code> section.
+    </p><p>
+     Also add a statement to this file that tells applications how to map host
+     names to a realm. For example, when connecting to a remote host, the Kerberos
+     library needs to know in which realm this host is located. This must be
+     configured in the <code class="literal">[domain_realms]</code> section:
+    </p><div class="verbatim-wrap"><pre class="screen">[domain_realm]
+.example.com = EXAMPLE.COM
+www.example.org = EXAMPLE.COM</pre></div><p>
+     This tells the library that all hosts in the
+     <code class="filename">example.com</code> DNS domains are in the
+     <code class="filename">EXAMPLE.COM</code> Kerberos realm. In addition, one external
+     host named <code class="filename">www.example.org</code> should also be considered
+     a member of the <code class="filename">EXAMPLE.COM</code> realm.
+    </p></section><section class="sect3" id="sec-security-kerberos-admin-client-dns" data-id-title="DNS-based configuration"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.6.2 </span><span class="title-name">DNS-based configuration</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-client-dns">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     DNS-based Kerberos configuration makes heavy use of SRV records. See
+     <span class="emphasis"><em>(RFC2052) A DNS RR for specifying the location of
+     services</em></span> at <a class="link" href="http://www.ietf.org" target="_blank">http://www.ietf.org</a>.
+    </p><p>
+     The name of an SRV record, as far as Kerberos is concerned, is always in the
+     format <code class="literal">_service._proto.realm</code>, where realm is the Kerberos
+     realm. Domain names in DNS are case-insensitive, so case-sensitive Kerberos
+     realms would break when using this configuration method.
+     <code class="literal">_service</code> is a service name (different names are used
+     when trying to contact the KDC or the password service, for example).
+     <code class="literal">_proto</code> can be either <code class="literal">_udp</code> or
+     <code class="literal">_tcp</code>, but not all services support both protocols.
+    </p><p>
+     The data portion of SRV resource records consists of a priority value, a
+     weight, a port number, and a host name. The priority defines the order in
+     which hosts should be tried (lower values indicate a higher priority). The
+     weight value is there to support some sort of load balancing among servers
+     of equal priority. You probably do not need any of this, so it is okay to
+     set these to zero.
+    </p><p>
+     MIT Kerberos currently looks up the following names when looking for
+     services:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.6.7.9.6.6.1"><span class="term">_kerberos</span></dt><dd><p>
+        This defines the location of the KDC daemon (the authentication and
+        ticket granting server). Typical records look like this:
+       </p><div class="verbatim-wrap"><pre class="screen">_kerberos._udp.EXAMPLE.COM.  IN  SRV    0 0 88 kdc.example.com.
+_kerberos._tcp.EXAMPLE.COM.  IN  SRV    0 0 88 kdc.example.com.</pre></div></dd><dt id="id-1.8.4.6.7.9.6.6.2"><span class="term">_kerberos-adm</span></dt><dd><p>
+        This describes the location of the remote administration service.
+        Typical records look like this:
+       </p><div class="verbatim-wrap"><pre class="screen">_kerberos-adm._tcp.EXAMPLE.COM. IN  SRV    0 0 749 kdc.example.com.</pre></div><p>
+        Because kadmind does not support UDP, there should be no
+        <code class="literal">_udp</code> record.
+       </p></dd></dl></div><p>
+     As with the static configuration file, there is a mechanism to inform
+     clients that a specific host is in the <code class="literal">EXAMPLE.COM</code>
+     realm, even if it is not part of the <code class="literal">example.com</code> DNS
+     domain. This can be done by attaching a TXT record to
+     <code class="literal">_kerberos.host_name</code>, as shown here:
+    </p><div class="verbatim-wrap"><pre class="screen">_kerberos.www.example.org.  IN TXT "EXAMPLE.COM"</pre></div></section><section class="sect3" id="sec-security-kerberos-admin-client-clockskew" data-id-title="Adjusting the clock skew"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.6.3 </span><span class="title-name">Adjusting the clock skew</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-client-clockskew">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The <span class="emphasis"><em>clock skew</em></span> is the tolerance for accepting tickets
+     with time stamps that do not exactly match the host's system clock.
+     Usually, the clock skew is set to 300 seconds (five minutes). This means a
+     ticket can have a time stamp somewhere between five minutes behind and
+     five minutes ahead of the server's clock.
+    </p><p>
+     When using NTP to synchronize all hosts, you can reduce this value to
+     about one minute. The clock skew value can be set in
+     <code class="filename">/etc/krb5.conf</code> like this:
+    </p><div class="verbatim-wrap"><pre class="screen">[libdefaults]
+        clockskew = 60</pre></div></section></section><section class="sect2" id="sec-security-kerberos-admin-remote" data-id-title="Configuring remote Kerberos administration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.7 </span><span class="title-name">Configuring remote Kerberos administration</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-remote">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To be able to add and remove principals from the Kerberos database without
+    accessing the KDC's console directly, tell the Kerberos administration server
+    which principals are allowed to do what by editing
+    <code class="filename">/var/lib/kerberos/krb5kdc/kadm5.acl</code>. The ACL (access
+    control list) file allows you to specify privileges with a precise degree
+    of control. For details, refer to the manual page with
+    <code class="command">man</code> <code class="option">8 kadmind</code>.
+   </p><p>
+    For now, grant yourself the privilege to administer the database by putting
+    the following line into the file:
+   </p><div class="verbatim-wrap"><pre class="screen">suzanne/admin              *</pre></div><p>
+    Replace the user name <code class="systemitem">suzanne</code> with your own. Restart
+    <code class="systemitem">kadmind</code> for the change to take effect.
+   </p><p>
+    You should now be able to perform Kerberos administration tasks remotely using
+    the kadmin tool. First, obtain a ticket for your admin role and use that
+    ticket when connecting to the kadmin server:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kadmin -p suzanne/admin
+Authenticating as principal suzanne/admin@EXAMPLE.COM with password.
+Password for suzanne/admin@EXAMPLE.COM:
+kadmin:  getprivs
+current privileges: GET ADD MODIFY DELETE
+kadmin:</pre></div><p>
+    Using the <code class="command">getprivs</code> command, verify which privileges you
+    have. The list shown above is the full set of privileges.
+   </p><p>
+    As an example, modify the principal <code class="systemitem">suzanne</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kadmin -p suzanne/admin
+Authenticating as principal suzanne/admin@EXAMPLE.COM with password.
+Password for suzanne/admin@EXAMPLE.COM:
+
+kadmin:  getprinc suzanne
+Principal: suzanne@EXAMPLE.COM
+Expiration date: [never]
+Last password change: Wed Jan 12 17:28:46 CET 2005
+Password expiration date: [none]
+Maximum ticket life: 0 days 10:00:00
+Maximum renewable life: 7 days 00:00:00
+Last modified: Wed Jan 12 17:47:17 CET 2005 (admin/admin@EXAMPLE.COM)
+Last successful authentication: [never]
+Last failed authentication: [never]
+Failed password attempts: 0
+Number of keys: 2
+Key: vno 1, Triple DES cbc mode with HMAC/sha1, no salt
+Key: vno 1, DES cbc mode with CRC-32, no salt
+Attributes:
+Policy: [none]
+
+kadmin:  modify_principal -maxlife "8 hours" suzanne
+Principal "suzanne@EXAMPLE.COM" modified.
+kadmin:  getprinc suzanne
+Principal: suzanne@EXAMPLE.COM
+Expiration date: [never]
+Last password change: Wed Jan 12 17:28:46 CET 2005
+Password expiration date: [none]
+Maximum ticket life: 0 days 08:00:00
+Maximum renewable life: 7 days 00:00:00
+Last modified: Wed Jan 12 17:59:49 CET 2005 (suzanne/admin@EXAMPLE.COM)
+Last successful authentication: [never]
+Last failed authentication: [never]
+Failed password attempts: 0
+Number of keys: 2
+Key: vno 1, Triple DES cbc mode with HMAC/sha1, no salt
+Key: vno 1, DES cbc mode with CRC-32, no salt
+Attributes:
+Policy: [none]
+kadmin:</pre></div><p>
+    This changes the maximum ticket life time to eight hours. For more
+    information about the <code class="command">kadmin</code> command and the options
+    available, see the <code class="systemitem">krb5-doc</code> package or refer to
+    the <code class="command">man</code> <code class="option">8 kadmin</code> manual page.
+   </p></section><section class="sect2" id="sec-security-kerberos-admin-hostprinc" data-id-title="Creating Kerberos service principals"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.8 </span><span class="title-name">Creating Kerberos service principals</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-hostprinc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    So far, only user credentials have been discussed. However,
+    Kerberos-compatible services usually need to authenticate themselves to the
+    client user, too. Therefore, special service principals must be in the
+    Kerberos database for each service offered in the realm. For example, if
+    ldap.example.com offers an LDAP service, you need a service principal,
+    <code class="literal">ldap/ldap.example.com@EXAMPLE.COM</code>, to authenticate this
+    service to all clients.
+   </p><p>
+    The naming convention for service principals is
+    <code class="literal"><em class="replaceable">SERVICE</em>/<em class="replaceable">HOSTNAME</em>@<em class="replaceable">REALM</em></code>,
+    where <em class="replaceable">HOSTNAME</em> is the host's fully qualified
+    host name.
+   </p><p>
+    Valid service descriptors are:
+   </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Service Descriptor
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Service
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">host</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Telnet, RSH, SSH
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">nfs</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         NFSv4 (with Kerberos support)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">HTTP</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         HTTP (with Kerberos authentication)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">imap</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         IMAP
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="literal">pop</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         POP3
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="literal">ldap</code>
+        </p>
+       </td><td>
+        <p>
+         LDAP
+        </p>
+       </td></tr></tbody></table></div><p>
+    Service principals are similar to user principals, but have significant
+    differences. The main difference between a user principal and a service
+    principal is that the key of the former is protected by a password. When a
+    user obtains a ticket-granting ticket from the KDC, they needs to type
+    their password, so Kerberos can decrypt the ticket. It would be inconvenient
+    for system administrators to obtain new tickets for the SSH daemon every
+    eight hours or so.
+   </p><p>
+    Instead, the key required to decrypt the initial ticket for the service
+    principal is extracted by the administrator from the KDC only once and
+    stored in a local file called the <span class="emphasis"><em>keytab</em></span>. Services
+    such as the SSH daemon read this key and use it to obtain new tickets
+    automatically, when needed. The default keytab file resides in
+    <code class="filename">/etc/krb5.keytab</code>.
+   </p><p>
+    To create a host service principal for <code class="literal">jupiter.example.com</code> enter
+    the following commands during your kadmin session:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kadmin -p suzanne/admin
+Authenticating as principal suzanne/admin@EXAMPLE.COM with password.
+Password for suzanne/admin@EXAMPLE.COM:
+kadmin:  addprinc -randkey host/jupiter.example.com
+WARNING: no policy specified for host/jupiter.example.com@EXAMPLE.COM;
+defaulting to no policy
+Principal "host/jupiter.example.com@EXAMPLE.COM" created.</pre></div><p>
+    Instead of setting a password for the new principal, the
+    <code class="option">-randkey</code> flag tells <code class="command">kadmin</code> to generate
+    a random key. This is used here because no user interaction is wanted for
+    this principal. It is a server account for the machine.
+   </p><p>
+    Finally, extract the key and store it in the local keytab file
+    <code class="filename">/etc/krb5.keytab</code>. This file is owned by the superuser,
+    so you must be <code class="systemitem">root</code> to execute
+    the next command in the kadmin shell:
+   </p><div class="verbatim-wrap"><pre class="screen">kadmin:  ktadd host/jupiter.example.com
+Entry for principal host/jupiter.example.com with kvno 3, encryption type Triple
+DES cbc mode with HMAC/sha1 added to keytab WRFILE:/etc/krb5.keytab.
+Entry for principal host/jupiter.example.com with kvno 3, encryption type DES
+cbc mode with CRC-32 added to keytab WRFILE:/etc/krb5.keytab.
+kadmin:</pre></div><p>
+    When completed, make sure that you destroy the admin ticket obtained with
+    kinit above with <code class="command">kdestroy</code>.
+   </p></section><section class="sect2" id="sec-security-kerberos-admin-pam" data-id-title="Enabling PAM support for Kerberos"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.9 </span><span class="title-name">Enabling PAM support for Kerberos</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-pam">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.8.4.6.7.12.2" data-id-title="Incomplete configuration locks users out" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Incomplete configuration locks users out</div><p>
+     An incomplete Kerberos configuration may completely lock you out of your
+     system, including the root user. To prevent this, add the
+     <code class="option">ignore_unknown_principals</code> directive to the
+     <code class="option">pam_krb5</code> module <span class="emphasis"><em>after</em></span> you have added
+     the <code class="option">pam_krb5</code> module to the existing PAM configuration
+     files as described below.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">pam-config --add --krb5-ignore_unknown_principals</code></pre></div><p>
+     This will direct the <code class="option">pam_krb5</code> module to ignore some
+     errors that would otherwise cause the account phase to fail.
+    </p></div><p>
+    <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span> comes with a PAM module named <code class="option">pam_krb5</code>,
+    which supports Kerberos login and password update. This module can be used by
+    applications such as console login, <code class="command">su</code>, and graphical
+    login applications like GDM. That is, it can be used in all cases where the
+    user enters a password and expects the authenticating application to obtain
+    an initial Kerberos ticket on their behalf. To configure PAM support for
+    Kerberos, use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">pam-config --add --krb5</code></pre></div><p>
+    The above command adds the <code class="option">pam_krb5</code> module to the existing
+    PAM configuration files and makes sure it is called in the right order. To
+    make precise adjustments to the way in which <code class="option">pam_krb5</code> is
+    used, edit the file <code class="filename">/etc/krb5.conf</code> and add default
+    applications to PAM. For details, refer to the manual page with
+    <code class="command">man 5 pam_krb5</code>.
+   </p><p>
+    The <code class="option">pam_krb5</code> module was specifically not designed for
+    network services that accept Kerberos tickets as part of user authentication.
+    This is an entirely different matter, and is discussed below.
+   </p></section><section class="sect2" id="sec-security-kerberos-admin-sshd" data-id-title="Configuring SSH for Kerberos authentication"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.10 </span><span class="title-name">Configuring SSH for Kerberos authentication</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-sshd">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    OpenSSH supports Kerberos authentication in both protocol version 1 and
+    2. In version 1, there are special protocol messages to transmit Kerberos
+    tickets. Version 2 does not use Kerberos directly anymore, but relies on
+    GSSAPI, the General Security Services API. This is a programming interface
+    that is not specific to Kerberos—it was designed to hide the
+    peculiarities of the underlying authentication system, be it Kerberos, a
+    public-key authentication system like SPKM, or others. However, the
+    included GSSAPI library only supports Kerberos.
+   </p><p>
+    To use sshd with Kerberos authentication, edit
+    <code class="filename">/etc/ssh/sshd_config</code> and set the following options:
+   </p><div class="verbatim-wrap"><pre class="screen"># These are for protocol version 1
+#
+# KerberosAuthentication yes
+# KerberosTicketCleanup yes
+
+# These are for version 2 - better to use this
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes</pre></div><p>
+    Then restart your SSH daemon using <code class="command">sudo systemctl restart
+    sshd</code>.
+   </p><p>
+    To use Kerberos authentication with protocol version 2, enable it on the
+    client side as well. Do this either in the system-wide configuration file
+    <code class="filename">/etc/ssh/ssh_config</code> or on a per-user level by
+    editing <code class="filename">~/.ssh/config</code>. In both cases, add the
+    option <code class="literal">GSSAPIAuthentication yes</code>.
+   </p><p>
+    You should now be able to connect using Kerberos authentication. Use
+    <code class="command">klist</code> to verify that you have a valid ticket, then
+    connect to the SSH server. To force SSH protocol version 1, specify the
+    <code class="literal">-1</code> option on the command line.
+   </p><div id="id-1.8.4.6.7.13.8" data-id-title="More information" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: More information</div><p>
+     The file
+     <code class="filename">/usr/share/doc/packages/openssh/README.kerberos</code>
+     discusses the interaction of OpenSSH and Kerberos in more detail.
+    </p></div><div id="id-1.8.4.6.7.13.9" data-id-title="Additional directives for protocol version 2" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Additional directives for protocol version 2</div><p>
+     The <code class="literal">GSSAPIKeyExchange</code> mechanism (RFC 4462) is
+     supported. This directive specifies how host keys are exchanged. For more
+     information, see the sshd_config manual page (<code class="command">man
+     sshd_config</code>).
+    </p></div></section><section class="sect2" id="sec-security-kerberos-admin-ldap" data-id-title="Using LDAP and Kerberos"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.5.11 </span><span class="title-name">Using LDAP and Kerberos</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-ldap">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    While Kerberos provides authentication, LDAP is used for authorization and
+    identification. Both services can work together.
+   </p><p>
+    For secure connections,389 Directory Server supports different ways of encrypting data:
+    SSL/TLS connections, Start TLS connections, and SASL authentication. Simple
+    Authentication and Security Layer (SASL) is a network protocol designed for
+    authentication. The SASL implementation used on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is
+    <code class="literal">cyrus-sasl</code>. Kerberos authentication is performed through
+    GSS-API (General Security Services API), provided by the
+    <span class="package">cyrus-sasl-gssapi</span> package. Using GSS-API, 389 Directory Server uses
+    Kerberos tickets to authenticate sessions and encrypt data.
+   </p><p>
+    With the SASL framework you can use different mechanisms to authenticate a
+    user to the server. In Kerberos, authentication is always mutual. This means
+    that not only have you authenticated yourself to the 389 Directory Server, but also the
+    389 Directory Server has authenticated itself to you. In particular, this means
+    communication is with the desired server, rather than with a random service
+    set up by an attacker.
+   </p><p>
+    To enable Kerberos to bind to the 389 Directory Server, create a principal
+    <code class="literal">ldap/ldap.example.com</code> and add that to the keytab. The
+    credentials used by the 389 Directory Server to authenticate are given to other servers
+    by the keytab. 389 Directory Server assigns a keytab through the
+    <code class="varname">KRB5_KTNAME</code> environment variable.
+   </p><div class="procedure"><div class="procedure-contents"><p>
+     To set the variable, proceed as follows:
+    </p><ol class="procedure" type="1"><li class="step"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl edit dirsrv@<em class="replaceable">INSTANCE</em></pre></div><p>
+      If you used the default name for the 389 Directory Server instance, replace
+      <em class="replaceable">INSTANCE</em> with <code class="literal">localhost</code>.
+     </p></li><li class="step"><p>
+      Add the following:
+     </p><div class="verbatim-wrap"><pre class="screen">[Service]
+  Environment=KRB5_KTNAME=/etc/dirsrv/slapd-<em class="replaceable">INSTANCE</em>/krb5.keytab</pre></div></li><li class="step"><p>
+      The keytab file needs to be readable by the account under which the
+      389 Directory Server runs (for example, <code class="literal">dirserv</code>):
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> chown dirsrv:dirsrv /etc/dirsrv/slapd-<em class="replaceable">INSTANCE</em>/krb5.keytab
+<code class="prompt user">&gt; </code><code class="command">sudo</code> chmod 600 /etc/dirsrv/slapd-<em class="replaceable">INSTANCE</em>/krb5.keytab</pre></div></li></ol></div></div><section class="sect3" id="sec-security-kerberos-admin-ldap-auth" data-id-title="Using Kerberos authentication with LDAP"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.11.1 </span><span class="title-name">Using Kerberos authentication with LDAP</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-ldap-auth">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To obtain and cache an initial ticket-granting ticket, use the principal
+     that has been created in <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-admin-kdc-princ" title="6.5.5.3. Creating a principal">Section 6.5.5.3, “Creating a principal”</a>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kinit suzanne@EXAMPLE.COM</pre></div><p>
+     To check if GSSAPI authentication works, run:</p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ldapwhoami -Y GSSAPI -H ldap://ldapkdc.example.com
+dn: uid=testuser,ou=People,dc=example,dc=com
+    </pre></div><p>GSSAPI uses the <code class="literal">ccache</code> to authenticate the user to the
+     389 Directory Server without the user's password.</p></section><section class="sect3" id="sec-security-kerberos-admin-ldap-sasl" data-id-title="Configuring SASL identity mapping"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">6.5.11.2 </span><span class="title-name">Configuring SASL identity mapping</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-admin-ldap-sasl">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     When processing a SASL bind request, the 389 Directory Server maps the SASL
+     authentication ID (used to authenticate to the Directory Server) with an
+     LDAP entry stored within the server. When using Kerberos, the SASL user ID
+     usually has the following format:
+     <code class="literal"><em class="replaceable">userid</em>@<em class="replaceable">REALM</em></code>,
+     such as <code class="systemitem">tux</code>@example.com. This ID must be converted into the
+     DN of the user's Directory Server entry, such as
+     <code class="literal">uid=tux,ou=people,dc=example,dc=com</code>.
+     The 389 Directory Server comes with some default maps for most common configurations.
+     However, you can create customized maps.
+     <a class="xref" href="cha-security-kerberos.html#pro-krb-389-ds-mapping" title="Managing maps">Procedure 6.1, “Managing maps”</a> shows how to list and display a
+     map, how to delete a map and how to create a custom map.
+    </p><div class="procedure" id="pro-krb-389-ds-mapping" data-id-title="Managing maps"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 6.1: </span><span class="title-name">Managing maps </span></span><a title="Permalink" class="permalink" href="cha-security-kerberos.html#pro-krb-389-ds-mapping">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       To list the existing SASL maps:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>dsconf <em class="replaceable">INSTANCE</em> sasl list
+Kerberos uid mapping
+rfc 2829 dn syntax
+rfc 2829u syntax
+uid mapping</pre></div></li><li class="step"><p>
+       To display a map:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> dsconf <em class="replaceable">INSTANCE</em> sasl get "Kerberos uid mapping"
+dn: cn=Kerberos uid mapping,cn=mapping,cn=sasl,cn=config
+cn: Kerberos uid mapping
+nsSaslMapBaseDNTemplate: dc=\2,dc=\3
+nsSaslMapFilterTemplate: (uid=\1)
+nsSaslMapRegexString: \(.*\)@\(.*\)\.\(.*\)
+objectClass: top
+objectClass: nsSaslMapping</pre></div></li><li class="step"><p>
+       The default map only works if your dc has two components. To delete the
+       map (if it does not work for you):
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> dsconf <em class="replaceable">INSTANCE</em> sasl delete "Kerberos uid mapping"
+Deleting SaslMapping cn=Kerberos uid mapping,cn=mapping,cn=sasl,cn=config :
+Successfully deleted cn=Kerberos uid mapping,cn=mapping,cn=sasl,cn=config</pre></div></li><li class="step"><p>
+       To create a new map:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> dsconf localhost sasl create --cn=bhgssapi --nsSaslMapRegexString "\
+(.*\)@EXAMPLE.NET.DE" --nsSaslMapBaseDNTemplate="dc=example,dc=net,dc=de" --nsSaslMapFilterTemplate="(uid=\1)"
+<code class="prompt user">&gt; </code><code class="command">sudo</code> Enter value for nsSaslMapPriority :
+Successfully created bhgssapi</pre></div></li><li class="step"><p>
+       Display the newly created map with:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> dsconf localhost sasl get "bhgssapi"
+dn: cn=bhgssapi,cn=mapping,cn=sasl,cn=config
+cn: bhgssapi
+nsSaslMapBaseDNTemplate: dc=example,dc=net,dc=de
+nsSaslMapFilterTemplate: (uid=\1)
+nsSaslMapPriority: 100
+nsSaslMapRegexString: \(.*\)@EXAMPLE.NET.DE
+objectClass: top
+objectClass: nsSaslMapping</pre></div><p>
+       With this, you can check only the users of a specific realm and remap
+       them to a different dc base. As you can see, the new map has 3
+       <code class="literal">dc</code> components, so the default maps would not have
+       worked for this realm (<code class="literal">EXAMPLE.NET.DE</code>), only for a
+       realm like <code class="literal">EXAMPLE.NET</code>.
+      </p></li></ol></div></div></section></section></section><section class="sect1" id="sec-security-kerberos-nfs" data-id-title="Kerberos and NFS"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.6 </span><span class="title-name">Kerberos and NFS</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-nfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Most NFS servers can export file systems using any combination of the
+   default <span class="quote">“<span class="quote">trust the network</span>”</span> form of security, known as
+   <code class="option">sec=sys</code>, and three different levels of Kerberos-based
+   security, <code class="option">sec=krb5</code>, <code class="option">sec=krb5i</code>, and
+   <code class="option">sec=krb5p</code>. The <code class="option">sec</code> option is set as a
+   mount option on the client. It is often the case that the NFS service will
+   first be configured and used with <code class="option">sec=sys</code>, and then Kerberos
+   can be imposed afterwards. In this case it is likely that the server will be
+   configured to support both <code class="option">sec=sys</code> and one of the Kerberos
+   levels, and then after all clients have transitioned, the
+   <code class="option">sec=sys</code> support will be removed, thus achieving true
+   security. The transition to Kerberos should be fairly transparent if done in an
+   orderly manner. However there is one subtle detail of NFS behavior that
+   works differently when Kerberos is used, and the implications of this need to
+   be understood and possibly addressed. See
+   <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-overview-group" title="6.6.1. Group membership">Section 6.6.1, “Group membership”</a>.
+  </p><p>
+   The three Kerberos levels indicate different levels of security. With more
+   security comes a need for more processor power to encrypt and decrypt
+   messages. Choosing the right balance is an important consideration when
+   planning a roll-out of Kerberos for NFS.
+  </p><p>
+   <code class="literal">krb5</code> provides only authentication. The server can know
+   who sent a request, and the client can know that the server sent a reply. No
+   security is provided for the content of the request or reply, so an attacker
+   with physical network access could transform the request or reply, or both,
+   in various ways to deceive either server or client. They cannot directly
+   read or change any file that the authenticated user could not read or
+   change, but almost anything is theoretically possible.
+  </p><p>
+   <code class="literal">krb5i</code> adds integrity checks to all messages. With
+   <code class="literal">krb5i</code>, an attacker cannot modify any request or reply,
+   but they can view all the data exchanged, and so could discover the content
+   of any file that is read.
+  </p><p>
+   <code class="literal">krb5p</code> adds privacy to the protocol. As well as reliable
+   authentication and integrity checking, messages are fully encrypted so an
+   attacker can only know that messages were exchanged between client and
+   server, and cannot extract other information directly from the message.
+   Whether information can be extracted from message timing is a separate
+   question that Kerberos does not address.
+  </p><section class="sect2" id="sec-security-kerberos-overview-group" data-id-title="Group membership"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.6.1 </span><span class="title-name">Group membership</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-overview-group">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The one behavioral difference between <code class="option">sec=sys</code> and the
+    various Kerberos security levels that might be visible is related to group
+    membership. In Unix and Linux, each file system access comes from a process
+    that is owned by a particular user and has a particular group owner and several
+    supplemental groups. Access rights to files can vary based on the
+    owner and the various groups.
+   </p><p>
+    With <code class="option">sec=sys</code>, the user-id, group-id, and a list of up to
+    16 supplementary groups are sent to the server in each request.
+   </p><p>
+    If a user is a member of more than 16 supplementary groups, the extra
+    groups are lost and some files may not be accessible over NFS that the user
+    would normally expect to have access to. For this reason, most sites that
+    use NFS find a way to limit all users to at most 16 supplementary groups.
+   </p><p>
+    If the user runs the <code class="command">newgrp</code> command or runs a
+    set-group-id program, either of which can change the list of groups they
+    are a member of, these changes take effect immediately and provide
+    different accesses over NFS.
+   </p><p>
+    With Kerberos, group information is not sent in requests. Only the user
+    is identified (using a Kerberos <span class="quote">“<span class="quote">principal</span>”</span>), and the server
+    performs a lookup to determine the user ID and group list for that
+    principal. This means that if the user is a member of more than 16 groups,
+    all of these group memberships will be used in determining file access
+    permissions. However it also means that if the user changes a group-id on
+    the client in some way, the server will not notice the change and will not
+    take it into account in determining access rights.
+   </p><p>
+    Usually the improvement of having access to more groups brings a
+    real benefit, and the loss of not being able to change groups is not
+    noticed as it is not widely used. A site administrator considering the use
+    of Kerberos should be aware of the difference though and ensure that it will
+    not actually cause problems.
+   </p></section><section class="sect2" id="sec-security-kerberos-overview-performance" data-id-title="Performance and scalability"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.6.2 </span><span class="title-name">Performance and scalability</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-overview-performance">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Using Kerberos for security requires extra CPU power for encrypting and
+    decrypting messages. How much extra CPU power is required and whether the
+    difference is noticeable will vary with different hardware and different
+    applications. If the server or client are already saturating the available
+    CPU power, it is likely that a performance drop will be measurable when
+    switching from <code class="literal">sec=sys</code> to Kerberos. If there is spare CPU
+    capacity available, it is quite possible that the transition will not
+    result in any throughput change. The only way to be sure how much impact
+    the use of Kerberos will have is to test your load on your hardware.
+   </p><p>
+    The only configuration options that might reduce the load will also reduce
+    the quality of the protection offered. <code class="option">sec=krb5</code> should
+    produce noticeably less load than <code class="option">sec=krb5p</code> but, as
+    discussed above, it does not produce very strong security. Similarly it is
+    possible to adjust the list of ciphers that Kerberos can choose from, and this
+    might change the CPU requirement. However the defaults are carefully chosen
+    and should not be changed without similar careful consideration.
+   </p><p>
+    The other possible performance issue when configuring NFS to use Kerberos
+    involves availability of the Kerberos authentication servers, known as the KDC
+    or Key Distribution Center.
+   </p><p>
+    The use of NFS adds load to such servers to the same degree that adding the
+    use of Kerberos for any other services adds some load. Every time a given user
+    (Kerberos principal) establishes a session with a service, for example by
+    accessing files exported by a particular NFS server, the client needs to
+    negotiate with the KDC. Once a session key has been negotiated, the client
+    server can communicate without further help for many hours, depending on
+    details of the Kerberos configuration, particularly the
+    <code class="option">ticket_lifetime</code> setting.
+   </p><p>
+    The concerns most likely to affect the provisioning of Kerberos KDC servers
+    are availability and peak usage.
+   </p><p>
+    As with other core services such as DNS, LDAP or similar name-lookup
+    services, having two servers that are reasonably "close" to every client
+    provides good availability for modest resources. Kerberos allows for multiple
+    KDC servers with flexible models for database propagation, so distributing
+    servers as needed around campuses, buildings, and even cabinets is fairly
+    straightforward. The best mechanism to ensure each client finds a nearby
+    Kerberos server is to use split-horizon DNS with each building (or similar)
+    getting different details from the DNS server. If this is not possible,
+    then managing the <code class="filename">/etc/krb5.conf</code> file to be different
+    at different locations is a suitable alternative.
+   </p><p>
+    As access to the Kerberos KDC is infrequent, load is only likely to be a
+    problem at peak times. If thousands of people all log in between 9:00 and
+    9:05, then the servers will receive many more requests-per-minute than they
+    might in the middle of the night. The load on the Kerberos server is likely to
+    be more than that on an LDAP server, but not orders of magnitude more. A
+    sensible guideline is to provision Kerberos replicas in the same manner that
+    you provision LDAP replicas, and then monitor performance to determine if
+    demand ever exceeds capacity.
+   </p></section><section class="sect2" id="sec-security-kerberos-overview-kdc" data-id-title="Master KDC, multiple domains, and trust relationships"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">6.6.3 </span><span class="title-name">Master KDC, multiple domains, and trust relationships</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-overview-kdc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    One service of the Kerberos KDC that is not easily distributed is the handling
+    of updates, such as password changes and new user creation. These must
+    happen at a single master KDC.
+   </p><p>
+    These updates are not likely to happen with such frequency that any
+    significant load will be generated, but availability could be an issue. It
+    can be annoying to create a new user or change a password, and
+    the master KDC on the other side of the world is temporarily unavailable.
+   </p><p>
+    When an organization is geographically distributed and has a policy of
+    handling administration tasks locally at each site, it can be beneficial to
+    create multiple Kerberos domains, one for each administrative center. Each
+    domain would then have its own master KDC which would be geographically
+    local. Users in one domain can still get access to resources in another
+    domain by setting up trust relationships between domains.
+   </p><p>
+    The easiest arrangement for multiple domains is to have a global
+    domain (for example, EXAMPLE.COM) and various local domains (for example,
+    ASIA.EXAMPLE.COM, EUROPE.EXAMPLE.COM). If the global domain is
+    configured to trust each local domain, and each local domain is
+    configured to trust the global domain, then fully transitive trust
+    is available between any pair of domains, and any principal can
+    establish a secure connection with any service. Ensuring
+    appropriate access rights to resources, for example files provided
+    by that service, will be dependent on the user name lookup service
+    used, and the functionality of the NFS file server, and is beyond
+    the scope of this document.
+   </p></section></section><section class="sect1" id="sec-security-kerberos-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.7 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-security-kerberos.html#sec-security-kerberos-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_kerberos.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The official site of MIT Kerberos is
+   <a class="link" href="https://web.mit.edu/kerberos" target="_blank">https://web.mit.edu/kerberos</a>. There, find links to any
+   other relevant resource concerning Kerberos, including Kerberos installation,
+   user, and administration guides.
+  </p><p>
+   The book <span class="emphasis"><em>Kerberos—A Network Authentication System</em></span>
+   by Brian Tung (ISBN 0-201-37924-4) offers extensive information.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-ldap.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 5 </span>LDAP with 389 Directory Server</span></a> </div><div><a class="pagination-link next" href="cha-security-ad.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 7 </span>Active Directory support</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-overview"><span class="title-number">6.1 </span><span class="title-name">Conceptual overview</span></a></span></li><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-terms"><span class="title-number">6.2 </span><span class="title-name">Kerberos terminology</span></a></span></li><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-how"><span class="title-number">6.3 </span><span class="title-name">How Kerberos works</span></a></span></li><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-users"><span class="title-number">6.4 </span><span class="title-name">User view of Kerberos</span></a></span></li><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-admin"><span class="title-number">6.5 </span><span class="title-name">Installing and administering Kerberos</span></a></span></li><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-nfs"><span class="title-number">6.6 </span><span class="title-name">Kerberos and NFS</span></a></span></li><li><span class="sect1"><a href="cha-security-kerberos.html#sec-security-kerberos-info"><span class="title-number">6.7 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

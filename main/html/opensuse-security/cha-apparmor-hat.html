@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Profiling your Web applications using ChangeHat | Security and Hardening Guide | openSUSE Leap 15.6</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="Profiling your Web applications using ChangeHat | open…" />
+<meta name="description" content="An AppArmor® profile represents the security policy for an individual program instance or process. It applies to an executable program, but if a portion of the…" />
+<meta name="product-name" content="openSUSE Leap" />
+<meta name="product-number" content="15.6" />
+<meta name="book-title" content="Security and Hardening Guide" />
+<meta name="chapter-title" content="Chapter 34. Profiling your Web applications using ChangeHat" />
+<meta name="tracker-url" content="https://bugzilla.opensuse.org/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="fs@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="openSUSE Distribution" />
+<meta name="tracker-bsc-version" content="Leap 15.4" />
+<meta property="og:title" content="Profiling your Web applications using ChangeHat | open…" />
+<meta property="og:description" content="An AppArmor® profile represents the security policy for an individual program instance or process. It applies to an executable program, but if a portion of the…" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Profiling your Web applications using ChangeHat | open…" />
+<meta name="twitter:description" content="An AppArmor® profile represents the security policy for an individual program instance or process. It applies to an executable program, but if a portion of the…" />
+<link rel="home" href="index.html" title="openSUSE Leap Documentation" /><link rel="up" href="part-apparmor.html" title="Part IV. Confining privileges with AppArmor" /><link rel="prev" href="cha-apparmor-commandline.html" title="Chapter 33. Building profiles from the command line" /><link rel="next" href="cha-apparmor-pam.html" title="Chapter 35. Confining users with pam_apparmor" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="Security and Hardening Guide"><span class="book-icon">Security and Hardening Guide</span></a><span> › </span><a class="crumb" href="part-apparmor.html">Confining privileges with AppArmor</a><span> › </span><a class="crumb" href="cha-apparmor-hat.html">Profiling your Web applications using ChangeHat</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and confidentiality</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">2 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">3 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">4 </span><span class="name">Setting up authentication clients using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">5 </span><span class="name">LDAP with 389 Directory Server</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">6 </span><span class="name">Network authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">7 </span><span class="name">Active Directory support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">8 </span><span class="name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">9 </span><span class="name">Physical security</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">10 </span><span class="name">Software management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">11 </span><span class="name">File management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">12 </span><span class="name">Encrypting partitions and files</span></a></li><li class="inactive"><a href="cha-configure-cryptctl.html"><span class="number">13 </span><span class="name">Storage encryption for hosted applications with cryptctl</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">14 </span><span class="name">User management</span></a></li><li class="inactive"><a href="cha-sec-cron-at.html"><span class="number">15 </span><span class="name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li class="inactive"><a href="cha-spectre.html"><span class="number">16 </span><span class="name">Spectre/Meltdown checker</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">17 </span><span class="name">Configuring security settings with YaST</span></a></li><li class="inactive"><a href="cha-security-polkit.html"><span class="number">18 </span><span class="name">The Polkit authentication framework</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">19 </span><span class="name">Access control lists in Linux</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">20 </span><span class="name">Intrusion detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">21 </span><span class="name">X Window System and X authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">22 </span><span class="name">Securing network operations with OpenSSH</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">23 </span><span class="name">Masquerading and firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">24 </span><span class="name">Configuring a VPN server</span></a></li><li class="inactive"><a href="cha-security-xca.html"><span class="number">25 </span><span class="name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li class="inactive"><a href="cha-sec-sysctl.html"><span class="number">26 </span><span class="name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">27 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">28 </span><span class="name">Getting started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">29 </span><span class="name">Immunizing programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">30 </span><span class="name">Profile components and syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">31 </span><span class="name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">32 </span><span class="name">Building and managing profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">33 </span><span class="name">Building profiles from the command line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">34 </span><span class="name">Profiling your Web applications using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">35 </span><span class="name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">36 </span><span class="name">Managing profiled applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">37 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">38 </span><span class="name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="inactive"><a href="part-selinux.html"><span class="number">V </span><span class="name">SELinux</span></a><ol><li class="inactive"><a href="cha-selinux.html"><span class="number">39 </span><span class="name">Configuring SELinux</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">VI </span><span class="name">The Linux Audit Framework</span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">40 </span><span class="name">Understanding Linux audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">41 </span><span class="name">Setting up the Linux audit framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">42 </span><span class="name">Introducing an audit rule set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">43 </span><span class="name">Useful resources</span></a></li></ol></li><li class="inactive"><a href="bk04apa.html"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 33. Building profiles from the command line" href="cha-apparmor-commandline.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 35. Confining users with pam_apparmor" href="cha-apparmor-pam.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="Security and Hardening Guide"><span class="book-icon">Security and Hardening Guide</span></a><span> › </span><a class="crumb" href="part-apparmor.html">Confining privileges with AppArmor</a><span> › </span><a class="crumb" href="cha-apparmor-hat.html">Profiling your Web applications using ChangeHat</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 33. Building profiles from the command line" href="cha-apparmor-commandline.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 35. Confining users with pam_apparmor" href="cha-apparmor-pam.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-apparmor-hat"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">openSUSE Leap</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15.6</span></span></span></div><div><h2 class="title"><span class="number">34 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Profiling your Web applications using ChangeHat</span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span>cha-apparmor-hat</li></ul></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-apparmor-hat.html#sec-apparmor-hat-config"><span class="number">34.1 </span><span class="name">Configuring Apache for <code class="systemitem">mod_apparmor</code></span></a></span></dt><dt><span class="sect1"><a href="cha-apparmor-hat.html#sec-apparmor-hat-apache-managing"><span class="number">34.2 </span><span class="name">Managing ChangeHat-aware applications</span></a></span></dt></dl></div></div><p>
+  An <span class="phrase">AppArmor®</span> profile represents the security policy for an individual
+  program instance or process. It applies to an executable program, but if a
+  portion of the program needs different access permissions than other
+  portions, the program can <span class="quote">“<span class="quote ">change hats</span>”</span> to use a different
+  security context, distinctive from the access of the main program. This is
+  known as a <span class="emphasis"><em>hat</em></span> or <span class="emphasis"><em>subprofile</em></span>.
+ </p><p>
+  ChangeHat enables programs to change to or from a <span class="emphasis"><em>hat</em></span>
+  within an <span class="phrase">AppArmor</span> profile. It enables you to define security at a finer
+  level than the process. This feature requires that each application be
+  made <span class="quote">“<span class="quote ">ChangeHat-aware</span>”</span>, meaning that it is modified to make a
+  request to the <span class="phrase">AppArmor</span> module to switch security domains at specific times
+  during the application execution. One example of a ChangeHat-aware
+  application is the Apache Web server.
+ </p><p>
+  A profile can have an arbitrary number of subprofiles, but there are only
+  two levels: a subprofile cannot have further child profiles. A subprofile
+  is written as a separate profile. Its name consists of the name of the
+  containing profile followed by the subprofile name, separated by a
+  <code class="literal">^</code>.
+ </p><p>
+  Subprofiles are either stored in the same file as the parent profile, or
+  in a separate file. The latter case is recommended on sites with many
+  hats—it allows the policy caching to handle changes at
+  the per hat level. If all the hats are in the same file as the parent
+  profile, then the parent profile and all hats must be recompiled.
+ </p><p>
+  An external subprofile that is going to be used as a hat, must begin with
+  the word <code class="literal">hat</code> or the <code class="literal">^</code> character.
+ </p><p>
+  The following two subprofiles <span class="emphasis"><em>cannot</em></span> be used as a
+  hat:
+ </p><div class="verbatim-wrap"><pre class="screen">/foo//bar { }</pre></div><p>
+  or
+ </p><div class="verbatim-wrap"><pre class="screen">profile /foo//bar { }</pre></div><p>
+  While the following two are treated as hats:
+ </p><div class="verbatim-wrap"><pre class="screen">^/foo//bar { }</pre></div><p>
+  or
+ </p><div class="verbatim-wrap"><pre class="screen">hat /foo//bar { } # this syntax is not highlighted in vim</pre></div><p>
+  The security of hats is considerably weaker than that of full
+  profiles. Using certain types of bugs in a program, an attacker may be
+  able to escape from a hat into the containing profile. This is because the
+  security of hats is determined by a secret key handled by the containing
+  process, and the code running in the hat must not have access to the key.
+  Thus, change_hat is most useful with application servers,
+  where a language interpreter (such as PERL, PHP or Java) is isolating
+  pieces of code such that they do not have direct access to the memory of
+  the containing process.
+ </p><p>
+  The rest of this chapter describes using change_hat with
+  Apache, to contain Web server components run using <code class="literal">mod_perl</code> and <code class="literal">mod_php</code>.
+  Similar approaches can be used with any application server by providing an
+  application module similar to the <code class="literal">mod_apparmor</code> described next in
+  <a class="xref" href="cha-apparmor-hat.html#sec-apparmor-hat-config-directives" title="34.1.2. Location and directory directives">Section 34.1.2, “Location and directory directives”</a>.
+ </p><div id="id-1.6.7.9.18" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: More information</h6><p>
+   For more information, see the <code class="command">change_hat</code> man page.
+  </p></div><div class="sect1 " id="sec-apparmor-hat-config"><div class="titlepage"><div><div><h2 class="title"><span class="number">34.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring Apache for <code class="systemitem">mod_apparmor</code></span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#sec-apparmor-hat-config">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span>sec-apparmor-hat-config</li></ul></div></div></div></div><p>
+   <span class="phrase">AppArmor</span> provides a <code class="literal">mod_apparmor</code> module (package <code class="systemitem">apache2-mod-apparmor</code>) for the Apache
+   program. This module
+   makes the Apache Web server ChangeHat aware. Install it along with Apache.
+  </p><p>
+   When Apache is ChangeHat-aware, it checks for the following customized
+   <span class="phrase">AppArmor</span> security profiles in the order given for every URI request that
+   it receives.
+  </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+     URI-specific hat. For example,
+     <code class="filename">^www_app_name/templates/classic/images/bar_left.gif</code>
+    </p></li><li class="listitem "><p>
+     <code class="literal">DEFAULT_URI</code>
+    </p></li><li class="listitem "><p>
+     <code class="literal">HANDLING_UNTRUSTED_INPUT</code>
+    </p></li></ul></div><div id="id-1.6.7.9.19.5" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Apache configuration</h6><p>
+    If you install
+    <code class="systemitem">apache2-mod-apparmor</code>, make
+    sure the module is enabled, and then restart Apache by executing the
+    following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>a2enmod apparmor &amp;&amp; sudo systemctl reload apache2</pre></div></div><p>
+   Apache is configured by placing directives in plain text configuration
+   files. The main configuration file is
+   <code class="filename">/etc/apache2/httpd.conf</code>. When you compile Apache,
+   you can indicate the location of this file. Directives can be placed in
+   any of these configuration files to alter the way Apache behaves. When
+   you make changes to the main configuration files, you need to reload
+   Apache with <code class="command">sudo systemctl reload apache2</code>, so
+   the changes are recognized.
+  </p><div class="sect2 " id="sec-apparmor-hat-config-vhost"><div class="titlepage"><div><div><h3 class="title"><span class="number">34.1.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Virtual host directives</span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#sec-apparmor-hat-config-vhost">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span>sec-apparmor-hat-config-vhost</li></ul></div></div></div></div><p>
+    &lt;VirtualHost&gt; and &lt;/VirtualHost&gt; directives are used
+    to enclose a group of directives that applies only to a particular
+    virtual host. For more information on Apache virtual host directives,
+    refer to
+    <a class="link" href="https://httpd.apache.org/docs/2.4/en/mod/core.html#virtualhost" target="_blank">https://httpd.apache.org/docs/2.4/en/mod/core.html#virtualhost</a>.
+   </p><p>
+    The ChangeHat-specific configuration keyword is
+    <code class="literal">AADefaultHatName</code>. It is used similarly to
+    <code class="literal">AAHatName</code>, for example, <code class="literal">AADefaultHatName
+    My_Funky_Default_Hat</code>.
+   </p><p>
+    It allows you to specify a default hat to be used for virtual hosts and
+    other Apache server directives, so that you can have different defaults
+    for different virtual hosts. This can be overridden by the
+    <code class="literal">AAHatName</code> directive and is checked for only if there
+    is not a matching <code class="literal">AAHatName</code> or hat named by the URI.
+    If the <code class="literal">AADefaultHatName</code> hat does not exist, it falls
+    back to the <code class="literal">DEFAULT_URI</code> hat if it exists/
+   </p><p>
+    If none of those are matched, it goes back to the <span class="quote">“<span class="quote ">parent</span>”</span>
+    Apache hat.
+   </p></div><div class="sect2 " id="sec-apparmor-hat-config-directives"><div class="titlepage"><div><div><h3 class="title"><span class="number">34.1.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Location and directory directives</span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#sec-apparmor-hat-config-directives">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span>sec-apparmor-hat-config-directives</li></ul></div></div></div></div><p>
+    Location and directory directives specify hat names in the program
+    configuration file so the Apache calls the hat regarding its security.
+    For Apache, you can find documentation about the location and directory
+    directives at
+    <a class="link" href="https://httpd.apache.org/docs/2.4/en/sections.html" target="_blank">https://httpd.apache.org/docs/2.4/en/sections.html</a>.
+   </p><p>
+    The location directive example below specifies that, for a given
+    location, <code class="literal">mod_apparmor</code> should use a specific hat:
+   </p><div class="verbatim-wrap"><pre class="screen">&lt;Location /foo/&gt;
+  AAHatName MY_HAT_NAME
+&lt;/Location&gt;</pre></div><p>
+    This tries to use <code class="literal">MY_HAT_NAME</code> for any URI beginning
+    with <code class="filename">/foo/</code> (<code class="filename">/foo/</code>,
+    <code class="filename">/foo/bar</code>,
+    <code class="filename">/foo/cgi/path/blah_blah/blah</code>, etc.).
+   </p><p>
+    The directory directive works similarly to the location directive,
+    except it refers to a path in the file system as in the following
+    example:
+   </p><div class="verbatim-wrap"><pre class="screen">&lt;Directory "/srv/www/www.example.org/docs"&gt;
+  # Note lack of trailing slash
+  AAHatName example.org
+&lt;/Directory&gt;</pre></div></div></div><div class="sect1 " id="sec-apparmor-hat-apache-managing"><div class="titlepage"><div><div><h2 class="title"><span class="number">34.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Managing ChangeHat-aware applications</span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#sec-apparmor-hat-apache-managing">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span>sec-apparmor-hat-apache-managing</li></ul></div></div></div></div><p>
+   In the previous section you learned about <code class="literal">mod_apparmor</code>
+   and the way it helps you to secure a specific Web application. This
+   section walks you through a real-life example of creating a hat for a Web
+   application, and using <span class="phrase">AppArmor</span>'s change_hat feature to secure it.
+   This chapter focuses on <span class="phrase">AppArmor</span>'s command-line tools, as
+   YaST's <span class="phrase">AppArmor</span> module has limited functionality.
+  </p><div class="sect2 " id="id-1.6.7.9.20.3"><div class="titlepage"><div><div><h3 class="title"><span class="number">34.2.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">With <span class="phrase">AppArmor</span>'s command line tools</span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#id-1.6.7.9.20.3">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span><span class="ds-message">no ID found</span></li></ul></div></div></div></div><p>
+   For illustration purposes, let us choose the Web application called
+   <span class="emphasis"><em>Adminer</em></span>
+   (<a class="link" href="https://www.adminer.org/en/" target="_blank">https://www.adminer.org/en/</a>). It is a full-featured
+   SQL database management tool written in PHP, yet consisting of a single
+   PHP file. For Adminer to work, you need to set up an Apache Web server,
+   PHP and its Apache module, and one of the database drivers available for
+   PHP—MariaDB in this example. You can install the required
+   packages with
+  </p><div class="verbatim-wrap"><pre class="screen">zypper in apache2 apache2-mod_apparmor apache2-mod_php5 php5 php5-mysql</pre></div><p>
+   To set up the Web environment for running Adminer, follow these steps:
+  </p><div class="procedure " id="id-1.6.7.9.20.3.5"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 34.1: </span><span class="name">Setting up a web server environment </span><a title="Permalink" class="permalink" href="cha-apparmor-hat.html#id-1.6.7.9.20.3.5">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Make sure <code class="literal">apparmor</code> and <code class="literal">php5</code>
+     modules are enabled for Apache. To enable the modules in any case, use:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>a2enmod apparmor php5</pre></div><p>
+     and then restart Apache with
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart apache2</pre></div></li><li class="step "><p>
+     Make sure MariaDB is running. If unsure, restart it with
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart mariadb</pre></div></li><li class="step "><p>
+     Download Adminer from <a class="link" href="https://www.adminer.org" target="_blank">https://www.adminer.org</a>, copy
+     it to <code class="filename">/srv/www/htdocs/adminer/</code>, and rename it to
+     <code class="filename">adminer.php</code>, so that its full path is
+     <code class="filename">/srv/www/htdocs/adminer/adminer.php</code>.
+    </p></li><li class="step "><p>
+     Test Adminer in your Web browser by entering
+     <code class="literal">http://localhost/adminer/adminer.php</code> in its URI
+     address field. If you installed Adminer to a remote server, replace
+     <code class="literal">localhost</code> with the real host name of the server.
+    </p><div class="figure" id="id-1.6.7.9.20.3.5.5.2"><div class="figure-contents"><div class="mediaobject"><a xmlns="" href="images/aa_changehat_adminer.png" target="_blank"><img src="images/aa_changehat_adminer.png" width="" alt="Adminer login page" /></a></div></div><div class="figure-title-wrap"><h6 class="figure-title"><span class="number">Figure 34.1: </span><span class="name">Adminer login page </span><a title="Permalink" class="permalink" href="cha-apparmor-hat.html#id-1.6.7.9.20.3.5.5.2">#</a></h6></div></div><div id="id-1.6.7.9.20.3.5.5.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip</h6><p> If you encounter problems viewing the Adminer login page,
+            try to look for help in the Apache error log
+              <code class="filename">/var/log/apache2/error.log</code>. Another
+            reason you cannot access the Web page may be
+            that your Apache is already under <span class="phrase">AppArmor</span> control and its <span class="phrase">AppArmor</span>
+            profile is too tight to permit viewing Adminer. Check it
+            with <code class="command">aa-status</code>, and if needed, set Apache
+            temporarily in complain mode with </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>sudo aa-complain usr.sbin.httpd2-prefork</pre></div></div></li></ol></div></div><p>
+   After the Web environment for Adminer is ready, you need to configure
+   Apache's <code class="literal">mod_apparmor</code>, so that <span class="phrase">AppArmor</span> can detect accesses to Adminer and
+   change to the specific <span class="quote">“<span class="quote ">hat</span>”</span>.
+  </p><div class="procedure " id="id-1.6.7.9.20.3.7"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 34.2: </span><span class="name">Configuring <code class="literal">mod_apparmor</code> </span><a title="Permalink" class="permalink" href="cha-apparmor-hat.html#id-1.6.7.9.20.3.7">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Apache has several configuration files under
+     <code class="filename">/etc/apache2/</code> and
+     <code class="filename">/etc/apache2/conf.d/</code>. Choose your preferred one
+     and open it in a text editor. In this example, the
+     <code class="command">vim</code> editor is used to create a new configuration
+     file <code class="filename">/etc/apache2/conf.d/apparmor.conf</code>.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vim /etc/apache2/conf.d/apparmor.conf</pre></div></li><li class="step "><p>
+     Copy the following snippet into the edited file.
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;Directory /srv/www/htdocs/adminer&gt;
+  AAHatName adminer
+&lt;/Directory&gt;</pre></div><p>
+     It tells Apache to let <span class="phrase">AppArmor</span> know about a change_hat event when the
+     Web user accesses the directory <code class="filename">/adminer</code> (and any
+     file/directory inside) in Apache's document root. Remember, we placed
+     the <code class="filename">adminer.php</code> application there.
+    </p></li><li class="step "><p>
+     Save the file, close the editor, and restart Apache with
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart apache2</pre></div></li></ol></div></div><p>
+   Apache now knows about our Adminer and changing a <span class="quote">“<span class="quote ">hat</span>”</span> for
+   it. It is time to create the related hat for Adminer in the <span class="phrase">AppArmor</span>
+   configuration. If you do not have an <span class="phrase">AppArmor</span> profile yet, create one
+   before proceeding. Remember that if your Apache's main binary is
+   <code class="filename">/usr/sbin/httpd2-prefork</code>, then the related profile
+   is named <code class="filename">/etc/apparmor.d/usr.sbin.httpd2-prefork</code>.
+  </p><div class="procedure " id="id-1.6.7.9.20.3.9"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 34.3: </span><span class="name">Creating a hat for Adminer </span><a title="Permalink" class="permalink" href="cha-apparmor-hat.html#id-1.6.7.9.20.3.9">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Open (or create one if it does not exist) the file
+     <code class="filename">/etc/apparmor.d/usr.sbin.httpd2-prefork</code> in a text
+     editor. Its contents should be similar to the following:
+    </p><div class="verbatim-wrap"><pre class="screen">#include &lt;tunables/global&gt;
+
+/usr/sbin/httpd2-prefork {
+  #include &lt;abstractions/apache2-common&gt;
+  #include &lt;abstractions/base&gt;
+  #include &lt;abstractions/php5&gt;
+
+  capability kill,
+  capability setgid,
+  capability setuid,
+
+  /etc/apache2/** r,
+  /run/httpd.pid rw,
+  /usr/lib{,32,64}/apache2*/** mr,
+  /var/log/apache2/** rw,
+
+  ^DEFAULT_URI {
+    #include &lt;abstractions/apache2-common&gt;
+    /var/log/apache2/** rw,
+  }
+
+  ^HANDLING_UNTRUSTED_INPUT {
+    #include &lt;abstractions/apache2-common&gt;
+    /var/log/apache2/** w,
+  }
+}</pre></div></li><li class="step "><p>
+     Before the last closing curly bracket (<code class="literal">}</code>), insert
+     the following section:
+    </p><div class="verbatim-wrap"><pre class="screen">^adminer flags=(complain) {
+}</pre></div><p>
+     Note the <code class="literal">(complain)</code> addition after the hat
+     name—it tells <span class="phrase">AppArmor</span> to leave the
+     <code class="systemitem">adminer</code> hat in complain mode. That is because
+     we need to learn the hat profile by accessing Adminer later on.
+     
+    </p></li><li class="step "><p>
+     Save the file, and then restart <span class="phrase">AppArmor</span>, then Apache.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl reload apparmor apache2</pre></div></li><li class="step "><p>
+     Check if the <code class="systemitem">adminer</code> hat really is in complain
+     mode.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aa-status
+apparmor module is loaded.
+39 profiles are loaded.
+37 profiles are in enforce mode.
+[...]
+   /usr/sbin/httpd2-prefork
+   /usr/sbin/httpd2-prefork//DEFAULT_URI
+   /usr/sbin/httpd2-prefork//HANDLING_UNTRUSTED_INPUT
+[...]
+2 profiles are in complain mode.
+   /usr/bin/getopt
+   /usr/sbin/httpd2-prefork//adminer
+[...]</pre></div><p>
+     As we can see, the <code class="literal">httpd2-prefork//adminer</code> is loaded
+     in complain mode.
+    </p></li></ol></div></div><p>
+   Our last task is to find out the right set of rules for the
+   <code class="systemitem">adminer</code> hat. That is why we set the
+   <code class="systemitem">adminer</code> hat into complain mode—the
+   logging facility collects useful information about the access
+   requirements of <code class="filename">adminer.php</code> as we use it via the Web
+   browser. <code class="command">aa-logprof</code> then helps us with creating the
+   hat's profile.
+  </p><div class="procedure " id="id-1.6.7.9.20.3.11"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 34.4: </span><span class="name">Generating rules for the <code class="systemitem">adminer</code> hat </span><a title="Permalink" class="permalink" href="cha-apparmor-hat.html#id-1.6.7.9.20.3.11">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Open Adminer in the Web browser. If you installed it locally, then the
+     URI is <code class="literal">http://localhost/adminer/adminer.php</code>.
+    </p></li><li class="step "><p>
+     Choose the database engine you want to use (MariaDB in our case),
+     and log in to Adminer using the existing database user name and
+     password. You do not need to specify the database name as you can do so
+     after logging in. Perform any operations with Adminer you
+     like—create a new database, create a new table for it, set
+     user privileges, and so on.
+    </p></li><li class="step "><p>
+     After the short testing of Adminer's user interface, switch back to
+     console and examine the log for collected data.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aa-logprof
+Reading log entries from /var/log/audit/audit.log.
+Updating AppArmor profiles in /etc/apparmor.d.
+Complain-mode changes:
+
+Profile:  /usr/sbin/httpd2-prefork^adminer
+Path:     /dev/urandom
+Mode:     r
+Severity: 3
+
+  1 - #include &lt;abstractions/apache2-common&gt;
+[...]
+ [8 - /dev/urandom]
+
+[(A)llow] / (D)eny / (G)lob / Glob w/(E)xt / (N)ew / Abo(r)t / (F)inish / (O)pts</pre></div><p>
+     From the <code class="command">aa-logprof</code> message, it is clear that our
+     new <code class="systemitem">adminer</code> hat was correctly detected:
+    </p><div class="verbatim-wrap"><pre class="screen">Profile:  /usr/sbin/httpd2-prefork^adminer</pre></div><p>
+     The <code class="command">aa-logprof</code> command asks you to pick the
+     right rule for each discovered <span class="phrase">AppArmor</span> event. Specify the one you want
+     to use, and confirm with <span class="guimenu ">Allow</span>. For more information
+     on working with the <code class="command">aa-genprof</code> and
+     <code class="command">aa-logprof</code> interface, see
+     <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-genprof" title="33.7.3.8. aa-genprof—generating profiles">Section 33.7.3.8, “aa-genprof—generating profiles”</a>.
+    </p><div id="id-1.6.7.9.20.3.11.4.6" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip</h6><p>
+      <code class="command">aa-logprof</code> offers several valid rules for
+      the examined event. Some are
+      <span class="emphasis"><em>abstractions</em></span>—predefined sets of rules
+      affecting a specific common group of targets. Sometimes it is useful
+      to include such an abstraction instead of a direct URI rule:
+     </p><div class="verbatim-wrap"><pre class="screen"> 1 - #include &lt;abstractions/php5&gt;
+ [2 - /var/lib/php5/sess_3jdmii9cacj1e3jnahbtopajl7p064ai242]</pre></div><p>
+      In the example above, it is recommended hitting <span class="guimenu ">1</span>
+      and confirming with <span class="guimenu ">A</span> to allow the abstraction.
+     </p></div></li><li class="step "><p>
+     After the last change, you are asked to save the changed profile.
+    </p><div class="verbatim-wrap"><pre class="screen">The following local profiles were changed. Would you like to save them?
+ [1 - /usr/sbin/httpd2-prefork]
+
+ (S)ave Changes / [(V)iew Changes] / Abo(r)t</pre></div><p>
+     Hit <span class="guimenu ">S</span> to save the changes.
+    </p></li><li class="step "><p>
+     Set the profile to enforce mode with <code class="command">aa-enforce</code>
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aa-enforce usr.sbin.httpd2-prefork</pre></div><p>
+     and check its status with <code class="command">aa-status</code>
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aa-status
+apparmor module is loaded.
+39 profiles are loaded.
+38 profiles are in enforce mode.
+[...]
+   /usr/sbin/httpd2-prefork
+   /usr/sbin/httpd2-prefork//DEFAULT_URI
+   /usr/sbin/httpd2-prefork//HANDLING_UNTRUSTED_INPUT
+   /usr/sbin/httpd2-prefork//adminer
+[...]</pre></div><p>
+     As you can see, the <code class="literal">//adminer</code> hat jumped from
+     <span class="emphasis"><em>complain</em></span> to <span class="emphasis"><em>enforce</em></span> mode.
+    </p></li><li class="step "><p>
+     Try to run Adminer in the Web browser, and if you encounter problems
+     running it, switch it to the complain mode, repeat the steps that
+     previously did not work well, and update the profile with
+     <code class="command">aa-logprof</code> until you are satisfied with the
+     application's functionality.
+    </p></li></ol></div></div><div id="id-1.6.7.9.20.3.12" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Hat and parent profile relationship</h6><p>
+    The profile <code class="filename">^adminer</code> is only available in the
+    context of a process running under the parent profile
+    <code class="filename">usr.sbin.httpd2-prefork</code>.
+   </p></div></div><div class="sect2 " id="sec-apparmor-hat-apache-managing-add"><div class="titlepage"><div><div><h3 class="title"><span class="number">34.2.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding hats and entries to hats in YaST</span> <a title="Permalink" class="permalink" href="cha-apparmor-hat.html#sec-apparmor-hat-apache-managing-add">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/apparmor_changehat.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>apparmor_changehat.xml</li><li><span class="ds-label">ID: </span>sec-apparmor-hat-apache-managing-add</li></ul></div></div></div></div><p>
+    When you use the <span class="guimenu ">Edit Profile</span> dialog (for
+    instructions, refer to
+    <a class="xref" href="cha-apparmor-yast.html#sec-apparmor-yast-edit" title="32.2. Editing profiles">Section 32.2, “Editing profiles”</a>) or
+    when you add a new profile using <span class="guimenu ">Manually Add Profile</span>
+    (for instructions, refer to
+    <a class="xref" href="cha-apparmor-yast.html#sec-apparmor-yast-add" title="32.1. Manually adding a profile">Section 32.1, “Manually adding a profile”</a>),
+    you are given the option of adding hats (subprofiles) to your <span class="phrase">AppArmor</span>
+    profiles. Add a ChangeHat subprofile from the <span class="guimenu "><span class="phrase">AppArmor</span> Profile
+    Dialog</span> window as in the following.
+   </p><div class="informalfigure"><div class="mediaobject"><a xmlns="" href="images/hats_in_profiles.png" target="_blank"><img src="images/hats_in_profiles.png" width="" alt="AppArmor profile dialog" /></a></div></div><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+      From the <span class="guimenu "><span class="phrase">AppArmor</span> Profile Dialog</span> window, click
+      <span class="guimenu ">Add Entry</span> then select <span class="guimenu ">Hat</span>. The
+      <span class="guimenu ">Enter Hat Name</span> dialog opens:
+     </p><div class="informalfigure"><div class="mediaobject"><a xmlns="" href="images/hat_createhat.png" target="_blank"><img src="images/hat_createhat.png" width="" alt="Enter hat name" /></a></div></div></li><li class="step "><p>
+      Enter the name of the hat to add to the <span class="phrase">AppArmor</span> profile. The name is
+      the URI that, when accessed, receives the permissions set in the hat.
+     </p></li><li class="step "><p>
+      Click <span class="guimenu ">Create Hat</span>. You are returned to the
+      <span class="guimenu "><span class="phrase">AppArmor</span> Profile Dialog</span> screen.
+     </p></li><li class="step "><p>
+      After adding the new hat, click <span class="guimenu ">Done</span>.
+     </p></li></ol></div></div></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-apparmor-pam.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 35 </span>Confining users with <code class="systemitem">pam_apparmor</code></span></a><a class="nav-link" href="cha-apparmor-commandline.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 33 </span>Building profiles from the command line</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

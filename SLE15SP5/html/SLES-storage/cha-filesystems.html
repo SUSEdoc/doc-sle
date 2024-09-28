@@ -1,0 +1,1593 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Storage Administration Guide | Overview of file systems in Linux</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Overview of file systems in Linux | SLES 15 SP5"/>
+<meta name="description" content="SUSE Linux Enterprise Server ships with different file systems from which to choose, including Btrfs, Ext4, Ext3, Ext2 and XFS. Each file system has …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 1. Overview of file systems in Linux"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Overview of file systems in Linux",
+  
+    "description": "SUSE Linux Enterprise Server ships with different file systems from which to choose, including Btrfs, Ext4, Ext3, Ext2 and XFS. Each file system has …",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-filesystems.html" title="Part I. File systems and mounting"/><link rel="next" href="cha-resize-fs.html" title="Chapter 2. Resizing file systems"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-filesystems.html">File systems and mounting</a><span> / </span><a class="crumb" href="cha-filesystems.html">Overview of file systems in Linux</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li class="active"><a href="part-filesystems.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" you-are-here"><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li><a href="part-software-raid.html" class="has-children "><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li><a href="part-net-storage.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-filesystems" data-id-title="Overview of file systems in Linux"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> ships with different file systems from which to choose,
+    including Btrfs, Ext4, Ext3, Ext2 and XFS. Each file system has its own
+    advantages and disadvantages. For a side-by-side feature comparison of the
+    major file systems in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, see
+    <a class="link" href="https://www.suse.com/releasenotes/x86_64/SUSE-SLES/15-SP3/#file-system-comparison" target="_blank">https://www.suse.com/releasenotes/x86_64/SUSE-SLES/15-SP3/#file-system-comparison</a>
+    (<em class="citetitle">Comparison of supported file systems</em>). This chapter
+    contains an overview of how these file systems work and what advantages
+    they offer.
+   </p></div></div></div></div><p>
+  Btrfs is the default file system for the operating system and
+  XFS is the default for all other use cases. SUSE also continues to support
+  the Ext family of file systems and OCFS2. By default, the Btrfs file system
+  will be set up with subvolumes. Snapshots will be automatically enabled for
+  the root file system using the snapper infrastructure. For more information
+  about snapper, refer to <span class="intraxref">Book “Administration Guide”, Chapter 10 “System recovery and snapshot management with Snapper”</span>.
+ </p><p>
+  Professional high-performance setups might require a highly available storage
+  system. To meet the requirements of high-performance clustering scenarios,
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> includes OCFS2 (Oracle Cluster File System 2) and the
+  Distributed Replicated Block Device (DRBD) in the High Availability add-on. These
+  advanced storage systems are not covered in this guide. For information, see
+  the
+  <a class="link" href="https://documentation.suse.com/sle-ha-15/html/SLE-HA-all/book-administration.html" target="_blank">
+  <em class="citetitle">Administration Guide for SUSE Linux Enterprise High Availability</em></a>.
+ </p><p>
+  It is very important to remember that no file system best suits all kinds of
+  applications. Each file system has its particular strengths and weaknesses,
+  which must be taken into account. In addition, even the most sophisticated
+  file system cannot replace a reasonable backup strategy.
+ </p><p>
+  The terms <span class="emphasis"><em>data integrity</em></span> and <span class="emphasis"><em>data
+  consistency</em></span>, when used in this section, do not refer to the
+  consistency of the user space data (the data your application writes to its
+  files). Whether this data is consistent must be controlled by the application
+  itself.
+ </p><p>
+  Unless stated otherwise in this section, all the steps required to set up or
+  change partitions and file systems can be performed by using the YaST
+  Partitioner (which is also strongly recommended). For information, see
+  <span class="intraxref">Book “Deployment Guide”, Chapter 10 “<span class="guimenu">Expert Partitioner</span>”</span>.
+ </p><section class="sect1" id="sec-filesystems-glossary" data-id-title="Terminology"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.1 </span><span class="title-name">Terminology</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-glossary">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.8.2.1"><span class="term">metadata</span></dt><dd><p>
+      A data structure that is internal to the file system. It ensures that all
+      of the on-disk data is properly organized and accessible. Almost every
+      file system has its own structure of metadata, which is one reason the
+      file systems show different performance characteristics. It is extremely
+      important to maintain metadata intact, because otherwise all data on the
+      file system could become inaccessible.
+     </p></dd><dt id="id-1.11.3.2.8.2.2"><span class="term">inode</span></dt><dd><p>
+      A data structure on a file system that contains a variety of information
+      about a file, including size, number of links, pointers to the disk
+      blocks where the file contents are actually stored, and date and time of
+      creation, modification, and access.
+     </p></dd><dt id="id-1.11.3.2.8.2.3"><span class="term">journal</span></dt><dd><p>
+      In the context of a file system, a journal is an on-disk structure
+      containing a type of log in which the file system stores what it is about
+      to change in the file system’s metadata. Journaling greatly reduces the
+      recovery time of a file system because it has no need for the lengthy
+      search process that checks the entire file system at system start-up.
+      Instead, only the journal is replayed.
+     </p></dd></dl></div></section><section class="sect1" id="sec-filesystems-major-btrfs" data-id-title="Btrfs"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.2 </span><span class="title-name">Btrfs</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Btrfs is a copy-on-write (COW) file system developed by Chris Mason. It is
+   based on COW-friendly B-trees developed by Ohad Rodeh. Btrfs is a
+   logging-style file system. Instead of journaling the block changes, it
+   writes them in a new location, then links the change in. Until the last
+   write, the new changes are not committed.
+  </p><section class="sect2" id="sec-filesystems-major-btrfs-features" data-id-title="Key features"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.1 </span><span class="title-name">Key features</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-features">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Btrfs provides fault tolerance, repair, and easy management features, such
+    as the following:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Writable snapshots that allow you to easily roll back your system if
+      needed after applying updates, or to back up files.
+     </p></li><li class="listitem"><p>
+      Subvolume support: Btrfs creates a default subvolume in its assigned pool
+      of space. It allows you to create additional subvolumes that act as
+      individual file systems within the same pool of space. The number of
+      subvolumes is limited only by the space allocated to the pool.
+     </p></li><li class="listitem"><p>
+      The online check and repair functionality <code class="command">scrub</code> is
+      available as part of the Btrfs command line tools. It verifies the
+      integrity of data and metadata, assuming the tree structure is fine. You
+      can run scrub periodically on a mounted file system; it runs as a
+      background process during normal operation.
+     </p></li><li class="listitem"><p>
+      Different RAID levels for metadata and user data.
+     </p></li><li class="listitem"><p>
+      Different checksums for metadata and user data to improve error
+      detection.
+     </p></li><li class="listitem"><p>
+      Integration with Linux Logical Volume Manager (LVM) storage objects.
+     </p></li><li class="listitem"><p>
+      Integration with the YaST Partitioner and AutoYaST on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. This
+      also includes creating a Btrfs file system on Multiple Devices (MD) and
+      Device Mapper (DM) storage configurations.
+     </p></li><li class="listitem"><p>
+      Offline migration from existing Ext2, Ext3, and Ext4 file systems.
+     </p></li><li class="listitem"><p>
+      Boot loader support for <code class="filename">/boot</code>, allowing to boot from
+      a Btrfs partition.
+     </p></li><li class="listitem"><p>
+      Multivolume Btrfs is supported in RAID0, RAID1, and RAID10 profiles in
+      <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber"><span class="phrase">15 SP5</span></span>. Higher RAID levels are not supported yet,
+      but might be enabled with a future service pack.
+     </p></li><li class="listitem"><p>
+      Use Btrfs commands to set up transparent compression.
+     </p></li></ul></div></section><section class="sect2" id="sec-filesystems-major-btrfs-suse" data-id-title="The root file system setup on SUSE Linux Enterprise Server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.2 </span><span class="title-name">The root file system setup on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-suse">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By default, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is set up using Btrfs and snapshots for the root
+    partition. Snapshots allow you to easily roll back your system if needed
+    after applying updates, or to back up files. Snapshots can easily be
+    managed with the SUSE Snapper infrastructure as explained in
+    <span class="intraxref">Book “Administration Guide”, Chapter 10 “System recovery and snapshot management with Snapper”</span>. For general information about the SUSE
+    Snapper project, see the Snapper Portal wiki at OpenSUSE.org
+    (<a class="link" href="http://snapper.io" target="_blank">http://snapper.io</a>).
+   </p><p>
+    When using a snapshot to roll back the system, it must be ensured that data
+    such as user's home directories, Web and FTP server contents or log files
+    do not get lost or overwritten during a roll back. This is achieved by
+    using Btrfs subvolumes on the root file system. Subvolumes can be excluded
+    from snapshots. The default root file system setup on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> as
+    proposed by YaST during the installation contains the following
+    subvolumes. They are excluded from snapshots for the reasons given below.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.9.4.4.2"><span class="term"><code class="filename">/boot/grub2/i386-pc</code>,
+   <code class="filename">/boot/grub2/x86_64-efi</code>,
+   <code class="filename">/boot/grub2/powerpc-ieee1275</code>,
+   <code class="filename">/boot/grub2/s390x-emu</code>
+  </span></dt><dd><p>
+    A rollback of the boot loader configuration is not supported. The
+    directories listed above are architecture-specific. The first two
+    directories are present on AMD64/Intel 64 machines, the latter two on IBM
+    POWER and on IBM Z, respectively.
+   </p></dd><dt id="id-1.11.3.2.9.4.4.3"><span class="term"><code class="filename">/home</code>
+  </span></dt><dd><p>
+    If <code class="filename">/home</code> does not reside on a separate partition, it
+    is excluded to avoid data loss on rollbacks.
+   </p></dd><dt id="id-1.11.3.2.9.4.4.4"><span class="term"><code class="filename">/opt</code>
+  </span></dt><dd><p>
+    Third-party products usually get installed to <code class="filename">/opt</code>. It
+    is excluded to avoid uninstalling these applications on rollbacks.
+   </p></dd><dt id="id-1.11.3.2.9.4.4.5"><span class="term"><code class="filename">/srv</code>
+  </span></dt><dd><p>
+    Contains data for Web and FTP servers. It is excluded to avoid data loss on
+    rollbacks.
+   </p></dd><dt id="id-1.11.3.2.9.4.4.6"><span class="term"><code class="filename">/tmp</code>
+  </span></dt><dd><p>
+    All directories containing temporary files and caches are excluded from
+    snapshots.
+   </p></dd><dt id="id-1.11.3.2.9.4.4.7"><span class="term"><code class="filename">/usr/local</code>
+  </span></dt><dd><p>
+    This directory is used when manually installing software. It is excluded to
+    avoid uninstalling these installations on rollbacks.
+   </p></dd><dt id="id-1.11.3.2.9.4.4.8"><span class="term"><code class="filename">/var</code>
+  </span></dt><dd><p>
+    This directory contains many variable files, including logs, temporary
+    caches, third party products in <code class="filename">/var/opt</code>, and is the
+    default location for virtual machine images and databases. Therefore this
+    subvolume is created to exclude all of this variable data from snapshots
+    and has Copy-On-Write disabled.
+   </p></dd></dl></div><div id="id-1.11.3.2.9.4.5" data-id-title="Support for rollbacks" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Support for rollbacks</div><p>
+     Rollbacks are only supported by SUSE if you do not remove any of the
+     preconfigured subvolumes. You may, however, add subvolumes using the
+     YaST Partitioner.
+    </p></div><section class="sect3" id="sec-filesystems-major-btrfs-compress" data-id-title="Mounting compressed Btrfs file systems"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.2.1 </span><span class="title-name">Mounting compressed Btrfs file systems</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-compress">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The Btrfs file system supports transparent compression. While enabled,
+     Btrfs compresses file data when written and uncompresses file data when
+     read.
+    </p><p>
+     Use the <code class="option">compress</code> or <code class="option">compress-force</code> mount
+     option and select the compression algorithm, <code class="literal">zstd</code>,
+     <code class="literal">lzo</code>, or <code class="literal">zlib</code> (the default). zlib
+     compression has a higher compression ratio while lzo is faster and takes
+     less CPU load. The zstd algorithm offers a modern compromise, with
+     performance close to lzo and compression ratios similar to zlib.
+    </p><p>
+     For example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>mount -o compress=zstd /dev/sdx /mnt</pre></div><p>
+     In case you create a file, write to it, and the compressed result is
+     greater or equal to the uncompressed size, Btrfs will skip compression for
+     future write operations forever for this file. If you do not like this
+     behavior, use the <code class="option">compress-force</code> option. This can be
+     useful for files that have some initial non-compressible data.
+    </p><p>
+     Note, compression takes effect for new files only. Files that were written
+     without compression are not compressed when the file system is mounted
+     with the <code class="option">compress</code> or <code class="option">compress-force</code>
+     option. Furthermore, files with the <code class="option">nodatacow</code> attribute
+     never get their extents compressed:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">chattr</code> +C <em class="replaceable">FILE</em>
+<code class="prompt root"># </code><code class="command">mount</code> -o nodatacow  /dev/sdx /mnt</pre></div><p>
+     In regard to encryption, this is independent from any compression. After
+     you have written some data to this partition, print the details:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs filesystem show /mnt
+btrfs filesystem show /mnt
+Label: 'Test-Btrfs'  uuid: 62f0c378-e93e-4aa1-9532-93c6b780749d
+        Total devices 1 FS bytes used 3.22MiB
+      devid    1 size 2.00GiB used 240.62MiB path /dev/sdb1</pre></div><p>
+     If you want this to be permanent, add the <code class="option">compress</code> or
+     <code class="option">compress-force</code> option into the
+     <code class="filename">/etc/fstab</code> configuration file. For example:
+    </p><div class="verbatim-wrap"><pre class="screen">UUID=1a2b3c4d /home btrfs subvol=@/home,<span class="strong"><strong>compress</strong></span> 0 0</pre></div></section><section class="sect3" id="sec-filesystems-major-btrfs-suse-mount" data-id-title="Mounting subvolumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.2.2 </span><span class="title-name">Mounting subvolumes</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-suse-mount">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     A system rollback from a snapshot on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is performed by booting
+     from the snapshot first. This allows you to check the snapshot while
+     running before doing the rollback. Being able to boot from snapshots is
+     achieved by mounting the subvolumes (which would normally not be
+     necessary).
+    </p><p>
+     In addition to the subvolumes listed in
+     <a class="xref" href="cha-filesystems.html#sec-filesystems-major-btrfs-suse" title="1.2.2. The root file system setup on SUSE Linux Enterprise Server">Section 1.2.2, “The root file system setup on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>”</a> a volume named
+     <code class="literal">@</code> exists. This is the default subvolume that will be
+     mounted as the root partition (<code class="filename">/</code>). The other
+     subvolumes will be mounted into this volume.
+    </p><p>
+     When booting from a snapshot, not the <code class="literal">@</code> subvolume will
+     be used, but rather the snapshot. The parts of the file system included in
+     the snapshot will be mounted read-only as <code class="filename">/</code>. The
+     other subvolumes will be mounted writable into the snapshot. This state is
+     temporary by default: the previous configuration will be restored with the
+     next reboot. To make it permanent, execute the <code class="command">snapper
+     rollback</code> command. This will make the snapshot that is currently
+     booted the new <span class="emphasis"><em>default</em></span> subvolume, which will be used
+     after a reboot.
+    </p></section><section class="sect3" id="sec-filesystems-major-btrfs-suse-space" data-id-title="Checking for free space"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.2.3 </span><span class="title-name">Checking for free space</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-suse-space">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     File system usage is usually checked by running the <code class="command">df</code>
+     command. On a Btrfs file system, the output of <code class="command">df</code> can
+     be misleading, because in addition to the space the raw data allocates, a
+     Btrfs file system also allocates and uses space for metadata.
+    </p><p>
+     Consequently a Btrfs file system may report being out of space even though
+     it seems that plenty of space is still available. In that case, all space
+     allocated for the metadata is used up. Use the following commands to check
+     for used and available space on a Btrfs file system:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.9.4.8.4.1"><span class="term"><code class="command">btrfs filesystem show</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem show /
+Label: 'ROOT'  uuid: 52011c5e-5711-42d8-8c50-718a005ec4b3
+        Total devices 1 FS bytes used 10.02GiB
+        devid    1 size 20.02GiB used 13.78GiB path /dev/sda3</pre></div><p>
+        Shows the total size of the file system and its usage. If these two
+        values in the last line match, all space on the file system has been
+        allocated.
+       </p></dd><dt id="id-1.11.3.2.9.4.8.4.2"><span class="term"><code class="command">btrfs filesystem df</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem df /
+Data, single: total=13.00GiB, used=9.61GiB
+System, single: total=32.00MiB, used=16.00KiB
+Metadata, single: total=768.00MiB, used=421.36MiB
+GlobalReserve, single: total=144.00MiB, used=0.00B</pre></div><p>
+        Shows values for allocated (<code class="literal">total</code>) and used space of
+        the file system. If the values for <code class="literal">total</code> and
+        <code class="literal">used</code> for the metadata are almost equal, all space
+        for metadata has been allocated.
+       </p></dd><dt id="id-1.11.3.2.9.4.8.4.3"><span class="term"><code class="command">btrfs filesystem usage</code></span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem usage /
+Overall:
+    Device size:                  20.02GiB
+    Device allocated:             13.78GiB
+    Device unallocated:            6.24GiB
+    Device missing:                  0.00B
+    Used:                         10.02GiB
+    Free (estimated):              9.63GiB      (min: 9.63GiB)
+    Data ratio:                       1.00
+    Metadata ratio:                   1.00
+    Global reserve:              144.00MiB      (used: 0.00B)
+
+             Data     Metadata  System
+Id Path      single   single    single   Unallocated
+-- --------- -------- --------- -------- -----------
+ 1 /dev/sda3 13.00GiB 768.00MiB 32.00MiB     6.24GiB
+-- --------- -------- --------- -------- -----------
+   Total     13.00GiB 768.00MiB 32.00MiB     6.24GiB
+   Used       9.61GiB 421.36MiB 16.00KiB</pre></div><p>
+        Shows data similar to that of the two previous commands combined.
+       </p></dd></dl></div><p>
+     For more information refer to <code class="command">man 8 btrfs-filesystem</code>
+     and <a class="link" href="https://btrfs.wiki.kernel.org/index.php/FAQ" target="_blank">https://btrfs.wiki.kernel.org/index.php/FAQ</a>.
+    </p></section></section><section class="sect2" id="sec-filesystems-major-btrfs-migrate" data-id-title="Migration from ReiserFS and ext file systems to Btrfs"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.3 </span><span class="title-name">Migration from ReiserFS and ext file systems to Btrfs</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-migrate">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can migrate data volumes from existing ReiserFS or Ext (Ext2, Ext3, or
+    Ext4) to the Btrfs file system using the <code class="command">btrfs-convert</code>
+    tool. This allows you to do an in-place conversion of unmounted (offline)
+    file systems, which may require a bootable install media with the
+    <code class="command">btrfs-convert</code> tool. The tool constructs a Btrfs file
+    system within the free space of the original file system, directly linking
+    to the data contained in it. There must be enough free space on the device
+    to create the metadata or the conversion will fail. The original file
+    system will be intact and no free space will be occupied by the Btrfs file
+    system. The amount of space required is dependent on the content of the
+    file system and can vary based on the number of file system objects (such
+    as files, directories, extended attributes) contained in it. Since the data
+    is directly referenced, the amount of data on the file system does not
+    impact the space required for conversion, except for files that use tail
+    packing and are larger than about 2 KiB in size.
+   </p><div id="id-1.11.3.2.9.5.3" data-id-title="Root file system conversion not supported" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Root file system conversion not supported</div><p>
+     Converting the root file system to Btrfs is not supported and not
+     recommended. Automating such a conversion is not possible due to various
+     steps that need to be tailored to your specific setup—the process
+     requires a complex configuration to provide a correct rollback,
+     <code class="filename">/boot</code> must be on the root file system, and the system
+     must have specific subvolumes, etc. Either keep the existing file system
+     or re-install the whole system from scratch.
+    </p></div><p>
+    To convert the original file system to the Btrfs file system, run:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs-convert /path/to/device</pre></div><div id="id-1.11.3.2.9.5.6" data-id-title="Check /etc/fstab" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Check <code class="filename">/etc/fstab</code></div><p>
+     After the conversion, you need to ensure that any references to the
+     original file system in <code class="filename">/etc/fstab</code> have been adjusted
+     to indicate that the device contains a Btrfs file system.
+    </p></div><p>
+    When converted, the contents of the Btrfs file system will reflect the
+    contents of the source file system. The source file system will be
+    preserved until you remove the related read-only image created at
+    <code class="filename"><em class="replaceable">fs_root</em>/reiserfs_saved/image</code>.
+    The image file is effectively a 'snapshot' of the ReiserFS file system
+    prior to conversion and will not be modified as the Btrfs file system is
+    modified. To remove the image file, remove the
+    <code class="filename">reiserfs_saved</code> subvolume:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs subvolume delete <em class="replaceable">fs_root</em>/reiserfs_saved</pre></div><p>
+    To revert the file system back to the original one, use the following
+    command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>btrfs-convert -r /path/to/device</pre></div><div id="id-1.11.3.2.9.5.11" data-id-title="Lost changes" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Lost changes</div><p>
+     Any changes you made to the file system while it was mounted as a Btrfs
+     file system will be lost. A balance operation must not have been performed
+     in the interim, or the file system will not be restored correctly.
+    </p></div></section><section class="sect2" id="sec-filesystems-major-btrfs-admin" data-id-title="Btrfs administration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.4 </span><span class="title-name">Btrfs administration</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-admin">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Btrfs is integrated in the YaST Partitioner and AutoYaST. It is available
+    during the installation to allow you to set up a solution for the root file
+    system. You can use the YaST Partitioner after the installation to view
+    and manage Btrfs volumes.
+   </p><p>
+    Btrfs administration tools are provided in the
+    <code class="filename">btrfsprogs</code> package. For information about using Btrfs
+    commands, see the <code class="command">man 8 btrfs</code>, <code class="command">man 8
+    btrfsck</code>, and <code class="command">man 8 mkfs.btrfs</code> commands. For
+    information about Btrfs features, see the <em class="citetitle">Btrfs wiki</em>
+    at <a class="link" href="https://btrfs.wiki.kernel.org" target="_blank">https://btrfs.wiki.kernel.org</a>.
+   </p></section><section class="sect2" id="sec-filesystems-major-btrfs-quota" data-id-title="Btrfs quota support for subvolumes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.5 </span><span class="title-name">Btrfs quota support for subvolumes</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-quota">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The Btrfs root file system subvolumes (for example,
+    <code class="filename">/var/log</code>, <code class="filename">/var/crash</code>, or
+    <code class="filename">/var/cache</code>) can use all the available disk space
+    during normal operation, and cause a system malfunction. To help avoid this
+    situation, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> offers quota support for Btrfs subvolumes. If you
+    set up the root file system from a YaST proposal, you are ready to enable
+    and set subvolume quotas.
+   </p><section class="sect3" id="setting-btrfs-quotas-using-yast" data-id-title="Setting Btrfs quotas using YaST"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.5.1 </span><span class="title-name">Setting Btrfs quotas using YaST</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#setting-btrfs-quotas-using-yast">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To set a quota for a subvolume of the root file system by using YaST,
+     proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Start YaST and select
+       <span class="guimenu">System</span> › <span class="guimenu">Partitioner</span>
+       and confirm the warning with <span class="guimenu">Yes</span>.
+      </p></li><li class="step"><p>
+       In the left pane, click <span class="guimenu">Btrfs</span>.
+      </p></li><li class="step"><p>
+       In the main window, select the device for which you want to enable
+       subvolume quotas and click <span class="guimenu">Edit</span> at the bottom.
+      </p></li><li class="step"><p>
+       In the <span class="guimenu">Edit Btrfs</span> window, activate the
+       <span class="guimenu">Enable Subvolume Quotas</span> check box and confirm with
+       <span class="guimenu">Next</span>.
+      </p><div class="figure" id="id-1.11.3.2.9.7.3.3.4.2"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_btrfs_quotas_enable.png"><img src="images/yast2_btrfs_quotas_enable.png" width="75%" alt="Enabling Btrfs quotas" title="Enabling Btrfs quotas"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 1.1: </span><span class="title-name">Enabling Btrfs quotas </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.9.7.3.3.4.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+       From the list of existing subvolumes, click the subvolume whose size you
+       intend to limit by quota and click <span class="guimenu">Edit</span> at the
+       bottom.
+      </p></li><li class="step"><p>
+       In the <span class="guimenu">Edit subvolume of Btrfs</span> window, activate
+       <span class="guimenu">Limit size</span> and specify the maximum referenced size.
+       Confirm with <span class="guimenu">Accept</span>.
+      </p><div class="figure" id="id-1.11.3.2.9.7.3.3.6.2"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_btrfs_quotas_set.png"><img src="images/yast2_btrfs_quotas_set.png" width="75%" alt="Setting quota for a subvolume" title="Setting quota for a subvolume"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 1.2: </span><span class="title-name">Setting quota for a subvolume </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.9.7.3.3.6.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div><p>
+       The new size limit will be displayed next to the subvolume name:
+      </p><div class="figure" id="id-1.11.3.2.9.7.3.3.6.4"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_btrfs_quotas_edit.png"><img src="images/yast2_btrfs_quotas_edit.png" width="75%" alt="List of subvolumes for a device" title="List of subvolumes for a device"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 1.3: </span><span class="title-name">List of subvolumes for a device </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.9.7.3.3.6.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+       Apply changes with <span class="guimenu">Next</span>.
+      </p></li></ol></div></div></section><section class="sect3" id="setting-btrfs-quotas-using-cmdline" data-id-title="Setting Btrfs quotas on the command line"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.5.2 </span><span class="title-name">Setting Btrfs quotas on the command line</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#setting-btrfs-quotas-using-cmdline">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To set a quota for a subvolume of the root file system on the command
+     line, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Enable quota support:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs quota enable /</pre></div></li><li class="step"><p>
+       Get a list of subvolumes:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume list /</pre></div><p>
+       Quotas can only be set for existing subvolumes.
+      </p></li><li class="step"><p>
+       Set a quota for one of the subvolumes that was listed in the previous
+       step. A subvolume can either be identified by path (for example
+       <code class="filename">/var/tmp</code>) or by <code class="literal">0/<em class="replaceable">SUBVOLUME
+       ID</em></code> (for example <code class="literal">0/272</code>). The
+       following example sets a quota of 5 GB for
+       <code class="filename">/var/tmp</code>.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs qgroup limit 5G /var/tmp</pre></div><p>
+       The size can either be specified in bytes (5000000000), kilobytes
+       (5000000K), megabytes (5000M), or gigabytes (5G). The resulting values
+       in bytes slightly differ, since 1024 Bytes = 1 KiB, 1024 KiB = 1 MiB,
+       etc.
+      </p></li><li class="step"><p>
+       To list the existing quotas, use the following command. The column
+       <code class="literal">max_rfer</code> shows the quota in bytes.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs qgroup show -r /</pre></div></li></ol></div></div><div id="id-1.11.3.2.9.7.4.4" data-id-title="Nullifying a quota" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Nullifying a quota</div><p>
+      In case you want to nullify an existing quota, set a quota size of
+      <code class="literal">none</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs qgroup limit none /var/tmp</pre></div><p>
+      To disable quota support for a partition and all its subvolumes, use
+      <code class="command">btrfs quota disable</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs quota disable /</pre></div></div></section><section class="sect3" id="setting-btrfs-quotas-for-more-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.5.3 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#setting-btrfs-quotas-for-more-info">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     See the <code class="command">man 8 btrfs-qgroup</code> and <code class="command">man 8
+     btrfs-quota</code> for more details. The
+     <em class="citetitle">UseCases</em> page on the Btrfs wiki
+     (<a class="link" href="https://btrfs.wiki.kernel.org/index.php/UseCases" target="_blank">https://btrfs.wiki.kernel.org/index.php/UseCases</a>)
+     also provides more information.
+    </p></section></section><section class="sect2" id="sec-filesystems-major-btrfs-swapping" data-id-title="Swapping on Btrfs"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.6 </span><span class="title-name">Swapping on Btrfs</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-swapping">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.11.3.2.9.8.2" data-id-title="Snapshots with swapping" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Snapshots with swapping</div><p>
+     You will not be able to create a snapshot if the source subvolume contains
+     any enabled swap files.
+    </p></div><p>
+    SLES supports swapping to a file on the Btrfs file system if the
+    following criteria relating to the resulting swap file are fulfilled:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The swap file must have the <code class="option">NODATACOW</code> and
+      <code class="option">NODATASUM</code> mount options.
+     </p></li><li class="listitem"><p>
+      The swap file can not be compressed—you can ensure this by setting
+      the <code class="option">NODATACOW</code> and <code class="option">NODATASUM</code> mount
+      options. Both options disable swap file compression.
+     </p></li><li class="listitem"><p>
+      The swap file cannot be activated while exclusive operations are
+      running—such as device resizing, adding, removing, or replacing, or
+      when a balancing operation is running.
+     </p></li><li class="listitem"><p>
+      The swap file cannot be sparse.
+     </p></li><li class="listitem"><p>
+      The swap file can not be an inline file.
+     </p></li><li class="listitem"><p>
+      The swap file must be on a <code class="literal">single</code> allocation profile
+      file system.
+     </p></li></ul></div></section><section class="sect2" id="sec-filesystems-major-btrfs-s-r" data-id-title="Btrfs send/receive"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.7 </span><span class="title-name">Btrfs send/receive</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-s-r">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Btrfs allows to make snapshots to capture the state of the file system.
+    Snapper, for example, uses this feature to create snapshots before and
+    after system changes, allowing a rollback. However, together with the
+    send/receive feature, snapshots can also be used to create and maintain
+    copies of a file system in a remote location. This feature can, for
+    example, be used to do incremental backups.
+   </p><p>
+    A <code class="command">btrfs send</code> operation calculates the difference between
+    two read-only snapshots from the same subvolume and sends it to a file or
+    to STDOUT. A <code class="command">btrfs receive</code> operation takes the result of
+    the send command and applies it to a snapshot.
+   </p><section class="sect3" id="sec-filesystems-major-btrfs-s-r-requires" data-id-title="Prerequisites"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.7.1 </span><span class="title-name">Prerequisites</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-s-r-requires">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To use the send/receive feature, the following requirements need to be
+     met:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       A Btrfs file system is required on the source side
+       (<code class="literal">send</code>) and on the target side
+       (<code class="literal">receive</code>).
+      </p></li><li class="listitem"><p>
+       Btrfs send/receive operates on snapshots, therefore the respective data
+       needs to reside in a Btrfs subvolume.
+      </p></li><li class="listitem"><p>
+       Snapshots on the source side need to be read-only.
+      </p></li><li class="listitem"><p>
+       SUSE Linux Enterprise 12 SP2 or better. Earlier versions of SUSE Linux Enterprise do not support
+       send/receive.
+      </p></li></ul></div></section><section class="sect3" id="sec-filesystems-major-btrfs-s-r-backup" data-id-title="Incremental backups"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.2.7.2 </span><span class="title-name">Incremental backups</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-s-r-backup">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The following procedure shows the basic usage of Btrfs send/receive using
+     the example of creating incremental backups of <code class="filename">/data</code>
+     (source side) in <code class="filename">/backup/data</code> (target side).
+     <code class="filename">/data</code> needs to be a subvolume.
+    </p><div class="procedure" id="id-1.11.3.2.9.9.5.3" data-id-title="Initial setup"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 1.1: </span><span class="title-name">Initial setup </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.9.9.5.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Create the initial snapshot (called <code class="literal">snapshot_0</code> in
+       this example) on the source side and make sure it is written to the
+       disk:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume snapshot -r /data /data/bkp_data
+sync</pre></div><p>
+       A new subvolume <code class="filename">/data/bkp_data</code> is created. It will
+       be used as the basis for the next incremental backup and should be kept
+       as a reference.
+      </p></li><li class="step"><p>
+       Send the initial snapshot to the target side. Since this is the initial
+       send/receive operation, the complete snapshot needs to be sent:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> bash -c 'btrfs send /data/bkp_data | btrfs receive /backup'</pre></div><p>
+       A new subvolume <code class="filename">/backup/bkp_data</code> is created on the
+       target side.
+      </p></li></ol></div></div><p>
+     When the initial setup has been finished, you can create incremental
+     backups and send the differences between the current and previous
+     snapshots to the target side. The procedure is always the same:
+    </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+       Create a new snapshot on the source side.
+      </p></li><li class="listitem"><p>
+       Send the differences to the target side.
+      </p></li><li class="listitem"><p>
+       Optional: Rename and/or clean up snapshots on both sides.
+      </p></li></ol></div><div class="procedure" id="id-1.11.3.2.9.9.5.6" data-id-title="Performing an incremental backup"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 1.2: </span><span class="title-name">Performing an incremental backup </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.9.9.5.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Create a new snapshot on the source side and make sure it is written to
+       the disk. In the following example the snapshot is named
+       bkp_data_<em class="replaceable">CURRENT_DATE</em>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume snapshot -r /data /data/bkp_data_$(date +%F)
+sync</pre></div><p>
+       A new subvolume, for example
+       <code class="filename">/data/bkp_data_2016-07-07</code>, is created.
+      </p></li><li class="step"><p>
+       Send the difference between the previous snapshot and the one you have
+       created to the target side. This is achieved by specifying the previous
+       snapshot with the option <code class="option">-p
+       <em class="replaceable">SNAPSHOT</em></code>.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> bash -c 'btrfs send -p /data/bkp_data /data/bkp_data_2016-07-07 \
+| btrfs receive /backup'</pre></div><p>
+       A new subvolume <code class="filename">/backup/bkp_data_2016-07-07</code> is
+       created.
+      </p></li><li class="step"><p>
+       As a result four snapshots, two on each side, exist:
+      </p><table style="border: 0; " class="simplelist"><tr><td><code class="filename">/data/bkp_data</code></td></tr><tr><td><code class="filename">/data/bkp_data_2016-07-07</code></td></tr><tr><td><code class="filename">/backup/bkp_data</code></td></tr><tr><td><code class="filename">/backup/bkp_data_2016-07-07</code></td></tr></table><p>
+       Now you have three options for how to proceed:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         Keep all snapshots on both sides. With this option you can roll back
+         to any snapshot on both sides while having all data duplicated at the
+         same time. No further action is required. When doing the next
+         incremental backup, keep in mind to use the next-to-last snapshot as
+         parent for the send operation.
+        </p></li><li class="listitem"><p>
+         Only keep the last snapshot on the source side and all snapshots on
+         the target side. Also allows to roll back to any snapshot on both
+         sides—to do a rollback to a specific snapshot on the source
+         side, perform a send/receive operation of a complete snapshot from the
+         target side to the source side. Do a delete/move operation on the
+         source side.
+        </p></li><li class="listitem"><p>
+         Only keep the last snapshot on both sides. This way you have a backup
+         on the target side that represents the state of the last snapshot made
+         on the source side. It is not possible to roll back to other
+         snapshots. Do a delete/move operation on the source and the target
+         side.
+        </p></li></ul></div><ol type="a" class="substeps"><li class="step"><p>
+         To only keep the last snapshot on the source side, perform the
+         following commands:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume delete /data/bkp_data
+<code class="prompt user">&gt; </code><code class="command">sudo</code> mv /data/bkp_data_2016-07-07 /data/bkp_data</pre></div><p>
+         The first command will delete the previous snapshot, the second
+         command renames the current snapshot to
+         <code class="filename">/data/bkp_data</code>. This ensures that the last
+         snapshot that was backed up is always named
+         <code class="filename">/data/bkp_data</code>. As a consequence, you can also
+         always use this subvolume name as a parent for the incremental send
+         operation.
+        </p></li><li class="step"><p>
+         To only keep the last snapshot on the target side, perform the
+         following commands:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume delete /backup/bkp_data
+<code class="prompt user">&gt; </code><code class="command">sudo</code> mv /backup/bkp_data_2016-07-07 /backup/bkp_data</pre></div><p>
+         The first command will delete the previous backup snapshot, the second
+         command renames the current backup snapshot to
+         <code class="filename">/backup/bkp_data</code>. This ensures that the latest
+         backup snapshot is always named <code class="filename">/backup/bkp_data</code>.
+        </p></li></ol></li></ol></div></div><div id="id-1.11.3.2.9.9.5.7" data-id-title="Sending to a remote target side" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Sending to a remote target side</div><p>
+      To send the snapshots to a remote machine, use SSH:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>btrfs send /data/bkp_data | ssh root@jupiter.example.com 'btrfs receive /backup'</pre></div></div></section></section><section class="sect2" id="sec-filesystems-major-btrfs-deduplication" data-id-title="Data deduplication support"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.8 </span><span class="title-name">Data deduplication support</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-btrfs-deduplication">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Btrfs supports data deduplication by replacing identical blocks in the file
+    system with logical links to a single copy of the block in a common storage
+    location. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> provides the tool <code class="command">duperemove</code> for
+    scanning the file system for identical blocks. When used on a Btrfs file
+    system, it can also be used to deduplicate these blocks and thus save space
+    on the file system. <code class="command">duperemove</code> is not installed by
+    default. To make it available, install the package
+    <span class="package">duperemove</span> .
+   </p><div id="id-1.11.3.2.9.10.3" data-id-title="Deduplicating large datasets" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Deduplicating large datasets</div><p>
+     If you intend to deduplicate a large amount of files, use the
+     <code class="option">--hashfile</code> option:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> duperemove <code class="option">--hashfile <em class="replaceable">HASH_FILE</em></code> file1 file2 file3</pre></div><p>
+     The <code class="option">--hashfile</code> option stores hashes of all specified
+     files into the <em class="replaceable">HASH_FILE</em> instead of RAM and
+     prevents it from being exhausted. <em class="replaceable">HASH_FILE</em> is
+     reusable—you can deduplicate changes to large datasets very quickly
+     after an initial run that generated a baseline hash file.
+    </p></div><p>
+    <code class="command">duperemove</code> can either operate on a list of files or
+    recursively scan a directory:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> duperemove <em class="replaceable">OPTIONS</em> file1 file2 file3
+<code class="prompt user">&gt; </code><code class="command">sudo</code> duperemove -r <em class="replaceable">OPTIONS</em> directory</pre></div><p>
+    It operates in two modes: read-only and de-duping. When run in read-only
+    mode (that is without the <code class="option">-d</code> switch), it scans the given
+    files or directories for duplicated blocks and prints them. This works on
+    any file system.
+   </p><p>
+    Running <code class="command">duperemove</code> in de-duping mode is only supported
+    on Btrfs file systems. After having scanned the given files or directories,
+    the duplicated blocks will be submitted for deduplication.
+   </p><p>
+    For more information see <code class="command">man 8 duperemove</code>.
+   </p></section><section class="sect2" id="btrfs-delete-subvolumes" data-id-title="Deleting subvolumes from the root file system"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.2.9 </span><span class="title-name">Deleting subvolumes from the root file system</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#btrfs-delete-subvolumes">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You may need to delete one of the default Btrfs subvolumes from the root
+    file system for specific purposes. One of them is transforming a
+    subvolume—for example <code class="filename">@/home</code> or
+    <code class="filename">@/srv</code>—into a file system on a separate device.
+    The following procedure illustrates how to delete a Btrfs subvolume:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Identify the subvolume you need to delete (for example
+      <code class="filename">@/opt</code>). Notice that the root path has always
+      subvolume ID '5'.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume list /
+ID 256 gen 30 top level 5 path @
+ID 258 gen 887 top level 256 path @/var
+ID 259 gen 872 top level 256 path @/usr/local
+ID 260 gen 886 top level 256 path @/tmp
+ID 261 gen 60 top level 256 path @/srv
+ID 262 gen 886 top level 256 path @/root
+ID 263 gen 39 top level 256 path @/opt
+[...]</pre></div></li><li class="step"><p>
+      Find the device name that hosts the root partition:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs device usage /
+/dev/sda1, ID: 1
+  Device size:            23.00GiB
+  Device slack:              0.00B
+  Data,single:             7.01GiB
+  Metadata,DUP:            1.00GiB
+  System,DUP:             16.00MiB
+  Unallocated:            14.98GiB</pre></div></li><li class="step"><p>
+      Mount the root file system (subvolume with ID 5) on a separate mount
+      point (for example <code class="filename">/mnt</code>):
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount -o subvolid=5 /dev/sda1 /mnt</pre></div></li><li class="step"><p>
+      Delete the <code class="filename">@/opt</code> partition from the mounted root
+      file system:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs subvolume delete /mnt/@/opt</pre></div></li><li class="step"><p>
+      Unmount the previously mounted root file system:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> umount /mnt</pre></div></li></ol></div></div></section></section><section class="sect1" id="sec-filesystems-major-xfs" data-id-title="XFS"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.3 </span><span class="title-name">XFS</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-xfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Originally intended as the file system for their IRIX OS, SGI started XFS
+   development in the early 1990s. The idea behind XFS was to create a
+   high-performance 64-bit journaling file system to meet extreme computing
+   challenges. XFS is very good at manipulating large files and performs well
+   on high-end hardware.
+   
+   XFS is the default file system for data partitions in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>.
+  </p><p>
+   A quick review of XFS’s key features explains why it might prove to be a
+   strong competitor for other journaling file systems in high-end computing.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.10.4.1"><span class="term">High scalability</span></dt><dd><p>
+      XFS offers high scalability by using allocation groups
+     </p><p>
+      At the creation time of an XFS file system, the block device underlying
+      the file system is divided into eight or more linear regions of equal
+      size. Those are called <span class="emphasis"><em>allocation groups</em></span>. Each
+      allocation group manages its own inodes and free disk space. Practically,
+      allocation groups can be seen as file systems in a file system. Because
+      allocation groups are rather independent of each other, more than one of
+      them can be addressed by the kernel simultaneously. This feature is the
+      key to XFS’s great scalability. Naturally, the concept of independent
+      allocation groups suits the needs of multiprocessor systems.
+     </p></dd><dt id="id-1.11.3.2.10.4.2"><span class="term">High performance</span></dt><dd><p>
+      XFS offers high performance through efficient management of disk space
+     </p><p>
+      Free space and inodes are handled by B<sup>+</sup> trees
+      inside the allocation groups. The use of B<sup>+</sup>
+      trees greatly contributes to XFS’s performance and scalability. XFS uses
+      <span class="emphasis"><em>delayed allocation</em></span>, which handles allocation by
+      breaking the process into two pieces. A pending transaction is stored in
+      RAM and the appropriate amount of space is reserved. XFS still does not
+      decide where exactly (in file system blocks) the data should be stored.
+      This decision is delayed until the last possible moment. Some short-lived
+      temporary data might never make its way to disk, because it is obsolete
+      by the time XFS decides where to save it. In this way, XFS
+      increases write performance and reduces file system fragmentation.
+      Because delayed allocation results in less frequent write events than in
+      other file systems, it is likely that data loss after a crash during a
+      write is more severe.
+     </p></dd><dt id="id-1.11.3.2.10.4.3"><span class="term">Preallocation to avoid file system fragmentation</span></dt><dd><p>
+      Before writing the data to the file system, XFS
+      <span class="emphasis"><em>reserves</em></span> (preallocates) the free space needed for a
+      file. Thus, file system fragmentation is greatly reduced. Performance is
+      increased because the contents of a file are not distributed all over the
+      file system.
+     </p></dd></dl></div><section class="sect2" id="sec-filesystems-major-prealloc" data-id-title="XFS formats"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.3.1 </span><span class="title-name">XFS formats</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-prealloc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports the <span class="quote">“<span class="quote">on-disk format</span>”</span> (v5) of the XFS
+    file system. The main advantages of this format are automatic checksums of
+    all XFS metadata, file type support, and support for a larger number of
+    access control lists for a file.
+   </p><p>
+    Note that this format is not supported by SUSE Linux Enterprise kernels older than version
+    3.12, by <code class="literal">xfsprogs</code> older than version 3.2.0, and GRUB 2
+    versions released before SUSE Linux Enterprise 12.
+   </p><div id="id-1.11.3.2.10.5.4" data-id-title="V4 is deprecated" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: V4 is deprecated</div><p>
+     XFS is deprecating file systems with the V4 format. This file system
+     format was created by the command:
+    </p><div class="verbatim-wrap"><pre class="screen">mkfs.xfs -m crc=0 <em class="replaceable">DEVICE</em></pre></div><p>
+     The format was used in SLE 11 and older releases and currently it creates
+     a warning message by <code class="command">dmesg</code>:
+    </p><div class="verbatim-wrap"><pre class="screen">Deprecated V4 format (crc=0) will not be supported after September 2030</pre></div><p>
+     If you see the message above in the output of the <code class="command">dmesg</code>
+     command, it is recommended that you update your file system to the V5
+     format:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Back up your data to another device.
+      </p></li><li class="step"><p>
+       Create the file system on the device.
+      </p><div class="verbatim-wrap"><pre class="screen">mkfs.xfs -m crc=1 <em class="replaceable">DEVICE</em></pre></div></li><li class="step"><p>
+       Restore the data from the backup on the updated device.
+      </p></li></ol></div></div></div></section></section><section class="sect1" id="sec-filesystems-major-ext2" data-id-title="Ext2"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.4 </span><span class="title-name">Ext2</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext2">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The origins of Ext2 go back to the early days of Linux history. Its
+   predecessor, the Extended File System, was implemented in April 1992 and
+   integrated in Linux 0.96c. The Extended File System underwent several
+   modifications and, as Ext2, became the most popular Linux file system for
+   years. With the creation of journaling file systems and their short recovery
+   times, Ext2 became less important.
+  </p><p>
+   A brief summary of Ext2’s strengths might help understand why it
+   was—and in some areas still is—the favorite Linux file system of
+   many Linux users.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.11.4.1"><span class="term">Solidity and speed</span></dt><dd><p>
+      Being an <span class="quote">“<span class="quote">old-timer</span>”</span>, Ext2 underwent many improvements and
+      was heavily tested. This might be the reason people often refer to it as
+      rock-solid. After a system outage when the file system could not be
+      cleanly unmounted, e2fsck starts to analyze the file system data.
+      Metadata is brought into a consistent state and pending files or data
+      blocks are written to a designated directory (called
+      <code class="filename">lost+found</code>). In contrast to journaling file systems,
+      e2fsck analyzes the entire file system and not only the recently modified
+      bits of metadata. This takes significantly longer than checking the log
+      data of a journaling file system. Depending on file system size, this
+      procedure can take half an hour or more. Therefore, it is not desirable
+      to choose Ext2 for any server that needs high availability. However,
+      because Ext2 does not maintain a journal and uses less memory, it is
+      sometimes faster than other file systems.
+     </p></dd><dt id="id-1.11.3.2.11.4.2"><span class="term">Easy upgradability</span></dt><dd><p>
+      Because Ext3 is based on the Ext2 code and shares its on-disk format and
+      its metadata format, upgrades from Ext2 to Ext3 are very easy.
+     </p></dd></dl></div></section><section class="sect1" id="sec-filesystems-major-ext3" data-id-title="Ext3"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.5 </span><span class="title-name">Ext3</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext3">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Ext3 was designed by Stephen Tweedie. Unlike all other next-generation file
+   systems, Ext3 does not follow a completely new design principle. It is based
+   on Ext2. These two file systems are very closely related to each other. An
+   Ext3 file system can be easily built on top of an Ext2 file system. The most
+   important difference between Ext2 and Ext3 is that Ext3 supports journaling.
+   In summary, Ext3 has three major advantages to offer:
+  </p><section class="sect2" id="sec-filesystems-major-ext3-upgrade" data-id-title="Easy and highly reliable upgrades from ext2"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.5.1 </span><span class="title-name">Easy and highly reliable upgrades from ext2</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext3-upgrade">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The code for Ext2 is the strong foundation on which Ext3 could become a
+    highly acclaimed next-generation file system. Its reliability and solidity
+    are elegantly combined in Ext3 with the advantages of a journaling file
+    system. Unlike transitions to other journaling file systems, such as XFS,
+    which can be quite tedious (making backups of the entire file system and
+    re-creating it from scratch), a transition to Ext3 is a matter of minutes.
+    It is also very safe, because re-creating an entire file system from
+    scratch might not work flawlessly. Considering the number of existing Ext2
+    systems that await an upgrade to a journaling file system, you can easily
+    see why Ext3 might be of some importance to many system administrators.
+    Downgrading from Ext3 to Ext2 is as easy as the upgrade. Perform a clean
+    unmount of the Ext3 file system and remount it as an Ext2 file system.
+   </p></section><section class="sect2" id="sec-filesystems-major-ext3-ext22ext3a" data-id-title="Converting an ext2 file system into ext3"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.5.2 </span><span class="title-name">Converting an ext2 file system into ext3</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext3-ext22ext3a">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To convert an Ext2 file system to Ext3:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Create an Ext3 journal by running <code class="command">tune2fs -j</code> as the
+      <code class="systemitem">root</code> user.
+     </p><p>
+      This creates an Ext3 journal with the default parameters.
+     </p><p>
+      To specify how large the journal should be and on which device it should
+      reside, run <code class="command">tune2fs</code> <code class="option">-J</code> instead
+      together with the desired journal options <code class="option">size=</code> and
+      <code class="option">device=</code>. More information about the
+      <code class="command">tune2fs</code> program is available in the
+      <code class="command">tune2fs</code> man page.
+     </p></li><li class="step"><p>
+      Edit the file <code class="filename">/etc/fstab</code> as the <code class="systemitem">root</code> user to
+      change the file system type specified for the corresponding partition
+      from <code class="literal">ext2</code> to <code class="literal">ext3</code>, then save the
+      changes.
+     </p><p>
+      This ensures that the Ext3 file system is recognized as such. The change
+      takes effect after the next reboot.
+     </p></li><li class="step"><p>
+      To boot a root file system that is set up as an Ext3 partition, add the
+      modules <code class="literal">ext3</code> and <code class="literal">jbd</code> in the
+      <code class="filename">initrd</code>. Do so by
+     </p><ol type="a" class="substeps"><li class="step"><p>
+        opening or creating
+        <code class="filename">/etc/dracut.conf.d/filesystem.conf</code> and adding the
+        following line (mind the leading blank space):
+       </p><div class="verbatim-wrap"><pre class="screen">force_drivers+=" ext3 jbd"</pre></div></li><li class="step"><p>
+        and running the <code class="command">dracut</code> <code class="option">-f</code> command.
+       </p></li></ol></li><li class="step"><p>
+      Reboot the system.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-filesystems-major-ext4" data-id-title="Ext4"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.6 </span><span class="title-name">Ext4</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext4">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   In 2006, Ext4 started as a fork from Ext3. It is the latest file system in
+   the extended file system version. Ext4 was originally designed to increase
+   storage size by supporting volumes with a size of up to 1 exbibyte, files
+   with a size of up to 16 tebibytes and an unlimited number of subdirectories.
+   Ext4 uses extents, instead of the traditional direct and indirect block
+   pointers, to map the file contents. Usage of extents improves both storage
+   and retrieval of data from disks.
+  </p><p>
+   Ext4 also introduces several performance enhancements such as delayed block
+   allocation and a much faster file system checking routine. Ext4 is also more
+   reliable by supporting journal checksums and by providing time stamps
+   measured in nanoseconds. Ext4 is fully backward compatible to Ext2 and
+   Ext3—both file systems can be mounted as Ext4.
+  </p><div id="id-1.11.3.2.13.4" data-id-title="Ext3 functionality on Ext4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Ext3 functionality on Ext4</div><p>
+    The Ext3 functionality is fully supported by the Ext4 driver in the Ext4
+    kernel module.
+   </p></div><section class="sect2" id="sec-filesystems-major-ext4-performance" data-id-title="Reliability and performance"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.6.1 </span><span class="title-name">Reliability and performance</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext4-performance">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Some other journaling file systems follow the <span class="quote">“<span class="quote">metadata-only</span>”</span>
+    journaling approach. This means your metadata is always kept in a
+    consistent state, but this cannot be automatically guaranteed for the file
+    system data itself. Ext4 is designed to take care of both metadata and
+    data. The degree of <span class="quote">“<span class="quote">care</span>”</span> can be customized. Mounting Ext4 in
+    the <code class="option">data=journal</code> mode offers maximum security (data
+    integrity), but can slow down the system because both metadata and data are
+    journaled. Another approach is to use the <code class="option">data=ordered</code>
+    mode, which ensures both data and metadata integrity, but uses journaling
+    only for metadata. The file system driver collects all data blocks that
+    correspond to one metadata update. These data blocks are written to disk
+    before the metadata is updated. As a result, consistency is achieved for
+    metadata and data without sacrificing performance. A third mount option to
+    use is <code class="option">data=writeback</code>, which allows data to be written to
+    the main file system after its metadata has been committed to the journal.
+    This option is often considered the best in performance. It can, however,
+    allow old data to reappear in files after crash and recovery while internal
+    file system integrity is maintained. Ext4 uses the
+    <code class="option">data=ordered</code> option as the default.
+   </p></section><section class="sect2" id="sec-filesystems-major-ext4-inodesize" data-id-title="Ext4 file system inode size and number of inodes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.6.2 </span><span class="title-name">Ext4 file system inode size and number of inodes</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-ext4-inodesize">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    An inode stores information about the file and its block location in the
+    file system. To allow space in the inode for extended attributes and ACLs,
+    the default inode size was increased to 256 bytes.
+   </p><p>
+    When you create a new Ext4 file system, the space in the inode table is
+    preallocated for the total number of inodes that can be created. The
+    bytes-per-inode ratio and the size of the file system determine how many
+    inodes are possible. When the file system is made, an inode is created for
+    every bytes-per-inode bytes of space:
+   </p><div class="verbatim-wrap"><pre class="screen">number of inodes = total size of the file system divided by the number of bytes per inode</pre></div><p>
+    The number of inodes controls the number of files you can have in the file
+    system: one inode for each file.
+   </p><div id="id-1.11.3.2.13.6.6" data-id-title="Changing the inode size of an existing Ext4 file system not possible" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Changing the inode size of an existing Ext4 file system not possible</div><p>
+     After the inodes are allocated, you cannot change the settings for the
+     inode size or bytes-per-inode ratio. No new inodes are possible without
+     re-creating the file system with different settings, or unless the file
+     system gets extended. When you exceed the maximum number of inodes, no new
+     files can be created on the file system until some files are deleted.
+    </p></div><p>
+    When you make a new Ext4 file system, you can specify the inode size and
+    bytes-per-inode ratio to control inode space usage and the number of files
+    possible on the file system. If the blocks size, inode size, and
+    bytes-per-inode ratio values are not specified, the default values in the
+    <code class="filename">/etc/mked2fs.conf</code> file are applied. For information,
+    see the <code class="filename">mke2fs.conf(5)</code> man page.
+   </p><p>
+    Use the following guidelines:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Inode size:</span>
+       The default inode size is 256 bytes. Specify a value in bytes that is a
+       power of 2 and equal to 128 or larger in bytes and up to the block size,
+       such as 128, 256, 512, and so on. Use 128 bytes only if you do not use
+       extended attributes or ACLs on your Ext4 file systems.
+      </p></li><li class="listitem"><p><span class="formalpara-title">Bytes-per-inode ratio:</span>
+       The default bytes-per-inode ratio is 16384 bytes. Valid bytes-per-inode
+       ratio values must be a power of 2 equal to 1024 or greater in bytes,
+       such as 1024, 2048, 4096, 8192, 16384, 32768, and so on. This value
+       should not be smaller than the block size of the file system, because
+       the block size is the smallest chunk of space used to store data. The
+       default block size for the Ext4 file system is 4 KiB.
+      </p><p>
+      In addition, consider the number of files and the size of files you need
+      to store. For example, if your file system will have many small files,
+      you can specify a smaller bytes-per-inode ratio, which increases the
+      number of inodes. If your file system will have very large files, you can
+      specify a larger bytes-per-inode ratio, which reduces the number of
+      possible inodes.
+     </p><p>
+      Generally, it is better to have too many inodes than to run out of them.
+      If you have too few inodes and very small files, you could reach the
+      maximum number of files on a disk that is practically empty. If you have
+      too many inodes and very large files, you might have free space reported
+      but be unable to use it because you cannot create new files in space
+      reserved for inodes.
+     </p></li></ul></div><p>
+    Use any of the following methods to set the inode size and bytes-per-inode
+    ratio:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Modifying the default settings for all new Ext4 file systems:</span>
+       In a text editor, modify the <code class="literal">defaults</code> section of the
+       <code class="filename">/etc/mke2fs.conf</code> file to set the
+       <code class="literal">inode_size</code> and <code class="literal">inode_ratio</code> to the
+       desired default values. The values apply to all new Ext4 file systems.
+       For example:
+      </p><div class="verbatim-wrap"><pre class="screen">blocksize = 4096
+inode_size = 128
+inode_ratio = 8192</pre></div></li><li class="listitem"><p><span class="formalpara-title">At the command line:</span>
+       Pass the inode size (<code class="literal">-I 128</code>) and the bytes-per-inode
+       ratio (<code class="literal">-i 8192</code>) to the
+       <code class="command">mkfs.ext4(8)</code> command or the
+       <code class="command">mke2fs(8)</code> command when you create a new Ext4 file
+       system. For example, use either of the following commands:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkfs.ext4 -b 4096 -i 8092 -I 128 /dev/sda2
+<code class="prompt user">&gt; </code><code class="command">sudo</code> mke2fs -t ext4 -b 4096 -i 8192 -I 128 /dev/sda2</pre></div></li><li class="listitem"><p><span class="formalpara-title">During installation with YaST:</span>
+       Pass the inode size and bytes-per-inode ratio values when you create a
+       new Ext4 file system during the installation. In the <span class="guimenu">Expert
+       Partitioner</span>, select the partition, click
+       <span class="guimenu">Edit</span>. Under <span class="guimenu">Formatting Options</span>,
+       select <span class="guimenu">Format device</span><span class="guimenu">Ext4</span>, then
+       click <span class="guimenu">Options</span>. In the <span class="guimenu">Format
+       options</span> dialog, select the desired values from the
+       <span class="guimenu">Block Size in Bytes</span>,
+       <span class="guimenu">Bytes-per-inode</span>, and <span class="guimenu">Inode Size</span>
+       drop-down box.
+      </p><p>
+      For example, select 4096 for the <span class="guimenu">Block Size in Bytes</span>
+      drop-down box, select 8192 from the <span class="guimenu">Bytes per inode</span>
+      drop-down box, select 128 from the <span class="guimenu">Inode Size</span>
+      drop-down box, then click <span class="guimenu">OK</span>.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/ext4_inode_yast_a.png"><img src="images/ext4_inode_yast_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li></ul></div></section><section class="sect2" id="sec-upgrade-to-ext4" data-id-title="Upgrading to Ext4"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.6.3 </span><span class="title-name">Upgrading to Ext4</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-upgrade-to-ext4">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.11.3.2.13.7.2" data-id-title="Backup of data" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Backup of data</div><p>
+     Back up all data on the file system before performing any update of your
+     file system.
+    </p></div><div class="procedure" id="id-1.11.3.2.13.7.3" data-id-title="Upgrading to ext4"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 1.3: </span><span class="title-name">Upgrading to ext4 </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.13.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      To upgrade from Ext2 or Ext3, you must enable the following:
+     </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Features required by Ext4 </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#id-1.11.3.2.13.7.3.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.11.3.2.13.7.3.2.2.2"><span class="term">extents</span></dt><dd><p>
+         contiguous blocks on the hard disk that are used to keep files close
+         together and prevent fragmentation
+        </p></dd><dt id="id-1.11.3.2.13.7.3.2.2.3"><span class="term">unint_bg</span></dt><dd><p>
+         lazy inode table initialization
+        </p></dd><dt id="id-1.11.3.2.13.7.3.2.2.4"><span class="term">dir_index</span></dt><dd><p>
+         hashed b-tree lookups for large directories
+        </p></dd><dt id="id-1.11.3.2.13.7.3.2.2.5"><span class="term">on Ext2: <code class="literal">as_journal</code></span></dt><dd><p>
+         enable journaling on your Ext2 file system.
+        </p></dd></dl></div><p>
+      To enable the features, run:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        on Ext3:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>tune2fs -O extents,uninit_bg,dir_index <em class="replaceable">DEVICE_NAME</em></pre></div></li><li class="listitem"><p>
+        on Ext2:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>tune2fs -O extents,uninit_bg,dir_index,has_journal <em class="replaceable">DEVICE_NAME</em></pre></div></li></ul></div></li><li class="step"><p>
+      As <code class="systemitem">root</code> edit the <code class="filename">/etc/fstab</code> file: change the
+      <code class="literal">ext3</code> or <code class="literal">ext2</code> record to
+      <code class="literal">ext4</code>. The change takes effect after the next reboot.
+     </p></li><li class="step"><p>
+      To boot a file system that is set up on an ext4 partition, add the modules:
+      <code class="literal">ext4</code> and <code class="literal">jbd</code> in the
+      <code class="literal">initramfs</code>. Open or create
+      <code class="filename">/etc/dracut.conf.d/filesystem.conf</code> and add the
+      following line:
+     </p><div class="verbatim-wrap"><pre class="screen">force_drivers+=" ext4 jbd"</pre></div><p>
+      You need to overwrite the existing dracut <code class="filename">initramfs</code>
+      by running:
+     </p><div class="verbatim-wrap"><pre class="screen">dracut -f</pre></div></li><li class="step"><p>
+      Reboot your system.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-filesystems-major-reiser" data-id-title="ReiserFS"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.7 </span><span class="title-name">ReiserFS</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-major-reiser">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   ReiserFS support was completely removed with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> 15. To migrate
+   your existing partitions to Btrfs, refer to
+   <a class="xref" href="cha-filesystems.html#sec-filesystems-major-btrfs-migrate" title="1.2.3. Migration from ReiserFS and ext file systems to Btrfs">Section 1.2.3, “Migration from ReiserFS and ext file systems to Btrfs”</a>.
+  </p></section><section class="sect1" id="sec-filessytems-zfs" data-id-title="OpenZFS and ZFS"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.8 </span><span class="title-name">OpenZFS and ZFS</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filessytems-zfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Neither the OpenZFS nor ZFS file systems are supported by
+SUSE. Although ZFS was originally released by Sun under an open source
+license, the current Oracle Solaris ZFS is now closed source, and
+therefore cannot be used by SUSE. OpenZFS (based on the original ZFS)
+is under the CDDL license that is incompatible with the GPL license
+and therefore cannot be included in our kernels. However, Btrfs
+provides an excellent alternative to OpenZFS with a similar design
+philosophy and is fully supported by SUSE.
+  </p></section><section class="sect1" id="sec-filesystems-tmpfs" data-id-title="tmpfs"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.9 </span><span class="title-name">tmpfs</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-tmpfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    tmpfs is a RAM-based virtual memory file system. The file system is temporary, which means no files are
+    stored on the hard disk, and when the file system is unmounted, all data is discarded.```
+  </p><p>
+    Data in this file system is stored in the kernel internal cache. The needed kernel cache
+    space can grow or shrink. 
+  </p><p>
+The file system has the following characteristics:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+  Very fast access to files.
+</p></li><li class="listitem"><p>
+        When swap is enabled for the tmpfs mount, unused data is swapped.
+      </p></li><li class="listitem"><p>
+        You can change the file system size during the <code class="command">mount -o remount</code>
+        operation without losing data. However, you cannot resize to the value lower than its
+        current usage.
+        </p></li><li class="listitem"><p>
+  tmpfs supports Transparent HugePage Support (THP).
+</p></li></ul></div><p>
+    For more information, you can refer to:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        the <a class="link" href="https://www.kernel.org/doc/html/latest/filesystems/tmpfs.html" target="_blank">kernel
+        documentation</a>
+      </p></li><li class="listitem"><p>
+        <code class="command">man tmpfs</code>
+      </p></li></ul></div></section><section class="sect1" id="sec-filesystems-other" data-id-title="Other supported file systems"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.10 </span><span class="title-name">Other supported file systems</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-other">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p class="intro">
+   <a class="xref" href="cha-filesystems.html#tab-filesystems-other" title="File system types in Linux">Table 1.1, “File system types in Linux”</a> summarizes
+   some other file systems supported by Linux. They are supported mainly to
+   ensure compatibility and interchange of data with different kinds of media
+   or foreign operating systems.
+  </p><div class="table" id="tab-filesystems-other" data-id-title="File system types in Linux"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 1.1: </span><span class="title-name">File system types in Linux </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#tab-filesystems-other">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        File System Type
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Description
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">iso9660</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Standard file system on CD-ROMs.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">msdos</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="filename">fat</code>, the file system originally used by DOS, is
+        today used by various operating systems.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">nfs</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Network File System: Here, data can be stored on any machine in a
+        network and access might be granted via a network.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">ntfs</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Windows NT file system supported only with read-only access. The FUSE client
+        <code class="literal">ntfs-3g</code> provides the access.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">OverlayFS</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        File system combines multiple different underlying mount points into one. It is used
+        mainly on transactional-update systems and with containers.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">exfat</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        File system optimized for use with flash memory, such as USB flash
+        drives and SD cards.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">Squashfs</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        A compressed read-only file system. The file system compresses files, inodes and directories, and supports block sizes from 4 KiB up to 1 MiB for greater compression. 
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">smbfs</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Server Message Block is used by products such as Windows to enable file
+        access over a network. Includes support for  <code class="literal">cifs</code>— a network file system client for mounting SMB/CIFS shares.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+  <p>
+      <code class="systemitem">ufs</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">    
+       <p>
+        Used by BSD, SunOS and NextStep. Only supported in read-only mode.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        <code class="systemitem">vfat</code>
+       </p>
+      </td><td>
+       <p>
+        Virtual FAT: Extension of the <code class="literal">fat</code> file system
+        (supports long file names).
+       </p>
+      </td></tr></tbody></table></div></div></section><section class="sect1" id="sec-blacklist-filsystem" data-id-title="Blocked file systems"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.11 </span><span class="title-name">Blocked file systems</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-blacklist-filsystem">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Due to security reasons, some file systems have been blocked from automatic
+   mounting. These file systems are usually not maintained anymore and are not
+   in common use. However, the kernel module for this file system can be
+   loaded, because the in-kernel API is still compatible. A combination of
+   user-mountable file systems and the automatic mounting of file systems on
+   removable devices could result in the situation where unprivileged users
+   might trigger the automatic loading of kernel modules, and the removable
+   devices could store potentially malicious data.
+  </p><p>
+   To get a list of file systems that are not allowed to be mounted
+   automatically, run the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> rpm -ql suse-module-tools  | sed -nE 's/.*blacklist_fs-(.*)\.conf/\1/p'</pre></div><p>
+   If you try to mount a device with a blocked file system using the
+   <code class="command">mount</code>command, the command outputs an error message, for
+   example:
+  </p><div class="verbatim-wrap"><pre class="screen">mount: /mnt/mx: unknown filesystem type 'minix' (hint: possibly blacklisted, see mount(8)).</pre></div><p>
+   Even though a file system cannot be mounted automatically, you can load the
+   corresponding kernel module for the file system directly using
+   <code class="command">modprobe</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> modprobe <em class="replaceable">FILESYSTEM</em></pre></div><p>
+   For example, for the <code class="systemitem">cramfs</code> file system, the output
+   looks as follows:
+  </p><div class="verbatim-wrap"><pre class="screen">unblacklist: loading cramfs file system module
+unblacklist: Do you want to un-blacklist cramfs permanently (&lt;y&gt;es/&lt;n&gt;o/n&lt;e&gt;ver)? y
+unblacklist: cramfs un-blacklisted by creating /etc/modprobe.d/60-blacklist_fs-cramfs.conf</pre></div><p>
+  Here you have the following options:
+</p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.18.12.1"><span class="term"><span class="keycap">y</span>es</span></dt><dd><p>
+        The module will be loaded and removed from the blacklist. Therefore, the module will be
+        loaded automatically in future without any other prompt.
+      </p><p>
+        The configuration file <code class="filename">/etc/modprobe.d/60-blacklist_fs-${MODULE}.conf</code> is
+        created. Remove the file to undo the changes you performed.
+      </p></dd><dt id="id-1.11.3.2.18.12.2"><span class="term"><span class="keycap">n</span>o</span></dt><dd><p>
+      The module will be loaded, but it is not removed from the blacklist. Therefore, on a next
+      module loading
+      you will see the prompt above again.
+    </p></dd><dt id="id-1.11.3.2.18.12.3"><span class="term"><span class="keycap">e</span>ver</span></dt><dd><p>
+      The module will be loaded, but autoloading is disabled even for future use, and the prompt 
+      will no longer be displayed.
+    </p><p>
+      The configuration file <code class="filename">/etc/modprobe.d/60-blacklist_fs-${MODULE}.conf</code> is
+      created. Remove the file to undo the changes you performed.
+    </p></dd><dt id="id-1.11.3.2.18.12.4"><span class="term"><span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">c</span></span></dt><dd><p>
+      This option is used to interrupt the module loading.
+    </p></dd></dl></div></section><section class="sect1" id="sec-filesystems-lfs" data-id-title="Large file support in Linux"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.12 </span><span class="title-name">Large file support in Linux</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-lfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Originally, Linux supported a maximum file size of 2 GiB
+   (2<sup>31</sup> bytes). Unless a file system comes with
+   large file support, the maximum file size on a 32-bit system is 2 GiB.
+  </p><p>
+   Currently, all our standard file systems have LFS (large file support),
+   which gives a maximum file size of 2<sup>63</sup> bytes in
+   theory. <a class="xref" href="cha-filesystems.html#tab-filesystems-maxsize" title="Maximum sizes of files and file systems (on-disk format, 4 KiB block size)">Table 1.2, “Maximum sizes of files and file systems (on-disk format, 4 KiB block size)”</a>
+   offers an overview of the current on-disk format limitations of Linux files
+   and file systems. The numbers in the table assume that the file systems are
+   using 4 KiB block size, which is a common standard. When using different
+   block sizes, the results are different. The maximum file sizes in
+   <a class="xref" href="cha-filesystems.html#tab-filesystems-maxsize" title="Maximum sizes of files and file systems (on-disk format, 4 KiB block size)">Table 1.2, “Maximum sizes of files and file systems (on-disk format, 4 KiB block size)”</a> can be
+   larger than the file system's actual size when using sparse blocks.
+  </p><div id="id-1.11.3.2.19.4" data-id-title="Binary multiples" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Binary multiples</div><p>
+    In this document: 1024 Bytes = 1 KiB; 1024 KiB = 1 MiB; 1024 MiB = 1 GiB;
+    1024 GiB = 1 TiB; 1024 TiB = 1 PiB; 1024 PiB = 1 EiB (see also
+    <a class="link" href="https://physics.nist.gov/cuu/Units/binary.html" target="_blank"><em class="citetitle">NIST:
+    Prefixes for Binary Multiples</em></a>.
+   </p></div><div class="table" id="tab-filesystems-maxsize" data-id-title="Maximum sizes of files and file systems (on-disk format, 4 KiB block size)"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 1.2: </span><span class="title-name">Maximum sizes of files and file systems (on-disk format, 4 KiB block size) </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#tab-filesystems-maxsize">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        File System (4 KiB Block Size)
+       </p>
+      </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Maximum File System Size
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Maximum File Size
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Btrfs
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        16 EiB
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        16 EiB
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Ext3
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        16 TiB
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        2 TiB
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Ext4
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        1 EiB
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        16 TiB
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        OCFS2 (a cluster-aware file system available in SLE HA)
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        16 TiB
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        1 EiB
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        XFS
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        16 EiB
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        8 EiB
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        NFSv2 (client side)
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        8 EiB
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        2 GiB
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        NFSv3/NFSv4 (client side)
+       </p>
+      </td><td style="border-right: 1px solid ; ">
+       <p>
+        8 EiB
+       </p>
+      </td><td>
+       <p>
+        8 EiB
+       </p>
+      </td></tr></tbody></table></div></div><div id="id-1.11.3.2.19.6" data-id-title="Limitations" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Limitations</div><p>
+    <a class="xref" href="cha-filesystems.html#tab-filesystems-maxsize" title="Maximum sizes of files and file systems (on-disk format, 4 KiB block size)">Table 1.2, “Maximum sizes of files and file systems (on-disk format, 4 KiB block size)”</a> describes
+    the limitations regarding the on-disk format. The Linux kernel imposes its
+    own limits on the size of files and file systems handled by it. These are
+    as follows:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.3.2.19.6.3.1"><span class="term">File size</span></dt><dd><p>
+       On 32-bit systems, files cannot exceed 2 TiB
+       (2<sup>41</sup> bytes).
+      </p></dd><dt id="id-1.11.3.2.19.6.3.2"><span class="term">File system size</span></dt><dd><p>
+       File systems can be up to 2<sup>73</sup> bytes in size.
+       However, this limit is still out of reach for the currently available
+       hardware.
+      </p></dd></dl></div></div></section><section class="sect1" id="sec-filesystems-stor-limits" data-id-title="Linux kernel storage limitations"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.13 </span><span class="title-name">Linux kernel storage limitations</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-stor-limits">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <a class="xref" href="cha-filesystems.html#tab-filesystems-stor-limits" title="Storage limitations">Table 1.3, “Storage limitations”</a>
+   summarizes the kernel limits for storage associated with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>.
+  </p><div class="table" id="tab-filesystems-stor-limits" data-id-title="Storage limitations"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 1.3: </span><span class="title-name">Storage limitations </span></span><a title="Permalink" class="permalink" href="cha-filesystems.html#tab-filesystems-stor-limits">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Storage Feature
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Limitation
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Maximum number of LUNs supported
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        16384 LUNs per target.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Maximum number of paths per single LUN
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        No limit by default. Each path is treated as a normal LUN.
+       </p>
+       <p>
+        The actual limit is given by the number of LUNs per target and the
+        number of targets per HBA (16777215 for a Fibre Channel HBA).
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Maximum number of HBAs
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Unlimited. The actual limit is determined by the amount of PCI slots of
+        the system.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Maximum number of paths with device-mapper-multipath (in total) per
+        operating system
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Approximately 1024. The actual number depends on the length of the
+        device number strings for each multipath device. It is a compile-time
+        variable within multipath-tools, which can be raised if this limit
+        poses a problem.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        Maximum size per block device
+       </p>
+      </td><td>
+       <p>
+        Up to 8 EiB.
+       </p>
+      </td></tr></tbody></table></div></div></section><section class="sect1" id="sec-filesystems-trouble-trim" data-id-title="Freeing unused file system blocks"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.14 </span><span class="title-name">Freeing unused file system blocks</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble-trim">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   On solid-state drives (SSDs) and thinly provisioned volumes, it is useful to
+   trim blocks that are not in use by the file system. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> fully
+   supports <code class="literal">unmap</code> and <code class="literal">TRIM</code> operations on
+   all file systems supporting them.
+  </p><p>
+   There are two types of commonly used TRIM—online
+   <code class="literal">TRIM</code> and periodic <code class="literal">TRIM</code>. The most
+   suitable way of trimming devices depends on your use case. In general, it is
+   recommended to use periodic TRIM, especially if the device has enough free
+   blocks. If the device is often near its full capacity, online TRIM is
+   preferable.
+  </p><div id="id-1.11.3.2.21.4" data-id-title="TRIM support on devices" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: <code class="literal">TRIM</code> support on devices</div><p>
+    Always verify that your device supports the <code class="literal">TRIM</code>
+    operation before you attempt to use it. Otherwise, you might lose your data
+    on that device. To verify the <code class="literal">TRIM</code> support, run the
+    command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lsblk --discard</pre></div><p>
+    The command outputs information about all available block devices. If the
+    values of the columns <code class="literal">DISC-GRAN</code> and
+    <code class="literal">DISC-MAX</code> are non-zero, the device supports the
+    <code class="literal">TRIM</code> operation.
+   </p></div><section class="sect2" id="sec-filesystems-periodic-trim" data-id-title="Periodic TRIM"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.14.1 </span><span class="title-name">Periodic TRIM</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-periodic-trim">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Periodic TRIM is handled by the <code class="command">fstrim</code> command invoked
+    by <code class="systemitem">systemd</code> on a regular basis. You can also run the command manually.
+   </p><p>
+    To schedule periodic TRIM, enable the <code class="literal">fstrim.timer</code> as
+    follows:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl enable fstrim.timer</pre></div><p>
+    <code class="systemitem">systemd</code> creates a unit file in
+    <code class="filename">/usr/lib/systemd/system</code>. By default, the service runs
+    once a week, which is usually sufficient. However, you can change the
+    frequency by configuring the <code class="literal">OnCalendar</code> option to a
+    required value.
+   </p><p>
+    The default behaviour of <code class="command">fstrim</code> is to discard all blocks
+    in the file system. You can use options when invoking the command to modify
+    this behaviour. For example, you can pass the <code class="literal">offset</code>
+    option to define the place where to start the trimming procedure. For
+    details, see <code class="command">man fstrim</code>.
+   </p><p>
+    The <code class="command">fstrim</code> command can perform trimming on all devices
+    stored in the <code class="filename">/etc/fstab</code> file, which support the
+    <code class="literal">TRIM</code> operation—use the <code class="literal">-A</code>
+    option when invoking the command for this purpose.
+   </p><p>
+    To disable the trimming of a particular device, add the option
+    <code class="literal">X-fstrim.notrim</code> to the <code class="filename">/etc/fstab</code>
+    file as follows:
+   </p><div class="verbatim-wrap"><pre class="screen">UID=83df497d-bd6d-48a3-9275-37c0e3c8dc74  /  btrfs  defaults,X-fstrim.notrim                      0  0</pre></div></section><section class="sect2" id="sec-filesystem-online-trim" data-id-title="Online TRIM"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.14.2 </span><span class="title-name">Online TRIM</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystem-online-trim">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Online TRIM of a device is performed each time data is written to the
+    device.
+   </p><p>
+    To enable online TRIM on a device, add the <code class="literal">discard</code>
+    option to the <code class="filename">/etc/fstab</code> file as follows:
+   </p><div class="verbatim-wrap"><pre class="screen">UID=83df497d-bd6d-48a3-9275-37c0e3c8dc74  /  btrfs  defaults,discard</pre></div><p>
+    Alternatively, on the Ext4 file system you can use the
+    <code class="command">tune2fs</code> command to set the <code class="literal">discard</code>
+    option in <code class="filename">/etc/fstab</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> tune2fs -o discard <em class="replaceable">DEVICE</em></pre></div><p>
+    The <code class="literal">discard</code> option is also added to
+    <code class="filename">/etc/fstab</code> in case the device was mounted by
+    <code class="command">mount</code> with the <code class="literal">discard</code> option:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount -o discard <em class="replaceable">DEVICE</em></pre></div><div id="id-1.11.3.2.21.6.9" data-id-title="Drawbacks of online TRIM" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Drawbacks of online TRIM</div><p>
+     Using the <code class="literal">discard</code> option may decrease the lifetime of some
+     lower-quality SSD devices. Online TRIM can also impact the performance of
+     the device, for example, if a larger amount of data is deleted. In this
+     situation, an erase block might be reallocated, and shortly afterwards,
+     the same erase block might be marked as unused again.
+    </p></div></section></section><section class="sect1" id="sec-filesystems-trouble" data-id-title="Troubleshooting file systems"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.15 </span><span class="title-name">Troubleshooting file systems</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section describes some known issues and possible solutions for file
+   systems.
+  </p><section class="sect2" id="sec-filesystems-trouble-btrfs-volfull" data-id-title="Btrfs error: no space is left on device"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.15.1 </span><span class="title-name">Btrfs error: no space is left on device</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble-btrfs-volfull">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The root (<code class="filename">/</code>) partition using the Btrfs file system
+    stops accepting data. You receive the error <span class="quote">“<span class="quote"><code class="literal">No space left
+    on device</code></span>”</span>.
+   </p><p>
+    See the following sections for information about possible causes and
+    prevention of this issue.
+   </p><section class="sect3" id="sec-filesystems-trouble-btrfs-volfull-snapshots" data-id-title="Disk space consumed by Snapper snapshots"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.15.1.1 </span><span class="title-name">Disk space consumed by Snapper snapshots</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble-btrfs-volfull-snapshots">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     If Snapper is running for the Btrfs file system, the <span class="quote">“<span class="quote"><code class="literal">No
+     space left on device</code></span>”</span> problem is typically caused by
+     having too much data stored as snapshots on your system.
+    </p><p>
+     You can remove some snapshots from Snapper, however, the snapshots are not
+     deleted immediately and might not free up as much space as you need.
+    </p><p>
+     To delete files from Snapper:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Open a terminal.
+      </p></li><li class="step"><p>
+       At the command prompt, enter <code class="command">btrfs filesystem show</code>,
+       for example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem show
+Label: none uuid: 40123456-cb2c-4678-8b3d-d014d1c78c78
+ Total devices 1 FS bytes used 20.00GB
+ devid 1 size 20.00GB used 20.00GB path /dev/sda3</pre></div></li><li class="step"><p>
+       Enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs fi balance start <em class="replaceable">MOUNTPOINT</em> -dusage=5</pre></div><p>
+       This command attempts to relocate data in empty or near-empty data
+       chunks, allowing the space to be reclaimed and reassigned to metadata.
+       This can take a while (many hours for 1 TB) although the system is
+       otherwise usable during this time.
+      </p></li><li class="step"><p>
+       List the snapshots in Snapper. Enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c root list</pre></div></li><li class="step"><p>
+       Delete one or more snapshots from Snapper. Enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> snapper -c root delete <em class="replaceable">SNAPSHOT_NUMBER(S)</em></pre></div><p>
+       Ensure that you delete the oldest snapshots first. The older a snapshot
+       is, the more disk space it occupies.
+      </p></li></ol></div></div><p>
+     To help prevent this problem, you can change the Snapper cleanup
+     algorithms. See <span class="intraxref">Book “Administration Guide”, Chapter 10 “System recovery and snapshot management with Snapper”, Section 10.6.1.2 “Cleanup algorithms”</span> for
+     details. The configuration values controlling snapshot cleanup are
+     <code class="envar">EMPTY_*</code>, <code class="envar">NUMBER_*</code>, and
+     <code class="envar">TIMELINE_*</code>.
+    </p><p>
+     If you use Snapper with Btrfs on the file system disk, it is advisable to
+     reserve twice the amount of disk space than the standard storage proposal.
+     The YaST Partitioner automatically proposes twice the standard disk
+     space in the Btrfs storage proposal for the root file system.
+    </p></section><section class="sect3" id="sec-filesystems-trouble-btrfs-volfull-var" data-id-title="Disk space consumed by log, crash, and cache files"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">1.15.1.2 </span><span class="title-name">Disk space consumed by log, crash, and cache files</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble-btrfs-volfull-var">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     If the system disk is filling up with data, you can try deleting files
+     from <code class="filename">/var/log</code>, <code class="filename">/var/crash</code>,
+     <code class="filename">/var/lib/systemd/coredump</code> and
+     <code class="filename">/var/cache</code>.
+    </p><p>
+     The Btrfs <code class="systemitem">root</code> file system subvolumes <code class="filename">/var/log</code>,
+     <code class="filename">/var/crash</code> and <code class="filename">/var/cache</code> can
+     use all of the available disk space during normal operation, and cause a
+     system malfunction. To help avoid this situation, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> offers
+     Btrfs quota support for subvolumes. See
+     <a class="xref" href="cha-filesystems.html#sec-filesystems-major-btrfs-quota" title="1.2.5. Btrfs quota support for subvolumes">Section 1.2.5, “Btrfs quota support for subvolumes”</a> for details.
+    </p><p>
+     On test and development machines, especially if you have frequent crashes
+     of applications, you may also want to have a look at
+     <code class="filename">/var/lib/systemd/coredump</code> where the core dumps are
+     stored.
+    </p></section></section><section class="sect2" id="sec-filesystems-trouble-balance" data-id-title="Btrfs: balancing data across devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.15.2 </span><span class="title-name">Btrfs: balancing data across devices</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble-balance">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">btrfs balance</code> command is part of the
+    <span class="package">btrfs-progs</span> package. It balances block groups on Btrfs
+    file systems in the following example situations:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Assume you have a 1 TB drive with 600 GB used by data and you
+      add another 1 TB drive. The balancing will theoretically result in
+      having 300 GB of used space on each drive.
+     </p></li><li class="listitem"><p>
+      You have a lot of near-empty chunks on a device. Their space will not be
+      available until the balancing has cleared those chunks.
+     </p></li><li class="listitem"><p>
+      You need to compact half-empty block group based on the percentage of
+      their usage. The following command will balance block groups whose usage
+      is 5% or less:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs balance start -dusage=5 /</pre></div><div id="id-1.11.3.2.22.4.3.3.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+       The <code class="filename">/usr/lib/systemd/system/btrfs-balance.timer</code>
+       timer takes care of cleaning up unused block groups on a monthly basis.
+      </p></div></li><li class="listitem"><p>
+      You need to clear out non-full portions of block devices and spread data
+      more evenly.
+     </p></li><li class="listitem"><p>
+      You need to migrate data between different RAID types. For example, to
+      convert data on a set of disks from RAID1 to RAID5, run the following
+      command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs balance start -dprofiles=raid1,convert=raid5 /</pre></div></li></ul></div><div id="id-1.11.3.2.22.4.4" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+     To fine-tune the default behavior of balancing data on Btrfs file
+     systems—for example, how frequently or which mount points to
+     balance— inspect and customize
+     <code class="filename">/etc/sysconfig/btrfsmaintenance</code>. The relevant options
+     start with <code class="option">BTRFS_BALANCE_</code>.
+    </p></div><p>
+    For details about the <code class="command">btrfs balance</code> command usage, see
+    its manual pages (<code class="command">man 8 btrfs-balance</code>).
+   </p></section><section class="sect2" id="sec-filesystems-trouble-defrag" data-id-title="No defragmentation on SSDs"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.15.3 </span><span class="title-name">No defragmentation on SSDs</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-trouble-defrag">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Linux file systems contain mechanisms to avoid data fragmentation and
+    usually it is not necessary to defragment. However, there are use cases,
+    where data fragmentation cannot be avoided and where defragmenting the hard
+    disk significantly improves the performance.
+   </p><p>
+    This only applies to conventional hard disks. On solid state disks (SSDs)
+    which use flash memory to store data, the firmware provides an algorithm
+    that determines to which chips the data is written. Data is usually spread
+    all over the device. Therefore defragmenting an SSD does not have the
+    desired effect and will reduce the lifespan of an SSD by writing
+    unnecessary data.
+   </p><p>
+    For the reasons mentioned above, SUSE explicitly recommends
+    <span class="emphasis"><em>not</em></span> to defragment SSDs. Some vendors also warn about
+    defragmenting solid state disks. This includes, but it is not limited to
+    the following:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      HPE 3PAR StoreServ All-Flash
+     </p></li><li class="listitem"><p>
+      HPE 3PAR StoreServ Converged Flash
+     </p></li></ul></div></section></section><section class="sect1" id="sec-filesystems-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.16 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-filesystems.html#sec-filesystems-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_filesystems.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Each of the file system projects described above maintains its own home page
+   on which to find mailing list information, further documentation, and FAQs:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     The Btrfs Wiki on Kernel.org:
+     <a class="link" href="https://btrfs.wiki.kernel.org/" target="_blank">https://btrfs.wiki.kernel.org/</a>
+    </p></li><li class="listitem"><p>
+     E2fsprogs: Ext2/3/4 File System Utilities:
+     <a class="link" href="https://e2fsprogs.sourceforge.net/" target="_blank">https://e2fsprogs.sourceforge.net/</a>
+    </p></li><li class="listitem"><p>
+     The OCFS2 Project:
+     <a class="link" href="https://oss.oracle.com/projects/ocfs2/" target="_blank">https://oss.oracle.com/projects/ocfs2/</a>
+    </p></li></ul></div><p>
+   An in-depth comparison of file systems (not only Linux file systems) is
+   available from the Wikipedia project in Comparison of File Systems
+   (<a class="link" href="https://en.wikipedia.org/wiki/Comparison_of_file_systems#Comparison" target="_blank">https://en.wikipedia.org/wiki/Comparison_of_file_systems#Comparison</a>).
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-filesystems.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part I </span>File systems and mounting</span></a> </div><div><a class="pagination-link next" href="cha-resize-fs.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 2 </span>Resizing file systems</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-glossary"><span class="title-number">1.1 </span><span class="title-name">Terminology</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-major-btrfs"><span class="title-number">1.2 </span><span class="title-name">Btrfs</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-major-xfs"><span class="title-number">1.3 </span><span class="title-name">XFS</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-major-ext2"><span class="title-number">1.4 </span><span class="title-name">Ext2</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-major-ext3"><span class="title-number">1.5 </span><span class="title-name">Ext3</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-major-ext4"><span class="title-number">1.6 </span><span class="title-name">Ext4</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-major-reiser"><span class="title-number">1.7 </span><span class="title-name">ReiserFS</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filessytems-zfs"><span class="title-number">1.8 </span><span class="title-name">OpenZFS and ZFS</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-tmpfs"><span class="title-number">1.9 </span><span class="title-name">tmpfs</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-other"><span class="title-number">1.10 </span><span class="title-name">Other supported file systems</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-blacklist-filsystem"><span class="title-number">1.11 </span><span class="title-name">Blocked file systems</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-lfs"><span class="title-number">1.12 </span><span class="title-name">Large file support in Linux</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-stor-limits"><span class="title-number">1.13 </span><span class="title-name">Linux kernel storage limitations</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-trouble-trim"><span class="title-number">1.14 </span><span class="title-name">Freeing unused file system blocks</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-trouble"><span class="title-number">1.15 </span><span class="title-name">Troubleshooting file systems</span></a></span></li><li><span class="sect1"><a href="cha-filesystems.html#sec-filesystems-info"><span class="title-number">1.16 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

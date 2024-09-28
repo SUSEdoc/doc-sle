@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Storage Administration Guide | Sharing file systems with NFS</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Sharing file systems with NFS | SLES 15 SP6"/>
+<meta name="description" content="The Network File System (NFS) is a protocol that allows access to files on a server in a manner similar to accessing local files. SUSE Linux Enterpri…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 19. Sharing file systems with NFS"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Sharing file systems with NFS",
+  
+    "description": "The Network File System (NFS) is a protocol that allows access to files on a server in a manner similar to accessing local files.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-multipath.html" title="Chapter 18. Managing multipath I/O for devices"/><link rel="next" href="cha-samba.html" title="Chapter 20. Samba"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-net-storage.html">Network storage</a><span> / </span><a class="crumb" href="cha-nfs.html">Sharing file systems with NFS</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li><a href="part-software-raid.html" class="has-children "><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li class="active"><a href="part-net-storage.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" you-are-here"><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-nfs" data-id-title="Sharing file systems with NFS"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+        The <span class="emphasis"><em>Network File System</em></span> (<span class="emphasis"><em>NFS</em></span>)
+        is a protocol that allows access to files on a server in a manner
+        similar to accessing local files.
+      </p><p>
+        <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> installs NFS v4.2, which introduces support for sparse
+        files, file pre-allocation, server-side clone and copy, application
+        data block (ADB), and labeled NFS for mandatory access control (MAC)
+        (requires MAC on both client and server).
+      </p></div></div></div></div><section class="sect1" id="sec-nfs-overview" data-id-title="Overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.1 </span><span class="title-name">Overview</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The <span class="emphasis"><em>Network File System</em></span> (NFS) is a standardized,
+      well-proven and widely supported network protocol that allows sharing
+      files between separate hosts.
+    </p><p>
+      The <span class="emphasis"><em>Network Information Service</em></span> (NIS) can be used to
+      have centralized user management in the network. Combining NFS and NIS
+      allows using file and directory permissions for access control in the
+      network. NFS with NIS makes a network transparent to the user.
+    </p><p>
+      In the default configuration, NFS completely trusts the network and thus
+      any machine that is connected to a trusted network. Any user with
+      administrator privileges on any computer with physical access to any
+      network the NFS server trusts can access any files that the server makes
+      available.
+    </p><p>
+      Often, this level of security is perfectly satisfactory, such as when the
+      network that is trusted is truly private, often localized to a single
+      cabinet or machine room, and no unauthorized access is possible. In other
+      cases, the need to trust a whole subnet as a unit is restrictive, and
+      there is a need for more fine-grained trust. To meet the need in these
+      cases, NFS supports various security levels using the
+      <span class="emphasis"><em>Kerberos</em></span> infrastructure. Kerberos requires NFSv4, which is
+      used by default. For details, see
+      <span class="intraxref">Book “Security and Hardening Guide”, Chapter 6 “Network authentication with Kerberos”</span>.
+    </p><p>
+      The following are terms used in the YaST module.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.7.3.7.1"><span class="term">Exports</span></dt><dd><p>
+            A directory <span class="emphasis"><em>exported</em></span> by an NFS server, which
+            clients can integrate into their systems.
+          </p></dd><dt id="id-1.11.6.7.3.7.2"><span class="term">NFS client</span></dt><dd><p>
+            The NFS client is a system that uses NFS services from an NFS
+            server over the Network File System protocol. The TCP/IP protocol
+            is already integrated into the Linux kernel; there is no need to
+            install any additional software.
+          </p></dd><dt id="id-1.11.6.7.3.7.3"><span class="term">NFS server</span></dt><dd><p>
+            The NFS server provides NFS services to clients. A running server
+            depends on the following daemons:
+            <code class="systemitem">nfsd</code> (worker),
+            <code class="systemitem">idmapd</code> (ID-to-name mapping
+            for NFSv4, needed for certain scenarios only),
+            <code class="systemitem">statd</code> (file locking),
+            and <code class="systemitem">mountd</code> (mount
+            requests).
+          </p></dd><dt id="id-1.11.6.7.3.7.4"><span class="term">NFSv3</span></dt><dd><p>
+            NFSv3 is the version 3 implementation, the <span class="quote">“<span class="quote">old</span>”</span>
+            stateless NFS that supports client authentication.
+          </p></dd><dt id="id-1.11.6.7.3.7.5"><span class="term">NFSv4</span></dt><dd><p>
+            NFSv4 is the new version 4 implementation that supports secure user
+            authentication via Kerberos. NFSv4 requires one single port only and
+            thus is better suited for environments behind a firewall than
+            NFSv3.
+          </p><p>
+            The protocol is specified as
+            <a class="link" href="https://datatracker.ietf.org/doc/rfc7531/" target="_blank">https://datatracker.ietf.org/doc/rfc7531/</a>.
+          </p></dd><dt id="id-1.11.6.7.3.7.6"><span class="term">pNFS</span></dt><dd><p>
+            Parallel NFS, a protocol extension of NFSv4. Any pNFS clients can
+            directly access the data on an NFS server.
+          </p></dd></dl></div><div id="id-1.11.6.7.3.8" data-id-title="Need for DNS" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Need for DNS</div><p>
+        In principle, all exports can be made using IP addresses only. To avoid
+        timeouts, you need a working DNS system. DNS is necessary at least for
+        logging purposes, because the
+        <code class="systemitem">mountd</code> daemon does reverse
+        lookups.
+      </p></div></section><section class="sect1" id="sec-nfs-installation" data-id-title="Installing NFS server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.2 </span><span class="title-name">Installing NFS server</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-installation">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The NFS server is not part of the default installation. To install the
+      NFS server using YaST, choose <span class="guimenu">Software</span> › <span class="guimenu">Software Management</span>, select
+      <span class="guimenu">Patterns</span>, and enable the <span class="guimenu">File
+      Server</span> option in the <span class="guimenu">Server Functions</span>
+      section. Click <span class="guimenu">Accept</span> to install the required
+      packages.
+    </p><p>
+      The pattern does not include the YaST module for the NFS Server.
+      After the pattern installation is complete, install the module by running:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">zypper in yast2-nfs-server</code></pre></div><p>
+      Like NIS, NFS is a client/server system. However, a machine can be
+      both—it can supply file systems over the network (export) and mount
+      file systems from other hosts (import).
+    </p></section><section class="sect1" id="sec-nfs-configuring-nfs-server" data-id-title="Configuring NFS server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.3 </span><span class="title-name">Configuring NFS server</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-configuring-nfs-server">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Configuring an NFS server can be done either through YaST or manually.
+      For authentication, NFS can also be combined with Kerberos.
+    </p><section class="sect2" id="sec-nfs-export-yast2" data-id-title="Exporting file systems with YaST"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.3.1 </span><span class="title-name">Exporting file systems with YaST</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-export-yast2">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        With YaST, turn a host in your network into an NFS server—a
+        server that exports directories and files to all hosts granted access
+        to it or to all members of a group. Thus, the server can also provide
+        applications without installing the applications locally on every host.
+      </p><p>
+        To set up such a server, proceed as follows:
+      </p><div class="procedure" id="pro-nfs-export-yast2-nfs" data-id-title="Setting up an NFS server"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 19.1: </span><span class="title-name">Setting up an NFS server </span></span><a title="Permalink" class="permalink" href="cha-nfs.html#pro-nfs-export-yast2-nfs">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Start YaST and select <span class="guimenu">Network
+            Services</span> › <span class="guimenu">NFS Server</span>; see
+            <a class="xref" href="cha-nfs.html#fig-inst-nfsserver1" title="NFS server configuration tool">Figure 19.1, “NFS server configuration tool”</a>. You may be prompted to
+            install additional software.
+          </p><div class="figure" id="fig-inst-nfsserver1"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_inst_nfsserver1.png"><img src="images/yast2_inst_nfsserver1.png" width="75%" alt="NFS server configuration tool" title="NFS server configuration tool"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 19.1: </span><span class="title-name">NFS server configuration tool </span></span><a title="Permalink" class="permalink" href="cha-nfs.html#fig-inst-nfsserver1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+            Click the <span class="guimenu">Start</span> radio button.
+          </p></li><li class="step"><p>
+            If <code class="systemitem">firewalld</code> is active on your system, configure it separately
+            for NFS (see <a class="xref" href="cha-nfs.html#sec-nfs-firewall" title="19.5. Operating an NFS server and clients behind a firewall">Section 19.5, “Operating an NFS server and clients behind a firewall”</a>).
+            YaST does not yet have complete support for <code class="systemitem">firewalld</code>, so
+            ignore the "Firewall not configurable" message and continue.
+          </p></li><li class="step"><p>
+            Check whether you want to <span class="guimenu">Enable NFSv4</span>. If you
+            deactivate NFSv4, YaST will only support NFSv3. For information
+            about enabling NFSv2, see
+            <a class="xref" href="cha-nfs.html#sec-nfs-export-manual-nsfv2" title="Note: NFSv2">Note: NFSv2</a>.
+          </p><ol type="a" class="substeps"><li class="step"><p>
+                If NFSv4 is selected, additionally enter the appropriate NFSv4
+                domain name. This parameter is used by the
+                <code class="systemitem">idmapd</code> daemon
+                that is required for Kerberos setups or if clients cannot work
+                with numeric user names. Leave it as
+                <code class="literal">localdomain</code> (the default) if you do not run
+                <code class="systemitem">idmapd</code> or do not have
+                any special requirements. For more information on the
+                <code class="systemitem">idmapd</code> daemon,
+                see <a class="xref" href="cha-nfs.html#var-nfs-export-manual-idmapd"><code class="filename">/etc/idmapd.conf</code></a>.
+              </p><div id="id-1.11.6.7.5.3.4.5.2.1.2" data-id-title="NFSv4 Domain Name" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: NFSv4 Domain Name</div><p>
+                  Note that the domain name needs to be configured on all NFSv4
+                  clients as well. Only clients that share the same domain name
+                  as the server can access the server. The default domain name
+                  for server and clients is <code class="literal">localdomain</code>.
+                 </p></div></li></ol></li><li class="step"><p>
+            Click <span class="guimenu">Enable GSS Security</span> if you need secure
+            access to the server. A prerequisite for this is to have Kerberos
+            installed on your domain and to have both the server and the
+            clients kerberized.
+            
+            Click <span class="guimenu">Next</span> to proceed with the next
+            configuration dialog.
+          </p></li><li class="step"><p>
+            Click <span class="guimenu">Add Directory</span> in the upper half of the
+            dialog to export your directory.
+          </p></li><li class="step"><p>
+            If you have not configured the allowed hosts already, another
+            dialog for entering the client information and options pops up
+            automatically. Enter the host wild card (usually you can leave the
+            default settings as they are).
+          </p><p>
+            There are four possible types of host wild cards that can be set
+            for each host: a single host (name or IP address), netgroups, wild
+            cards (such as <code class="literal">*</code> indicating all machines can
+            access the server), and IP networks.
+          </p><p>
+            For more information about these options, see the
+            <code class="literal">exports</code> man page.
+          </p></li><li class="step"><p>
+            Click <span class="guimenu">Finish</span> to complete the configuration.
+          </p></li></ol></div></div></section><section class="sect2" id="sec-nfs-export-manual" data-id-title="Exporting file systems manually"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.3.2 </span><span class="title-name">Exporting file systems manually</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-export-manual">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The configuration files for the NFS export service are
+        <code class="filename">/etc/exports</code> and
+        <code class="filename">/etc/sysconfig/nfs</code>. In addition to these files,
+        <code class="filename">/etc/idmapd.conf</code> is needed for the NFSv4 server
+        configuration with kerberized NFS or if the clients cannot work with
+        numeric user names.
+      </p><p>
+        To start or restart the services, run the command <code class="command">systemctl
+        restart nfs-server</code>. This also restarts the RPC port mapper
+        that is required by the NFS server.
+      </p><p>
+        To make sure the NFS server always starts at boot time, run
+        <code class="command">sudo systemctl enable nfs-server</code>.
+      </p><div id="id-1.11.6.7.5.4.5" data-id-title="NFSv4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: NFSv4</div><p>
+          NFSv4 is the latest version of the NFS protocol available on
+          <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. Configuring directories for export with NFSv4 is now
+          the same as with NFSv3.
+        </p><p>
+          On
+          <span class="phrase">SUSE Linux Enterprise Server 11</span>, the bind mount in
+          <code class="filename">/etc/exports</code> was mandatory. It is still
+          supported, but now deprecated.
+        </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.7.5.4.6.1"><span class="term"><code class="filename">/etc/exports</code></span></dt><dd><p>
+              The <code class="filename">/etc/exports</code> file contains a list of
+              entries. Each entry indicates a directory that is shared and how
+              it is shared. A typical entry in
+              <code class="filename">/etc/exports</code> consists of:
+            </p><div class="verbatim-wrap"><pre class="screen">/<em class="replaceable">SHARED</em>/<em class="replaceable">DIRECTORY</em>   <em class="replaceable">HOST</em>(<em class="replaceable">OPTION_LIST</em>)</pre></div><p>
+              For example:
+            </p><div class="verbatim-wrap"><pre class="screen">/nfs_exports/public *(rw,sync,root_squash,wdelay)
+/nfs_exports/department1 *.department1.example.com(rw,sync,root_squash,wdelay)
+/nfs_exports/team1 192.168.1.0/24(rw,sync,root_squash,wdelay)
+/nfs_exports/tux 192.168.1.2(rw,sync,root_squash)</pre></div><p>
+              In this example, the following values for
+              <em class="replaceable">HOST</em> are used:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <code class="literal">*</code>: exports to all clients on the network
+                </p></li><li class="listitem"><p>
+                  <code class="literal">*.department1.example.com</code>: only exports
+                  to clients on the *.department1.example.com domain
+                </p></li><li class="listitem"><p>
+                  <code class="literal">192.168.1.0/24</code>: only exports
+                  to clients with IP adresses in the range of 192.168.1.0/24
+                </p></li><li class="listitem"><p>
+                  <code class="literal">192.168.1.2</code>: only exports
+                  to the machine with the IP address 192.168.1.2
+                </p></li></ul></div><p>
+              In addition to the examples above, you can also restrict exports
+              to netgroups (<code class="literal">@my-hosts</code>) defined in
+              <code class="filename">/etc/netgroup</code>.
+              For a detailed explanation of all options and their meanings,
+              refer to the <code class="literal">man</code> page of
+              <code class="filename">/etc/exports</code>: (<code class="command">man
+              exports</code>).
+            </p><p>
+              In case you have modified <code class="filename">/etc/exports</code> while
+              the NFS server was running, you need to restart it for the
+              changes to become active: <code class="command">sudo systemctl restart
+              nfs-server</code>.
+            </p></dd><dt id="id-1.11.6.7.5.4.6.2"><span class="term"><code class="filename">/etc/sysconfig/nfs</code></span></dt><dd><p>
+              The <code class="filename">/etc/sysconfig/nfs</code> file contains a few
+              parameters that determine NFSv4 server daemon behavior. It is
+              important to set the parameter
+              <code class="systemitem">NFS4_SUPPORT</code> to <code class="literal">yes</code>
+              (default). <code class="systemitem">NFS4_SUPPORT</code> determines
+              whether the NFS server supports NFSv4 exports and clients.
+            </p><p>
+              In case you have modified <code class="filename">/etc/sysconfig/nfs</code>
+              while the NFS server was running, you need to restart it for the
+              changes to become active: <code class="command">sudo systemctl restart
+              nfs-server</code>.
+            </p><div id="id-1.11.6.7.5.4.6.2.2.3" data-id-title="Mount options" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Mount options</div><p>
+                On
+                <span class="phrase">SUSE Linux Enterprise Server 11</span>, the <code class="option">--bind</code> mount in
+                <code class="filename">/etc/exports</code> was mandatory. It is still
+                supported, but now deprecated. Configuring directories for
+                export with NFSv4 is now the same as with NFSv3.
+              </p></div><div id="sec-nfs-export-manual-nsfv2" data-id-title="NFSv2" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: NFSv2</div><p>
+                If NFS clients still depend on NFSv2, enable it on the server
+                in <code class="filename">/etc/sysconfig/nfs</code> by setting:
+              </p><div class="verbatim-wrap"><pre class="screen">NFSD_OPTIONS="-V2"
+MOUNTD_OPTIONS="-V2"</pre></div><p>
+                After restarting the service, check whether version 2 is
+                available with the command:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /proc/fs/nfsd/versions
++2 +3 +4 +4.1 +4.2</pre></div></div></dd><dt id="var-nfs-export-manual-idmapd"><span class="term"><code class="filename">/etc/idmapd.conf</code></span></dt><dd><p>
+              The <code class="systemitem">idmapd</code> daemon is only
+              required if Kerberos authentication is used or if clients cannot
+              work with numeric user names. Linux clients can work with numeric
+              user names since Linux kernel 2.6.39. The
+              <code class="systemitem">idmapd</code> daemon does
+              the name-to-ID mapping for NFSv4 requests to the server and
+              replies to the client.
+            </p><p>
+              If required, <code class="systemitem">idmapd</code> needs
+              to run on the NFSv4 server. Name-to-ID mapping on the client will
+              be done by <code class="command">nfsidmap</code> provided by the package
+              <span class="package">nfs-client</span>.
+            </p><p>
+              Make sure that there is a uniform way in which user names and IDs
+              (UIDs) are assigned to users across machines that might be
+              sharing file systems using NFS. This can be achieved by using
+              NIS, LDAP, or any uniform domain authentication mechanism in your
+              domain.
+            </p><p>
+              The parameter <code class="literal">Domain</code> must be set in
+              <code class="filename">/etc/idmapd.conf</code>. It must be the same for
+              the server and all NFSv4 clients that access this server. Clients
+              in a different NFSv4 domain cannot access the server. Sticking
+              with the default domain <code class="literal">localdomain</code> is
+              recommended. If you need to choose a different name, you may want
+              to go with the FQDN of the host, minus the host name. A sample
+              configuration file looks like the following:
+            </p><div class="verbatim-wrap"><pre class="screen">[General]
+Verbosity = 0
+Pipefs-Directory = /var/lib/nfs/rpc_pipefs
+Domain = localdomain
+
+[Mapping]
+Nobody-User = nobody
+Nobody-Group = nobody</pre></div><p>
+              To start the <code class="systemitem">idmapd</code>
+              daemon, run <code class="command">systemctl start nfs-idmapd</code>. In
+              case you have modified <code class="filename">/etc/idmapd.conf</code>
+              while the daemon was running, you need to restart it for the
+              changes to become active: <code class="command">systemctl restart
+              nfs-idmapd</code>.
+            </p><p>
+              For more information, see the man pages of
+              <code class="literal">idmapd</code> and <code class="literal">idmapd.conf</code>
+              (<code class="literal">man idmapd</code> and <code class="literal">man
+              idmapd.conf</code>).
+            </p></dd></dl></div></section><section class="sect2" id="sec-nfs-kerberos" data-id-title="NFS with Kerberos"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.3.3 </span><span class="title-name">NFS with Kerberos</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-kerberos">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To use Kerberos authentication for NFS, Generic Security Services (GSS)
+        must be enabled. Select <span class="guimenu">Enable GSS Security</span> in the
+        initial YaST NFS Server dialog. You must have a working Kerberos server
+        to use this feature. YaST does not set up the server but only uses
+        the provided functionality. To use Kerberos authentication in addition to
+        the YaST configuration, complete at least the following steps before
+        running the NFS configuration:
+      </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Make sure that both the server and the client are in the same Kerberos
+            domain. They must access the same KDC (Key Distribution Center)
+            server and share their <code class="filename">krb5.keytab</code> file (the
+            default location on any machine is
+            <code class="filename">/etc/krb5.keytab</code>). For more information about
+            Kerberos, see <span class="intraxref">Book “Security and Hardening Guide”, Chapter 6 “Network authentication with Kerberos”</span>.
+          </p></li><li class="step"><p>
+            Start the gssd service on the client with <code class="command">systemctl start
+            rpc-gssd.service</code>.
+          </p></li><li class="step"><p>
+            Start the svcgssd service on the server with <code class="command">systemctl
+            start rpc-svcgssd.service</code>.
+          </p></li></ol></div></div><p>
+        Kerberos authentication also requires the
+        <code class="systemitem">idmapd</code> daemon to run on the
+        server. For more information, refer to
+        <a class="xref" href="cha-nfs.html#var-nfs-export-manual-idmapd"><code class="filename">/etc/idmapd.conf</code></a>.
+      </p><p>
+        For more information about configuring kerberized NFS, refer to the
+        links in <a class="xref" href="cha-nfs.html#sec-nfs-info" title="19.7. More information">Section 19.7, “More information”</a>.
+      </p></section></section><section class="sect1" id="sec-nfs-configuring-nfs-clients" data-id-title="Configuring clients"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.4 </span><span class="title-name">Configuring clients</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-configuring-nfs-clients">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To configure your host as an NFS client, you do not need to install
+      additional software. All needed packages are installed by default.
+    </p><section class="sect2" id="sec-nfs-import-yast2" data-id-title="Importing file systems with YaST"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.4.1 </span><span class="title-name">Importing file systems with YaST</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-import-yast2">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Authorized users can mount NFS directories from an NFS server into the
+        local file tree using the YaST NFS client module. Proceed as follows:
+      </p><div class="procedure" id="pro-nfs-import-yast2" data-id-title="Importing NFS directories"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 19.2: </span><span class="title-name">Importing NFS directories </span></span><a title="Permalink" class="permalink" href="cha-nfs.html#pro-nfs-import-yast2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Start the YaST NFS client module.
+          </p></li><li class="step"><p>
+            Click <span class="guimenu">Add</span> in the <span class="guimenu">NFS Shares</span>
+            tab. Enter the host name of the NFS server, the directory to
+            import, and the mount point at which to mount this directory
+            locally.
+          </p></li><li class="step"><p>
+            When using NFSv4, select <span class="guimenu">Enable NFSv4</span> in the
+            <span class="guimenu">NFS Settings</span> tab. Additionally, the
+            <span class="guimenu">NFSv4 Domain Name</span> must contain the same value as
+            used by the NFSv4 server. The default domain is
+            <code class="literal">localdomain</code>.
+          </p></li><li class="step"><p>
+            To use Kerberos authentication for NFS, GSS security must be enabled.
+            Select <span class="guimenu">Enable GSS Security</span>.
+          </p></li><li class="step"><p>
+            If <code class="systemitem">firewalld</code> is active on your system, configure it separately
+            for NFS (see <a class="xref" href="cha-nfs.html#sec-nfs-firewall" title="19.5. Operating an NFS server and clients behind a firewall">Section 19.5, “Operating an NFS server and clients behind a firewall”</a>).
+            YaST does not yet have complete support for <code class="systemitem">firewalld</code>, so
+            ignore the <span class="quote">“<span class="quote">Firewall not configurable</span>”</span> message and continue.
+          </p></li><li class="step"><p>
+            Click <span class="guimenu">OK</span> to save your changes.
+          </p></li></ol></div></div><p>
+        The configuration is written to <code class="filename">/etc/fstab</code> and the
+        specified file systems are mounted. When you start the YaST
+        configuration client at a later time, it also reads the existing
+        configuration from this file.
+      </p><div id="id-1.11.6.7.6.3.5" data-id-title="NFS as a root file system" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: NFS as a root file system</div><p>
+          On (diskless) systems where the root partition is mounted via network
+          as an NFS share, you need to be careful when configuring the network
+          device with which the NFS share is accessible.
+        </p><p>
+          When shutting down or rebooting the system, the default processing
+          order is to turn off network connections then unmount the root
+          partition. With NFS root, this order causes problems as the root
+          partition cannot be cleanly unmounted as the network connection to
+          the NFS share is already deactivated. To prevent the system from
+          deactivating the relevant network device, open the network device
+          configuration tab as described in
+          <span class="intraxref">Book “Administration Guide”, Chapter 23 “Basic networking”, Section 23.4.1.2.5 “Activating the network device”</span> and choose
+          <span class="guimenu">On NFSroot</span> in the <span class="guimenu">Device
+          Activation</span> pane.
+        </p></div></section><section class="sect2" id="sec-nfs-import" data-id-title="Importing file systems manually"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.4.2 </span><span class="title-name">Importing file systems manually</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-import">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The prerequisite for importing file systems manually from an NFS server
+        is a running RPC port mapper. The <code class="option">nfs</code> service takes
+        care to start it properly; thus, start it by entering
+        <code class="command">systemctl start nfs</code> as
+        <code class="systemitem">root</code>. Then remote file
+        systems can be mounted in the file system just like local partitions,
+        using the <code class="command">mount</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount <em class="replaceable">HOST</em>:<em class="replaceable">REMOTE-PATH</em> <em class="replaceable">LOCAL-PATH</em></pre></div><p>
+        To import user directories from the <code class="systemitem">nfs.example.com</code>
+        machine, for example, use:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount nfs.example.com:/home /home</pre></div><p>
+        To define a count of TCP connections that the clients make to the NFS
+        server, you can use the <code class="literal">nconnect</code> option of the
+        <code class="command">mount</code> command. You can specify any number between 1
+        and 16, where 1 is the default value if the mount option has not been
+        specified.
+      </p><p>
+        The <code class="literal">nconnect</code> setting is applied only during the
+        first mount process to the particular NFS server. If the same client
+        executes the mount command to the same NFS server, all already
+        established connections will be shared—no new connection will be
+        established. To change the <code class="literal">nconnect</code> setting, you
+        have to unmount <span class="bold"><strong>all</strong></span> client connections
+        to the particular NFS server. Then you can define a new value for the
+        <code class="literal">nconnect</code> option.
+      </p><p>
+        You can find the value of <code class="literal">nconnect</code> that is in
+        currently in effect in the output of the <code class="command">mount</code>, or
+        in the file <code class="filename">/proc/mounts</code>. If there is no value for
+        the mount option, then the option has not been used during mounting and
+        the default value of <span class="emphasis"><em>1</em></span> is in use.
+      </p><div id="id-1.11.6.7.6.4.9" data-id-title="Different number of connections than defined by nconnect" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Different number of connections than defined by <code class="literal">nconnect</code></div><p>
+          As you can close and open connections after the first mount, the
+          actual count of connections does not necessarily have to be the same
+          as the value of <code class="literal">nconnect</code>.
+        </p></div><section class="sect3" id="sec-nfs-automount" data-id-title="Using the automount service"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">19.4.2.1 </span><span class="title-name">Using the automount service</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-automount">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          The autofs daemon can be used to mount remote file systems
+          automatically. Add the following entry to the
+          <code class="filename">/etc/auto.master</code> file:
+        </p><div class="verbatim-wrap"><pre class="screen">/nfsmounts /etc/auto.nfs</pre></div><p>
+          Now the <code class="filename">/nfsmounts</code> directory acts as the root
+          for all the NFS mounts on the client if the
+          <code class="filename">auto.nfs</code> file is filled appropriately. The name
+          <code class="filename">auto.nfs</code> is chosen for the sake of
+          convenience—you can choose any name. In
+          <code class="filename">auto.nfs</code> add entries for all the NFS mounts as
+          follows:
+        </p><div class="verbatim-wrap"><pre class="screen">localdata -fstype=nfs server1:/data
+nfs4mount -fstype=nfs4 server2:/</pre></div><p>
+          Activate the settings with <code class="command">systemctl start autofs</code>
+          as <code class="systemitem">root</code>. In this example,
+          <code class="filename">/nfsmounts/localdata</code>, the
+          <code class="filename">/data</code> directory of
+          <code class="systemitem">server1</code>, is mounted with NFS and
+          <code class="filename">/nfsmounts/nfs4mount</code> from
+          <code class="systemitem">server2</code> is mounted with NFSv4.
+        </p><p>
+          If the <code class="filename">/etc/auto.master</code> file is edited while the
+          service autofs is running, the automounter must be restarted for the
+          changes to take effect with <code class="command">systemctl restart
+          autofs</code>.
+        </p></section><section class="sect3" id="sec-nfs-fstab" data-id-title="Manually editing /etc/fstab"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">19.4.2.2 </span><span class="title-name">Manually editing <code class="filename">/etc/fstab</code></span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-fstab">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          A typical NFSv3 mount entry in <code class="filename">/etc/fstab</code> looks
+          like this:
+        </p><div class="verbatim-wrap"><pre class="screen">nfs.example.com:/data /local/path nfs rw,noauto 0 0</pre></div><p>
+          For NFSv4 mounts, use <code class="literal">nfs4</code> instead of
+          <code class="literal">nfs</code> in the third column:
+        </p><div class="verbatim-wrap"><pre class="screen">nfs.example.com:/data /local/pathv4 nfs4 rw,noauto 0 0</pre></div><p>
+          The <code class="literal">noauto</code> option prevents the file system from
+          being mounted automatically at start-up. If you want to mount the
+          respective file system manually, it is possible to shorten the mount
+          command specifying the mount point only:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount /local/path</pre></div><div id="id-1.11.6.7.6.4.11.8" data-id-title="Mounting at start-up" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Mounting at start-up</div><p>
+            If you do not enter the <code class="literal">noauto</code> option, the init
+            scripts of the system will handle the mount of those file systems
+            at start-up. In that case, you may consider adding the option
+            <code class="option">_netdev</code>, which prevents scripts from trying to
+            mount the share before the network is available.
+         </p></div></section></section><section class="sect2" id="sec-nfs-pnfs" data-id-title="Parallel NFS (pNFS)"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.4.3 </span><span class="title-name">Parallel NFS (pNFS)</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-pnfs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        NFS is one of the oldest protocols, developed in the 1980s. As such,
+        NFS is usually sufficient if you want to share small files. However,
+        when you want to transfer big files or many clients want to access
+        data, an NFS server becomes a bottleneck and has a significant impact
+        on the system performance. This is because files are quickly getting
+        bigger, whereas the relative speed of Ethernet has not fully kept pace.
+      </p><p>
+        When you request a file from a regular NFS server, the server looks up
+        the file metadata, collects all the data, and transfers it over the
+        network to your client. However, the performance bottleneck becomes
+        apparent no matter how small or big the files are:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            With small files, most of the time is spent collecting the
+            metadata.
+          </p></li><li class="listitem"><p>
+            With big files, most of the time is spent on transferring the data
+            from server to client.
+          </p></li></ul></div><p>
+        pNFS, or parallel NFS, overcomes this limitation as it separates the
+        file system metadata from the location of the data. As such, pNFS
+        requires two types of servers:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            A <span class="emphasis"><em>metadata</em></span> or <span class="emphasis"><em>control
+            server</em></span> that handles all the non-data traffic
+          </p></li><li class="listitem"><p>
+            One or more <span class="emphasis"><em>storage server(s)</em></span> that hold(s) the
+            data
+          </p></li></ul></div><p>
+        The metadata and the storage servers form a single, logical NFS server.
+        When a client wants to read or write, the metadata server tells the
+        NFSv4 client which storage server to use to access the file chunks. The
+        client can access the data directly on the server.
+      </p><p>
+        <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports pNFS on the client side only.
+      </p><section class="sect3" id="sec-nfs-pnfs-yast" data-id-title="Configuring pNFS client with YaST"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">19.4.3.1 </span><span class="title-name">Configuring pNFS client with YaST</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-pnfs-yast">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Proceed as described in <a class="xref" href="cha-nfs.html#pro-nfs-import-yast2" title="Importing NFS directories">Procedure 19.2, “Importing NFS directories”</a>, but
+          click the <span class="guimenu">pNFS (v4.2)</span> check box and optionally
+          <span class="guimenu">NFSv4 share</span>. YaST will do all the necessary
+          steps and will write all the required options in the file
+          <code class="filename">/etc/exports</code>.
+        </p></section><section class="sect3" id="sec-nfs-pnfs-manual" data-id-title="Configuring pNFS client manually"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">19.4.3.2 </span><span class="title-name">Configuring pNFS client manually</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-pnfs-manual">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Refer to <a class="xref" href="cha-nfs.html#sec-nfs-import" title="19.4.2. Importing file systems manually">Section 19.4.2, “Importing file systems manually”</a> to start. Most of the
+          configuration is done by the NFSv4 server. For pNFS, the only
+          difference is to add the <code class="option">nfsvers</code> option and the
+          metadata server <em class="replaceable">MDS_SERVER</em> to your
+          <code class="command">mount</code> command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount -t nfs4 -o nfsvers=4.2 <em class="replaceable">MDS_SERVER</em> <em class="replaceable">MOUNTPOINT</em></pre></div><p>
+          To help with debugging, change the value in the
+          <code class="filename">/proc</code> file system:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> echo 32767 &gt; /proc/sys/sunrpc/nfsd_debug
+<code class="prompt user">&gt; </code><code class="command">sudo</code> echo 32767 &gt; /proc/sys/sunrpc/nfs_debug</pre></div></section></section></section><section class="sect1" id="sec-nfs-firewall" data-id-title="Operating an NFS server and clients behind a firewall"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.5 </span><span class="title-name">Operating an NFS server and clients behind a firewall</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-firewall">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Communication between an NFS server and its clients happens via Remote
+      Procedure Calls (RPC). Several RPC services, such as the mount daemon or the
+      file locking service, are part of the Linux NFS implementation. If
+      the server and the clients run behind a firewall, these services and the
+      firewall(s) need to be configured to not block the client-server
+      communication.
+    </p><p>
+      An NFS 4 server is backwards-compatible with NFS version 3, and firewall
+      configurations vary for both versions. If any of your clients use
+      NFS 3 to mount shares, configure your firewall to allow
+      both NFS 4 and NFS 3.
+    </p><section class="sect2" id="nfs-firewall-nfsv4" data-id-title="NFS 4.x"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.5.1 </span><span class="title-name">NFS 4.<em class="replaceable">x</em></span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#nfs-firewall-nfsv4">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        NFS 4 requires TCP port 2049 to be open on the server side only. To
+        open this port on the firewall, enable the <code class="literal">nfs</code>
+        service in firewalld <span class="emphasis"><em>on the NFS server</em></span>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --permanent --add-service=nfs --zone=<em class="replaceable">ACTIVE_ZONE</em>
+firewall-cmd --reload</pre></div><p>
+        Replace <em class="replaceable">ACTIVE_ZONE</em> with the firewall zone
+        used on the NFS server.
+      </p><p>
+        No additional firewall configuration on the client side is needed when
+        using NFSv4. By default mount defaults to the highest supported
+        NFS version, so if your client supports NFSv4, shares will
+        automatically be mounted as version 4.2.
+      </p></section><section class="sect2" id="nfs-firewall-nfsv3" data-id-title="NFS 3"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.5.2 </span><span class="title-name">NFS 3</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#nfs-firewall-nfsv3">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        NFS 3 requires the following services:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><code class="systemitem">portmapper</code></p></li><li class="listitem"><p><code class="systemitem">nfsd</code></p></li><li class="listitem"><p><code class="systemitem">mountd</code></p></li><li class="listitem"><p><code class="systemitem">lockd</code></p></li><li class="listitem"><p><code class="systemitem">statd</code></p></li></ul></div><p>
+        These services are operated by <code class="systemitem">rpcbind</code>, which,
+        by default, dynamically assigns ports. To allow access to these
+        services behind a firewall, they need to be configured to run on a
+        static port first. These ports need to be opened in the firewall(s) afterwards.
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.7.7.5.5.1"><span class="term"><code class="systemitem">portmapper</code></span></dt><dd><p>
+              On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, <code class="systemitem">portmapper</code> is already configured to
+              run on a static port.
+            </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Port</p></td><td style="border-bottom: 1px solid ; "><p>111</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Protocol(s)</p></td><td style="border-bottom: 1px solid ; "><p>TCP, UDP</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Runs on</p></td><td style="border-bottom: 1px solid ; "><p>Client, Server</p></td></tr><tr><td colspan="2">
+                       <div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --add-service=rpc-bind --permanent --zone=<em class="replaceable">ACTIVE_ZONE</em></pre></div>
+                     </td></tr></tbody></table></div></dd><dt id="id-1.11.6.7.7.5.5.2"><span class="term"><code class="systemitem">nfsd</code></span></dt><dd><p>
+              On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, <code class="systemitem">nfsd</code> is already configured to
+              run on a static port.
+            </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Port</p></td><td style="border-bottom: 1px solid ; "><p>2049</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Protocol(s)</p></td><td style="border-bottom: 1px solid ; "><p>TCP, UDP</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Runs on</p></td><td style="border-bottom: 1px solid ; "><p>Server</p></td></tr><tr><td colspan="2">
+                       <div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --add-service=nfs3 --permanent --zone=<em class="replaceable">ACTIVE_ZONE</em></pre></div>
+                     </td></tr></tbody></table></div></dd><dt id="id-1.11.6.7.7.5.5.3"><span class="term"><code class="systemitem">mountd</code></span></dt><dd><p>
+               On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, <code class="systemitem">mountd</code> is already configured to
+              run on a static port.
+            </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Port</p></td><td style="border-bottom: 1px solid ; "><p><em class="replaceable">20048</em></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Protocol(s)</p></td><td style="border-bottom: 1px solid ; "><p>TCP, UDP</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Runs on</p></td><td style="border-bottom: 1px solid ; "><p>Server</p></td></tr><tr><td colspan="2">
+                       <div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --add-service=mountd --permanent --zone=<em class="replaceable">ACTIVE_ZONE</em></pre></div>
+                     </td></tr></tbody></table></div></dd><dt id="id-1.11.6.7.7.5.5.4"><span class="term"><code class="systemitem">lockd</code></span></dt><dd><p>
+               To set a static port for <code class="systemitem">lockd</code>:
+            </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                  Edit<code class="filename">/etc/sysconfig/nfs</code> on the server and
+                  find and set
+                </p><div class="verbatim-wrap"><pre class="screen">LOCKD_TCPPORT=<em class="replaceable">NNNNN</em>
+LOCKD_UDPPORT=<em class="replaceable">NNNN</em></pre></div><p>
+                  Replace <em class="replaceable">NNNNN</em> with an unused port of
+                  your choice. Use the same port for both protocols.
+                </p></li><li class="step"><p>
+                  Restart the NFS server:
+                </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart nfs-server</pre></div></li></ol></div></div><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Port</p></td><td style="border-bottom: 1px solid ; "><p><em class="replaceable">NNNNN</em></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Protocol(s)</p></td><td style="border-bottom: 1px solid ; "><p>TCP, UDP</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Runs on</p></td><td style="border-bottom: 1px solid ; "><p>Client, Server</p></td></tr><tr><td colspan="2">
+                       <div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --add-port=<em class="replaceable">NNNNN</em>/{tcp,udp} --permanent --zone=<em class="replaceable">ACTIVE_ZONE</em></pre></div>
+                     </td></tr></tbody></table></div></dd><dt id="id-1.11.6.7.7.5.5.5"><span class="term"><code class="systemitem">statd</code></span></dt><dd><p>
+               To set a static port for <code class="systemitem">statd</code>:
+            </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                  Edit<code class="filename">/etc/sysconfig/nfs</code> on the server and
+                  find and set
+                </p><div class="verbatim-wrap"><pre class="screen">STATD_PORT=<em class="replaceable">NNNNN</em></pre></div><p>
+                  Replace <em class="replaceable">NNNNN</em> with an unused port of
+                  your choice.
+                </p></li><li class="step"><p>
+                  Restart the NFS server:
+                </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart nfs-server</pre></div></li></ol></div></div><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Port</p></td><td style="border-bottom: 1px solid ; "><p><em class="replaceable">NNNNN</em></p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Protocol(s)</p></td><td style="border-bottom: 1px solid ; "><p>TCP, UDP</p></td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; "><p>Runs on</p></td><td style="border-bottom: 1px solid ; "><p>Client, Server</p></td></tr><tr><td colspan="2">
+                       <div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --add-port=<em class="replaceable">NNNNN</em>/{tcp,udp} --permanent --zone=<em class="replaceable">ACTIVE_ZONE</em></pre></div>
+                     </td></tr></tbody></table></div></dd></dl></div><div id="id-1.11.6.7.7.5.6" data-id-title="Loading a changed firewalld configuration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Loading a changed <code class="systemitem">firewalld</code> configuration</div><p>
+          Whenever you change the <code class="systemitem">firewalld</code> configuration, you need to reload
+          the daemon to activate the changes:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> firewall-cmd --reload</pre></div></div><div id="id-1.11.6.7.7.5.7" data-id-title="Firewall zone" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Firewall zone</div><p>
+          Make sure to replace <em class="replaceable">ACTIVE_ZONE</em> with the firewall zone
+          used on the respective machine. Note that, depending on the firewall
+          configuration, the active zone can differ from machine to machine.
+        </p></div></section></section><section class="sect1" id="nfs4-acls" data-id-title="Managing Access Control Lists over NFSv4"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.6 </span><span class="title-name">Managing Access Control Lists over NFSv4</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#nfs4-acls">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      There is no single standard for Access Control Lists (ACLs) in Linux
+      beyond the simple read, write, and execute (<code class="literal">rwx</code>) flags
+      for user, group, and others (<code class="literal">ugo</code>). One option for
+      finer control is the <em class="citetitle">Draft POSIX ACLs</em>, which were
+      never formally standardized by POSIX. Another is the NFSv4 ACLs, which
+      were designed to be part of the NFSv4 network file system with the goal
+      of making something that provided reasonable compatibility between POSIX
+      systems on Linux and WIN32 systems on Microsoft Windows.
+    </p><p>
+      NFSv4 ACLs are not sufficient to correctly implement Draft POSIX ACLs so
+      no attempt has been made to map ACL accesses on an NFSv4 client (such as
+      using <code class="command">setfacl</code>).
+    </p><p>
+      When using NFSv4, Draft POSIX ACLs cannot be used even in emulation and
+      NFSv4 ACLs need to be used directly; that means while
+      <code class="command">setfacl</code> can work on NFSv3, it cannot work on NFSv4. To
+      allow NFSv4 ACLs to be used on an NFSv4 file system, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+      provides the <code class="filename">nfs4-acl-tools</code> package, which contains
+      the following:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          <code class="command">nfs4-getfacl</code>
+        </p></li><li class="listitem"><p>
+          <code class="command">nfs4-setfacl</code>
+        </p></li><li class="listitem"><p>
+          <code class="command">nfs4-editacl</code>
+        </p></li></ul></div><p>
+      These operate in a generally similar way to <code class="command">getfacl</code>
+      and <code class="command">setfacl</code> for examining and modifying NFSv4 ACLs.
+      These commands are effective only if the file system on the NFS server
+      provides full support for NFSv4 ACLs. Any limitation imposed by the
+      server will affect programs running on the client in that some particular
+      combinations of Access Control Entries (ACEs) might not be possible.
+    </p><p>
+      It is not supported to mount NFS volumes locally on the exporting NFS
+      server.
+    </p><div class="sect1 bridgehead"><h2 class="title" id="id-1.11.6.7.8.8"><span class="name">Additional Information</span><a title="Permalink" class="permalink" href="cha-nfs.html#id-1.11.6.7.8.8">#</a></h2></div><p>
+      For information, see <em class="citetitle">Introduction to NFSv4 ACLs</em> at
+      <a class="link" href="https://wiki.linux-nfs.org/wiki/index.php/ACLs#Introduction_to_NFSv4_ACLs" target="_blank">https://wiki.linux-nfs.org/wiki/index.php/ACLs#Introduction_to_NFSv4_ACLs</a>.
+    </p></section><section class="sect1" id="sec-nfs-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.7 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      In addition to the man pages of <code class="command">exports</code>,
+      <code class="command">nfs</code>, and <code class="command">mount</code>, information about
+      configuring an NFS server and client is available in
+      <code class="filename">/usr/share/doc/packages/nfsidmap/README</code>. For further
+      documentation online, refer to the following Web sites:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          For general information about network security, refer to
+          <span class="intraxref">Book “Security and Hardening Guide”, Chapter 23 “Masquerading and firewalls”</span>.
+        </p></li><li class="listitem"><p>
+          Refer to <a class="xref" href="cha-autofs.html#sec-autofs-nfs" title="21.4. Auto-mounting an NFS share">Section 21.4, “Auto-mounting an NFS share”</a> if you need to
+          automatically mount NFS exports.
+        </p></li><li class="listitem"><p>
+          For more details about configuring NFS by using AutoYaST, refer to
+          <span class="intraxref">Book “AutoYaST Guide”, Chapter 4 “Configuration and installation options”, Section 4.21 “NFS client and server”</span>.
+        </p></li><li class="listitem"><p>
+          For instructions about securing NFS exports with Kerberos, refer to
+          <span class="intraxref">Book “Security and Hardening Guide”, Chapter 6 “Network authentication with Kerberos”, Section 6.6 “Kerberos and NFS”</span>.
+        </p></li><li class="listitem"><p>
+          Find the detailed technical documentation online at
+          <a class="link" href="https://nfs.sourceforge.net/" target="_blank">SourceForge</a>.
+        </p></li></ul></div></section><section class="sect1" id="sec-nfs-troubleshooting" data-id-title="Gathering information for NFS troubleshooting"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.8 </span><span class="title-name">Gathering information for NFS troubleshooting</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-troubleshooting">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-nfs-common-troubleshooting" data-id-title="Common troubleshooting"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.8.1 </span><span class="title-name">Common troubleshooting</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-nfs-common-troubleshooting">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        In some cases, you can understand the problem in your NFS by reading
+        the error messages produced and looking into the
+        <code class="filename">/var/log/messages</code> file. However, in many cases,
+        the information provided by the error messages and in
+        <code class="filename">/var/log/messages</code> is not detailed enough. In these
+        cases, most NFS problems can be best understood through capturing
+        network packets while reproducing the problem.
+      </p><p>
+        Clearly define the problem. Examine the problem by testing the system
+        in a variety of ways and determining when the problem occurs. Isolate
+        the simplest steps that lead to the problem. Then try to reproduce the
+        problem as described in the procedure below.
+      </p><div class="procedure" id="id-1.11.6.7.10.2.4" data-id-title="Reproducing the problem"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 19.3: </span><span class="title-name">Reproducing the problem </span></span><a title="Permalink" class="permalink" href="cha-nfs.html#id-1.11.6.7.10.2.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Capture network packets. On Linux, you can use the
+            <code class="command">tcpdump</code> command, which is supplied by the
+            <span class="package">tcpdump</span> package.
+          </p><p>
+            An example of <code class="command">tcpdump</code> syntax follows:
+          </p><div class="verbatim-wrap"><pre class="screen">tcpdump -s0 -i <em class="replaceable">eth0</em> -w <em class="replaceable">/tmp/nfs-demo.cap</em> host <em class="replaceable">x.x.x.x</em></pre></div><p>
+            Where:
+          </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.7.10.2.4.2.5.1"><span class="term">s0</span></dt><dd><p>
+                  Prevents packet truncation
+                </p></dd><dt id="id-1.11.6.7.10.2.4.2.5.2"><span class="term">eth0</span></dt><dd><p>
+                  Should be replaced with the name of the local interface which
+                  the packets will pass through. You can use the
+                  <code class="literal">any</code> value to capture all interfaces at the
+                  same time, but usage of this attribute often results in
+                  inferior data as well as confusion in analysis.
+                </p></dd><dt id="id-1.11.6.7.10.2.4.2.5.3"><span class="term">w</span></dt><dd><p>
+                  Designates the name of the capture file to write.
+                </p></dd><dt id="id-1.11.6.7.10.2.4.2.5.4"><span class="term">x.x.x.x</span></dt><dd><p>
+                  Should be replaced with the IP address of the other end of
+                  the NFS connection. For example, when taking a
+                  <code class="command">tcpdump</code> at the NFS client side, specify
+                  the IP address of the NFS Server, and vice versa.
+                </p></dd></dl></div><div id="id-1.11.6.7.10.2.4.2.6" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+              In some cases, capturing the data at either the NFS client or NFS
+              server is sufficient. However, in cases where end-to-end network
+              integrity is in doubt, it is often necessary to capture data at
+              both ends.
+            </p></div><p>
+            Do not shut down the <code class="command">tcpdump</code> process and proceed
+            to the next step.
+          </p></li><li class="step"><p>
+            (Optional) If the problem occurs during execution of the
+            <code class="command">nfs mount</code> command itself, you can try to use the
+            high-verbosity option (<code class="literal">-vvv</code>) of the <code class="command">nfs
+            mount</code> command to get more output.
+          </p></li><li class="step"><p>
+            (Optional) Get an <code class="command">strace</code> of the reproduction
+            method. An <code class="command">strace</code> of reproduction steps records
+            exactly what system calls were made at exactly what time. This
+            information can be used to further determine on which events in the
+            <code class="literal">tcpdump</code> you should focus.
+          </p><p>
+            For example, if you found out that executing the command
+            <span class="emphasis"><em>mycommand --param</em></span> was failing on an NFS mount,
+            then you could <code class="command">strace</code> the command with:
+          </p><div class="verbatim-wrap"><pre class="screen">strace -ttf -s128 -o/tmp/nfs-strace.out mycommand --param</pre></div><p>
+            In case you do not get any <code class="command">strace</code> of the
+            reproduction step, note the time when the problem was reproduced.
+            Check the <code class="filename">/var/log/messages</code> log file to
+            isolate the problem.
+          </p></li><li class="step"><p>
+            Once the problem has been reproduced, stop
+            <code class="command">tcpdump</code> running in your terminal by pressing
+            <span class="keycap">CTRL</span><span class="key-connector">–</span><span class="keycap">c</span>. If
+            the <code class="command">strace</code> command resulted in a hang, also
+            terminate the <code class="command">strace</code> command.
+          </p></li><li class="step"><p>
+            An administrator with experience in analyzing packet traces and
+            <code class="command">strace</code> data can now inspect data in
+            <code class="filename">/tmp/nfs-demo.cap</code> and
+            <code class="filename">/tmp/nfs-strace.out</code>.
+          </p></li></ol></div></div></section><section class="sect2" id="sec-advance-debugging" data-id-title="Advanced NFS debugging"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.8.2 </span><span class="title-name">Advanced NFS debugging</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-advance-debugging">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.11.6.7.10.3.2" data-id-title="Advanced debugging is for experts" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Advanced debugging is for experts</div><p>
+          Please bear in mind that the following section is intended only for
+          skilled NFS administrators who understand the NFS code. Therefore,
+          perform the first steps described in
+          <a class="xref" href="cha-nfs.html#sec-nfs-common-troubleshooting" title="19.8.1. Common troubleshooting">Section 19.8.1, “Common troubleshooting”</a> to help narrow down
+          the problem and to inform an expert about which areas of debug code
+          (if any) might be needed to learn deeper details.
+        </p></div><p>
+        There are various areas of debug code that can be enabled to gather
+        additional NFS-related information. However, the debug messages are
+        quite cryptic and the volume of them can be so large that the use of
+        debug code can affect system performance. It may even impact the system
+        enough to prevent the problem from occurring. In the majority of cases,
+        the debug code output is not needed, nor is it typically useful to
+        anyone who is not highly familiar with the NFS code.
+      </p><section class="sect3" id="sec-rpcdebug" data-id-title="Activating debugging with rpcdebug"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">19.8.2.1 </span><span class="title-name">Activating debugging with <code class="command">rpcdebug</code></span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-rpcdebug">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          The <code class="command">rpcdebug</code> tool allows you to set and clear NFS client and server
+          debug flags. In case the <code class="command">rpcdebug</code> tool is not available in your
+          <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> installation, you can install it from the package
+          <span class="package">nfs-client</span> or <span class="package">nfs-kernel-server</span> for the NFS server.
+        </p><p>
+          To set debug flags, run:
+        </p><div class="verbatim-wrap"><pre class="screen">rpcdebug -m <em class="replaceable">module</em> -s flags</pre></div><p>
+          To clear the debug flags, run:
+        </p><div class="verbatim-wrap"><pre class="screen">rpcdebug -m <em class="replaceable">module</em> -c flags</pre></div><p>
+          where <em class="replaceable">module</em> can be:
+        </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.7.10.3.4.8.1"><span class="term">nfsd</span></dt><dd><p>
+                Debug for the NFS server code
+              </p></dd><dt id="id-1.11.6.7.10.3.4.8.2"><span class="term">nfs</span></dt><dd><p>
+                Debug for the NFS client code
+              </p></dd><dt id="id-1.11.6.7.10.3.4.8.3"><span class="term">nlm</span></dt><dd><p>
+                Debug for the NFS Lock Manager, at either the NFS client or NFS
+                server. This only applies to NFS v2/v3.
+              </p></dd><dt id="id-1.11.6.7.10.3.4.8.4"><span class="term">rpc</span></dt><dd><p>
+                Debug for the Remote Procedure Call module, at either the NFS
+                client or NFS server.
+              </p></dd></dl></div><p>
+          For information on detailed usage of the <code class="command">rpcdebug</code>
+          command, refer to the manual page:
+        </p><div class="verbatim-wrap"><pre class="screen">man 8 rpcdebug</pre></div></section><section class="sect3" id="sec-other-nfs-debug" data-id-title="Activating debug for other code upon which NFS depends"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">19.8.2.2 </span><span class="title-name">Activating debug for other code upon which NFS depends</span></span> <a title="Permalink" class="permalink" href="cha-nfs.html#sec-other-nfs-debug">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nfs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          NFS activities may depend on other related services, such as the NFS
+          mount daemon—<code class="command">rpc.mountd</code>. You can set options
+          for related services within <code class="filename">/etc/sysconfig/nfs</code>.
+        </p><p>
+          For example, <code class="filename">/etc/sysconfig/nfs</code> contains the
+          parameter:
+        </p><div class="verbatim-wrap"><pre class="screen">MOUNTD_OPTIONS=""</pre></div><p>
+          To enable the debug mode, you have to use the <code class="literal">-d</code>
+          option followed by any of the values: <code class="literal">all</code>,
+          <code class="literal">auth</code>, <code class="literal">call</code>,
+          <code class="literal">general</code>, or <code class="literal">parse</code>.
+        </p><p>
+          For example, the following code enables all forms of
+          <code class="command">rpc.mountd</code> logging:
+        </p><div class="verbatim-wrap"><pre class="screen">MOUNTD_OPTIONS="-d all"</pre></div><p>
+          For all available options refer to the manual pages:
+        </p><div class="verbatim-wrap"><pre class="screen">man 8 rpc.mountd</pre></div><p>
+          After changing <code class="filename">/etc/sysconfig/nfs</code>, services need
+          to be restarted:
+        </p><div class="verbatim-wrap"><pre class="screen">systemctl restart nfs-server  # for nfs server related changes
+systemctl restart nfs  # for nfs client related changes</pre></div></section></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-multipath.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 18 </span>Managing multipath I/O for devices</span></a> </div><div><a class="pagination-link next" href="cha-samba.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 20 </span>Samba</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-overview"><span class="title-number">19.1 </span><span class="title-name">Overview</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-installation"><span class="title-number">19.2 </span><span class="title-name">Installing NFS server</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-configuring-nfs-server"><span class="title-number">19.3 </span><span class="title-name">Configuring NFS server</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-configuring-nfs-clients"><span class="title-number">19.4 </span><span class="title-name">Configuring clients</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-firewall"><span class="title-number">19.5 </span><span class="title-name">Operating an NFS server and clients behind a firewall</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#nfs4-acls"><span class="title-number">19.6 </span><span class="title-name">Managing Access Control Lists over NFSv4</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-info"><span class="title-number">19.7 </span><span class="title-name">More information</span></a></span></li><li><span class="sect1"><a href="cha-nfs.html#sec-nfs-troubleshooting"><span class="title-number">19.8 </span><span class="title-name">Gathering information for NFS troubleshooting</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

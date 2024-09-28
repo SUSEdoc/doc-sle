@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>libguestfs | Virtualization Guide | openSUSE Leap 15.6</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="libguestfs | openSUSE Leap 15.6" />
+<meta name="description" content="s consist of disk images and definition files. Manually accessing and manipulating these guest components (outside of normal hypervisor processes) is possible,…" />
+<meta name="product-name" content="openSUSE Leap" />
+<meta name="product-number" content="15.6" />
+<meta name="book-title" content="Virtualization Guide" />
+<meta name="chapter-title" content="Chapter 19. libguestfs" />
+<meta name="tracker-url" content="https://bugzilla.opensuse.org/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="fs@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="openSUSE Distribution" />
+<meta name="tracker-bsc-version" content="Leap 15.4" />
+<meta property="og:title" content="libguestfs | openSUSE Leap 15.6" />
+<meta property="og:description" content="s consist of disk images and definition files. Manually accessing and manipulating these guest components (outside of normal hypervisor processes) is possible,…" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="libguestfs | openSUSE Leap 15.6" />
+<meta name="twitter:description" content="s consist of disk images and definition files. Manually accessing and manipulating these guest components (outside of normal hypervisor processes) is possible,…" />
+<link rel="home" href="index.html" title="openSUSE Leap Documentation" /><link rel="up" href="part-virt-common.html" title="Part III. Hypervisor-independent features" /><link rel="prev" href="sec-kvm-managing-clock.html" title="Chapter 18. VM Guest clock settings" /><link rel="next" href="cha-qemu-ga.html" title="Chapter 20. QEMU guest agent" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="Virtualization Guide"><span class="book-icon">Virtualization Guide</span></a><span> › </span><a class="crumb" href="part-virt-common.html">Hypervisor-independent features</a><span> › </span><a class="crumb" href="chap-guestfs.html">libguestfs</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Virtualization Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="cha-kvm.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="part-virt-intro.html"><span class="number">I </span><span class="name">Introduction</span></a><ol><li class="inactive"><a href="chap-virtualization-introduction.html"><span class="number">1 </span><span class="name">Virtualization technology</span></a></li><li class="inactive"><a href="cha-virtualization-scenarios.html"><span class="number">2 </span><span class="name">Virtualization scenarios</span></a></li><li class="inactive"><a href="cha-xen-basics.html"><span class="number">3 </span><span class="name">Introduction to Xen virtualization</span></a></li><li class="inactive"><a href="cha-kvm-intro.html"><span class="number">4 </span><span class="name">Introduction to KVM virtualization</span></a></li><li class="inactive"><a href="cha-tools-intro.html"><span class="number">5 </span><span class="name">Virtualization tools</span></a></li><li class="inactive"><a href="cha-vt-installation.html"><span class="number">6 </span><span class="name">Installation of virtualization components</span></a></li></ol></li><li class="inactive"><a href="part-virt-libvirt.html"><span class="number">II </span><span class="name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li class="inactive"><a href="cha-libvirt-overview.html"><span class="number">7 </span><span class="name"><code class="systemitem">libvirt</code> daemons</span></a></li><li class="inactive"><a href="cha-libvirt-host.html"><span class="number">8 </span><span class="name">Preparing the VM Host Server</span></a></li><li class="inactive"><a href="cha-kvm-inst.html"><span class="number">9 </span><span class="name">Guest installation</span></a></li><li class="inactive"><a href="cha-libvirt-managing.html"><span class="number">10 </span><span class="name">Basic VM Guest management</span></a></li><li class="inactive"><a href="cha-libvirt-connect.html"><span class="number">11 </span><span class="name">Connecting and authorizing</span></a></li><li class="inactive"><a href="cha-libvirt-storage.html"><span class="number">12 </span><span class="name">Advanced storage topics</span></a></li><li class="inactive"><a href="cha-libvirt-config-gui.html"><span class="number">13 </span><span class="name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li class="inactive"><a href="cha-libvirt-config-virsh.html"><span class="number">14 </span><span class="name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li class="inactive"><a href="sec-libvirt-admin-migrate.html"><span class="number">15 </span><span class="name">Migrating VM Guests</span></a></li><li class="inactive"><a href="xen2kvm-migration.html"><span class="number">16 </span><span class="name">Xen to KVM migration guide</span></a></li></ol></li><li class="inactive"><a href="part-virt-common.html"><span class="number">III </span><span class="name">Hypervisor-independent features</span></a><ol><li class="inactive"><a href="cha-cachemodes.html"><span class="number">17 </span><span class="name">Disk cache modes</span></a></li><li class="inactive"><a href="sec-kvm-managing-clock.html"><span class="number">18 </span><span class="name">VM Guest clock settings</span></a></li><li class="inactive"><a href="chap-guestfs.html"><span class="number">19 </span><span class="name">libguestfs</span></a></li><li class="inactive"><a href="cha-qemu-ga.html"><span class="number">20 </span><span class="name">QEMU guest agent</span></a></li><li class="inactive"><a href="tpm.html"><span class="number">21 </span><span class="name">Software TPM emulator</span></a></li><li class="inactive"><a href="virt-crash-dump.html"><span class="number">22 </span><span class="name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li class="inactive"><a href="part-virt-xen.html"><span class="number">IV </span><span class="name">Managing virtual machines with Xen</span></a><ol><li class="inactive"><a href="cha-xen-vhost.html"><span class="number">23 </span><span class="name">Setting up a virtual machine host</span></a></li><li class="inactive"><a href="cha-xen-network.html"><span class="number">24 </span><span class="name">Virtual networking</span></a></li><li class="inactive"><a href="cha-xen-manage.html"><span class="number">25 </span><span class="name">Managing a virtualization environment</span></a></li><li class="inactive"><a href="cha-xen-vbd.html"><span class="number">26 </span><span class="name">Block devices in Xen</span></a></li><li class="inactive"><a href="cha-xen-config.html"><span class="number">27 </span><span class="name">Virtualization: configuration options and settings</span></a></li><li class="inactive"><a href="cha-xen-admin.html"><span class="number">28 </span><span class="name">Administrative tasks</span></a></li><li class="inactive"><a href="cha-xen-xenstore.html"><span class="number">29 </span><span class="name">XenStore: configuration database shared between domains</span></a></li><li class="inactive"><a href="cha-xen-ha.html"><span class="number">30 </span><span class="name">Xen as a high-availability virtualization host</span></a></li><li class="inactive"><a href="pv-to-fv.html"><span class="number">31 </span><span class="name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li class="inactive"><a href="part-virt-qemu.html"><span class="number">V </span><span class="name">Managing virtual machines with QEMU</span></a><ol><li class="inactive"><a href="cha-qemu-overview.html"><span class="number">32 </span><span class="name">QEMU overview</span></a></li><li class="inactive"><a href="cha-qemu-host.html"><span class="number">33 </span><span class="name">Setting up a KVM VM Host Server</span></a></li><li class="inactive"><a href="cha-qemu-guest-inst.html"><span class="number">34 </span><span class="name">Guest installation</span></a></li><li class="inactive"><a href="cha-qemu-running.html"><span class="number">35 </span><span class="name">Running virtual machines with qemu-system-ARCH</span></a></li><li class="inactive"><a href="cha-qemu-monitor.html"><span class="number">36 </span><span class="name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li class="inactive"><a href="part-virt-troubleshoot.html"><span class="number">VI </span><span class="name">Troubleshooting</span></a><ol><li class="inactive"><a href="cha-virt-help.html"><span class="number">37 </span><span class="name">Integrated help and package documentation</span></a></li><li class="inactive"><a href="cha-virt-logs.html"><span class="number">38 </span><span class="name">Gathering system information and logs</span></a></li></ol></li><li class="inactive"><a href="gloss-vt-glossary.html"><span class="number"> </span><span class="name">Glossary</span></a></li><li class="inactive"><a href="app-gpu-passthru.html"><span class="number">A </span><span class="name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li class="inactive"><a href="bk06apb.html"><span class="number">B </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 18. VM Guest clock settings" href="sec-kvm-managing-clock.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 20. QEMU guest agent" href="cha-qemu-ga.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="Virtualization Guide"><span class="book-icon">Virtualization Guide</span></a><span> › </span><a class="crumb" href="part-virt-common.html">Hypervisor-independent features</a><span> › </span><a class="crumb" href="chap-guestfs.html">libguestfs</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 18. VM Guest clock settings" href="sec-kvm-managing-clock.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 20. QEMU guest agent" href="cha-qemu-ga.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div xml:lang="en" class="chapter " id="chap-guestfs" lang="en"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">openSUSE Leap</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15.6</span></span></span></div><div><h2 class="title"><span class="number">19 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">libguestfs</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>chap-guestfs</li></ul></div></div><div><div class="abstract"><div class="abstract-title-wrap"><h6 class="abstract-title">Abstract<a title="Permalink" class="permalink" href="chap-guestfs.html#id-1.8.5.4.2.1">#</a></h6></div><p>
+        <a class="xref" href="gloss-vt-glossary.html#gloss-vt-vm" title="Virtual Machine">Virtual Machine</a>s consist of disk images and definition
+        files. Manually accessing and manipulating these guest components
+        (outside of normal hypervisor processes) is possible, but inherently
+        dangerous and risks compromising data integrity. libguestfs is a C
+        library and a corresponding set of tools designed for safely accessing
+        and modifying <a class="xref" href="gloss-vt-glossary.html#gloss-vt-vm" title="Virtual Machine">Virtual Machine</a> disk images—outside
+        of normal hypervisor processes, but without the risk normally
+        associated with manual editing.
+      </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="chap-guestfs.html#sec-guestfs-intro"><span class="number">19.1 </span><span class="name">VM Guest manipulation overview</span></a></span></dt><dt><span class="sect1"><a href="chap-guestfs.html#sec-guestfs-package"><span class="number">19.2 </span><span class="name">Package installation</span></a></span></dt><dt><span class="sect1"><a href="chap-guestfs.html#sec-guestfs-tools"><span class="number">19.3 </span><span class="name">Guestfs tools</span></a></span></dt><dt><span class="sect1"><a href="chap-guestfs.html#sec-guestfs-trouble"><span class="number">19.4 </span><span class="name">Troubleshooting</span></a></span></dt><dt><span class="sect1"><a href="chap-guestfs.html#sec-guestfs-external-doc"><span class="number">19.5 </span><span class="name">More information</span></a></span></dt></dl></div></div><div id="id-1.8.5.4.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important</h6><p>
+      Using libguestfs tools is fully supported on the AMD64/Intel 64 architecture
+      only.
+    </p></div><div class="sect1 " id="sec-guestfs-intro"><div class="titlepage"><div><div><h2 class="title"><span class="number">19.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">VM Guest manipulation overview</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-intro">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-intro</li></ul></div></div></div></div><div class="sect2 " id="sec-guestfs-intro-risk"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.1.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">VM Guest manipulation risk</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-intro-risk">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-intro-risk</li></ul></div></div></div></div><p>
+        As disk images and definition files are simply another type of file in
+        a Linux environment, it is possible to use many tools to access, edit
+        and write to these files. When used correctly, such tools can be an
+        important part of guest administration. However, even correct usage of
+        these tools is not without risk. Risks that should be considered when
+        manually manipulating guest disk images include:
+      </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            <span class="emphasis"><em>Data Corruption</em></span>: concurrently accessing
+            images, by the host machine or another node in a cluster, can cause
+            changes to be lost or data corruption to occur if virtualization
+            protection layers are bypassed.
+          </p></li><li class="listitem "><p>
+            <span class="emphasis"><em>Security</em></span>: mounting disk images as loop devices
+            requires root access. While an image is loop mounted, other users
+            and processes can potentially access the disk contents.
+          </p></li><li class="listitem "><p>
+            <span class="emphasis"><em>Administrator Error</em></span>: bypassing virtualization
+            layers correctly requires advanced understanding of virtual
+            components and tools. Failing to isolate the images or failing to
+            clean up properly after changes have been made can lead to further
+            problems once back in virtualization control.
+          </p></li></ul></div></div><div class="sect2 " id="sec-guestfs-intro-design"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.1.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">libguestfs design</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-intro-design">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-intro-design</li></ul></div></div></div></div><p>
+        libguestfs C library has been designed to safely and securely create,
+        access and modify virtual machine (VM Guest) disk images. It also
+        provides additional language bindings: for
+        <a class="link" href="https://libguestfs.org/guestfs-perl.3.html" target="_blank">Perl</a>,
+        <a class="link" href="https://libguestfs.org/guestfs-python.3.html" target="_blank">Python</a>,
+        PHP (only for 64-bit machines), and
+        <a class="link" href="https://libguestfs.org/guestfs-ruby.3.html" target="_blank">
+        Ruby</a>. libguestfs can access VM Guest disk images without
+        needing root and with multiple layers of defense against rogue disk
+        images.
+      </p><p>
+        libguestfs provides many tools designed for accessing and modifying
+        VM Guest disk images and contents. These tools provide such
+        capabilities as: viewing and editing files inside guests, scripting
+        changes to VM Guests, monitoring disk used/free statistics, creating
+        guests, doing V2V or P2V migrations, performing backups, cloning
+        VM Guests, formatting disks, and resizing disks.
+      </p><div id="id-1.8.5.4.4.4.4" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg" /><h6>Warning: Best practices</h6><p>
+          You must not use libguestfs tools on live virtual machines. Doing so
+          may result in disk corruption in the VM Guest. libguestfs tools try
+          to stop you from doing this, but cannot catch all cases.
+        </p><p>
+          However, most commands have the <code class="option">--ro</code> (read-only)
+          option. With this option, you can run a command on a live virtual
+          machine. The results may be strange or inconsistent but you do not
+          risk disk corruption.
+        </p></div></div></div><div class="sect1 " id="sec-guestfs-package"><div class="titlepage"><div><div><h2 class="title"><span class="number">19.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Package installation</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-package">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-package</li></ul></div></div></div></div><p>
+      libguestfs is shipped through 4 packages:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          <code class="systemitem">libguestfs0</code>: which provides
+          the main C library
+        </p></li><li class="listitem "><p>
+          <code class="systemitem">guestfs-data</code>: which
+          contains the appliance files used when launching images (stored in
+          <code class="filename">/usr/lib64/guestfs</code>)
+        </p></li><li class="listitem "><p>
+          <code class="systemitem">guestfs-tools</code>: the core
+          guestfs tools, man pages, and the
+          <code class="filename">/etc/libguestfs-tools.conf</code> configuration file.
+        </p></li><li class="listitem "><p>
+          <code class="systemitem">guestfs-winsupport</code>:
+          provides support for Windows file guests in the guestfs tools. This
+          package only needs to be installed to handle Windows guests, for
+          example when converting a Windows guest to KVM.
+        </p></li></ul></div><p>
+      To install guestfs tools on your system run:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper in guestfs-tools</pre></div></div><div class="sect1 " id="sec-guestfs-tools"><div class="titlepage"><div><div><h2 class="title"><span class="number">19.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Guestfs tools</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools</li></ul></div></div></div></div><div class="sect2 " id="sec-guestfs-tools-intro"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Modifying virtual machines</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-intro">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-intro</li></ul></div></div></div></div><p>
+        The set of tools found within the guestfs-tools package is used for
+        accessing and modifying virtual machine disk images. This functionality
+        is provided through a familiar shell interface with built-in safeguards
+        which ensure image integrity. Guestfs tools shells expose all
+        capabilities of the guestfs API, and create an appliance on the fly
+        using the packages installed on the machine and the files found in
+        <code class="filename">/usr/lib64/guestfs</code>.
+      </p></div><div class="sect2 " id="sec-guestfs-tools-supportedfs"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Supported file systems and disk images</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-supportedfs">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-supportedfs</li></ul></div></div></div></div><p>
+        Guestfs tools support multiple file systems including:
+      </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            Ext2, Ext3, Ext4
+          </p></li><li class="listitem "><p>
+            Xfs
+          </p></li><li class="listitem "><p>
+            Btrfs
+          </p></li></ul></div><p>
+        Multiple disk image formats are also supported:
+      </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            raw
+          </p></li><li class="listitem "><p>
+            qcow2
+          </p></li></ul></div><div id="id-1.8.5.4.6.4.6" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg" /><h6>Warning: Unsupported file systems</h6><p>
+          Guestfs may also support Windows* file systems (VFAT, NTFS), BSD* and
+          Apple* file systems, and other disk image formats (VMDK, VHDX...).
+          However, these file systems and disk image formats are unsupported on
+          <span class="productname"><span class="phrase">openSUSE Leap</span></span>.
+        </p></div></div><div class="sect2 " id="sec-guestfs-tools-virt-rescue"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-rescue</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-virt-rescue">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-virt-rescue</li></ul></div></div></div></div><p>
+        <code class="command">virt-rescue</code> is similar to a rescue CD, but for
+        virtual machines, and without the need for a CD. virt-rescue presents
+        users with a rescue shell and several simple recovery tools which can
+        be used to examine and correct problems within a virtual machine or
+        disk image.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-rescue -a sles.qcow2
+Welcome to virt-rescue, the libguestfs rescue shell.
+
+Note: The contents of / are the rescue appliance.
+You need to mount the guest's partitions under /sysroot
+before you can examine them. A helper script for that exists:
+mount-rootfs-and-do-chroot.sh /dev/sda2
+
+&gt;&lt;rescue&gt;
+[   67.194384] EXT4-fs (sda1): mounting ext3 file system
+using the ext4 subsystem
+[   67.199292] EXT4-fs (sda1): mounted filesystem with ordered data
+mode. Opts: (null)
+mount: /dev/sda1 mounted on /sysroot.
+mount: /dev bound on /sysroot/dev.
+mount: /dev/pts bound on /sysroot/dev/pts.
+mount: /proc bound on /sysroot/proc.
+mount: /sys bound on /sysroot/sys.
+Directory: /root
+Thu Jun  5 13:20:51 UTC 2014
+(none):~ #</pre></div><p>
+        You are now running the VM Guest in rescue mode:
+      </p><div class="verbatim-wrap"><pre class="screen">(none):~ # cat /etc/fstab
+devpts  /dev/pts          devpts  mode=0620,gid=5 0 0
+proc    /proc             proc    defaults        0 0
+sysfs   /sys              sysfs   noauto          0 0
+debugfs /sys/kernel/debug debugfs noauto          0 0
+usbfs   /proc/bus/usb     usbfs   noauto          0 0
+tmpfs   /run              tmpfs   noauto          0 0
+/dev/disk/by-id/ata-QEMU_HARDDISK_QM00001-part1 / ext3 defaults 1 1</pre></div></div><div class="sect2 " id="sec-guestfs-tools-virt-resize"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-resize</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-virt-resize">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-virt-resize</li></ul></div></div></div></div><p>
+        <code class="command">virt-resize</code> is used to resize a virtual machine
+        disk, making it larger or smaller overall, and resizing or deleting any
+        partitions contained within.
+      </p><div class="procedure " id="pro-guestfs-tools-virt-resize"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 19.1: </span><span class="name">Expanding a disk </span><a title="Permalink" class="permalink" href="chap-guestfs.html#pro-guestfs-tools-virt-resize">#</a></h6></div><div class="procedure-contents"><p>
+          Full step-by-step example: how to expand a virtual machine disk
+        </p><ol class="procedure" type="1"><li class="step "><p>
+            First, with virtual machine powered off, determine the size of the
+            partitions available on this virtual machine:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-filesystems --long --parts --blkdevs -h -a sles.qcow2
+Name       Type       MBR  Size  Parent
+/dev/sda1  partition  83   16G   /dev/sda
+/dev/sda   device     -    16G   -</pre></div></li><li class="step "><p>
+            <code class="command">virt-resize</code> cannot do in-place disk
+            modifications—there must be sufficient space to store the
+            resized output disk. Use the <code class="command">truncate</code> command to
+            create a file of suitable size:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>truncate -s 32G outdisk.img</pre></div></li><li class="step "><p>
+            Use <code class="command">virt-resize</code> to resize the disk image.
+            <code class="command">virt-resize</code> requires two mandatory parameters
+            for the input and output images:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-resize --expand /dev/sda1 sles.qcow2 outdisk.img
+Examining sles.qcow2 ...
+**********
+Summary of changes:
+
+/dev/sda1: This partition will be resized from 16,0G to 32,0G.  The
+    filesystem ext3 on /dev/sda1 will be expanded using the 'resize2fs'
+    method.
+
+**********
+Setting up initial partition table on outdisk.img ...
+Copying /dev/sda1 ...
+◐ 84%
+⟦▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒════════⟧ 00:03
+Expanding /dev/sda1 using the 'resize2fs' method ...
+
+Resize operation completed with no errors.  Before deleting the old
+disk, carefully check that the resized disk boots and works correctly.</pre></div></li><li class="step "><p>
+            Confirm the image was resized properly:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-filesystems --long --parts --blkdevs -h -a outdisk.img
+Name       Type       MBR  Size  Parent
+/dev/sda1  partition  83   32G   /dev/sda
+/dev/sda   device     -    32G   -</pre></div></li><li class="step "><p>
+            Bring up the VM Guest using the new disk image and confirm correct
+            operation before deleting the old image.
+          </p></li></ol></div></div></div><div class="sect2 " id="sec-guestfs-tools-others"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Other virt-* tools</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others</li></ul></div></div></div></div><p>
+        There are guestfs tools to simplify administrative tasks—such as
+        viewing and editing files, or obtaining information on the virtual
+        machine.
+      </p><div class="sect3 " id="sec-guestfs-tools-others-filesystem"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-filesystems</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-filesystem">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-filesystem</li></ul></div></div></div></div><p>
+          This tool is used to report information regarding file systems,
+          partitions and logical volumes in a disk image or virtual machine.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-filesystems -l -a sles.qcow2
+Name       Type        VFS   Label  Size         Parent
+/dev/sda1  filesystem  ext3  -      17178820608  -</pre></div></div><div class="sect3 " id="sec-guestfs-tools-others-ls"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-ls</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-ls">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-ls</li></ul></div></div></div></div><p>
+          <code class="command">virt-ls</code> lists file names, file sizes, checksums,
+          extended attributes and more from a virtual machine or disk image.
+          Multiple directory names can be given, in which case the output from
+          each is concatenated. To list directories from a libvirt guest, use
+          the <code class="option">-d</code> option to specify the name of the guest. For
+          a disk image, use the <code class="option">-a</code> option.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-ls -h -lR -a sles.qcow2 /var/log/
+d 0755        776 /var/log
+- 0640          0 /var/log/NetworkManager
+- 0644        23K /var/log/Xorg.0.log
+- 0644        23K /var/log/Xorg.0.log.old
+d 0700        482 /var/log/YaST2
+- 0644        512 /var/log/YaST2/_dev_vda
+- 0644         59 /var/log/YaST2/arch.info
+- 0644        473 /var/log/YaST2/config_diff_2017_05_03.log
+- 0644       5.1K /var/log/YaST2/curl_log
+- 0644       1.5K /var/log/YaST2/disk_vda.info
+- 0644       1.4K /var/log/YaST2/disk_vda.info-1
+[...]</pre></div></div><div class="sect3 " id="sec-guestfs-tools-others-cat"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-cat</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-cat">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-cat</li></ul></div></div></div></div><p>
+          <code class="command">virt-cat</code> is a command-line tool to display the
+          contents of a file that exists in the named virtual machine (or disk
+          image). Multiple file names can be given, in which case they are
+          concatenated together. Each file name must be specified by its
+          absolute path, starting at the root directory with
+          <code class="literal">/</code>.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-cat -a sles.qcow2 /etc/fstab
+devpts /dev/pts devpts mode=0620,gid=5 0 0
+proc   /proc    proc   defaults        0 0</pre></div></div><div class="sect3 " id="sec-guestfs-tools-others-df"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-df</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-df">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-df</li></ul></div></div></div></div><p>
+          <code class="command">virt-df</code> is a command-line tool to display free
+          space on virtual machine file systems. Unlike other tools, it not
+          only displays the size of disk allocated to a virtual machine, but
+          can look inside disk images to show how much space is being used.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-df -a sles.qcow2
+Filesystem                           1K-blocks       Used  Available  Use%
+sles.qcow2:/dev/sda1                  16381864     520564   15022492  4%</pre></div></div><div class="sect3 " id="sec-guestfs-tools-others-edit"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-edit</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-edit">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-edit</li></ul></div></div></div></div><p>
+          <code class="command">virt-edit</code> is a command-line tool capable of
+          editing files that reside in the named virtual machine (or disk
+          image).
+        </p></div><div class="sect3 " id="sec-guestfs-tools-others-tar"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-tar-in/out</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-tar">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-tar</li></ul></div></div></div></div><p>
+          <code class="command">virt-tar-in</code> unpacks an uncompressed TAR archive
+          into a virtual machine disk image or named libvirt domain.
+          <code class="command">virt-tar-out</code> packs a virtual machine disk image
+          directory into a TAR archive.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-tar-out -a sles.qcow2 /home homes.tar</pre></div></div><div class="sect3 " id="sec-guestfs-tools-others-copy"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-copy-in/out</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-copy">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-copy</li></ul></div></div></div></div><p>
+          <code class="command">virt-copy-in</code> copies files and directories from the
+          local disk into a virtual machine disk image or named libvirt domain.
+          <code class="command">virt-copy-out</code> copies files and directories out of
+          a virtual machine disk image or named libvirt domain.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-copy-in -a sles.qcow2 data.tar /tmp/
+<code class="prompt user">&gt; </code>virt-ls -a sles.qcow2 /tmp/
+.ICE-unix
+.X11-unix
+data.tar</pre></div></div><div class="sect3 " id="sec-guestfs-tools-others-log"><div class="titlepage"><div><div><h4 class="title"><span class="number">19.3.5.8 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">virt-log</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-tools-others-log">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-tools-others-log</li></ul></div></div></div></div><p>
+          <code class="command">virt-log</code> shows the log files of the named libvirt
+          domain, virtual machine or disk image. If the package
+          <span class="package ">guestfs-winsupport</span> is installed it can also show
+          the event log of a Windows virtual machine disk image.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-log -a windows8.qcow2
+&lt;?xml version="1.0" encoding="utf-8" standalone="yes" ?&gt;
+&lt;Events&gt;
+&lt;Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event"&gt;&lt;System&gt;&lt;Provider Name="EventLog"&gt;&lt;/Provider&gt;
+&lt;EventID Qualifiers="32768"&gt;6011&lt;/EventID&gt;
+&lt;Level&gt;4&lt;/Level&gt;
+&lt;Task&gt;0&lt;/Task&gt;
+&lt;Keywords&gt;0x0080000000000000&lt;/Keywords&gt;
+&lt;TimeCreated SystemTime="2014-09-12 05:47:21"&gt;&lt;/TimeCreated&gt;
+&lt;EventRecordID&gt;1&lt;/EventRecordID&gt;
+&lt;Channel&gt;System&lt;/Channel&gt;
+&lt;Computer&gt;windows-uj49s6b&lt;/Computer&gt;
+&lt;Security UserID=""&gt;&lt;/Security&gt;
+&lt;/System&gt;
+&lt;EventData&gt;&lt;Data&gt;&lt;string&gt;WINDOWS-UJ49S6B&lt;/string&gt;
+&lt;string&gt;WIN-KG190623QG4&lt;/string&gt;
+&lt;/Data&gt;
+&lt;Binary&gt;&lt;/Binary&gt;
+&lt;/EventData&gt;
+&lt;/Event&gt;
+
+...</pre></div></div></div><div class="sect2 " id="sec-guestfs-guestfish"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">guestfish</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-guestfish">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-guestfish</li></ul></div></div></div></div><p>
+        <code class="command">guestfish</code> is a shell and command-line tool for
+        examining and modifying virtual machine file systems. It uses
+        libguestfs and exposes all the functionality of the guestfs API.
+      </p><p>
+        Examples of usage:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>guestfish -a disk.img &lt;&lt;EOF
+run
+list-filesystems
+EOF</pre></div><div class="verbatim-wrap"><pre class="screen">guestfish
+
+Welcome to guestfish, the guest filesystem shell for
+editing virtual machine filesystems and disk images.
+
+Type: 'help' for help on commands
+      'man' to read the manual
+      'quit' to quit the shell
+
+&gt;&lt;fs&gt; add sles.qcow2
+&gt;&lt;fs&gt; run
+&gt;&lt;fs&gt; list-filesystems
+/dev/sda1: ext3
+&gt;&lt;fs&gt; mount /dev/sda1 /
+ cat /etc/fstab
+devpts  /dev/pts          devpts  mode=0620,gid=5 0 0
+proc    /proc             proc    defaults        0 0
+sysfs   /sys              sysfs   noauto          0 0
+debugfs /sys/kernel/debug debugfs noauto          0 0
+usbfs   /proc/bus/usb     usbfs   noauto          0 0
+tmpfs   /run              tmpfs   noauto          0 0
+/dev/disk/by-id/ata-QEMU_HARDDISK_QM00001-part1 / ext3 defaults 1 1</pre></div></div><div class="sect2 " id="sec-guestfs-p2v"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.3.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Converting a physical machine into a KVM guest</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-p2v">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-p2v</li></ul></div></div></div></div><p>
+        Libguestfs provides tools to help converting Xen virtual machines or
+        physical machines into KVM guests.  The following section
+        covers a special use case: converting a bare metal machine into a KVM
+        one.
+      </p><p>
+        Converting a physical machine into a KVM one is not yet supported in
+        <span class="productname"><span class="phrase">openSUSE Leap</span></span>. This feature is released as a technology preview only.
+      </p><p>
+        Converting a physical machine requires collecting information about it
+        and transmitting this to a conversion server. This is achieved by
+        running a live system prepared with <code class="command">virt-p2v</code> and
+        KIWI NG tools on the machine.
+      </p><div class="procedure " id="pro-guestfs-p2v-kiwi"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 19.2: </span><span class="name">Using virt-p2v </span><a title="Permalink" class="permalink" href="chap-guestfs.html#pro-guestfs-p2v-kiwi">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Install the needed packages with the command:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper in virt-p2v kiwi-desc-isoboot</pre></div><div id="id-1.8.5.4.6.9.5.2.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note</h6><p>
+              These steps document how to create an ISO image to create a
+              bootable DVD. Alternatively, you can create a PXE boot image
+              instead; for more information about building PXE images with
+              KIWI NG, see <code class="command">man virt-p2v-make-kiwi</code>.
+            </p></div></li><li class="step "><p>
+            Create a KIWI NG configuration:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-p2v-make-kiwi -o <em class="replaceable ">/tmp/p2v.kiwi</em></pre></div><p>
+            The <code class="option">-o</code> defines where to create the KIWI NG
+            configuration.
+          </p></li><li class="step "><p>
+            Edit the <code class="filename">config.xml</code> file in the generated
+            configuration if needed. For example, in
+            <code class="filename">config.xml</code> adjust the keyboard layout of the
+            live system.
+          </p></li><li class="step "><p>
+            Build the ISO image with <code class="command">kiwi</code>:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>kiwi --build <em class="replaceable ">/tmp/p2v.kiwi</em><span id="p2v-config"></span><span class="callout">1</span> \
+     -d <em class="replaceable ">/tmp/build</em><span id="p2v-target"></span><span class="callout">2</span> \
+     --ignore-repos \
+     --add-repo <em class="replaceable ">http://URL_TO_REPOSITORIES</em><span id="p2v-repo"></span><span class="callout">3</span> \
+     --type iso</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#p2v-config"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+                The directory where the KIWI NG configuration was generated in
+                the previous step.
+              </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#p2v-target"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+                The directory where KIWI NG will place the generated ISO image
+                and other intermediary build results.
+              </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#p2v-repo"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+                The URLs to the package repositories as found with
+                <code class="command">zypper lr -d</code>.
+              </p><p>
+                Use one <code class="option">--add-repo</code> parameter per repository.
+              </p></td></tr></table></div></li><li class="step "><p>
+            Burn the ISO on a DVD or a USB stick. With such a medium, boot the
+            machine to be converted.
+          </p></li><li class="step "><p>
+            After the system is started, enter the connection details of the
+            <span class="emphasis"><em>conversion server</em></span>. This server is a machine
+            with the <code class="systemitem">virt-v2v</code>
+            package installed.
+          </p><p>
+            If the network setup is more complex than a DHCP client, click the
+            <span class="guimenu ">Configure network</span> button to open the YaST
+            network configuration dialog.
+          </p><p>
+            Click the <span class="guimenu ">Test connection</span> button to allow moving
+            to the next page of the wizard.
+          </p></li><li class="step "><p>
+            Select the disks and network interfaces to be converted and define
+            the VM data like the amount of allocated CPUs, memory and the
+            Virtual Machine name.
+          </p><div id="id-1.8.5.4.6.9.5.8.2" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note</h6><p>
+              If not defined, the created disk image format is
+              <span class="emphasis"><em>raw</em></span> by default. This can be changed by
+              entering the desired format in the <span class="guimenu ">Output
+              format</span> field.
+            </p></div><p>
+            There are two possibilities to generate the virtual machine: either
+            using the <span class="emphasis"><em>local</em></span> or the
+            <span class="emphasis"><em>libvirt</em></span> output. The first one places the
+            Virtual Machine disk image and configuration in the path defined in
+            the <span class="guimenu ">Output storage</span> field. These can then be used
+            to define a new libvirt-handled guest using
+            <code class="command">virsh</code>. The second method creates a new
+            libvirt-handled guest with the disk image placed in the pool
+            defined in the <span class="guimenu ">Output storage</span> field.
+          </p><p>
+            Click <span class="guimenu ">Start conversion</span> to start it.
+          </p></li></ol></div></div></div></div><div class="sect1 " id="sec-guestfs-trouble"><div class="titlepage"><div><div><h2 class="title"><span class="number">19.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Troubleshooting</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-trouble">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-trouble</li></ul></div></div></div></div><div class="sect2 " id="sec-guestfs-trouble-btrfs"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Btrfs-related problems</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-trouble-btrfs">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-trouble-btrfs</li></ul></div></div></div></div><p>
+        When using the guestfs tools on an image with Btrfs root partition (the
+        default with <span class="productname"><span class="phrase">openSUSE Leap</span></span>) the following error message may be
+        displayed:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-ls -a /path/to/sles12sp2.qcow2 /
+virt-ls: multi-boot operating systems are not supported
+
+If using guestfish '-i' option, remove this option and instead
+use the commands 'run' followed by 'list-filesystems'.
+You can then mount file systems you want by hand using the
+'mount' or 'mount-ro' command.
+
+If using guestmount '-i', remove this option and choose the
+filesystem(s) you want to see by manually adding '-m' option(s).
+Use 'virt-filesystems' to see what file systems are available.
+
+If using other virt tools, multi-boot operating systems won't work
+with these tools.  Use the guestfish equivalent commands
+(see the virt tool manual page).</pre></div><p>
+        This is often caused by the presence of snapshots in the guests. In
+        this case guestfs does not know which snapshot to bootstrap. To force
+        the use of a snapshot, use the <code class="option">-m</code> parameter as
+        follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-ls -m /dev/sda2:/:subvol=@/.snapshots/2/snapshot -a /path/to/sles12sp2.qcow2 /</pre></div></div><div class="sect2 " id="sec-guestfs-trouble-env"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Environment</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-trouble-env">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-trouble-env</li></ul></div></div></div></div><p>
+        When troubleshooting problems within a libguestfs appliance, the
+        environment variable <span class="emphasis"><em>LIBGUESTFS_DEBUG=1</em></span> can be
+        used to enable debug messages. To output each command/API call in a
+        format that is similar to guestfish commands, use the environment
+        variable <span class="emphasis"><em>LIBGUESTFS_TRACE=1</em></span>.
+      </p></div><div class="sect2 " id="sec-guestfs-trouble-tools"><div class="titlepage"><div><div><h3 class="title"><span class="number">19.4.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name"><code class="command">libguestfs-test-tool</code></span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-trouble-tools">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-trouble-tools</li></ul></div></div></div></div><p>
+        <code class="command">libguestfs-test-tool</code> is a test program that checks
+        if basic libguestfs functionality is working. It prints a large amount
+        of diagnostic messages and details of the guestfs environment, then
+        create a test image and try to start it. If it runs to completion
+        successfully, the following message should be seen near the end:
+      </p><div class="verbatim-wrap"><pre class="screen">===== TEST FINISHED OK =====</pre></div></div></div><div class="sect1 " id="sec-guestfs-external-doc"><div class="titlepage"><div><div><h2 class="title"><span class="number">19.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">More information</span> <a title="Permalink" class="permalink" href="chap-guestfs.html#sec-guestfs-external-doc">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_guestfs.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>vt_guestfs.xml</li><li><span class="ds-label">ID: </span>sec-guestfs-external-doc</li></ul></div></div></div></div><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          <a class="link" href="https://libguestfs.org" target="_blank">libguestfs.org</a>
+        </p></li><li class="listitem "><p>
+          <a class="link" href="https://libguestfs.org/guestfs-faq.1.html" target="_blank">libguestfs
+          FAQ</a>
+        </p></li></ul></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-qemu-ga.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 20 </span>QEMU guest agent</span></a><a class="nav-link" href="sec-kvm-managing-clock.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 18 </span>VM Guest clock settings</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

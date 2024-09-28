@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP4 | Virtualization Guide | Setting Up a KVM VM Host Server</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Setting Up a KVM VM Host Server | SLES 12 SP4"/>
+<meta name="description" content="This section documents how to set up and use SUSE Linu…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP4"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 27. Setting Up a KVM VM Host Server"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Setting Up a KVM VM Host Server | SLES 12 SP4"/>
+<meta property="og:description" content="This section documents how to set up and use SUSE Linux Enterprise Server 12 SP4 as a QEMU-KVM based virtual machine host."/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Setting Up a KVM VM Host Server | SLES 12 SP4"/>
+<meta name="twitter:description" content="This section documents how to set up and use SUSE Linux Enterprise Server 12 SP4 as a QEMU-KVM based virtual machine host."/>
+<link rel="prev" href="cha-qemu-overview.html" title="Chapter 26. QEMU Overview"/><link rel="next" href="cha-qemu-guest-inst.html" title="Chapter 28. Guest Installation"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-qemu.html">Managing Virtual Machines with QEMU</a><span> / </span><a class="crumb" href="cha-qemu-host.html">Setting Up a KVM VM Host Server</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-containers-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to Linux Containers</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Supported Guests, Hosts and Features</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">9 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">10 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">11 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">13 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">15 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">16 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">17 </span><span class="title-name">libguestfs</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">18 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">19 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">20 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">21 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">23 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">24 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">25 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li class="active"><a href="part-virt-qemu.html" class="has-children you-are-here"><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">26 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" you-are-here"><span class="title-number">27 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">28 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">29 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">30 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">31 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">32 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Tool Stacks and Libvirt framework</span></a></li><li><a href="app-virt-docupdates.html" class=" "><span class="title-number">D </span><span class="title-name">Documentation Updates</span></a></li><li><a href="bk10ape.html" class=" "><span class="title-number">E </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-qemu-host" data-id-title="Setting Up a KVM VM Host Server"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">12 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">27 </span><span class="title-name">Setting Up a KVM VM Host Server</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  This section documents how to set up and use <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber"><span class="phrase">12 SP4</span></span> as
+  a QEMU-KVM based virtual machine host.
+ </p><div id="id-1.12.7.3.4" data-id-title="Resources" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Resources</div><p>
+   In general, the virtual guest system needs the same hardware resources as if
+   it were installed on a physical machine. The more guests you plan to run on
+   the host system, the more hardware resources—CPU, disk, memory, and
+   network—you need to add to the VM Host Server.
+  </p></div><section class="sect1" id="kvm-host-cpu" data-id-title="CPU Support for Virtualization"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">27.1 </span><span class="title-name">CPU Support for Virtualization</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-host-cpu">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To run KVM, your CPU must support virtualization, and virtualization needs
+   to be enabled in BIOS. The file <code class="filename">/proc/cpuinfo</code> includes
+   information about your CPU features.
+  </p><p>
+   To find out whether your system supports virtualization, see
+   <a class="xref" href="cha-virt-support.html#sec-kvm-requires-hardware" title="7.3. KVM Hardware Requirements">Section 7.3, “KVM Hardware Requirements”</a>.
+  </p></section><section class="sect1" id="kvm-host-soft" data-id-title="Required Software"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">27.2 </span><span class="title-name">Required Software</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-host-soft">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The KVM host requires several packages to be installed. To install all
+   necessary packages, do the following:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Verify that the <span class="package">yast2-vm</span> package is installed. This package
+     is YaST's configuration tool that simplifies the installation of virtualization
+     hypervisors.
+    </p></li><li class="step"><p>
+     Run <span class="guimenu">YaST</span> › <span class="guimenu">
+     Virtualization</span> › <span class="guimenu">Install Hypervisor and
+     Tools</span>.
+    </p><div class="figure" id="id-1.12.7.3.6.3.2.2"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_hypervisors.png"><img src="images/yast2_hypervisors.png" width="75%" alt="Installing the KVM Hypervisor and Tools" title="Installing the KVM Hypervisor and Tools"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 27.1: </span><span class="title-name">Installing the KVM Hypervisor and Tools </span></span><a title="Permalink" class="permalink" href="cha-qemu-host.html#id-1.12.7.3.6.3.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+     Select <span class="guimenu">KVM server</span> and preferably also <span class="guimenu">KVM
+     tools</span>, and confirm with <span class="guimenu">Accept</span>.
+    </p></li><li class="step"><p>
+     During the installation process, you can optionally let YaST create a
+     <span class="guimenu">Network Bridge</span> for you automatically. If you do not
+     plan to dedicate an additional physical network card to your virtual
+     guests, network bridge is a standard way to connect the guest machines to
+     the network.
+    </p><div class="figure" id="id-1.12.7.3.6.3.4.2"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_netbridge.png"><img src="images/yast2_netbridge.png" width="75%" alt="Network Bridge" title="Network Bridge"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 27.2: </span><span class="title-name">Network Bridge </span></span><a title="Permalink" class="permalink" href="cha-qemu-host.html#id-1.12.7.3.6.3.4.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+     After all the required packages are installed (and new network setup
+     activated), try to load the KVM kernel module relevant for your CPU
+     type—<code class="systemitem">kvm-intel</code> or
+     <code class="systemitem">kvm-amd</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>modprobe kvm-intel</pre></div><p>
+     Check if the module is loaded into memory:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>lsmod | grep kvm
+kvm_intel              64835  6
+kvm                   411041  1 kvm_intel</pre></div><p>
+     Now the KVM host is ready to serve KVM VM Guests. For more
+     information, see <a class="xref" href="cha-qemu-running.html" title="Chapter 29. Running Virtual Machines with qemu-system-ARCH">Chapter 29, <em>Running Virtual Machines with qemu-system-ARCH</em></a>.
+    </p></li></ol></div></div></section><section class="sect1" id="kvm-host-virtio" data-id-title="KVM Host-Specific Features"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">27.3 </span><span class="title-name">KVM Host-Specific Features</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-host-virtio">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   You can improve the performance of KVM-based VM Guests by letting them
+   fully use specific features of the VM Host Server's hardware
+   (<span class="emphasis"><em>paravirtualization</em></span>). This section introduces
+   techniques to make the guests access the physical host's hardware
+   directly—without the emulation layer—to make the most use of it.
+  </p><div id="id-1.12.7.3.7.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+    Examples included in this section assume basic knowledge of the
+    <code class="command">qemu-system-<em class="replaceable">ARCH</em></code> command line
+    options. For more information, see <a class="xref" href="cha-qemu-running.html" title="Chapter 29. Running Virtual Machines with qemu-system-ARCH">Chapter 29, <em>Running Virtual Machines with qemu-system-ARCH</em></a>.
+   </p></div><section class="sect2" id="kvm-virtio-scsi" data-id-title="Using the Host Storage with virtio-scsi"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.3.1 </span><span class="title-name">Using the Host Storage with <code class="systemitem">virtio-scsi</code></span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-virtio-scsi">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="systemitem">virtio-scsi</code> is an advanced storage stack for
+    KVM. It replaces the former <code class="systemitem">virtio-blk</code> stack for
+    SCSI devices pass-through. It has several advantages over
+    <code class="systemitem">virtio-blk</code>:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.7.3.7.4.3.1"><span class="term">Improved scalability</span></dt><dd><p>
+       KVM guests have a limited number of PCI controllers, which results in
+       a limited number of possibly attached devices.
+       <code class="systemitem">virtio-scsi</code> solves this limitation by grouping
+       multiple storage devices on a single controller. Each device on a
+       <code class="systemitem">virtio-scsi</code> controller is represented as a
+       logical unit, or <span class="emphasis"><em>LUN</em></span>.
+      </p></dd><dt id="id-1.12.7.3.7.4.3.2"><span class="term">Standard command set</span></dt><dd><p>
+       <code class="systemitem">virtio-blk</code> uses a small set of commands that
+       need to be known to both the <code class="systemitem">virtio-blk</code> driver
+       and the virtual machine monitor, and so introducing a new command
+       requires updating both the driver and the monitor.
+      </p><p>
+       By comparison, <code class="systemitem">virtio-scsi</code> does not define
+       commands, but rather a transport protocol for these commands following
+       the industry-standard SCSI specification. This approach is shared with
+       other technologies, such as Fibre Channel, ATAPI, and USB devices.
+      </p></dd><dt id="id-1.12.7.3.7.4.3.3"><span class="term">Device naming</span></dt><dd><p>
+       <code class="systemitem">virtio-blk</code> devices are presented inside the
+       guest as <code class="filename">/dev/vd<em class="replaceable">X</em></code>, which
+       is different from device names in physical systems and may cause
+       migration problems.
+      </p><p>
+       <code class="systemitem">virtio-scsi</code> keeps the device names identical to
+       those on physical systems, making the virtual machines easily
+       relocatable.
+      </p></dd><dt id="id-1.12.7.3.7.4.3.4"><span class="term">SCSI device pass-through</span></dt><dd><p>
+       For virtual disks backed by a whole LUN on the host, it is preferable
+       for the guest to send SCSI commands directly to the LUN (pass-through).
+       This is limited in <code class="systemitem">virtio-blk</code>, as guests need
+       to use the virtio-blk protocol instead of SCSI command pass-through,
+       and, moreover, it is not available for Windows guests.
+       <code class="systemitem">virtio-scsi</code> natively removes these limitations.
+      </p></dd></dl></div><section class="sect3" id="id-1.12.7.3.7.4.4" data-id-title="virtio-scsi Usage"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">27.3.1.1 </span><span class="title-name"><code class="systemitem">virtio-scsi</code> Usage</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#id-1.12.7.3.7.4.4">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     KVM supports the SCSI pass-through feature with the
+     <code class="systemitem">virtio-scsi-pci</code> device:
+    </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] \
+-device virtio-scsi-pci,id=scsi</pre></div></section></section><section class="sect2" id="kvm-qemu-vnet" data-id-title="Accelerated Networking with vhost-net"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.3.2 </span><span class="title-name">Accelerated Networking with <code class="systemitem">vhost-net</code></span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-qemu-vnet">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="systemitem">vhost-net</code> module is used to accelerate KVM's
+    paravirtualized network drivers. It provides better latency and greater
+    network throughput. Use the <code class="literal">vhost-net</code> driver by starting
+    the guest with the following example command line:
+   </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] \
+-netdev tap,id=guest0,vhost=on,script=no \
+-net nic,model=virtio,netdev=guest0,macaddr=00:16:35:AF:94:4B</pre></div><p>
+    Note that <code class="literal">guest0</code> is an identification string of the
+    vhost-driven device.
+   </p></section><section class="sect2" id="kvm-qemu-multiqueue" data-id-title="Scaling Network Performance with Multiqueue virtio-net"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.3.3 </span><span class="title-name">Scaling Network Performance with Multiqueue virtio-net</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-qemu-multiqueue">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As the number of virtual CPUs increases in VM Guests, QEMU offers a way
+    of improving the network performance using <span class="emphasis"><em>multiqueue</em></span>.
+    Multiqueue virtio-net scales the network performance by allowing VM Guest
+    virtual CPUs to transfer packets in parallel. Multiqueue support is
+    required on both the VM Host Server and VM Guest sides.
+   </p><div id="id-1.12.7.3.7.6.3" data-id-title="Performance Benefit" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Performance Benefit</div><p>
+     The multiqueue virtio-net solution is most beneficial in the following
+     cases:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       Network traffic packets are large.
+      </p></li><li class="listitem"><p>
+       VM Guest has many connections active at the same time, mainly between
+       the guest systems, or between the guest and the host, or between the
+       guest and an external system.
+      </p></li><li class="listitem"><p>
+       The number of active queues is equal to the number of virtual CPUs in
+       the VM Guest.
+      </p></li></ul></div></div><div id="id-1.12.7.3.7.6.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+     While multiqueue virtio-net increases the total network throughput, it
+     increases CPU consumption as it uses of the virtual CPU's power.
+    </p></div><div class="procedure" id="kvm-qemu-mq-enable" data-id-title="How to Enable Multiqueue virtio-net"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 27.1: </span><span class="title-name">How to Enable Multiqueue virtio-net </span></span><a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-qemu-mq-enable">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+     The following procedure lists important steps to enable the multiqueue
+     feature with <code class="command">qemu-system-ARCH</code>. It assumes that a tap
+     network device with multiqueue capability (supported since kernel version
+     3.8) is set up on the VM Host Server.
+    </p><ol class="procedure" type="1"><li class="step"><p>
+      In <code class="command">qemu-system-ARCH</code>, enable multiqueue for the tap
+      device:
+     </p><div class="verbatim-wrap"><pre class="screen">-netdev tap,vhost=on,queues=<em class="replaceable">2*N</em></pre></div><p>
+      where <code class="literal">N</code> stands for the number of queue pairs.
+     </p></li><li class="step"><p>
+      In <code class="command">qemu-system-ARCH</code>, enable multiqueue and specify
+      MSI-X (Message Signaled Interrupt) vectors for the virtio-net-pci device:
+     </p><div class="verbatim-wrap"><pre class="screen">-device virtio-net-pci,mq=on,vectors=<em class="replaceable">2*N+2</em></pre></div><p>
+      where the formula for the number of MSI-X vectors results from: N vectors
+      for TX (transmit) queues, N for RX (receive) queues, one for
+      configuration purposes, and one for possible VQ (vector quantization)
+      control.
+     </p></li><li class="step"><p>
+      In VM Guest, enable multiqueue on the relevant network interface
+      (<code class="literal">eth0</code> in this example):
+     </p><div class="verbatim-wrap"><pre class="screen">ethtool -L eth0 combined 2*N</pre></div></li></ol></div></div><p>
+    The resulting <code class="command">qemu-system-ARCH</code> command line will look
+    similar to the following example:
+   </p><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] -netdev tap,id=guest0,queues=8,vhost=on \
+-device virtio-net-pci,netdev=guest0,mq=on,vectors=10</pre></div><p>
+    Note that the <code class="literal">id</code> of the network device
+    (<code class="literal">guest0</code> ) needs to be identical for both options.
+   </p><p>
+    Inside the running VM Guest, specify the following command as <code class="systemitem">root</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">ethtool -L eth0 combined 8</pre></div><p>
+    Now the guest system networking uses the multiqueue support from the
+    <code class="command">qemu-system-ARCH</code> hypervisor.
+   </p></section><section class="sect2" id="kvm-vfio" data-id-title="VFIO: Secure Direct Access to Devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.3.4 </span><span class="title-name">VFIO: Secure Direct Access to Devices</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-vfio">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Directly assigning a PCI device to a VM Guest (PCI pass-through) avoids
+    performance issues caused by avoiding any emulation in performance-critical
+    paths. VFIO replaces the traditional KVM PCI Pass-Through device assignment. A
+    prerequisite for this feature is a VM Host Server configuration as described in
+    <a class="xref" href="chap-virtualization-introduction.html#ann-vt-io-require" title="Important: Requirements for VFIO and SR-IOV">Important: Requirements for VFIO and SR-IOV</a>.
+   </p><p>
+    To be able to assign a PCI device via VFIO to a VM Guest, you need to find
+    out which IOMMU Group it belongs to. The
+    <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-iommu" title="IOMMU">IOMMU</a> (input/output memory
+    management unit that connects a direct memory access-capable I/O bus to the
+    main memory) API supports the notion of groups. A group is a set of devices
+    that can be isolated from all other devices in the system. Groups are
+    therefore the unit of ownership used by <a class="xref" href="chap-virtualization-introduction.html#vt-io-vfio">VFIO</a>.
+   </p><div class="procedure" id="id-1.12.7.3.7.7.4" data-id-title="Assigning a PCI Device to a VM Guest via VFIO"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 27.2: </span><span class="title-name">Assigning a PCI Device to a VM Guest via VFIO </span></span><a title="Permalink" class="permalink" href="cha-qemu-host.html#id-1.12.7.3.7.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Identify the host PCI device to assign to the guest.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>sudo lspci -nn
+[...]
+00:10.0 Ethernet controller [0200]: Intel Corporation 82576 \
+Virtual Function [8086:10ca] (rev 01)
+[...]</pre></div><p>
+      Note down the device ID (<code class="literal">00:10.0</code> in this case) and the
+      vendor ID (<code class="literal">8086:10ca</code>).
+     </p></li><li class="step"><p>
+      Find the IOMMU group of this device:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>sudo readlink /sys/bus/pci/devices/0000\:00\:10.0/iommu_group
+../../../kernel/iommu_groups/20</pre></div><p>
+      The IOMMU group for this device is <code class="literal">20</code>. Now you can
+      check the devices belonging to the same IOMMU group:
+     </p><div class="verbatim-wrap"><pre class="screen">ls -l /sys/bus/pci/devices/0000:01:10.0/iommu_group/devices/0000:01:10.0
+[...] 0000:00:1e.0 -&gt; ../../../../devices/pci0000:00/0000:00:1e.0
+[...] 0000:01:10.0 -&gt; ../../../../devices/pci0000:00/0000:00:1e.0/0000:01:10.0
+[...] 0000:01:10.1 -&gt; ../../../../devices/pci0000:00/0000:00:1e.0/0000:01:10.1</pre></div></li><li class="step"><p>
+      Unbind the device from the device driver:
+     </p><div class="verbatim-wrap"><pre class="screen">sudo echo "0000:01:10.0" &gt; /sys/bus/pci/devices/0000\:01\:10.0/driver/unbind</pre></div></li><li class="step"><p>
+      Bind the device to the vfio-pci driver using the vendor ID from step 1:
+     </p><div class="verbatim-wrap"><pre class="screen">sudo echo "8086 153a" &gt; /sys/bus/pci/drivers/vfio-pci/new_id</pre></div><p>
+      A new device
+      <code class="filename">/dev/vfio/<em class="replaceable">IOMMU_GROUP</em></code>
+      will be created as a result, <code class="filename">/dev/vfio/20</code> in this
+      case.
+     </p></li><li class="step"><p>
+      Change the ownership of the newly created device:
+     </p><div class="verbatim-wrap"><pre class="screen">chown qemu.qemu /dev/vfio/<em class="replaceable">DEVICE</em></pre></div></li><li class="step"><p>
+      Now run the VM Guest with the PCI device assigned.
+     </p><div class="verbatim-wrap"><pre class="screen">qemu-system-<em class="replaceable">ARCH</em> [...] -device
+     vfio-pci,host=00:10.0,id=<em class="replaceable">ID</em></pre></div></li></ol></div></div><div id="id-1.12.7.3.7.7.5" data-id-title="No Hotplugging" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: No Hotplugging</div><p>
+     As of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber"><span class="phrase">12 SP4</span></span> hotplugging of PCI devices passed to a
+     VM Guest via VFIO is not supported.
+    </p></div><p>
+    You can find more detailed information on the <a class="xref" href="chap-virtualization-introduction.html#vt-io-vfio">VFIO</a>
+    driver in the <code class="filename">/usr/src/linux/Documentation/vfio.txt</code>
+    file (package <code class="systemitem">kernel-source</code> needs to be
+    installed).
+   </p></section><section class="sect2" id="kvm-qemu-virtfs" data-id-title="VirtFS: Sharing Directories between Host and Guests"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.3.5 </span><span class="title-name">VirtFS: Sharing Directories between Host and Guests</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-qemu-virtfs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    VM Guests usually run in a separate computing space—they are
+    provided their own memory range, dedicated CPUs, and file system space. The
+    ability to share parts of the VM Host Server's file system makes the
+    virtualization environment more flexible by simplifying mutual data
+    exchange. Network file systems, such as CIFS and NFS, have been the
+    traditional way of sharing directories. But as they are not specifically
+    designed for virtualization purposes, they suffer from major performance
+    and feature issues.
+   </p><p>
+    KVM introduces a new optimized method called <span class="emphasis"><em>VirtFS</em></span>
+    (sometimes called <span class="quote">“<span class="quote">file system pass-through</span>”</span>). VirtFS uses a
+    paravirtual file system driver, which avoids converting the guest
+    application file system operations into block device operations, and then
+    again into host file system operations.
+   </p><p>
+    You typically use VirtFS for the following situations:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      To access a shared directory from several guests, or to provide
+      guest-to-guest file system access.
+     </p></li><li class="listitem"><p>
+      To replace the virtual disk as the root file system to which the guest's
+      RAM disk connects during the guest boot process.
+     </p></li><li class="listitem"><p>
+      To provide storage services to different customers from a single host
+      file system in a cloud environment.
+     </p></li></ul></div><section class="sect3" id="kvm-qemu-virtfs-implement" data-id-title="Implementation"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">27.3.5.1 </span><span class="title-name">Implementation</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-qemu-virtfs-implement">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     In QEMU, the implementation of VirtFS is simplified by defining two
+     types of devices:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       <code class="literal">virtio-9p-pci</code> device which transports protocol
+       messages and data between the host and the guest.
+      </p></li><li class="listitem"><p>
+       <code class="literal">fsdev</code> device which defines the export file system
+       properties, such as file system type and security model.
+      </p></li></ul></div><div class="complex-example"><div class="example" id="ex-qemu-virtfs-host" data-id-title="Exporting Hosts File System with VirtFS"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 27.1: </span><span class="title-name">Exporting Host's File System with VirtFS </span></span><a title="Permalink" class="permalink" href="cha-qemu-host.html#ex-qemu-virtfs-host">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">qemu-system-x86_64 [...] \
+-fsdev local,id=exp1<span class="callout" id="co-virtfs-host-id">1</span>,path=/tmp/<span class="callout" id="co-virtfs-host-path">2</span>,security_model=mapped<span class="callout" id="co-virtfs-host-sec-model">3</span> \
+-device virtio-9p-pci,fsdev=exp1<span class="callout" id="co-virtfs-host-fsdev">4</span>,mount_tag=v_tmp<span class="callout" id="co-virtfs-host-mnt-tag">5</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-virtfs-host-id"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Identification of the file system to be exported.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-virtfs-host-path"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        File system path on the host to be exported.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-virtfs-host-sec-model"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Security model to be used—<code class="literal">mapped</code> keeps the
+        guest file system modes and permissions isolated from the host, while
+        <code class="literal">none</code> invokes a <span class="quote">“<span class="quote">pass-through</span>”</span> security
+        model in which permission changes on the guest's files are reflected on
+        the host as well.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-virtfs-host-fsdev"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        The exported file system ID defined before with <code class="literal">-fsdev
+        id=</code> .
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-virtfs-host-mnt-tag"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Mount tag used later on the guest to mount the exported file system.
+       </p></td></tr></table></div><p>
+      Such an exported file system can be mounted on the guest as follows:
+     </p><div class="verbatim-wrap"><pre class="screen">sudo mount -t 9p -o trans=virtio v_tmp /mnt</pre></div><p>
+      where <code class="literal">v_tmp</code> is the mount tag defined earlier with
+      <code class="literal">-device mount_tag=</code> and <code class="literal">/mnt</code> is the
+      mount point where you want to mount the exported file system.
+     </p></div></div></div></section></section><section class="sect2" id="kvm-qemu-ksm" data-id-title="KSM: Sharing Memory Pages between Guests"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">27.3.6 </span><span class="title-name">KSM: Sharing Memory Pages between Guests</span></span> <a title="Permalink" class="permalink" href="cha-qemu-host.html#kvm-qemu-ksm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/qemu_host_installation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Kernel Same Page Merging (<a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-ksm" title="KSM">KSM</a>) is a
+    Linux kernel feature that merges identical memory pages from multiple
+    running processes into one memory region. Because KVM guests run as
+    processes under Linux, <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-ksm" title="KSM">KSM</a> provides the
+    memory overcommit feature to hypervisors for more efficient use of memory.
+    Therefore, if you need to run multiple virtual machines on a host with
+    limited memory, <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-ksm" title="KSM">KSM</a> may be helpful to
+    you.
+   </p><p>
+    <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-ksm" title="KSM">KSM</a> stores its status information in the
+    files under the <code class="filename">/sys/kernel/mm/ksm</code> directory:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>ls -1 /sys/kernel/mm/ksm
+full_scans
+merge_across_nodes
+pages_shared
+pages_sharing
+pages_to_scan
+pages_unshared
+pages_volatile
+run
+sleep_millisecs</pre></div><p>
+    For more information on the meaning of the
+    <code class="filename">/sys/kernel/mm/ksm/*</code> files, see
+    <code class="filename">/usr/src/linux/Documentation/vm/ksm.txt</code> (package
+    <code class="systemitem">kernel-source</code>).
+   </p><p>
+    To use <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-ksm" title="KSM">KSM</a>, do the following.
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Although <span class="productname"><span class="phrase">SLES</span></span> includes
+      <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-ksm" title="KSM">KSM</a> support in the kernel, it is
+      disabled by default. To enable it, run the following command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>echo 1 &gt; /sys/kernel/mm/ksm/run</pre></div></li><li class="step"><p>
+      Now run several VM Guests under KVM and inspect the content of files
+      <code class="filename">pages_sharing</code> and <code class="filename">pages_shared</code>,
+      for example:
+     </p><div class="verbatim-wrap"><pre class="screen">while [ 1 ]; do cat /sys/kernel/mm/ksm/pages_shared; sleep 1; done
+13522
+13523
+13519
+13518
+13520
+13520
+13528</pre></div></li></ol></div></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-qemu-overview.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 26 </span>QEMU Overview</span></a> </div><div><a class="pagination-link next" href="cha-qemu-guest-inst.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 28 </span>Guest Installation</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-qemu-host.html#kvm-host-cpu"><span class="title-number">27.1 </span><span class="title-name">CPU Support for Virtualization</span></a></span></li><li><span class="sect1"><a href="cha-qemu-host.html#kvm-host-soft"><span class="title-number">27.2 </span><span class="title-name">Required Software</span></a></span></li><li><span class="sect1"><a href="cha-qemu-host.html#kvm-host-virtio"><span class="title-number">27.3 </span><span class="title-name">KVM Host-Specific Features</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

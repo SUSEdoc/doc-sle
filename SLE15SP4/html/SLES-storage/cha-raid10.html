@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP4 | Storage Administration Guide | Creating software RAID 10 devices</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Creating software RAID 10 devices | SLES 15 SP4"/>
+<meta name="description" content="This section describes how to set up nested and complex RAID 10 devices. A RAID 10 device consists of nested RAID 1 (mirroring) and RAID 0 (striping)…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 9. Creating software RAID 10 devices"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Creating software RAID 10 devices",
+  
+    "description": "Creating software RAID 10 devices",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-raidroot.html" title="Chapter 8. Configuring software RAID for the root partition"/><link rel="next" href="cha-raid-degraded.html" title="Chapter 10. Creating a degraded RAID array"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-software-raid.html">Software RAID</a><span> / </span><a class="crumb" href="cha-raid10.html">Creating software RAID 10 devices</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li class="active"><a href="part-software-raid.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" you-are-here"><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li><a href="part-net-storage.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-raid10" data-id-title="Creating software RAID 10 devices"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  This section describes how to set up nested and complex RAID 10 devices.
+  A RAID 10 device consists of nested RAID 1 (mirroring) and RAID 0
+  (striping) arrays. Nested RAIDs can either be set up as striped mirrors
+  (RAID 1+0) or as mirrored stripes (RAID 0+1). A complex
+  RAID 10 setup also combines mirrors and stripes and additional data
+  security by supporting a higher data redundancy level.
+ </p><section class="sect1" id="sec-raid10-nest" data-id-title="Creating nested RAID 10 devices with mdadm"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.1 </span><span class="title-name">Creating nested RAID 10 devices with <code class="command">mdadm</code></span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-nest">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A nested RAID device consists of a RAID array that uses another RAID array
+   as its basic element, instead of using physical disks. The goal of this
+   configuration is to improve the performance and fault tolerance of the RAID.
+   Setting up nested RAID levels is not supported by YaST, but can be done by
+   using the <code class="command">mdadm</code> command line tool.
+  </p><p>
+   Based on the order of nesting, two different nested RAIDs can be set up.
+   This document uses the following terminology:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">RAID 1+0:</span>
+      RAID 1 (mirror) arrays are built first, then combined to form a RAID 0
+      (stripe) array.
+     </p></li><li class="listitem"><p><span class="formalpara-title">RAID 0+1:</span>
+      RAID 0 (stripe) arrays are built first, then combined to form a RAID 1
+      (mirror) array.
+     </p></li></ul></div><p>
+   The following table describes the advantages and disadvantages of RAID 10
+   nesting as 1+0 versus 0+1. It assumes that the storage objects you use
+   reside on different disks, each with a dedicated I/O capability.
+  </p><div class="table" id="id-1.11.5.4.4.6" data-id-title="Nested RAID levels"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 9.1: </span><span class="title-name">Nested RAID levels </span></span><a title="Permalink" class="permalink" href="cha-raid10.html#id-1.11.5.4.4.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        RAID Level
+       </p>
+      </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Description
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Performance and Fault Tolerance
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        10 (1+0)
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        RAID 0 (stripe) built with RAID 1 (mirror) arrays
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        RAID 1+0 provides high levels of I/O performance, data redundancy, and
+        disk fault tolerance. Because each member device in the RAID 0 is
+        mirrored individually, multiple disk failures can be tolerated and data
+        remains available as long as the disks that fail are in different
+        mirrors.
+       </p>
+       <p>
+        You can optionally configure a spare for each underlying mirrored
+        array, or configure a spare to serve a spare group that serves all
+        mirrors.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        10 (0+1)
+       </p>
+      </td><td style="border-right: 1px solid ; ">
+       <p>
+        RAID 1 (mirror) built with RAID 0 (stripe) arrays
+       </p>
+      </td><td>
+       <p>
+        RAID 0+1 provides high levels of I/O performance and data redundancy,
+        but slightly less fault tolerance than a 1+0. If multiple disks fail on
+        one side of the mirror, then the other mirror is available. However, if
+        disks are lost concurrently on both sides of the mirror, all data is
+        lost.
+       </p>
+       <p>
+        This solution offers less disk fault tolerance than a 1+0 solution, but
+        if you need to perform maintenance or maintain the mirror on a
+        different site, you can take an entire side of the mirror offline and
+        still have a fully functional storage device. Also, if you lose the
+        connection between the two sites, either site operates independently of
+        the other. That is not true if you stripe the mirrored segments,
+        because the mirrors are managed at a lower level.
+       </p>
+       <p>
+        If a device fails, the mirror on that side fails because RAID 1 is not
+        fault-tolerant. Create a new RAID 0 to replace the failed side, then
+        resynchronize the mirrors.
+       </p>
+      </td></tr></tbody></table></div></div><section class="sect2" id="sec-raid10-nest-10" data-id-title="Creating nested RAID 10 (1+0) with mdadm"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.1.1 </span><span class="title-name">Creating nested RAID 10 (1+0) with mdadm</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-nest-10">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    A nested RAID 1+0 is built by creating two or more RAID 1 (mirror) devices,
+    then using them as component devices in a RAID 0.
+   </p><div id="id-1.11.5.4.4.7.3" data-id-title="Multipathing" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Multipathing</div><p>
+     If you need to manage multiple connections to the devices, you must
+     configure multipath I/O before configuring the RAID devices. For
+     information, see
+     <a class="xref" href="cha-multipath.html" title="Chapter 18. Managing multipath I/O for devices">Chapter 18, <em>Managing multipath I/O for devices</em></a>.
+    </p></div><p>
+    The procedure in this section uses the device names shown in the following
+    table. Ensure that you modify the device names with the names of your own
+    devices.
+   </p><div class="table" id="id-1.11.5.4.4.7.5" data-id-title="Scenario for creating a RAID 10 (1+0) by nesting"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 9.2: </span><span class="title-name">Scenario for creating a RAID 10 (1+0) by nesting </span></span><a title="Permalink" class="permalink" href="cha-raid10.html#id-1.11.5.4.4.7.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Raw Devices
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         RAID 1 (mirror)
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         RAID 1+0 (striped mirrors)
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <table style="border: 0; " class="simplelist"><tr><td><code class="filename">/dev/sdb1</code>
+         </td></tr><tr><td><code class="filename">/dev/sdc1</code>
+         </td></tr></table>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="filename">/dev/md0</code>
+        </p>
+       </td><td rowspan="2">
+        
+        <p>
+         <code class="filename">/dev/md2</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <table style="border: 0; " class="simplelist"><tr><td><code class="filename">/dev/sdd1</code>
+         </td></tr><tr><td><code class="filename">/dev/sde1</code>
+         </td></tr></table>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="filename">/dev/md1</code>
+        </p>
+       </td></tr></tbody></table></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      If necessary, create four 0xFD Linux RAID partitions of equal size using
+      a disk partitioner such as parted.
+     </p></li><li class="step"><p>
+      Create two software RAID 1 devices, using two different devices for
+      each device. At the command prompt, enter these two commands:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --create /dev/md0 --run --level=1 --raid-devices=2 /dev/sdb1 /dev/sdc1
+sudo mdadm --create /dev/md1 --run --level=1 --raid-devices=2 /dev/sdd1 /dev/sde1</pre></div></li><li class="step"><p>
+      Create the nested RAID 1+0 device. At the command prompt, enter the
+      following command using the software RAID 1 devices you created in the
+      previous step:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --create /dev/md2 --run --level=0 --chunk=64 \
+--raid-devices=2 /dev/md0 /dev/md1</pre></div><p>
+      The default chunk size is 64 KB.
+     </p></li><li class="step"><p>
+      Create a file system on the RAID 1+0 device
+      <code class="filename">/dev/md2</code>, for example an XFS file system:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkfs.xfs /dev/md2</pre></div><p>
+      Modify the command to use a different file system.
+     </p></li><li class="step"><p>
+      Edit the <code class="filename">/etc/mdadm.conf</code> file or create it, if it
+      does not exist (for example by running <code class="command">sudo vi
+      /etc/mdadm.conf</code>). Add the following lines (if the file already
+      exists, the first line probably already exists).
+     </p><div class="verbatim-wrap"><pre class="screen">DEVICE containers partitions
+ARRAY /dev/md0 UUID=<em class="replaceable">UUID</em>
+ARRAY /dev/md1 UUID=<em class="replaceable">UUID</em>
+ARRAY /dev/md2 UUID=<em class="replaceable">UUID</em></pre></div><p>
+      The UUID of each device can be retrieved with the following command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/<em class="replaceable">DEVICE</em> | grep UUID</pre></div></li><li class="step"><p>
+      Edit the <code class="filename">/etc/fstab</code> file to add an entry for the
+      RAID 1+0 device <code class="filename">/dev/md2</code>. The following example
+      shows an entry for a RAID device with the XFS file system and
+      <code class="filename">/data</code> as a mount point.
+     </p><div class="verbatim-wrap"><pre class="screen">/dev/md2 /data xfs defaults 1 2</pre></div></li><li class="step"><p>
+      Mount the RAID device:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount /data</pre></div></li></ol></div></div></section><section class="sect2" id="sec-raid10-nest-01" data-id-title="Creating nested RAID 10 (0+1) with mdadm"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.1.2 </span><span class="title-name">Creating nested RAID 10 (0+1) with mdadm</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-nest-01">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    A nested RAID 0+1 is built by creating two to four RAID 0 (striping)
+    devices, then mirroring them as component devices in a RAID 1.
+   </p><div id="id-1.11.5.4.4.8.3" data-id-title="Multipathing" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Multipathing</div><p>
+     If you need to manage multiple connections to the devices, you must
+     configure multipath I/O before configuring the RAID devices. For
+     information, see
+     <a class="xref" href="cha-multipath.html" title="Chapter 18. Managing multipath I/O for devices">Chapter 18, <em>Managing multipath I/O for devices</em></a>.
+    </p></div><p>
+    In this configuration, spare devices cannot be specified for the underlying
+    RAID 0 devices because RAID 0 cannot tolerate a device loss. If a
+    device fails on one side of the mirror, you must create a replacement
+    RAID 0 device, than add it into the mirror.
+   </p><p>
+    The procedure in this section uses the device names shown in the following
+    table. Ensure that you modify the device names with the names of your own
+    devices.
+   </p><div class="table" id="id-1.11.5.4.4.8.6" data-id-title="Scenario for creating a RAID 10 (0+1) by nesting"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 9.3: </span><span class="title-name">Scenario for creating a RAID 10 (0+1) by nesting </span></span><a title="Permalink" class="permalink" href="cha-raid10.html#id-1.11.5.4.4.8.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Raw Devices
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         RAID 0 (stripe)
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         RAID 0+1 (mirrored stripes)
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <table style="border: 0; " class="simplelist"><tr><td><code class="filename">/dev/sdb1</code>
+         </td></tr><tr><td><code class="filename">/dev/sdc1</code>
+         </td></tr></table>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="filename">/dev/md0</code>
+        </p>
+       </td><td rowspan="2">
+        
+        <p>
+         <code class="filename">/dev/md2</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <table style="border: 0; " class="simplelist"><tr><td><code class="filename">/dev/sdd1</code>
+         </td></tr><tr><td><code class="filename">/dev/sde1</code>
+         </td></tr></table>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="filename">/dev/md1</code>
+        </p>
+       </td></tr></tbody></table></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      If necessary, create four 0xFD Linux RAID partitions of equal size using
+      a disk partitioner such as parted.
+     </p></li><li class="step"><p>
+      Create two software RAID 0 devices, using two different devices for
+      each RAID 0 device. At the command prompt, enter these two commands:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --create /dev/md0 --run --level=0 --chunk=64 \
+--raid-devices=2 /dev/sdb1 /dev/sdc1
+sudo mdadm --create /dev/md1 --run --level=0 --chunk=64 \
+--raid-devices=2 /dev/sdd1 /dev/sde1</pre></div><p>
+      The default chunk size is 64 KB.
+     </p></li><li class="step"><p>
+      Create the nested RAID 0+1 device. At the command prompt, enter the
+      following command using the software RAID 0 devices you created in
+      the previous step:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --create /dev/md2 --run --level=1 --raid-devices=2 /dev/md0 /dev/md1</pre></div></li><li class="step"><p>
+      Create a file system on the RAID 1+0 device
+      <code class="filename">/dev/md2</code>, for example an XFS file system:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkfs.xfs /dev/md2</pre></div><p>
+      Modify the command to use a different file system.
+     </p></li><li class="step"><p>
+      Edit the <code class="filename">/etc/mdadm.conf</code> file or create it, if it
+      does not exist (for example by running <code class="command">sudo vi
+      /etc/mdadm.conf</code>). Add the following lines (if the file exists,
+      the first line probably already exists, too).
+     </p><div class="verbatim-wrap"><pre class="screen">DEVICE containers partitions
+ARRAY /dev/md0 UUID=<em class="replaceable">UUID</em>
+ARRAY /dev/md1 UUID=<em class="replaceable">UUID</em>
+ARRAY /dev/md2 UUID=<em class="replaceable">UUID</em></pre></div><p>
+      The UUID of each device can be retrieved with the following command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/<em class="replaceable">DEVICE</em> | grep UUID</pre></div></li><li class="step"><p>
+      Edit the <code class="filename">/etc/fstab</code> file to add an entry for the
+      RAID 1+0 device <code class="filename">/dev/md2</code>. The following example
+      shows an entry for a RAID device with the XFS file system and
+      <code class="filename">/data</code> as a mount point.
+     </p><div class="verbatim-wrap"><pre class="screen">/dev/md2 /data xfs defaults 1 2</pre></div></li><li class="step"><p>
+      Mount the RAID device:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount /data</pre></div></li></ol></div></div></section></section><section class="sect1" id="sec-raid10-complex" data-id-title="Creating a complex RAID 10"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.2 </span><span class="title-name">Creating a complex RAID 10</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   YaST (and <code class="command">mdadm</code> with the <code class="option">--level=10</code>
+   option) creates a single complex software RAID 10 that combines
+   features of both RAID 0 (striping) and RAID 1 (mirroring). Multiple copies
+   of all data blocks are arranged on multiple drives following a striping
+   discipline. Component devices should be the same size.
+  </p><p>
+   The complex RAID 10 is similar in purpose to a nested RAID 10
+   (1+0), but differs in the following ways:
+  </p><div class="table" id="id-1.11.5.4.5.4" data-id-title="Complex RAID 10 compared to nested RAID 10"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 9.4: </span><span class="title-name">Complex RAID 10 compared to nested RAID 10 </span></span><a title="Permalink" class="permalink" href="cha-raid10.html#id-1.11.5.4.5.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Feature
+       </p>
+      </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Complex RAID 10
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Nested RAID 10 (1+0)
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Number of devices
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Allows an even or odd number of component devices
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Requires an even number of component devices
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Component devices
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Managed as a single RAID device
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Manage as a nested RAID device
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Striping
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Striping occurs in the near or far layout on component devices.
+       </p>
+       <p>
+        The far layout provides sequential read throughput that scales by
+        number of drives, rather than number of RAID 1 pairs.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Striping occurs consecutively across component devices
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Multiple copies of data
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Two or more copies, up to the number of devices in the array
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Copies on each mirrored segment
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        Hot spare devices
+       </p>
+      </td><td style="border-right: 1px solid ; ">
+       <p>
+        A single spare can service all component devices
+       </p>
+      </td><td>
+       <p>
+        Configure a spare for each underlying mirrored array, or configure a
+        spare to serve a spare group that serves all mirrors.
+       </p>
+      </td></tr></tbody></table></div></div><section class="sect2" id="sec-raid10-complex-replicas" data-id-title="Number of devices and replicas in the complex RAID 10"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.2.1 </span><span class="title-name">Number of devices and replicas in the complex RAID 10</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-replicas">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When configuring a complex RAID 10 array, you must specify the number
+    of replicas of each data block that are required. The default number of
+    replicas is two, but the value can be two to the number of devices in the
+    array.
+   </p><p>
+    You must use at least as many component devices as the number of replicas
+    you specify. However, the number of component devices in a RAID 10
+    array does not need to be a multiple of the number of replicas of each data
+    block. The effective storage size is the number of devices divided by the
+    number of replicas.
+   </p><p>
+    For example, if you specify two replicas for an array created with five
+    component devices, a copy of each block is stored on two different devices.
+    The effective storage size for one copy of all data is 5/2 or 2.5 times the
+    size of a component device.
+   </p></section><section class="sect2" id="sec-raid10-complex-layout" data-id-title="Layout"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.2.2 </span><span class="title-name">Layout</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-layout">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The complex RAID 10 setup supports three different layouts which
+    define how the data blocks are arranged on the disks. The available layouts
+    are near (default), far and offset. They have different performance
+    characteristics, so it is important to choose the right layout for your
+    workload.
+   </p><section class="sect3" id="sec-raid10-complex-layout-near" data-id-title="Near layout"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.2.1 </span><span class="title-name">Near layout</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-layout-near">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     With the near layout, copies of a block of data are striped near each
+     other on different component devices. That is, multiple copies of one data
+     block are at similar offsets in different devices. Near is the default
+     layout for RAID 10. For example, if you use an odd number of
+     component devices and two copies of data, some copies are perhaps one
+     chunk further into the device.
+    </p><p>
+     The near layout for the complex RAID 10 yields read and write
+     performance similar to RAID 0 over half the number of drives.
+    </p><p>
+     Near layout with an even number of disks and two replicas:
+    </p><div class="verbatim-wrap"><pre class="screen">sda1 sdb1 sdc1 sde1
+  0    0    1    1
+  2    2    3    3
+  4    4    5    5
+  6    6    7    7
+  8    8    9    9</pre></div><p>
+     Near layout with an odd number of disks and two replicas:
+    </p><div class="verbatim-wrap"><pre class="screen">sda1 sdb1 sdc1 sde1 sdf1
+  0    0    1    1    2
+  2    3    3    4    4
+  5    5    6    6    7
+  7    8    8    9    9
+  10   10   11   11   12</pre></div></section><section class="sect3" id="sec-raid10-complex-layout-far" data-id-title="Far layout"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.2.2 </span><span class="title-name">Far layout</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-layout-far">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The far layout stripes data over the early part of all drives, then
+     stripes a second copy of the data over the later part of all drives,
+     making sure that all copies of a block are on different drives. The second
+     set of values starts halfway through the component drives.
+    </p><p>
+     With a far layout, the read performance of the complex RAID 10 is
+     similar to a RAID 0 over the full number of drives, but write
+     performance is substantially slower than a RAID 0 because there is
+     more seeking of the drive heads. It is best used for read-intensive
+     operations such as for read-only file servers.
+    </p><p>
+     The speed of the RAID 10 for writing is similar to other mirrored
+     RAID types, like RAID 1 and RAID 10 using near layout, as the
+     elevator of the file system schedules the writes in a more optimal way
+     than raw writing. Using RAID 10 in the far layout is well suited for
+     mirrored writing applications.
+    </p><p>
+     Far layout with an even number of disks and two replicas:
+    </p><div class="verbatim-wrap"><pre class="screen">sda1 sdb1 sdc1 sde1
+  0    1    2    3
+  4    5    6    7
+  . . .
+  3    0    1    2
+  7    4    5    6</pre></div><p class="intro">
+     Far layout with an odd number of disks and two replicas:
+    </p><div class="verbatim-wrap"><pre class="screen">sda1 sdb1 sdc1 sde1 sdf1
+  0    1    2    3    4
+  5    6    7    8    9
+  . . .
+  4    0    1    2    3
+  9    5    6    7    8</pre></div></section><section class="sect3" id="sec-raid10-complex-layout-offset" data-id-title="Offset layout"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.2.3 </span><span class="title-name">Offset layout</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-layout-offset">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The offset layout duplicates stripes so that the multiple copies of a
+     given chunk are laid out on consecutive drives and at consecutive offsets.
+     Effectively, each stripe is duplicated and the copies are offset by one
+     device. This should give similar read characteristics to a far layout if a
+     suitably large chunk size is used, but without as much seeking for writes.
+    </p><p>
+     Offset layout with an even number of disks and two replicas:
+    </p><div class="verbatim-wrap"><pre class="screen">sda1 sdb1 sdc1 sde1
+  0    1    2    3
+  3    0    1    2
+  4    5    6    7
+  7    4    5    6
+  8    9   10   11
+ 11    8    9   10</pre></div><p>
+     Offset layout with an odd number of disks and two replicas:
+    </p><div class="verbatim-wrap"><pre class="screen">sda1 sdb1 sdc1 sde1 sdf1
+  0    1    2    3    4
+  4    0    1    2    3
+  5    6    7    8    9
+  9    5    6    7    8
+ 10   11   12   13   14
+ 14   10   11   12   13</pre></div></section><section class="sect3" id="sec-raid10-complex-layout-parameter" data-id-title="Specifying the number of replicas and the layout with YaST and mdadm"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.2.4 </span><span class="title-name">Specifying the number of replicas and the layout with YaST and mdadm</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-layout-parameter">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The number of replicas and the layout is specified as <span class="guimenu">Parity
+     Algorithm</span> in YaST or with the <code class="option">--layout</code>
+     parameter for mdadm. The following values are accepted:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.5.4.5.6.6.3.1"><span class="term"><code class="literal">n<em class="replaceable">N</em></code>
+      </span></dt><dd><p>
+        Specify <code class="literal">n</code> for near layout and replace
+        <em class="replaceable">N</em> with the number of replicas.
+        <code class="literal">n2</code> is the default that is used when not configuring
+        layout and the number of replicas.
+       </p></dd><dt id="id-1.11.5.4.5.6.6.3.2"><span class="term"><code class="literal">f<em class="replaceable">N</em></code>
+      </span></dt><dd><p>
+        Specify <code class="literal">f</code> for far layout and replace
+        <em class="replaceable">N</em> with the number of replicas.
+       </p></dd><dt id="id-1.11.5.4.5.6.6.3.3"><span class="term"><code class="literal">o<em class="replaceable">N</em></code>
+      </span></dt><dd><p>
+        Specify <code class="literal">o</code> for offset layout and replace
+        <em class="replaceable">N</em> with the number of replicas.
+       </p></dd></dl></div><div id="id-1.11.5.4.5.6.6.4" data-id-title="Number of replicas" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Number of replicas</div><p>
+      YaST automatically offers a selection of all possible values for the
+      <span class="guimenu">Parity Algorithm</span> parameter.
+     </p></div></section></section><section class="sect2" id="sec-raid10-complex-yast" data-id-title="Creating a complex RAID 10 with the YaST partitioner"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.2.3 </span><span class="title-name">Creating a complex RAID 10 with the YaST partitioner</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-yast">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Launch YaST and open the Partitioner.
+     </p></li><li class="step"><p>
+      If necessary, create partitions that should be used with your RAID
+      configuration. Do not format them and set the partition type to
+      <span class="guimenu">0xFD Linux RAID</span>. When using existing partitions it is
+      not necessary to change their partition type—YaST will
+      automatically do so. Refer to
+      <span class="intraxref">Book “Deployment Guide”, Chapter 10 “<span class="guimenu">Expert Partitioner</span>”, Section 10.1 “Using the <span class="guimenu">Expert Partitioner</span>”</span> for details.
+     </p><p>
+      For RAID 10 at least four partitions are needed. It is strongly
+      recommended to use partitions stored on different hard disks to decrease
+      the risk of losing data if one is defective. It is recommended to use
+      only partitions of the same size because each segment can contribute only
+      the same amount of space as the smallest sized partition.
+     </p></li><li class="step"><p>
+      In the left panel, select <span class="guimenu">RAID</span>.
+     </p><p>
+      A list of existing RAID configurations opens in the right panel.
+     </p></li><li class="step"><p>
+      At the lower left of the RAID page, click <span class="guimenu">Add RAID</span>.
+     </p></li><li class="step"><p>
+      Under <span class="guimenu">RAID Type</span>, select <span class="guimenu">RAID 10 (Mirroring
+      and Striping)</span>.
+     </p><p>
+      You can optionally assign a <span class="guimenu">RAID Name</span> to your RAID. It
+      will make it available as
+      <code class="filename">/dev/md/<em class="replaceable">NAME</em></code>. See
+      <a class="xref" href="cha-raid.html#sec-raid-yast-names" title="7.2.1. RAID names">Section 7.2.1, “RAID names”</a> for more information.
+     </p></li><li class="step"><p>
+      In the <span class="guimenu">Available Devices</span> list, select the desired
+      partitions, then click <span class="guimenu">Add</span> to move them to the
+      <span class="guimenu">Selected Devices</span> list.
+     </p><div class="informalfigure"><div class="mediaobject"><a href="images/raid10_a.png"><img src="images/raid10_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+      (Optional) Click <span class="guimenu">Classify</span> to specify the preferred
+      order of the disks in the RAID array.
+     </p><p>
+      For RAID types such as RAID 10, where the order of added disks
+      matters, you can specify the order in which the devices will be used.
+      This will ensure that one half of the array resides on one disk subsystem
+      and the other half of the array resides on a different disk subsystem.
+      For example, if one disk subsystem fails, the system keeps running from
+      the second disk subsystem.
+     </p><ol type="a" class="substeps"><li class="step"><p>
+        Select each disk in turn and click one of the <span class="guimenu">Class
+        X</span> buttons, where X is the letter you want to assign to the
+        disk. Available classes are A, B, C, D and E but for many cases fewer
+        classes are needed (only A and B, for example). Assign all available
+        RAID disks this way.
+       </p><p>
+        You can press the <span class="keycap">Ctrl</span> or
+        <span class="keycap">Shift</span> key to select multiple devices. You
+        can also right-click a selected device and choose the appropriate class
+        from the context menu.
+       </p></li><li class="step"><p>
+        Specify the order of the devices by selecting one of the sorting
+        options:
+       </p><p><span class="formalpara-title"><span class="guimenu">Sorted</span>:</span>
+         Sorts all devices of class A before all devices of class B and so on.
+         For example: <code class="literal">AABBCC</code>.
+        </p><p><span class="formalpara-title"><span class="guimenu">Interleaved</span>:</span>
+         Sorts devices by the first device of class A, then first device of
+         class B, then all the following classes with assigned devices. Then
+         the second device of class A, the second device of class B, and so on
+         follows. All devices without a class are sorted to the end of the
+         devices list. For example: <code class="literal">ABCABC</code>.
+        </p><p><span class="formalpara-title">Pattern file:</span>
+         Select an existing file that contains multiple lines, where each is a
+         regular expression and a class name (<code class="literal">"sda.* A"</code>).
+         All devices that match the regular expression are assigned to the
+         specified class for that line. The regular expression is matched
+         against the kernel name (<code class="filename">/dev/sda1</code>), the udev
+         path name
+         (<code class="filename">/dev/disk/by-path/pci-0000:00:1f.2-scsi-0:0:0:0-part1</code>)
+         and then the udev ID
+         (<code class="filename">dev/disk/by-id/ata-ST3500418AS_9VMN8X8L-part1</code>).
+         The first match made determines the class if a device’s name matches
+         more than one regular expression.
+        </p></li><li class="step"><p>
+        At the bottom of the dialog, click <span class="guimenu">OK</span> to confirm the
+        order.
+       </p><div class="informalfigure"><div class="mediaobject"><a href="images/raid10_classify_a.png"><img src="images/raid10_classify_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li></ol></li><li class="step"><p>
+      Click <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Under <span class="guimenu">RAID Options</span>, specify the <span class="guimenu">Chunk
+      Size</span> and <span class="guimenu">Parity Algorithm</span>, then click
+      <span class="guimenu">Next</span>.
+     </p><p>
+      For a RAID 10, the parity options are n (near), f (far), and o (offset).
+      The number indicates the number of replicas of each data block that are
+      required. Two is the default. For information, see
+      <a class="xref" href="cha-raid10.html#sec-raid10-complex-layout" title="9.2.2. Layout">Section 9.2.2, “Layout”</a>.
+     </p></li><li class="step"><p>
+      Add a file system and mount options to the RAID device, then click
+      <span class="guimenu">Finish</span>.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Verify the changes to be made, then click <span class="guimenu">Finish</span> to
+      create the RAID.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-raid10-complex-yast-mdadm" data-id-title="Creating a complex RAID 10 with mdadm"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.2.4 </span><span class="title-name">Creating a complex RAID 10 with mdadm</span></span> <a title="Permalink" class="permalink" href="cha-raid10.html#sec-raid10-complex-yast-mdadm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The procedure in this section uses the device names shown in the following
+    table. Ensure that you modify the device names with the names of your own
+    devices.
+   </p><div class="table" id="id-1.11.5.4.5.8.3" data-id-title="Scenario for creating a RAID 10 using mdadm"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 9.5: </span><span class="title-name">Scenario for creating a RAID 10 using mdadm </span></span><a title="Permalink" class="permalink" href="cha-raid10.html#id-1.11.5.4.5.8.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid10.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Raw Devices
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         RAID 10
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="filename">/dev/sdf1</code>
+        </p>
+        <p>
+         <code class="filename">/dev/sdg1</code>
+        </p>
+        <p>
+         <code class="filename">/dev/sdh1</code>
+        </p>
+        <p>
+         <code class="filename">/dev/sdi1</code>
+        </p>
+       </td><td>
+        <p>
+         <code class="filename">/dev/md3</code>
+        </p>
+       </td></tr></tbody></table></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      If necessary, create at least four 0xFD Linux RAID partitions of equal
+      size using a disk partitioner such as parted.
+     </p></li><li class="step"><p>
+      Create a RAID 10 by entering the following command.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --create /dev/md3 --run --level=10 --chunk=32 --raid-devices=4 \
+/dev/sdf1 /dev/sdg1 /dev/sdh1 /dev/sdi1</pre></div><p>
+      Make sure to adjust the value for <code class="option">--raid-devices</code> and the
+      list of partitions according to your setup.
+     </p><p>
+      The command creates an array with near layout and two replicas. To change
+      any of the two values, use the <code class="option">--layout</code> as described in
+      <a class="xref" href="cha-raid10.html#sec-raid10-complex-layout-parameter" title="9.2.2.4. Specifying the number of replicas and the layout with YaST and mdadm">Section 9.2.2.4, “Specifying the number of replicas and the layout with YaST and mdadm”</a>.
+     </p></li><li class="step"><p>
+      Create a file system on the RAID 10 device
+      <code class="filename">/dev/md3</code>, for example an XFS file system:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkfs.xfs /dev/md3</pre></div><p>
+      Modify the command to use a different file system.
+     </p></li><li class="step"><p>
+      Edit the <code class="filename">/etc/mdadm.conf</code> file or create it, if it
+      does not exist (for example by running <code class="command">sudo vi
+      /etc/mdadm.conf</code>). Add the following lines (if the file exists,
+      the first line probably already exists, too).
+     </p><div class="verbatim-wrap"><pre class="screen">DEVICE containers partitions
+ARRAY /dev/md3 UUID=<em class="replaceable">UUID</em></pre></div><p>
+      The UUID of the device can be retrieved with the following command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/md3 | grep UUID</pre></div></li><li class="step"><p>
+      Edit the <code class="filename">/etc/fstab</code> file to add an entry for the
+      RAID 10 device <code class="filename">/dev/md3</code>. The following example
+      shows an entry for a RAID device with the XFS file system and
+      <code class="filename">/data</code> as a mount point.
+     </p><div class="verbatim-wrap"><pre class="screen">/dev/md3 /data xfs defaults 1 2</pre></div></li><li class="step"><p>
+      Mount the RAID device:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mount /data</pre></div></li></ol></div></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-raidroot.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 8 </span>Configuring software RAID for the root partition</span></a> </div><div><a class="pagination-link next" href="cha-raid-degraded.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 10 </span>Creating a degraded RAID array</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-raid10.html#sec-raid10-nest"><span class="title-number">9.1 </span><span class="title-name">Creating nested RAID 10 devices with <code class="command">mdadm</code></span></a></span></li><li><span class="sect1"><a href="cha-raid10.html#sec-raid10-complex"><span class="title-number">9.2 </span><span class="title-name">Creating a complex RAID 10</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

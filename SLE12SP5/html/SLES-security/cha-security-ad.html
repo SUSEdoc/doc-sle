@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Security and Hardening Guide | Active Directory Support</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Active Directory Support | SLES 12 SP5"/>
+<meta name="description" content="Active Directory* (AD) is a directory-service based on LDAP, Kerberos, and other services. It is used by Microsoft* Windows* to manage resources, ser…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 7. Active Directory Support"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security Guide"/>
+<meta property="og:description" content="Implement system security for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security Guide"/>
+<meta name="twitter:description" content="Implement system security for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Active Directory Support",
+  
+    "description": "Active Directory Support",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-security-kerberos.html" title="Chapter 6. Network Authentication with Kerberos"/><link rel="next" href="part-local-security.html" title="Part II. Local Security"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-auth.html">Authentication</a><span> / </span><a class="crumb" href="cha-security-ad.html">Active Directory Support</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and Confidentiality</span></a></li><li class="active"><a href="part-auth.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting Up Authentication Servers and Clients Using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP—A Directory Service</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network Authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" you-are-here"><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local Security</span></a><ol><li><a href="cha-spectre.html" class=" "><span class="title-number">8 </span><span class="title-name">Spectre/Meltdown Checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Configuring Security Settings with YaST</span></a></li><li><a href="cha-security-policykit.html" class=" "><span class="title-number">10 </span><span class="title-name">Authorization with Polkit</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">11 </span><span class="title-name">Access Control Lists in Linux</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting Partitions and Files</span></a></li><li><a href="cha-certstore.html" class=" "><span class="title-number">13 </span><span class="title-name">Certificate Store</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">14 </span><span class="title-name">Intrusion Detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network Security</span></a><ol><li><a href="cha-ssh.html" class=" "><span class="title-number">15 </span><span class="title-name">SSH: Secure Network Operations</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">16 </span><span class="title-name">Masquerading and Firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring a VPN Server</span></a></li><li><a href="cha-security-yast-ca.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing X.509 Certification</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">19 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">20 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">21 </span><span class="title-name">Getting Started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">22 </span><span class="title-name">Immunizing Programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">23 </span><span class="title-name">Profile Components and Syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">24 </span><span class="title-name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">25 </span><span class="title-name">Building and Managing Profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">26 </span><span class="title-name">Building Profiles from the Command Line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">27 </span><span class="title-name">Profiling Your Web Applications Using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">28 </span><span class="title-name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">29 </span><span class="title-name">Managing Profiled Applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">30 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">31 </span><span class="title-name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li><a href="bk05pt05.html" class="has-children "><span class="title-number">V </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">32 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">33 </span><span class="title-name">Understanding Linux Audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting Up the Linux Audit Framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">35 </span><span class="title-name">Introducing an Audit Rule Set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">36 </span><span class="title-name">Useful Resources</span></a></li></ol></li><li><a href="app-pcidss.html" class=" "><span class="title-number">A </span><span class="title-name">Achieving PCI DSS Compliance</span></a></li><li><a href="bk05apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-ad" data-id-title="Active Directory Support"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Active Directory* (AD) is a directory-service based on LDAP, Kerberos, and
+  other services. It is used by Microsoft* Windows* to manage
+  resources, services, and people. In a Microsoft Windows network, Active Directory provides
+  information about these objects, restricts access to them, and enforces
+  policies.
+  <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span> lets you join existing Active Directory domains and integrate your
+  Linux machine into a Windows environment.
+ </p><section class="sect1" id="sec-security-ad-integrate" data-id-title="Integrating Linux and Active Directory Environments"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.1 </span><span class="title-name">Integrating Linux and Active Directory Environments</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-integrate">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   With a Linux client (configured as an Active Directory client) that is
+   joined to an existing Active Directory domain, benefit from various
+   features not available on a pure <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> Linux client:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.4.7.4.3.1"><span class="term">Browsing Shared Files and Directories with SMB</span></dt><dd><p>
+      GNOME Files (previously called Nautilus) supports browsing shared resources
+      through SMB.
+     </p></dd><dt id="id-1.7.4.7.4.3.2"><span class="term">Sharing Files and Directories with SMB</span></dt><dd><p>
+      GNOME Files supports sharing directories and files as in Windows.
+     </p></dd><dt id="id-1.7.4.7.4.3.3"><span class="term">Accessing and Manipulating User Data on the Windows Server</span></dt><dd><p>
+      Through GNOME Files, users can access their Windows user data and
+      can edit, create, and delete files and directories on the Windows
+      server. Users can access their data without having to enter their
+      password multiple times.
+     </p></dd><dt id="id-1.7.4.7.4.3.4"><span class="term">Offline Authentication</span></dt><dd><p>
+      Users can log in and access their local data on the Linux
+      machine even if they are offline or the Active Directory server is unavailable for
+      other reasons.
+     </p></dd><dt id="id-1.7.4.7.4.3.5"><span class="term">Windows Password Change</span></dt><dd><p>
+      This port of Active Directory support in Linux enforces corporate password policies
+      stored in Active Directory. The display managers and console support
+      password change messages and accept your input. You can even use the
+      Linux <code class="command">passwd</code> command to set Windows passwords.
+     </p></dd><dt id="id-1.7.4.7.4.3.6"><span class="term">Single-Sign-On through Kerberized Applications</span></dt><dd><p>
+      
+      Many desktop applications are Kerberos-enabled
+      (<span class="emphasis"><em>kerberized</em></span>), which means they can transparently
+      handle authentication for the user without the need for password
+      reentry at Web servers, proxies, groupware applications, or other
+      locations.
+     </p></dd></dl></div><div id="id-1.7.4.7.4.4" data-id-title="Managing Unix Attributes from Windows Server* 2016 and Later" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Managing Unix Attributes from Windows Server* 2016 and Later</div><p>
+    In Windows Server 2016 and later, Microsoft has removed the role
+    <span class="emphasis"><em>IDMU/NIS Server</em></span> and along with it the
+    <span class="emphasis"><em>Unix Attributes</em></span> plug-in for the
+    <span class="emphasis"><em>Active Directory Users and Computers</em></span> MMC snap-in.
+   </p><p>
+    However, Unix attributes can still be managed manually when
+    <span class="guimenu">Advanced Options</span> are enabled in the
+    <span class="emphasis"><em>Active Directory Users and Computers</em></span> MMC snap-in.
+    For more information, see
+    <a class="link" href="https://blogs.technet.microsoft.com/activedirectoryua/2016/02/09/identity-management-for-unix-idmu-is-deprecated-in-windows-server/" target="_blank">https://blogs.technet.microsoft.com/activedirectoryua/2016/02/09/identity-management-for-unix-idmu-is-deprecated-in-windows-server/</a>.
+   </p><p>
+    Alternatively, use the method described in
+    <a class="xref" href="cha-security-ad.html#pro-security-ad-join-sssd" title="Joining an Active Directory Domain Using User Logon Management">Procedure 7.1, “Joining an Active Directory Domain Using <span class="guimenu">User Logon
+     Management</span>”</a> to complete
+    attributes on the client side (in particular, see
+    <a class="xref" href="cha-security-ad.html#st-security-sssd-home-dir" title="Step 6.c">Step 6.c</a>).
+   </p></div><p>
+   The following section contains technical background for most of the
+   previously named features.
+   
+  </p></section><section class="sect1" id="sec-security-ad-background" data-id-title="Background Information for Linux Active Directory Support"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.2 </span><span class="title-name">Background Information for Linux Active Directory Support</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-background">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Many system components need to interact flawlessly to integrate
+   a Linux client into an existing Windows Active Directory domain. The following sections
+   focus on the underlying processes of the key events in Active Directory server and
+   client interaction.
+  </p><p>
+   To communicate with the directory service, the client needs to share at
+   least two protocols with the server:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.4.7.5.4.1"><span class="term">LDAP</span></dt><dd><p>
+      LDAP is a protocol optimized for managing directory information. A
+      Windows domain controller with Active Directory can use the LDAP protocol to
+      exchange directory information with the clients. To learn more about
+      LDAP in general and about the open source port of it, OpenLDAP, refer
+      to <a class="xref" href="cha-security-ldap.html" title="Chapter 5. LDAP—A Directory Service">Chapter 5, <em>LDAP—A Directory Service</em></a>.
+     </p></dd><dt id="id-1.7.4.7.5.4.2"><span class="term">Kerberos</span></dt><dd><p> Kerberos is a third-party trusted authentication service.
+            All its clients trust Kerberos's authorization of another
+            client's identity, enabling kerberized single-sign-on (SSO)
+            solutions. Windows supports a Kerberos implementation,
+            making Kerberos SSO possible even with Linux clients. To
+            learn more about Kerberos in Linux, refer to <a class="xref" href="cha-security-kerberos.html" title="Chapter 6. Network Authentication with Kerberos">Chapter 6, <em>Network Authentication with Kerberos</em></a>. </p></dd></dl></div><p>
+   Depending on which YaST module you use to set up Kerberos authentication,
+   different client components process account and authentication data:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.4.7.5.6.1"><span class="term">Solutions Based on SSSD</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        The <code class="systemitem">sssd</code> daemon is the
+        central part of this solution. It handles all communication with the
+        Active Directory server.
+       </p></li><li class="listitem"><p>
+        To gather name service information,
+        <code class="systemitem">sssd_nss</code> is used.
+       </p></li><li class="listitem"><p>
+        To authenticate users, the
+        <code class="systemitem">pam_sss</code> module for PAM
+        is used. The creation of user homes for the Active Directory users on the Linux
+        client is handled by <code class="filename">pam_mkhomedir</code>.
+       </p><p>
+        For more information about PAM, see <a class="xref" href="cha-pam.html" title="Chapter 2. Authentication with PAM">Chapter 2, <em>Authentication with PAM</em></a>.
+       </p></li></ul></div></dd><dt id="id-1.7.4.7.5.6.2"><span class="term">Solution Based On Winbind (Samba)</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        The <code class="systemitem">winbindd</code> daemon is the
+        central part of this solution. It handles all communication with the
+        Active Directory server.
+       </p></li><li class="listitem"><p>
+        To gather name service information,
+        <code class="systemitem">nss_winbind</code> is used.
+       </p></li><li class="listitem"><p>
+        To authenticate users, the
+        <code class="systemitem">pam_winbind</code> module for PAM
+        is used. The creation of user homes for the Active Directory users on the Linux
+        client is handled by <code class="filename">pam_mkhomedir</code>.
+       </p><p>
+        For more information about PAM, see <a class="xref" href="cha-pam.html" title="Chapter 2. Authentication with PAM">Chapter 2, <em>Authentication with PAM</em></a>.
+       </p></li></ul></div><p>
+      <a class="xref" href="cha-security-ad.html#fig-ad-schema" title="Schema of Winbind-based Active Directory Authentication">Figure 7.1, “Schema of Winbind-based Active Directory Authentication”</a> highlights the most prominent
+      components of Winbind-based Active Directory authentication.
+     </p><div class="figure" id="fig-ad-schema"><div class="figure-contents"><div class="mediaobject"><a href="images/sled10_ad_schema.png"><img src="images/sled10_ad_schema.png" width="75%" alt="Schema of Winbind-based Active Directory Authentication" title="Schema of Winbind-based Active Directory Authentication"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 7.1: </span><span class="title-name">Schema of Winbind-based Active Directory Authentication </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#fig-ad-schema">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></dd></dl></div><p>
+   Applications that are PAM-aware, like the login routines and the GNOME
+   display manager, interact with the PAM and NSS layer to authenticate
+   against the Windows server. Applications supporting Kerberos
+   authentication (such as file managers, Web browsers, or e-mail clients)
+   use the Kerberos credential cache to access user's Kerberos tickets,
+   making them part of the SSO framework.
+  </p><section class="sect2" id="sec-security-ad-background-domain-join" data-id-title="Domain Join"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.1 </span><span class="title-name">Domain Join</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-background-domain-join">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    During domain join, the server and the client establish a secure
+    relation. On the client, the following tasks need to be performed to
+    join the existing LDAP and Kerberos SSO environment provided by the
+    Windows domain controller. The entire join process is handled by the
+    YaST Domain Membership module, which can be run during installation
+    or in the installed system:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      The Windows domain controller providing both LDAP and KDC (Key
+      Distribution Center) services is located.
+     </p></li><li class="step"><p>
+      A machine account for the joining client is created in the directory
+      service.
+     </p></li><li class="step"><p>
+      An initial ticket granting ticket (TGT) is obtained for the client and
+      stored in its local Kerberos credential cache. The client needs this
+      TGT to get further tickets allowing it to contact other services, like
+      contacting the directory server for LDAP queries.
+     </p></li><li class="step"><p>
+      NSS and PAM configurations are adjusted to enable the client to
+      authenticate against the domain controller.
+     </p></li></ol></div></div><p>
+    During client boot, the winbind daemon is started and retrieves the
+    initial Kerberos ticket for the machine account. winbindd automatically
+    refreshes the machine's ticket to keep it valid. To keep track of the
+    current account policies, winbindd periodically queries the domain
+    controller.
+   </p></section><section class="sect2" id="sec-security-ad-background-logon" data-id-title="Domain Login and User Homes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.2 </span><span class="title-name">Domain Login and User Homes</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-background-logon">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The login manager of GNOME (GDM) has been extended to allow the handling
+    of Active Directory domain login. Users can choose to log in to the primary domain the
+    machine has joined or to one of the trusted domains with which the
+    domain controller of the primary domain has established a trust
+    relationship.
+   </p><p>
+    User authentication is mediated by several PAM modules as described
+    in <a class="xref" href="cha-security-ad.html#sec-security-ad-background" title="7.2. Background Information for Linux Active Directory Support">Section 7.2, “Background Information for Linux Active Directory Support”</a>. If there are errors, the
+    error codes are translated into user-readable error messages that PAM
+    gives at login through any of the supported methods (GDM, console, and
+    SSH):
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.4.7.5.9.4.1"><span class="term"><code class="literal">Password has expired</code>
+     </span></dt><dd><p>
+       The user sees a message stating that the password has expired and
+       needs to be changed. The system prompts for a new password and
+       informs the user if the new password does not comply with corporate
+       password policies (for example the password is too short, too simple,
+       or already in the history). If a user's password change fails, the
+       reason is shown and a new password prompt is given.
+      </p></dd><dt id="id-1.7.4.7.5.9.4.2"><span class="term"><code class="literal">Account disabled</code>
+     </span></dt><dd><p>
+       The user sees an error message stating that the account has been
+       disabled and to contact the system administrator.
+      </p></dd><dt id="id-1.7.4.7.5.9.4.3"><span class="term"><code class="literal">Account locked out</code>
+     </span></dt><dd><p>
+       The user sees an error message stating that the account has been
+       locked and to contact the system administrator.
+      </p></dd><dt id="id-1.7.4.7.5.9.4.4"><span class="term"><code class="literal">Password has to be changed</code>
+     </span></dt><dd><p>
+       The user can log in but receives a warning that the password needs to
+       be changed soon. This warning is sent three days before that password
+       expires. After expiration, the user cannot log in.
+      </p></dd><dt id="id-1.7.4.7.5.9.4.5"><span class="term"><code class="literal">Invalid workstation</code>
+     </span></dt><dd><p>
+       When a user is restricted to specific workstations and the current
+       <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> machine is not among them, a message appears that
+       this user cannot log in from this workstation.
+      </p></dd><dt id="id-1.7.4.7.5.9.4.6"><span class="term"><code class="literal">Invalid logon hours</code>
+     </span></dt><dd><p>
+       When a user is only allowed to log in during working hours and tries
+       to log in outside working hours, a message informs the user that
+       logging in is not possible at that time.
+      </p></dd><dt id="id-1.7.4.7.5.9.4.7"><span class="term"><code class="literal">Account expired</code>
+     </span></dt><dd><p>
+       An administrator can set an expiration time for a specific user
+       account. If that user tries to log in after expiration, the user gets
+       a message that the account has expired and cannot be used to log in.
+      </p></dd></dl></div><p>
+    During a successful authentication, the client
+    acquires a ticket granting ticket (TGT) from the Kerberos server of
+    Active Directory and stores it in the user's credential cache. It also
+    renews the TGT in the background, requiring no user interaction.
+   </p><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports local home directories for Active Directory users. If
+    configured through YaST as described in
+    <a class="xref" href="cha-security-ad.html#sec-security-ad-config" title="7.3. Configuring a Linux Client for Active Directory">Section 7.3, “Configuring a Linux Client for Active Directory”</a>, user home directories are
+    created when a Windows/Active Directory user first logs in to the Linux client. These
+    home directories look and feel identical to standard Linux user home
+    directories and work independently of the Active Directory Domain Controller.
+   </p><p>
+    Using a
+    local user home, it is possible to access a user's data on this machine
+    (even when the Active Directory server is disconnected) as long as the Linux client
+    has been configured to perform offline authentication.
+   </p></section><section class="sect2" id="sec-security-ad-background-offline" data-id-title="Offline Service and Policy Support"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.3 </span><span class="title-name">Offline Service and Policy Support</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-background-offline">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Users in a corporate environment must have the ability to become roaming
+    users (for example, to switch networks or even work disconnected for
+    some time). To enable users to log in to a disconnected machine,
+    extensive caching was integrated into the winbind daemon. The winbind
+    daemon enforces password policies even in the offline state. It tracks
+    the number of failed login attempts and reacts according to the policies
+    configured in Active Directory. Offline support is disabled by default
+    and must be explicitly enabled in the YaST Domain Membership
+    module.
+   </p><p>
+    When the domain controller has become unavailable, the user can still
+    access network resources (other than the Active Directory server itself) with valid
+    Kerberos tickets that have been acquired before losing the connection
+    (as in Windows). Password changes cannot be processed unless the domain
+    controller is online. While disconnected from the Active Directory server, a user
+    cannot access any data stored on this server. When a workstation has
+    become disconnected from the network entirely and connects to the
+    corporate network again later, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> acquires a new Kerberos
+    ticket when the user has locked and unlocked the desktop (for
+    example, using a desktop screen saver).
+   </p></section></section><section class="sect1" id="sec-security-ad-config" data-id-title="Configuring a Linux Client for Active Directory"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.3 </span><span class="title-name">Configuring a Linux Client for Active Directory</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Before your client can join an Active Directory domain, some adjustments must be made
+   to your network setup to ensure the flawless interaction of client and
+   server.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.4.7.6.3.1"><span class="term">DNS</span></dt><dd><p>
+      Configure your client machine to use a DNS server that can forward DNS
+      requests to the Active Directory DNS server. Alternatively, configure your machine
+      to use the Active Directory DNS server as the name service data source.
+     </p></dd><dt id="id-1.7.4.7.6.3.2"><span class="term">NTP</span></dt><dd><p>
+      To succeed with Kerberos authentication, the client must have its time
+      set accurately. It is highly recommended to use a central NTP time
+      server for this purpose (this can be also the NTP server running on
+      your Active Directory domain controller). If the clock skew between
+      your Linux host and the domain controller exceeds a certain limit,
+      Kerberos authentication fails and the client is logged in using the
+      weaker NTLM (NT LAN Manager) authentication. For more details about
+      using Active Directory for time synchronization, see
+      <a class="xref" href="cha-security-ad.html#proc-ad-join" title="Joining an Active Directory Domain Using Windows Domain Membership">Procedure 7.2, “Joining an Active Directory Domain Using <span class="guimenu">Windows Domain
+    Membership</span>”</a>.
+     </p></dd><dt id="id-1.7.4.7.6.3.3"><span class="term">Firewall</span></dt><dd><p>
+      To browse your network neighborhood, either disable the firewall
+      entirely or mark the interface used for browsing as part of the
+      internal zone.
+     </p><p>
+      
+      To change the firewall settings on your client, log in as
+      <code class="systemitem">root</code> and start the YaST firewall module. Select
+      <span class="guimenu">Interfaces</span>. Select your network interface from the
+      list of interfaces and click <span class="guimenu">Change</span>. Select
+      <span class="guimenu">Internal Zone</span> and apply your settings with
+      <span class="guimenu">OK</span>. Leave the firewall settings with <span class="guimenu">Next</span> › <span class="guimenu">Finish</span>. To
+      disable the firewall, check the <span class="guimenu">Disable Firewall Automatic
+      Starting</span> option, and leave the firewall module with
+      <span class="guimenu">Next</span> › <span class="guimenu">Finish</span>.
+     </p></dd><dt id="id-1.7.4.7.6.3.4"><span class="term">Active Directory Account</span></dt><dd><p>
+      You cannot log in to an Active Directory domain unless the Active Directory administrator has
+      provided you with a valid user account for that domain. Use the Active Directory
+      user name and password to log in to the Active Directory domain from your Linux
+      client.
+     </p></dd></dl></div><section class="sect2" id="sec-security-ad-configure-choose" data-id-title="Choosing Which YaST Module to Use for Connecting to Active Directory"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.3.1 </span><span class="title-name">Choosing Which YaST Module to Use for Connecting to Active Directory</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-configure-choose">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    YaST contains multiple modules that allow connecting to an Active Directory:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">User Logon Management</span>. </span>
+    Use both an identity service (usually LDAP) and a user authentication
+    service (usually Kerberos). This option is based on SSSD and in the
+    majority of cases is best suited for joining Active Directory domains.
+   </p><p>
+   This module is described in
+   <a class="xref" href="cha-security-ad.html#sec-security-ad-sssd" title="7.3.2. Joining Active Directory Using User Logon Management">Section 7.3.2, “Joining Active Directory Using <span class="guimenu">User Logon Management</span>”</a>.
+  </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Windows Domain Membership</span>. </span>
+    Join an Active Directory (which entails use of Kerberos and LDAP). This option is
+    based on <code class="command">winbind</code> and is best suited for joining an
+    Active Directory domain if support for NTLM or cross-forest trusts is necessary.
+   </p><p>
+   This module is described in
+   <a class="xref" href="cha-security-ad.html#sec-security-ad-winbind" title="7.3.3. Joining Active Directory Using Windows Domain Membership">Section 7.3.3, “Joining Active Directory Using <span class="guimenu">Windows Domain
+    Membership</span>”</a>.
+  </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">LDAP and Kerberos Authentication</span>. </span>
+    Allows setting up LDAP identities and Kerberos authentication
+    independently from each other and provides fewer options. While this
+    module also uses SSSD, it is not as well suited for connecting to Active Directory
+    as the previous two options.
+   </p><p>
+   This module is described in:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     LDAP: <a class="xref" href="cha-security-ldap.html#sec-security-ldap-yast-client" title="5.3. Configuring an LDAP Client with YaST">Section 5.3, “Configuring an LDAP Client with YaST”</a>
+    </p></li><li class="listitem"><p>
+     Kerberos: <a class="xref" href="cha-security-kerberos.html#sec-security-kerberos-yast-client" title="6.6. Setting up Kerberos using LDAP and Kerberos Client">Section 6.6, “Setting up Kerberos using <span class="guimenu">LDAP and Kerberos Client</span>”</a>
+    </p></li></ul></div></li></ul></div></section><section class="sect2" id="sec-security-ad-sssd" data-id-title="Joining Active Directory Using User Logon Management"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.3.2 </span><span class="title-name">Joining Active Directory Using <span class="guimenu">User Logon Management</span></span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-sssd">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The YaST module <span class="guimenu">User Logon Management</span> supports
+    authentication at an Active Directory. Additionally, it also supports the following
+    related authentication and identification providers:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.4.7.6.5.3.1"><span class="term">Identification Providers</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Delegate to third-party software library</span>. </span>
+          Support for legacy NSS providers via a proxy.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">FreeIPA</span>. </span>
+          FreeIPA and Red Hat Enterprise Identity Management provider.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Generic directory service (LDAP)</span>. </span>
+         An LDAP provider. For more information about configuring LDAP, see
+         <code class="command">man 5 sssd-ldap</code>.
+        </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Local SSSD file database</span>. </span>
+          An SSSD-internal provider for local users.
+         </p></li></ul></div></dd><dt id="id-1.7.4.7.6.5.3.2"><span class="term">Authentication Providers</span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Delegate to third-party software library</span>. </span>
+          Relay authentication to another PAM target via a proxy.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">FreeIPA</span>. </span>
+          FreeIPA and Red Hat Enterprise Identity Management provider.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Generic Kerberos service</span>. </span>
+          An LDAP provider.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Generic directory service (LDAP)</span>. </span>
+          Kerberos authentication.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">Local SSSD file database</span>. </span>
+          An SSSD-internal provider for local users.
+         </p></li><li class="listitem"><p><span class="formalpara-title"><span class="guimenu">This domain does not provide authentication service</span>. </span>
+          Disables authentication explicitly.
+         </p></li></ul></div></dd></dl></div><p>
+    To join an Active Directory domain using SSSD and the
+    <span class="guimenu">User Logon Management</span> module of YaST, proceed as
+    follows:
+   </p><div class="procedure" id="pro-security-ad-join-sssd" data-id-title="Joining an Active Directory Domain Using User Logon Management"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 7.1: </span><span class="title-name">Joining an Active Directory Domain Using <span class="guimenu">User Logon
+     Management</span> </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#pro-security-ad-join-sssd">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open YaST.
+     </p></li><li class="step"><p>
+      To be able to use DNS auto-discovery later, set up the Active Directory Domain
+      Controller (the Active Directory server) as the name server for your client.
+     </p><ol type="a" class="substeps"><li class="step"><p>
+        In YaST, click <span class="guimenu">Network Settings</span>.
+       </p></li><li class="step"><p>
+        Select <span class="guimenu">Hostname/DNS</span>, then enter the IP address of
+        the Active Directory Domain Controller into the text box <span class="guimenu">Name Server
+        1</span>.
+       </p><p>
+        Save the setting with <span class="guimenu">OK</span>.
+       </p></li></ol></li><li class="step"><p>
+      From the YaST main window, start the module <span class="guimenu">User Logon
+      Management</span>.
+     </p><p>
+      The module opens with an overview showing different network properties
+      of your computer and the authentication method currently in use.
+     </p><div class="figure" id="fig-security-logonmanagement"><div class="figure-contents"><div class="mediaobject"><a href="images/ad-overview.png"><img src="images/ad-overview.png" alt="Overview window showing the computer name, IP address, and its authentication setting." title="Overview window showing the computer name, IP address, and its authentication setting."/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 7.2: </span><span class="title-name">Main Window of <span class="guimenu">User Logon Management</span> </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#fig-security-logonmanagement">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+      To start editing, click <span class="guimenu">Change Settings</span>.
+     </p></li><li class="step"><p>
+      Now join the domain.
+     </p><ol type="a" class="substeps"><li class="step"><p>
+        Click <span class="guimenu">Join Domain</span>.
+       </p></li><li class="step"><p>
+        In the appearing dialog, specify the correct
+        <span class="guimenu">Domain name</span>. Then specify the services to use for
+        identity data and authentication: Select <span class="guimenu">Microsoft Active
+        Directory</span> for both.
+       </p><p>
+        Ensure that <span class="guimenu">Enable the domain</span> is activated.
+       </p><p>
+        Click <span class="guimenu">OK</span>.
+       </p></li><li class="step"><p><span class="step-optional">(Optional)</span> 
+        Usually, you can keep the default settings in the
+        following dialog. However, there are reasons to make changes:
+       </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">If the Local Host Name Does Not Match the Host Name Set on the
+           Domain Controller. </span>
+           
+           Find out if the host name of your computer matches what the name
+           your computer is known as to the Active Directory Domain Controller. In a
+           terminal, run the command <code class="command">hostname</code>, then compare
+           its output to the configuration of the Active Directory Domain Controller.
+          </p><p>
+          If the values differ, specify the host name from the Active Directory
+          configuration under <span class="guimenu">AD hostname</span>. Otherwise, leave
+          the appropriate text box empty.
+         </p></li><li class="listitem"><p><span class="formalpara-title">If You Do Not Want to Use DNS Auto-Discovery. </span>
+           Specify the <span class="guimenu">Host names of Active Directory
+           servers</span> that you want to use. If there are multiple
+           Domain Controllers, separate their host names with commas.
+          </p></li></ul></div></li><li class="step"><p>
+        To continue, click <span class="guimenu">OK</span>.
+       </p><p>
+        If not all software is installed already, the computer will now
+        install missing software. It will then check whether the configured
+        Active Directory Domain Controller is available.
+       </p></li><li class="step"><p>
+        If everything is correct, the following dialog should now show that
+        it has discovered an <span class="guimenu">Active Directory Server</span> but
+        that you are <span class="guimenu">Not yet enrolled</span>.
+       </p><p>
+        In the dialog, specify the <span class="guimenu">Username</span> and
+        <span class="guimenu">Password</span> of the Active Directory administrator account
+        (usually <code class="literal">Administrator</code>).
+       </p><p>
+        To make sure that the current domain is enabled for Samba, activate
+        <span class="guimenu">Overwrite Samba configuration to work with this AD</span>.
+       </p><p>
+        To enroll, click <span class="guimenu">OK</span>.
+       </p><div class="figure" id="fig-security-logonmanagement-enroll"><div class="figure-contents"><div class="mediaobject"><a href="images/ad-enroll.png"><img src="images/ad-enroll.png" alt="" title=""/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 7.3: </span><span class="title-name">Enrolling into a Domain </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#fig-security-logonmanagement-enroll">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+        You should now see a message confirming that you have enrolled
+        successfully. Finish with <span class="guimenu">OK</span>.
+       </p></li></ol></li><li class="step"><p>
+      After enrolling, configure the client using the window
+      <span class="guimenu">Manage Domain User Logon</span>.
+     </p><div class="figure" id="fig-security-logonmanagement-configure"><div class="figure-contents"><div class="mediaobject"><a href="images/ad-config.png"><img src="images/ad-config.png" alt="" title=""/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 7.4: </span><span class="title-name">Configuration Window of <span class="guimenu">User Logon
+       Management</span> </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#fig-security-logonmanagement-configure">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div><ol type="a" class="substeps"><li class="step"><p>
+        To allow logging in to the computer using login data provided by Active Directory,
+        activate <span class="guimenu">Allow Domain User Logon</span>.
+       </p></li><li class="step"><p><span class="step-optional">(Optional)</span> 
+        Optionally, under <span class="guimenu">Enable domain data source</span>,
+        activate additional data sources such as information on which users are
+        allowed to use <code class="command">sudo</code> or which network drives are
+        available.
+       </p></li><li class="step" id="st-security-sssd-home-dir"><p>
+        To allow Active Directory users to have home directories, activate
+        <span class="guimenu">Create Home Directories</span>. The path for home
+        directories can be set in multiple ways—on the client, on
+        the server, or both ways:
+       </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          To configure the home directory paths on the Domain Controller, set
+          an appropriate value for the attribute
+          <code class="literal">UnixHomeDirectory</code> for each user. Additionally,
+          make sure that this attribute replicated to the global catalog. For
+          information on achieving that under Windows, see
+          <a class="link" href="https://support.microsoft.com/en-us/kb/248717" target="_blank">https://support.microsoft.com/en-us/kb/248717</a>.
+         </p></li><li class="listitem"><p>
+          To configure home directory paths on the client in such a way that
+          precedence will be given to the path set on the domain controller,
+          use the option <code class="literal">fallback_homedir</code>.
+         </p></li><li class="listitem"><p>
+          To configure home directory paths on the client in such a way that
+          the client setting will override the server setting, use
+          <code class="literal">override_homedir</code>.
+         </p></li></ul></div><p>
+        As settings on the Domain Controller are outside of the scope of this
+        documentation, only the configuration of the client-side options will be
+        described in the following.
+       </p><p>
+        From the side bar, select
+        <span class="guimenu">Service Options</span> › <span class="guimenu">Name switch</span>, then click
+        <span class="guimenu">Extended Options</span>. From that window, select either
+        <code class="literal">fallback_homedir</code> or
+        <code class="literal">override_homedir</code>, then click <span class="guimenu">Add</span>.
+       </p><p>
+        Specify a value. To have home directories follow the format
+        <code class="filename">/home/<em class="replaceable">USER_NAME</em></code>, use
+        <code class="literal">/home/%u</code>.
+        For more information about possible variables, see the man page
+        <code class="literal">sssd.conf</code> (<code class="command">man 5 sssd.conf</code>),
+        section
+        <em class="citetitle">override_homedir</em>.
+       </p><p>
+        Click <span class="guimenu">OK</span>.
+       </p></li></ol></li><li class="step"><p>
+      Save the changes by clicking <span class="guimenu">OK</span>. Then make sure that
+      the values displayed now are correct. To leave the dialog, click
+      <span class="guimenu">Cancel</span>.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-security-ad-winbind" data-id-title="Joining Active Directory Using Windows Domain Membership"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.3.3 </span><span class="title-name">Joining Active Directory Using <span class="guimenu">Windows Domain
+    Membership</span></span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-winbind">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To join an Active Directory domain using <code class="command">winbind</code> and the
+    <span class="guimenu">Windows Domain Membership</span> module of YaST, proceed as
+    follows:
+   </p><div class="procedure" id="proc-ad-join" data-id-title="Joining an Active Directory Domain Using Windows Domain Membership"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 7.2: </span><span class="title-name">Joining an Active Directory Domain Using <span class="guimenu">Windows Domain
+    Membership</span> </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#proc-ad-join">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Log in as <code class="systemitem">root</code> and start YaST.
+    </p></li><li class="step"><p>
+     Start <span class="guimenu">Network Services</span> › <span class="guimenu">Windows
+     Domain Membership</span>.
+    </p></li><li class="step"><p>
+     Enter the domain to join at <span class="guimenu">Domain or Workgroup</span> in
+     the <span class="guimenu">Windows Domain Membership</span> screen (see
+     <a class="xref" href="cha-security-ad.html#fig-ad-smbclient" title="Determining Windows Domain Membership">Figure 7.5, “Determining Windows Domain Membership”</a>). If the DNS settings on your host
+     are properly integrated with the Windows DNS server, enter the Active Directory
+     domain name in its DNS format
+     (<code class="literal">mydomain.mycompany.com</code>). If you enter the short
+     name of your domain (also known as the pre–Windows 2000 domain
+     name), YaST must rely on NetBIOS name resolution instead of DNS to
+     find the correct domain controller.
+
+    </p><div class="figure" id="fig-ad-smbclient"><div class="figure-contents"><div class="mediaobject"><a href="images/ad_sambaclient.png"><img src="images/ad_sambaclient.png" width="75%" alt="Determining Windows Domain Membership" title="Determining Windows Domain Membership"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 7.5: </span><span class="title-name">Determining Windows Domain Membership </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#fig-ad-smbclient">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+     To use the SMB source for Linux authentication, activate
+     <span class="guimenu">Also Use SMB Information for Linux Authentication</span>.
+    </p></li><li class="step"><p>
+     To automatically create a local home directory for Active Directory users on the
+     Linux machine, activate <span class="guimenu">Create Home Directory on
+     Login</span>.
+    </p></li><li class="step"><p>
+     Check <span class="guimenu">Offline Authentication</span> to allow your domain
+     users to log in even if the Active Directory server is temporarily unavailable, or if
+     you do not have a network connection.
+    </p></li><li class="step"><p>
+     To change the UID and GID ranges for the Samba users and groups, select
+     <span class="guimenu">Expert Settings</span>. Let DHCP retrieve
+     the WINS server only if you need it. This is the case when some
+     machines are resolved only by the WINS system.
+    </p></li><li class="step"><p>
+     Configure NTP time synchronization for your Active Directory environment by selecting
+     <span class="guimenu">NTP Configuration</span> and entering an appropriate server
+     name or IP address. This step is obsolete if you have already entered
+     the appropriate settings in the stand-alone YaST NTP configuration
+     module.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">OK</span> and confirm the domain join when prompted
+     for it.
+    </p></li><li class="step"><p>
+     Provide the password for the Windows administrator on the Active Directory server and
+     click <span class="guimenu">OK</span> (see <a class="xref" href="cha-security-ad.html#fig-ad-join1" title="Providing Administrator Credentials">Figure 7.6, “Providing Administrator Credentials”</a>).
+    </p><div class="figure" id="fig-ad-join1"><div class="figure-contents"><div class="mediaobject"><a href="images/ad_join1.png"><img src="images/ad_join1.png" width="30%" alt="Providing Administrator Credentials" title="Providing Administrator Credentials"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 7.6: </span><span class="title-name">Providing Administrator Credentials </span></span><a title="Permalink" class="permalink" href="cha-security-ad.html#fig-ad-join1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></li></ol></div></div><p>
+   After you have joined the Active Directory domain, you can log in to it from your
+   workstation using the display manager of your desktop or the console.
+  </p><div id="id-1.7.4.7.6.6.5" data-id-title="Domain Name" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Domain Name</div><p>
+    Joining a domain may not succeed if the domain name ends with
+    <code class="literal">.local</code>. Names ending in <code class="literal">.local</code>
+    cause conflicts with Multicast DNS (MDNS) where
+    <code class="literal">.local</code> is reserved for link-local host names.
+   </p></div><div id="id-1.7.4.7.6.6.6" data-id-title="Only Administrators Can Enroll a Computer" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Only Administrators Can Enroll a Computer</div><p>
+    Only a domain administrator account, such as
+    <code class="literal">Administrator</code>, can join <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> into Active
+    Directory.
+   </p></div></section><section class="sect2" id="sec-security-ad-connection" data-id-title="Checking Active Directory Connection Status"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.3.4 </span><span class="title-name">Checking Active Directory Connection Status</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-connection">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To check whether you are successfully enrolled in an Active Directory domain,
+    use the following commands:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <code class="command">klist</code> shows whether the current user has a valid
+      Kerberos ticket.
+     </p></li><li class="listitem"><p>
+      <code class="command">getent passwd</code> shows published LDAP data for all
+      users.
+     </p></li></ul></div></section></section><section class="sect1" id="sec-security-ad-login" data-id-title="Logging In to an Active Directory Domain"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.4 </span><span class="title-name">Logging In to an Active Directory Domain</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-login">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Provided your machine has been configured to authenticate against Active
+   Directory and you have a valid Windows user identity, you can log in to
+   your machine using the Active Directory credentials. Login is supported for GNOME, the
+   console, SSH, and any other PAM-aware application.
+  </p><div id="id-1.7.4.7.7.3" data-id-title="Offline Authentication" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Offline Authentication</div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports offline authentication, allowing you to log in
+    to your client machine even when it is offline. See
+    <a class="xref" href="cha-security-ad.html#sec-security-ad-background-offline" title="7.2.3. Offline Service and Policy Support">Section 7.2.3, “Offline Service and Policy Support”</a> for details.
+   </p></div><section class="sect2" id="sec-security-ad-login-gui" data-id-title="GDM"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.4.1 </span><span class="title-name">GDM</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-login-gui">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To authenticate a GNOME client machine against an Active Directory server, proceed as
+    follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Click <span class="guimenu">Not listed</span>.
+     </p></li><li class="step"><p>
+      In the text box <span class="guimenu">Username</span>,
+      enter the domain name and the Windows user name in this form:
+      <code class="literal"><em class="replaceable">DOMAIN_NAME</em>\<em class="replaceable">USER_NAME</em></code>.
+     </p></li><li class="step"><p>
+      Enter your Windows password.
+     </p></li></ol></div></div><p>
+    If configured to do so, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> creates a user home directory
+    on the local machine on the first login of each user authenticated via Active Directory.
+    This allows you to benefit from the Active Directory support of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> while
+    still having a fully functional Linux machine at your disposal.
+   </p></section><section class="sect2" id="sec-security-ad-login-console" data-id-title="Console Login"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.4.2 </span><span class="title-name">Console Login</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-login-console">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Besides logging in to the Active Directory client machine using a graphical front-end,
+    you can log in using the text-based console or even remotely using SSH.
+   </p><p>
+    To log in to your Active Directory client from a console, enter
+    <code class="literal"><em class="replaceable">DOMAIN_NAME</em>\<em class="replaceable">USER_NAME</em></code>
+    at the <code class="literal">login:</code> prompt and provide the password.
+   </p><p>
+    To remotely log in to your Active Directory client machine using SSH, proceed as
+    follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      At the login prompt, enter:
+     </p><div class="verbatim-wrap"><pre class="screen">ssh <em class="replaceable">DOMAIN_NAME</em>\\<em class="replaceable">USER_NAME</em>@<em class="replaceable">HOST_NAME</em></pre></div><p>
+      The <code class="literal">\</code> domain and login delimiter is escaped with
+      another <code class="literal">\</code> sign.
+     </p></li><li class="step"><p>
+      Provide the user's password.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-security-ad-passwd" data-id-title="Changing Passwords"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.5 </span><span class="title-name">Changing Passwords</span></span> <a title="Permalink" class="permalink" href="cha-security-ad.html#sec-security-ad-passwd">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_ad_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> helps the user choose a suitable new
+   password that meets the corporate security policy. The underlying PAM
+   module retrieves the current password policy settings from the domain
+   controller, informing the user about the specific password quality
+   requirements a user account typically has by means of a message on login.
+   Like its Windows counterpart, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> presents a message
+   describing:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Password history settings
+    </p></li><li class="listitem"><p>
+     Minimum password length requirements
+    </p></li><li class="listitem"><p>
+     Minimum password age
+    </p></li><li class="listitem"><p>
+     Password complexity
+    </p></li></ul></div><p>
+   The password change process cannot succeed unless all requirements have
+   been successfully met. Feedback about the password status is given both
+   through the display managers and the console.
+  </p><p>
+   GDM provides feedback about password expiration and the prompt for new
+   passwords in an interactive mode. To change passwords in the display
+   managers, provide the password information when prompted.
+  </p><p>
+   To change your Windows password, you can use the standard Linux utility,
+   <code class="command">passwd</code>, instead of having to manipulate this data on
+   the server. To change your Windows password, proceed as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Log in at the console.
+    </p></li><li class="step"><p>
+     Enter <code class="literal">passwd</code>.
+    </p></li><li class="step"><p>
+     Enter your current password when prompted.
+    </p></li><li class="step"><p>
+     Enter the new password.
+    </p></li><li class="step"><p>
+     Reenter the new password for confirmation. If your new password does
+     not comply with the policies on the Windows server, this feedback is
+     given to you and you are prompted for another password.
+    </p></li></ol></div></div><p>
+   To change your Windows password from the GNOME desktop, proceed as
+   follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Click the <span class="guimenu">Computer</span> icon on the left edge of the
+     panel.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Control Center</span>.
+    </p></li><li class="step"><p>
+     From the <span class="guimenu">Personal</span> section, select
+     <span class="guimenu">About Me</span> › <span class="guimenu">Change
+     Password</span>.
+    </p></li><li class="step"><p>
+     Enter your old password.
+    </p></li><li class="step"><p>
+     Enter and confirm the new password.
+    </p></li><li class="step"><p>
+     Leave the dialog with <span class="guimenu">Close</span> to apply your settings.
+    </p></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-kerberos.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>Network Authentication with Kerberos</span></a> </div><div><a class="pagination-link next" href="part-local-security.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part II </span>Local Security</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-ad.html#sec-security-ad-integrate"><span class="title-number">7.1 </span><span class="title-name">Integrating Linux and Active Directory Environments</span></a></span></li><li><span class="sect1"><a href="cha-security-ad.html#sec-security-ad-background"><span class="title-number">7.2 </span><span class="title-name">Background Information for Linux Active Directory Support</span></a></span></li><li><span class="sect1"><a href="cha-security-ad.html#sec-security-ad-config"><span class="title-number">7.3 </span><span class="title-name">Configuring a Linux Client for Active Directory</span></a></span></li><li><span class="sect1"><a href="cha-security-ad.html#sec-security-ad-login"><span class="title-number">7.4 </span><span class="title-name">Logging In to an Active Directory Domain</span></a></span></li><li><span class="sect1"><a href="cha-security-ad.html#sec-security-ad-passwd"><span class="title-number">7.5 </span><span class="title-name">Changing Passwords</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

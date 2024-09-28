@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP4 | Administration Guide | The boot loader GRUB 2</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="The boot loader GRUB 2 | SLED 15 SP4"/>
+<meta name="description" content="This chapter describes how to configure GRUB 2, the boot loader used in SUSE® Linux Enterprise Desktop. It is the successor to the traditional GRUB b…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 18. The boot loader GRUB 2"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "The boot loader GRUB 2",
+  
+    "description": "This chapter describes how to configure GRUB 2, the boot loader used in SUSE® Linux Enterprise Desktop. It is the successor to the traditional GRUB b…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-02-13T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-uefi.html" title="Chapter 17. UEFI (Unified Extensible Firmware Interface)"/><link rel="next" href="cha-systemd.html" title="Chapter 19. The systemd daemon"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-boot.html">Booting a Linux system</a><span> / </span><a class="crumb" href="cha-grub2.html">The boot loader GRUB 2</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="pre-sle.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-administration.html" class="has-children "><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name"><code class="command">sudo</code> basics</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">3 </span><span class="title-name">Using YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST in text mode</span></a></li><li><a href="cha-yast-lang.html" class=" "><span class="title-number">5 </span><span class="title-name">Changing language and country settings with YaST</span></a></li><li><a href="cha-yast-userman.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing users with YaST</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">7 </span><span class="title-name">YaST online update</span></a></li><li><a href="cha-yast-software.html" class=" "><span class="title-number">8 </span><span class="title-name">Installing or removing software</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">9 </span><span class="title-name">Managing software with command line tools</span></a></li><li><a href="cha-snapper.html" class=" "><span class="title-number">10 </span><span class="title-name">System recovery and snapshot management with Snapper</span></a></li><li><a href="cha-klp.html" class=" "><span class="title-number">11 </span><span class="title-name">Live kernel patching with KLP</span></a></li><li><a href="cha-ulp.html" class=" "><span class="title-number">12 </span><span class="title-name">User space live patching</span></a></li><li><a href="cha-transactional-updates.html" class=" "><span class="title-number">13 </span><span class="title-name">Transactional updates</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">14 </span><span class="title-name">Remote graphical sessions with VNC</span></a></li><li><a href="cha-net-rsync.html" class=" "><span class="title-number">15 </span><span class="title-name">File copying with RSync</span></a></li></ol></li><li class="active"><a href="part-boot.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Booting a Linux system</span></a><ol><li><a href="cha-boot.html" class=" "><span class="title-number">16 </span><span class="title-name">Introduction to the boot process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">17 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" you-are-here"><span class="title-number">18 </span><span class="title-name">The boot loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">19 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li><a href="part-system.html" class="has-children "><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">20 </span><span class="title-name">32-bit and 64-bit applications in a 64-bit system environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">21 </span><span class="title-name"><code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> journal</span></a></li><li><a href="cha-update-alternative.html" class=" "><span class="title-number">22 </span><span class="title-name"><code class="command">update-alternatives</code>: Managing multiple versions of commands and files</span></a></li><li><a href="cha-network.html" class=" "><span class="title-number">23 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-print.html" class=" "><span class="title-number">24 </span><span class="title-name">Printer operation</span></a></li><li><a href="cha-gui-desktop.html" class=" "><span class="title-number">25 </span><span class="title-name">Graphical user interface</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">26 </span><span class="title-name">Accessing file systems with FUSE</span></a></li><li><a href="cha-tuning-multikernel.html" class=" "><span class="title-number">27 </span><span class="title-name">Installing multiple kernel versions</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing kernel modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">29 </span><span class="title-name">Dynamic kernel device management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">30 </span><span class="title-name">Special system features</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">31 </span><span class="title-name">Using NetworkManager</span></a></li></ol></li><li><a href="part-hardware.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Hardware configuration</span></a><ol><li><a href="sec-yast-hw-keym.html" class=" "><span class="title-number">32 </span><span class="title-name">Setting up your system keyboard layout</span></a></li><li><a href="sec-yast-hw-sound.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up sound cards</span></a></li><li><a href="sec-yast-hw-print.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a printer</span></a></li><li><a href="sec-yast-hw-scan.html" class=" "><span class="title-number">35 </span><span class="title-name">Setting up a scanner</span></a></li><li><a href="cha-power-mgmt.html" class=" "><span class="title-number">36 </span><span class="title-name">Power management</span></a></li><li><a href="cha-nvdimm.html" class=" "><span class="title-number">37 </span><span class="title-name">Persistent memory</span></a></li></ol></li><li><a href="part-services.html" class="has-children "><span class="title-number">V </span><span class="title-name">Services</span></a><ol><li><a href="cha-yast-serviceman.html" class=" "><span class="title-number">38 </span><span class="title-name">Service management with YaST</span></a></li><li><a href="cha-ntp.html" class=" "><span class="title-number">39 </span><span class="title-name">Time synchronization with NTP</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">40 </span><span class="title-name">Help and documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Gathering system information for support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">42 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An example network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-grub2" data-id-title="The boot loader GRUB 2"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">18 </span><span class="title-name">The boot loader GRUB 2</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This chapter describes how to configure GRUB 2, the boot loader used in
+    <span class="productname"><span class="phrase">SUSE® Linux Enterprise Desktop</span></span>. <span class="phrase">It is the successor to the
+    traditional GRUB boot loader—now called <span class="quote">“<span class="quote">GRUB Legacy</span>”</span>.
+    GRUB 2 has been the default boot loader in <span class="productname"><span class="phrase">SUSE® Linux Enterprise Desktop</span></span> since
+    version 12.</span> A YaST module is available for configuring the most
+    important settings. The boot procedure as a whole is outlined in <a class="xref" href="cha-boot.html" title="Chapter 16. Introduction to the boot process">Chapter 16, <em>Introduction to the boot process</em></a>. For details on Secure Boot support for UEFI machines,
+    see <a class="xref" href="cha-uefi.html" title="Chapter 17. UEFI (Unified Extensible Firmware Interface)">Chapter 17, <em>UEFI (Unified Extensible Firmware Interface)</em></a>.
+   </p></div></div></div></div><section class="sect1" id="sec-grub2-new-features" data-id-title="Main differences between GRUB legacy and GRUB 2"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.1 </span><span class="title-name">Main differences between GRUB legacy and GRUB 2</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-new-features">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     The configuration is stored in different files.
+    </p></li><li class="listitem"><p>
+     More file systems are supported (for example, Btrfs).
+    </p></li><li class="listitem"><p>
+     Can directly read files stored on LVM or RAID devices.
+    </p></li><li class="listitem"><p>
+     The user interface can be translated and altered with themes.
+    </p></li><li class="listitem"><p>
+     Includes a mechanism for loading modules to support additional features,
+     such as file systems, etc.
+    </p></li><li class="listitem"><p>
+     Automatically searches for and generates boot entries for other kernels
+     and operating systems, such as Windows.
+    </p></li><li class="listitem"><p>
+     Includes a minimal Bash-like console.
+    </p></li></ul></div></section><section class="sect1" id="sec-grub2-file-structure" data-id-title="Configuration file structure"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.2 </span><span class="title-name">Configuration file structure</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-file-structure">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The configuration of GRUB 2 is based on the following files:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.4.3.1"><span class="term"><code class="filename">/boot/grub2/grub.cfg</code></span></dt><dd><p>
+            This file contains the configuration of the GRUB 2 menu items. It
+            replaces <code class="filename">menu.lst</code> used in GRUB Legacy.
+            <code class="filename">grub.cfg</code> should not be edited—it is
+            automatically generated by the command <code class="command">grub2-mkconfig -o
+            /boot/grub2/grub.cfg</code>.
+          </p></dd><dt id="id-1.3.4.4.4.3.2"><span class="term"><code class="filename">/boot/grub2/custom.cfg</code></span></dt><dd><p>
+            This optional file is directly sourced by
+            <code class="filename">grub.cfg</code> at boot time and can be used to add
+            custom items to the boot menu. Starting with <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>
+            <span class="phrase">12 SP2</span> these entries are also parsed when using
+            <code class="command">grub-once</code>.
+          </p></dd><dt id="id-1.3.4.4.4.3.3"><span class="term"><code class="filename">/etc/default/grub</code></span></dt><dd><p>
+            This file controls the user settings of GRUB 2 and normally
+            includes additional environmental settings such as backgrounds and
+            themes.
+          </p></dd><dt id="id-1.3.4.4.4.3.4"><span class="term">Scripts under <code class="filename">/etc/grub.d/</code></span></dt><dd><p>
+            The scripts in this directory are read during execution of the
+            command <code class="command">grub2-mkconfig -o /boot/grub2/grub.cfg</code>.
+            Their instructions are integrated into the main configuration file
+            <code class="filename">/boot/grub/grub.cfg</code>.
+          </p></dd><dt id="vle-grub2-sysconfig"><span class="term"><code class="filename">/etc/sysconfig/bootloader</code></span></dt><dd><p>
+            This configuration file holds certain basic settings like the boot
+            loader type and whether to enable UEFI Secure Boot support.
+          </p></dd><dt id="id-1.3.4.4.4.3.6"><span class="term"><code class="filename">/boot/grub2/x86_64-efi</code>, <code class="filename">/boot/grub2/power-ieee1275</code></span></dt><dd><p>
+            These configuration files contain architecture-specific options.
+          </p></dd></dl></div><p>
+   GRUB 2 can be controlled in various ways. Boot entries from an existing
+   configuration can be selected from the graphical menu (splash screen). The
+   configuration is loaded from the file
+   <code class="filename">/boot/grub2/grub.cfg</code> which is compiled from other
+   configuration files (see below). All GRUB 2 configuration files are
+   considered system files, and you need <code class="systemitem">root</code> privileges to edit them.
+  </p><div id="id-1.3.4.4.4.5" data-id-title="Activating configuration changes" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Activating configuration changes</div><p>
+        After having manually edited GRUB 2 configuration files, you need to
+        run <code class="command">grub2-mkconfig -o /boot/grub2/grub.cfg</code> to
+        activate the changes. However, this is not necessary when changing the
+        configuration with YaST, because YaST automatically runs this
+        command.
+      </p></div><section class="sect2" id="sec-grub2-cfg" data-id-title="The file /boot/grub2/grub.cfg"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.1 </span><span class="title-name">The file <code class="filename">/boot/grub2/grub.cfg</code></span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-cfg">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The graphical splash screen with the boot menu is based on the GRUB 2
+    configuration file <code class="filename">/boot/grub2/grub.cfg</code>, which
+    contains information about all partitions or operating systems that can be
+    booted by the menu.
+   </p><p>
+    Every time the system is booted, GRUB 2 loads the menu file directly from
+    the file system. For this reason, GRUB 2 does not need to be re-installed
+    after changes to the configuration file. <code class="filename">grub.cfg</code> is
+    automatically rebuilt with kernel installations or removals.
+   </p><p>
+    <code class="filename">grub.cfg</code> is compiled from the file
+    <code class="filename">/etc/default/grub</code> and scripts found in the
+    <code class="filename">/etc/grub.d/</code> directory when running the command
+    <code class="command">grub2-mkconfig -o /boot/grub2/grub.cfg</code>. Therefore you should never
+    edit the file manually. Instead, edit the related source files or use the
+    YaST <span class="guimenu">Boot Loader</span> module to modify the configuration as
+    described in <a class="xref" href="cha-grub2.html#sec-grub2-yast2-config" title="18.3. Configuring the boot loader with YaST">Section 18.3, “Configuring the boot loader with YaST”</a>.
+   </p></section><section class="sect2" id="sec-grub2-etc-default-grub" data-id-title="The file /etc/default/grub"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.2 </span><span class="title-name">The file <code class="filename">/etc/default/grub</code></span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-etc-default-grub">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        More general options of GRUB 2 belong in this file, such as the time the menu
+        is displayed, or the default OS to boot. To list all available options,
+        see the output of the following command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>grep "export GRUB_DEFAULT" -A50 /usr/sbin/grub2-mkconfig | grep GRUB_</pre></div><p>
+        You can introduce custom variables and use them later in the scripts
+        found in the <code class="filename">/etc/grub.d</code> directory.
+      </p><p>
+        After having edited <code class="filename">/etc/default/grub</code>, update the
+        main configuration file with <code class="command">grub2-mkconfig -o
+        /boot/grub2/grub.cfg</code>.
+      </p><div id="id-1.3.4.4.4.7.6" data-id-title="Scope" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Scope</div><p>
+          All options specified in this file are general options that affect all
+          boot entries. Options specific to a Xen hypervisor include the
+          <code class="literal">_XEN_</code> substring.
+        </p></div><div id="id-1.3.4.4.4.7.7" data-id-title="Escaping inner quotes" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Escaping inner quotes</div><p>
+          More complex options with spaces require quoting so that they are
+          processed as one option. Such inner quotes need to be correctly
+          escaped, for example:
+        </p><div class="verbatim-wrap"><pre class="screen">GRUB_CMDLINE_LINUX_XEN="debug loglevel=9 log_buf_len=5M \"ddebug_query=file drivers/xen/xen-acpi-processor.c +p\""</pre></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.4.7.8.1"><span class="term"><code class="literal">GRUB_DEFAULT</code></span></dt><dd><p>
+              Sets the boot menu entry that is booted by default. Its value can
+              be a numeric value, the complete name of a menu entry, or
+              <span class="quote">“<span class="quote">saved</span>”</span>.
+            </p><p>
+              <code class="literal">GRUB_DEFAULT=2</code> boots the third (counted from
+              zero) boot menu entry.
+            </p><p>
+              <code class="literal">GRUB_DEFAULT="2&gt;0"</code> boots the first submenu
+              entry of the third top-level menu entry.
+            </p><p>
+              <code class="literal">GRUB_DEFAULT="Example boot menu entry"</code> boots
+              the menu entry with the title <span class="quote">“<span class="quote">Example boot menu
+              entry</span>”</span>.
+            </p><p>
+              <code class="literal">GRUB_DEFAULT=saved</code> boots the entry specified
+              by the <code class="command">grub2-once</code> or
+              <code class="command">grub2-set-default</code> commands. While
+              <code class="command">grub2-reboot</code> sets the default boot entry for
+              the next reboot only, <code class="command">grub2-set-default</code> sets
+              the default boot entry until changed. <code class="command">grub2-editenv
+              list</code> lists the next boot entry.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.2"><span class="term"><code class="literal">GRUB_HIDDEN_TIMEOUT</code></span></dt><dd><p>
+              Waits the specified number of seconds for the user to press a
+              key. During the period no menu is shown unless the user presses a
+              key. If no key is pressed during the time specified, the control
+              is passed to <code class="literal">GRUB_TIMEOUT</code>.
+              <code class="literal">GRUB_HIDDEN_TIMEOUT=0</code> first checks whether
+              <span class="keycap">Shift</span> is pressed and shows the boot menu if
+              yes, otherwise immediately boots the default menu entry. This is
+              the default when only one bootable OS is identified by GRUB 2.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.3"><span class="term"><code class="literal">GRUB_HIDDEN_TIMEOUT_QUIET</code></span></dt><dd><p>
+              If <code class="literal">false</code> is specified, a countdown timer is
+              displayed on a blank screen when the
+              <code class="literal">GRUB_HIDDEN_TIMEOUT</code> feature is active.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.4"><span class="term"><code class="literal">GRUB_TIMEOUT</code></span></dt><dd><p>
+              Time period in seconds the boot menu is displayed before
+              automatically booting the default boot entry. If you press a key,
+              the timeout is cancelled and GRUB 2 waits for you to make the
+              selection manually. <code class="literal">GRUB_TIMEOUT=-1</code> causes
+              the menu to be displayed until you select the boot entry
+              manually.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.5"><span class="term"><code class="literal">GRUB_CMDLINE_LINUX</code></span></dt><dd><p>
+              Entries on this line are added at the end of the boot entries for
+              normal and recovery modes. Use it to add kernel parameters to the
+              boot entry.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.6"><span class="term"><code class="literal">GRUB_CMDLINE_LINUX_DEFAULT</code></span></dt><dd><p>
+              Same as <code class="literal">GRUB_CMDLINE_LINUX</code> but the entries are
+              appended in the normal mode only.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.7"><span class="term"><code class="literal">GRUB_CMDLINE_LINUX_RECOVERY</code></span></dt><dd><p>
+              Same as <code class="literal">GRUB_CMDLINE_LINUX</code> but the entries are
+              appended in the recovery mode only.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.8"><span class="term"><code class="literal">GRUB_CMDLINE_LINUX_XEN_REPLACE</code></span></dt><dd><p>
+              This entry replaces the <code class="literal">GRUB_CMDLINE_LINUX</code>
+              parameters for all Xen boot entries.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.9"><span class="term"><code class="literal">GRUB_CMDLINE_LINUX_XEN_REPLACE_DEFAULT</code></span></dt><dd><p>
+              Same as <code class="literal">GRUB_CMDLINE_LINUX_XEN_REPLACE</code> but it
+              only replaces parameters
+              of <code class="literal">GRUB_CMDLINE_LINUX_DEFAULT</code>.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.10"><span class="term"><code class="literal">GRUB_CMDLINE_XEN</code></span></dt><dd><p>
+              These entries are passed to the Xen hypervisor Xen menu
+              entries for normal and recovery modes. For example:
+            </p><div class="verbatim-wrap"><pre class="screen">GRUB_CMDLINE_XEN="loglvl=all guest_loglvl=all"</pre></div><div id="id-1.3.4.4.4.7.8.10.2.3" data-id-title="Xen hypervisor options" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Xen hypervisor options</div><p>
+                Find a complete list of Xen hypervisor options in <a class="link" href="https://xenbits.xen.org/docs/unstable/misc/xen-command-line.html" target="_blank">https://xenbits.xen.org/docs/unstable/misc/xen-command-line.html</a>
+              </p></div></dd><dt id="id-1.3.4.4.4.7.8.11"><span class="term"><code class="literal">GRUB_CMDLINE_XEN_DEFAULT</code></span></dt><dd><p>
+              Same as <code class="literal">GRUB_CMDLINE_XEN</code> but the entries are
+              appended in the normal mode only.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.12"><span class="term"><code class="literal">GRUB_TERMINAL</code></span></dt><dd><p>
+              Enables and specifies an input/output terminal device. Can be
+              <code class="literal">console</code> (PC BIOS and EFI consoles),
+              <code class="literal">serial</code> (serial terminal),
+              <code class="literal">ofconsole</code> (Open Firmware console), or the
+              default <code class="literal">gfxterm</code> (graphics-mode output). It is
+              also possible to enable more than one device by quoting the
+              required options, for example, <code class="literal">GRUB_TERMINAL="console
+              serial"</code>.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.13"><span class="term"><code class="literal">GRUB_GFXMODE</code></span></dt><dd><p>
+              The resolution used for the <code class="literal">gfxterm</code> graphical
+              terminal. You can only use modes supported by your graphics card
+              (VBE). The default is ‘auto’, which tries to select a preferred
+              resolution. You can display the screen resolutions available to
+              GRUB 2 by typing <code class="command">videoinfo</code> in the GRUB 2
+              command line. The command line is accessed by typing
+              <span class="keycap">C</span> when the GRUB 2 boot menu screen is displayed.
+            </p><p>
+              You can also specify a color depth by appending it to the
+              resolution setting, for example,
+              <code class="literal">GRUB_GFXMODE=1280x1024x24</code>.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.14"><span class="term"><code class="literal">GRUB_BACKGROUND</code></span></dt><dd><p>
+              Set a background image for the <code class="literal">gfxterm</code>
+              graphical terminal. The image must be a file readable by GRUB 2
+              at boot time, and it must end with the <code class="literal">.png</code>,
+              <code class="literal">.tga</code>, <code class="literal">.jpg</code>, or
+              <code class="literal">.jpeg</code> suffix. If necessary, the image is
+              scaled to fit the screen.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.15"><span class="term"><code class="literal">GRUB_DISABLE_OS_PROBER</code></span></dt><dd><p>
+              If this option is set to <code class="literal">true</code>, automatic
+              searching for other operating systems is disabled. Only the
+              kernel images in <code class="filename">/boot/</code> and the options from
+              your own scripts in <code class="filename">/etc/grub.d/</code> are
+              detected.
+            </p></dd><dt id="id-1.3.4.4.4.7.8.16"><span class="term"><code class="literal">SUSE_BTRFS_SNAPSHOT_BOOTING</code></span></dt><dd><p>
+              If this option is set to <code class="literal">true</code>, GRUB 2 can boot
+              directly into Snapper snapshots. For more information, see
+              <a class="xref" href="cha-snapper.html#sec-snapper-snapshot-boot" title="10.3. System rollback by booting from snapshots">Section 10.3, “System rollback by booting from snapshots”</a>.
+            </p></dd></dl></div><p>
+        For a complete list of options, see the
+        <a class="link" href="http://www.gnu.org/software/grub/manual/grub.html#Simple-configuration" target="_blank">
+        GNU GRUB manual</a>.
+      </p></section><section class="sect2" id="sec-grub2-etc-grub-d" data-id-title="Scripts in /etc/grub.d"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.3 </span><span class="title-name">Scripts in <code class="filename">/etc/grub.d</code></span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-etc-grub-d">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The scripts in this directory are read during execution of the command
+        <code class="command">grub2-mkconfig -o /boot/grub2/grub.cfg</code>. Their
+        instructions are incorporated into
+        <code class="filename">/boot/grub2/grub.cfg</code>. The order of menu items in
+        <code class="filename">grub.cfg</code> is determined by the order in which the
+        files in this directory are run. Files with a leading numeral are
+        executed first, beginning with the lowest number.
+        <code class="filename">00_header</code> is run before
+        <code class="filename">10_linux</code>, which would run before
+        <code class="filename">40_custom</code>. If files with alphabetic names are
+        present, they are executed after the numerically named files. Only
+        executable files generate output to <code class="filename">grub.cfg</code>
+        during execution of <code class="command">grub2-mkconfig</code>. By default all
+        files in the <code class="filename">/etc/grub.d</code> directory are executable.
+      </p><div id="id-1.3.4.4.4.8.3" data-id-title="Persistent custom content in grub.cfg" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Persistent custom content in <code class="filename">grub.cfg</code></div><p>
+          Because <code class="filename">/boot/grub2/grub.cfg</code> is recompiled each
+          time <code class="command">grub2-mkconfig</code> is run, any custom content is
+          lost. To insert your lines directly into
+          <code class="filename">/boot/grub2/grub.cfg</code> without losing them after
+          <code class="command">grub2-mkconfig</code> is run, insert them between
+        </p><div class="verbatim-wrap"><pre class="screen">### BEGIN /etc/grub.d/90_persistent ###</pre></div><p>
+          and
+        </p><div class="verbatim-wrap"><pre class="screen">### END /etc/grub.d/90_persistent ###</pre></div><p>
+          The <code class="filename">90_persistent</code> script ensures that such
+          content is preserved.
+        </p><p>
+          A list of the most important scripts follows:
+        </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.4.8.4.1"><span class="term"><code class="filename">00_header</code></span></dt><dd><p>
+              Sets environmental variables such as system file locations,
+              display settings, themes and previously saved entries. It also
+              imports preferences stored in the
+              <code class="filename">/etc/default/grub</code>. Normally you do not need
+              to make changes to this file.
+            </p></dd><dt id="id-1.3.4.4.4.8.4.2"><span class="term"><code class="filename">10_linux</code></span></dt><dd><p>
+              Identifies Linux kernels on the root device and creates relevant
+              menu entries. This includes the associated recovery mode option
+              if enabled. Only the latest kernel is displayed on the main menu
+              page, with additional kernels included in a submenu.
+            </p></dd><dt id="id-1.3.4.4.4.8.4.3"><span class="term"><code class="filename">30_os-prober</code></span></dt><dd><p>
+              This script uses <code class="command">os-prober</code> to search for Linux
+              and other operating systems and places the results in the GRUB 2
+              menu. There are sections to identify specific other operating
+              systems, such as Windows or macOS.
+            </p></dd><dt id="id-1.3.4.4.4.8.4.4"><span class="term"><code class="filename">40_custom</code></span></dt><dd><p>
+              This file provides a simple way to include custom boot entries
+              into <code class="filename">grub.cfg</code>. Make sure that you do not
+              change the <code class="literal">exec tail -n +3 $0</code> part at the
+              beginning.
+            </p></dd></dl></div><p>
+        The processing sequence is set by the preceding numbers with the lowest
+        number being executed first. If scripts are preceded by the same number
+        the alphabetical order of the complete name decides the order.
+      </p><div id="id-1.3.4.4.4.8.6" data-id-title="/boot/grub2/custom.cfg" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: <code class="filename">/boot/grub2/custom.cfg</code></div><p>
+          If you create <code class="filename">/boot/grub2/custom.cfg</code> and fill it
+          with content, it is automatically included into
+          <code class="filename">/boot/grub2/grub.cfg</code> right after
+          <code class="filename">40_custom</code> at boot time.
+        </p></div></section><section class="sect2" id="sec-grub2-map" data-id-title="Mapping between BIOS drives and Linux devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.4 </span><span class="title-name">Mapping between BIOS drives and Linux devices</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-map">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        In GRUB Legacy, the <code class="filename">device.map</code> configuration file
+        was used to derive Linux device names from BIOS drive numbers. The
+        mapping between BIOS drives and Linux devices cannot always be guessed
+        correctly. For example, GRUB Legacy would get a wrong order if the boot
+        sequence of IDE and SCSI drives is exchanged in the BIOS configuration.
+      </p><p>
+        GRUB 2 avoids this problem by using device ID strings (UUIDs) or file
+        system labels when generating <code class="filename">grub.cfg</code>. GRUB 2
+        utilities create a temporary device map on the fly, which is normally
+        sufficient, particularly for single-disk systems.
+      </p><p>
+        However, if you need to override the GRUB 2's automatic device mapping
+        mechanism, create your custom mapping file
+        <code class="filename">/boot/grub2/device.map</code>. The following example
+        changes the mapping to make <code class="literal">DISK 3</code> the boot disk.
+        GRUB 2 partition numbers start with <code class="literal">1</code> and
+        not with <code class="literal">0</code> as in GRUB 2 Legacy.
+      </p><div class="verbatim-wrap"><pre class="screen">(hd1)  /dev/disk-by-id/<em class="replaceable">DISK3 ID</em>
+(hd2)  /dev/disk-by-id/<em class="replaceable">DISK1 ID</em>
+(hd3)  /dev/disk-by-id/<em class="replaceable">DISK2 ID</em></pre></div></section><section class="sect2" id="sec-grub2-menu-change" data-id-title="Editing menu entries during the boot procedure"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.5 </span><span class="title-name">Editing menu entries during the boot procedure</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-menu-change">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Being able to directly edit menu entries is useful when the system does
+        not boot anymore because of a faulty configuration. It can also be used
+        to test new settings without altering the system configuration.
+      </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            In the graphical boot menu, select the entry you want to edit with
+            the arrow keys.
+          </p></li><li class="step"><p>
+            Press <span class="keycap">E</span> to open the text-based editor.
+          </p></li><li class="step"><p>
+            Use the arrow keys to move to the line you want to edit.
+          </p><div class="figure" id="fig-grub2-boot-editor"><div class="figure-contents"><div class="mediaobject"><a href="images/grub2_edit_config.png"><img src="images/grub2_edit_config.png" width="75%" alt="GRUB 2 boot editor" title="GRUB 2 boot editor"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 18.1: </span><span class="title-name">GRUB 2 boot editor </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#fig-grub2-boot-editor">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div><p>
+            Now you have two options:
+          </p><ol type="a" class="substeps"><li class="step"><p>
+                Add space-separated parameters to the end of the line starting
+                with <code class="literal">linux</code> or <code class="literal">linuxefi</code> to
+                edit the kernel parameters. A complete list of parameters is
+                available at
+                <a class="link" href="https://en.opensuse.org/Linuxrc" target="_blank">https://en.opensuse.org/Linuxrc</a>.
+              </p></li><li class="step"><p>
+                Or edit the general options to change, for example, the kernel
+                version. The <span class="keycap">→|</span> key suggests all possible
+                completions.
+              </p></li></ol></li><li class="step"><p>
+            Press <span class="keycap">F10</span> to boot the system with the changes you
+            made or press <span class="keycap">Esc</span> to discard your edits and
+            return to the GRUB 2 menu.
+          </p></li></ol></div></div><p>
+        Changes made this way only apply to the current boot process and are
+        not saved permanently.
+      </p><div id="id-1.3.4.4.4.10.5" data-id-title="Keyboard layout during the boot procedure" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Keyboard layout during the boot procedure</div><p>
+          The US keyboard layout is the only one available when booting. See
+          <span class="intraxref">Book “Deployment Guide”, Chapter 8 “Troubleshooting”, Section 8.3 “Booting from installation media fails”, US keyboard layout</span>.
+        </p></div><div id="id-1.3.4.4.4.10.6" data-id-title="Boot loader on the installation media" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Boot loader on the installation media</div><p>
+          The Boot Loader of the installation media on systems with a
+          traditional BIOS is still GRUB Legacy. To add boot parameters, select
+          an entry and start typing. Additions you make to the installation
+          boot entry are permanently saved in the installed system.
+        </p></div></section><section class="sect2" id="sec-grub2-password" data-id-title="Setting a boot password"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.6 </span><span class="title-name">Setting a boot password</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-password">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Even before the operating system is booted, GRUB 2 enables access to file
+    systems. Users without root permissions can access files in your Linux
+    system to which they have no access after the system is booted. To block
+    this kind of access or to prevent users from booting certain menu entries,
+    set a boot password.
+   </p><div id="id-1.3.4.4.4.11.3" data-id-title="Booting requires a password" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Booting requires a password</div><p>
+     If set, the boot password is required on every boot, which means the
+     system does not boot automatically.
+    </p></div><p>
+    Proceed as follows to set a boot password. Alternatively use YaST
+    (<a class="xref" href="cha-grub2.html#vle-grub2-yast2-boot-password"><span class="guimenu">Protect Boot Loader with Password</span>
+     </a>).
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Encrypt the password using <code class="command">grub2-mkpasswd-pbkdf2:</code>
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> grub2-mkpasswd-pbkdf2
+Password: ****
+Reenter password: ****
+PBKDF2 hash of your password is grub.pbkdf2.sha512.10000.9CA4611006FE96BC77A...</pre></div></li><li class="step"><p>
+      Paste the resulting string into the file
+      <code class="filename">/etc/grub.d/40_custom</code> together with the <code class="command">set
+      superusers</code> command.
+     </p><div class="verbatim-wrap"><pre class="screen">set superusers="root"
+password_pbkdf2 root grub.pbkdf2.sha512.10000.9CA4611006FE96BC77A...</pre></div></li><li class="step"><p>
+            To import the changes into the main configuration file, run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> grub2-mkconfig -o /boot/grub2/grub.cfg</pre></div></li></ol></div></div><p>
+        After you reboot, GRUB 2 prompts you for a user name and a password
+        when trying to boot a menu entry. Enter <code class="literal">root</code> and the
+        password you typed during the <code class="command">grub2-mkpasswd-pbkdf2</code>
+        command. If the credentials are correct, the system boots the
+        selected boot entry.
+      </p><p>
+        For more information, see
+        <a class="link" href="https://www.gnu.org/software/grub/manual/grub.html#Security" target="_blank">https://www.gnu.org/software/grub/manual/grub.html#Security</a>.
+   </p></section><section class="sect2" id="sec-grub2-authorization" data-id-title="Authorized access to boot menu entries"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.7 </span><span class="title-name">Authorized access to boot menu entries</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-authorization">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can configure GRUB 2 to allow access to boot menu entries depending
+    on the level of authorization. You can configure multiple user accounts
+    protected with passwords and assign them access to different menu entries.
+    To configure authorization in GRUB 2, follow these steps:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Create and encrypt one password for each user account you want to use in
+      GRUB 2. Use the <code class="command">grub2-mkpasswd-pbkdf2</code> command as
+      described in <a class="xref" href="cha-grub2.html#sec-grub2-password" title="18.2.6. Setting a boot password">Section 18.2.6, “Setting a boot password”</a>.
+     </p></li><li class="step"><p>
+      Delete the file <code class="filename">/etc/grub.d/10_linux</code>.
+      This prevents outputting the default GRUB 2 menu entries.
+     </p></li><li class="step"><p>
+      Edit the <code class="filename">/boot/grub2/custom.cfg</code> file and add custom
+      menu entries manually. The following template is an example, adjust
+      it to better match your use case:
+     </p><div class="verbatim-wrap"><pre class="screen">set superusers=admin
+password admin <em class="replaceable">ADMIN_PASSWORD</em>
+password maintainer <em class="replaceable">MAINTAINER_PASSWORD</em>
+
+menuentry 'Operational mode' {
+  insmod ext2
+  set root=hd0,1
+  echo 'Loading Linux ...'
+  linux /boot/vmlinuz root=/dev/vda1 $GRUB_CMDLINE_LINUX_DEFAULT $GRUB_CMDLINE_LINUX mode=operation
+  echo 'Loading Initrd ...'
+  initrd /boot/initrd
+}
+
+menuentry 'Maintenance mode' --users maintainer {
+  insmod ext2
+  set root=hd0,1
+  echo 'Loading Linux ...'
+  linux /boot/vmlinuz root=/dev/vda1 $GRUB_CMDLINE_LINUX_DEFAULT $GRUB_CMDLINE_LINUX mode=maintenance
+  echo 'Loading Initrd ...'
+  initrd /boot/initrd
+}</pre></div></li><li class="step"><p>
+      Import the changes into the main configuration file:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> grub2-mkconfig -o /boot/grub2/grub.cfg</pre></div></li></ol></div></div><p>
+    In the above example:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The GRUB 2 menu has two entries, <span class="guimenu">Operational mode</span>
+      and <span class="guimenu">Maintenance mode</span>.
+     </p></li><li class="listitem"><p>
+      If no user is specified, both boot menu entries are accessible, but
+      no one can access GRUB 2 command line or edit existing menu entries.
+     </p></li><li class="listitem"><p>
+      <code class="literal">admin</code> user can access GRUB 2 command line and edit
+      existing menu entries.
+     </p></li><li class="listitem"><p>
+      <code class="literal">maintenance</code> user can select the recovery menu item.
+     </p></li></ul></div></section></section><section class="sect1" id="sec-grub2-yast2-config" data-id-title="Configuring the boot loader with YaST"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.3 </span><span class="title-name">Configuring the boot loader with YaST</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-yast2-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  The easiest way to configure general options of the boot loader in your
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> system is to use the YaST module. In the <span class="guimenu">YaST Control Center</span>, select
+  <span class="guimenu">System</span> › <span class="guimenu">Boot
+  Loader</span>. The module shows the current boot loader
+  configuration of your system and allows you to make changes.
+ </p><p>
+  Use the <span class="guimenu">Boot Code Options</span> tab to view and change settings
+  related to type, location and advanced loader settings. You can choose
+  whether to use GRUB 2 in standard or EFI mode.
+ </p><div id="id-1.3.4.4.5.5" data-id-title="EFI systems require GRUB2-EFI" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: EFI systems require GRUB2-EFI</div><p>
+   If you have an EFI system you can only install GRUB2-EFI, otherwise your
+   system is no longer bootable.
+  </p></div><div id="id-1.3.4.4.5.6" data-id-title="Reinstalling the boot loader" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Reinstalling the boot loader</div><p>
+   To reinstall the boot loader, make sure to change a setting in YaST and
+   then change it back. For example, to reinstall GRUB2-EFI, select
+   <span class="guimenu">GRUB2</span> first and then immediately switch back to
+   <span class="guimenu">GRUB2-EFI</span>.
+  </p><p>
+   Otherwise, the boot loader may only be partially reinstalled.
+  </p></div><div id="id-1.3.4.4.5.7" data-id-title="Custom boot loader" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Custom boot loader</div><p>
+   To use a boot loader other than the ones listed, select <span class="guimenu">Do Not
+   Install Any Boot Loader</span>. Read the documentation of your boot
+   loader carefully before choosing this option.
+  </p></div><section class="sect2" id="sec-grub2-yast2-location" data-id-title="Boot loader location and boot code options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.3.1 </span><span class="title-name">Boot loader location and boot code options</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-yast2-location">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The default location of the boot loader depends on the partition setup and
+   is either the Master Boot Record (MBR) or the boot sector of the
+   <code class="filename">/</code> partition. To modify the location of the boot loader,
+   follow these steps:
+  </p><div class="procedure" id="pro-sec-grub2-yast2-location" data-id-title="Changing the boot loader location"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 18.1: </span><span class="title-name">Changing the boot loader location </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#pro-sec-grub2-yast2-location">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Select the <span class="guimenu">Boot Code Options</span> tab and then choose one of
+     the following options for <span class="guimenu">Boot Loader Location</span>:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.5.8.3.2.2.1"><span class="term"><span class="guimenu">Boot from Master Boot Record</span>
+      </span></dt><dd><p>
+        This installs the boot loader in the MBR of the disk containing the
+        directory <code class="filename">/boot</code>. Usually this will be the disk
+        mounted to <code class="filename">/</code>, but if <code class="filename">/boot</code> is
+        mounted to a separate partition on a different disk, the MBR of that
+        disk will be used.
+       </p></dd><dt id="id-1.3.4.4.5.8.3.2.2.2"><span class="term"><span class="guimenu">Boot from Root Partition</span>
+      </span></dt><dd><p>
+        This installs the boot loader in the boot sector of the
+        <code class="filename">/</code> partition.
+       </p></dd><dt id="id-1.3.4.4.5.8.3.2.2.3"><span class="term"><span class="guimenu">Custom Root Partition</span>
+      </span></dt><dd><p>
+        Use this option to specify the location of the boot loader manually.
+       </p></dd></dl></div></li><li class="step"><p>
+     Click <span class="guimenu">OK</span> to apply the changes.
+    </p></li></ol></div></div><div class="figure" id="fig-grub2-yast-boot-code-options0"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_bootloader_boot_code.png"><img src="images/yast2_bootloader_boot_code.png" width="75%" alt="Boot code options" title="Boot code options"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 18.2: </span><span class="title-name">Boot code options </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#fig-grub2-yast-boot-code-options0">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div><p>
+   The <span class="guimenu">Boot Code Options</span> tab includes the following
+   additional options:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.5.8.6.1"><span class="term"><span class="guimenu">Set Active Flag in Partition Table for Boot
+      Partition</span>
+     </span></dt><dd><p>
+       Activates the partition that contains the
+       <code class="filename">/boot</code> directory. For POWER systems it
+       activates the PReP partition. Use this option on systems with
+       old BIOS and/or legacy operating systems because they may fail
+       to boot from a non-active partition. It is safe to leave this
+       option active.
+      </p></dd><dt id="id-1.3.4.4.5.8.6.2"><span class="term"><span class="guimenu">Write Generic Boot Code to MBR</span>
+     </span></dt><dd><p>
+       If MBR contains a custom 'non-GRUB' code, this option replaces it with a
+       generic, operating system independent code. If you deactivate this
+       option, the system may become unbootable.
+      </p></dd><dt id="id-1.3.4.4.5.8.6.3"><span class="term"><span class="guimenu">Enable Trusted Boot Support</span>
+     </span></dt><dd><p>
+       Starts TrustedGRUB2, which supports trusted computing functionality
+       (Trusted Platform Module (TPM)). For more information refer to
+       <a class="link" href="https://github.com/Sirrix-AG/TrustedGRUB2" target="_blank">https://github.com/Sirrix-AG/TrustedGRUB2</a>.
+      </p></dd></dl></div><p>
+      The <span class="guimenu">Protective MBR flag</span> section includes the following
+      options:
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.5.8.8.1"><span class="term"><span class="guimenu">set</span>
+     </span></dt><dd><p>
+       This is appropriate for traditional legacy BIOS booting.
+      </p></dd><dt id="id-1.3.4.4.5.8.8.2"><span class="term"><span class="guimenu">remove</span>
+     </span></dt><dd><p>
+       This is appropriate for UEFI booting.
+      </p></dd><dt id="id-1.3.4.4.5.8.8.3"><span class="term"><span class="guimenu">do not change</span>
+     </span></dt><dd><p>
+       This is usually the best choice if you have an already working
+       system.
+      </p></dd></dl></div><p>
+       In most cases YaST defaults to the appropriate choice.
+    </p></section><section class="sect2" id="sec-grub2-yast2-config-order" data-id-title="Adjusting the disk order"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.3.2 </span><span class="title-name">Adjusting the disk order</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-yast2-config-order">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If your computer has more than one hard disk, you can specify the boot
+   sequence of the disks. The first disk in the list is where GRUB 2 will be
+   installed in the case of booting from MBR. It is the disk where <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>
+   is installed by default. The rest of the list is a hint for
+   GRUB 2's device mapper (see <a class="xref" href="cha-grub2.html#sec-grub2-map" title="18.2.4. Mapping between BIOS drives and Linux devices">Section 18.2.4, “Mapping between BIOS drives and Linux devices”</a>).
+  </p><div id="id-1.3.4.4.5.9.3" data-id-title="Unbootable system" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Unbootable system</div><p>
+    The default value is usually valid for almost all deployments. If you change
+    the boot order of disks wrongly, the system may become unbootable on the
+    next reboot. For example, if the first disk in the list is not part of the
+    BIOS boot order, and the other disks in the list have empty MBRs.
+   </p></div><div class="procedure" id="pro-sec-grub2-yast2-config-order" data-id-title="Setting the disk order"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 18.2: </span><span class="title-name">Setting the disk order </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#pro-sec-grub2-yast2-config-order">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Open the <span class="guimenu">Boot Code Options</span> tab.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Edit Disk Boot Order</span>.
+    </p></li><li class="step"><p>
+     If more than one disk is listed, select a disk and click
+     <span class="guimenu">Up</span> or <span class="guimenu">Down</span> to reorder the displayed
+     disks.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">OK</span> two times to save the changes.
+    </p></li></ol></div></div></section><section class="sect2" id="sec-grub2-yast2-config-advanced" data-id-title="Configuring advanced options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.3.3 </span><span class="title-name">Configuring advanced options</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-yast2-config-advanced">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Advanced boot parameters can be configured via the <span class="guimenu">Boot Loader
+   Options</span> tab.
+  </p><section class="sect3" id="sec-grub2-yast2-config-advanced-boot-loader" data-id-title="Boot Loader Options tab"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">18.3.3.1 </span><span class="title-name"><span class="guimenu">Boot Loader Options</span> tab</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-yast2-config-advanced-boot-loader">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><div class="figure" id="fig-grub2-yast-bootloader-options"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_bootloader_options.png"><img src="images/yast2_bootloader_options.png" width="75%" alt="Boot loader options" title="Boot loader options"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 18.3: </span><span class="title-name">Boot loader options </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#fig-grub2-yast-bootloader-options">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.5.10.3.3.1"><span class="term"><span class="guimenu">Boot Loader Time-Out</span>
+     </span></dt><dd><p>
+       Change the value of <span class="guimenu">Time-Out in Seconds</span> by typing in
+       a new value and clicking the appropriate arrow key with your mouse.
+      </p></dd><dt id="id-1.3.4.4.5.10.3.3.2"><span class="term"><span class="guimenu">Probe Foreign OS</span>
+     </span></dt><dd><p>
+       When selected, the boot loader searches for other systems like Windows
+       or other Linux installations.
+      </p></dd><dt id="id-1.3.4.4.5.10.3.3.3"><span class="term"><span class="guimenu">Hide Menu on Boot</span>
+     </span></dt><dd><p>
+       Hides the boot menu and boots the default entry.
+      </p></dd><dt id="id-1.3.4.4.5.10.3.3.4"><span class="term"><span class="guimenu">Adjusting the Default Boot Entry</span>
+     </span></dt><dd><p>
+       Select the desired entry from the <span class="quote">“<span class="quote">Default Boot Section</span>”</span>
+       list. Note that the <span class="quote">“<span class="quote">&gt;</span>”</span> sign in the boot entry name
+       delimits the boot section and its subsection.
+      </p></dd><dt id="vle-grub2-yast2-boot-password"><span class="term"><span class="guimenu">Protect Boot Loader with Password</span>
+     </span></dt><dd><p>
+       Protects the boot loader and the system with an additional password. For
+       details on manual configuration, see <a class="xref" href="cha-grub2.html#sec-grub2-password" title="18.2.6. Setting a boot password">Section 18.2.6, “Setting a boot password”</a>.
+       If this option is activated, the boot password is required on every boot,
+       which means the system does not boot automatically. However, if you prefer
+       the behavior of GRUB 1, additionally enable <span class="guimenu">Protect Entry
+       Modification Only</span>. With this setting, anybody is allowed to select
+       a boot entry and boot the system, whereas the password for the GRUB 2 <code class="systemitem">root</code>
+       user is only required for modifying boot entries.
+      </p></dd></dl></div></section><section class="sect3" id="sec-grub2-yast2-config-advanced-kernel-parameters" data-id-title="Kernel Parameters tab"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">18.3.3.2 </span><span class="title-name"><span class="guimenu">Kernel Parameters</span> tab</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-yast2-config-advanced-kernel-parameters">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><div class="figure" id="fig-grub2-yast-kernel-parameters"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_bootloader_kernel_parameters.png"><img src="images/yast2_bootloader_kernel_parameters.png" width="75%" alt="Kernel parameters" title="Kernel parameters"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 18.4: </span><span class="title-name">Kernel parameters </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#fig-grub2-yast-kernel-parameters">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2_yast_i.xml" title="Edit source document"> </a></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.4.5.10.4.3.1"><span class="term"><span class="guimenu">Optional Kernel Command Line Parameter</span>
+     </span></dt><dd><p>
+       Specify optional kernel parameters here to enable/disable system
+       features, add drivers, etc. 
+      </p></dd><dt id="vle-grub2-yast2-cpu-mitigations"><span class="term"><span class="guimenu">CPU Mitigations</span></span></dt><dd><p>
+       SUSE has released one or more kernel boot command line parameters for
+       all software mitigations that have been deployed to prevent CPU side-channel
+       attacks. Some of those may result in performance loss. Choose
+       one the following options to strike a balance between security and
+       performance, depending on your setting:
+      </p><p><span class="formalpara-title"><span class="guimenu">Auto</span>. </span>
+   Enables all mitigations required for your CPU model, but does
+   not protect against cross-CPU thread attacks. This setting may impact
+   performance to some degree, depending on the workload.
+  </p><p><span class="formalpara-title"><span class="guimenu">Auto + No SMT</span>. </span>
+    Provides the full set of available security mitigations. Enables all
+    mitigations required for your CPU model. In addition, it disables
+    Simultaneous Multithreading (SMT) to avoid side-channel attacks across
+    multiple CPU threads. This setting may further impact performance,
+    depending on the workload.
+    </p><p><span class="formalpara-title"><span class="guimenu">Off</span>. </span>
+    Disables all mitigations. Side-channel attacks against your CPU
+    are possible, depending on the CPU model. This setting has no impact
+    on performance.
+   </p><p><span class="formalpara-title"><span class="guimenu">Manual</span>. </span>
+    Does not set any mitigation level. Specify your CPU mitigations manually
+    by using the kernel command line options.
+   </p></dd><dt id="id-1.3.4.4.5.10.4.3.3"><span class="term"><span class="guimenu">Use Graphical Console</span>
+     </span></dt><dd><p>
+       When checked, the boot menu appears on a graphical splash screen rather
+       than in a text mode. The resolution of the boot screen is set
+       automatically by default, but you can manually set it
+       via <span class="guimenu">Console resolution</span>. The graphical theme
+       definition file can be specified with the <span class="guimenu">Console
+       theme</span> file chooser. Only change this if you want to apply
+       your own, custom-made theme.
+      </p></dd><dt id="id-1.3.4.4.5.10.4.3.4"><span class="term"><span class="guimenu">Use Serial Console</span>
+     </span></dt><dd><p>
+       If your machine is controlled via a serial console, activate this option
+       and specify which COM port to use at which speed. See <code class="command">info
+       grub</code> or
+       <a class="link" href="http://www.gnu.org/software/grub/manual/grub.html#Serial-terminal" target="_blank">http://www.gnu.org/software/grub/manual/grub.html#Serial-terminal</a>
+      </p></dd></dl></div></section></section></section><section class="sect1" id="sec-grub2-commands" data-id-title="Helpful GRUB 2 commands"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.4 </span><span class="title-name">Helpful GRUB 2 commands</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-commands">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="vle-grub2-mkconfig"><span class="term"><code class="command">grub2-mkconfig</code>
+    </span></dt><dd><p>
+      Generates a new <code class="filename">/boot/grub2/grub.cfg</code> based on
+      <code class="filename">/etc/default/grub</code> and the scripts from
+      <code class="filename">/etc/grub.d/</code>.
+     </p><div class="example" id="id-1.3.4.4.6.2.1.2.2" data-id-title="Usage of grub2-mkconfig"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 18.1: </span><span class="title-name">Usage of grub2-mkconfig </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#id-1.3.4.4.6.2.1.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">grub2-mkconfig -o /boot/grub2/grub.cfg</pre></div></div></div><div id="id-1.3.4.4.6.2.1.2.3" data-id-title="Syntax check" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Syntax check</div><p>
+       Running <code class="command">grub2-mkconfig</code> without any parameters prints
+       the configuration to STDOUT where it can be reviewed. Use
+       <a class="xref" href="cha-grub2.html#vle-grub2-script-check"><code class="command">grub2-script-check</code>
+    </a> after
+       <code class="filename">/boot/grub2/grub.cfg</code> has been written to check its
+       syntax.
+      </p></div><div id="id-1.3.4.4.6.2.1.2.4" data-id-title="grub2-mkconfig cannot repair UEFI Secure Boot tables" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: <code class="command">grub2-mkconfig</code> cannot repair UEFI Secure Boot tables</div><p>
+       If you are using UEFI Secure Boot and your system is not reaching GRUB 2
+       correctly anymore, you may need to additionally reinstall the Shim and
+       regenerate the UEFI boot table. To do so, use:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>shim-install --config-file=/boot/grub2/grub.cfg</pre></div></div></dd><dt id="vle-grub2-mkrescue"><span class="term"><code class="command">grub2-mkrescue</code></span></dt><dd><p>
+      Creates a bootable rescue image of your installed GRUB 2 configuration.
+     </p><div class="example" id="id-1.3.4.4.6.2.2.2.2" data-id-title="Usage of grub2-mkrescue"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 18.2: </span><span class="title-name">Usage of grub2-mkrescue </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#id-1.3.4.4.6.2.2.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">grub2-mkrescue -o save_path/name.iso iso</pre></div></div></div></dd><dt id="vle-grub2-script-check"><span class="term"><code class="command">grub2-script-check</code>
+    </span></dt><dd><p>
+      Checks the given file for syntax errors.
+     </p><div class="example" id="id-1.3.4.4.6.2.3.2.2" data-id-title="Usage of grub2-script-check"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 18.3: </span><span class="title-name">Usage of grub2-script-check </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#id-1.3.4.4.6.2.3.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">grub2-script-check /boot/grub2/grub.cfg</pre></div></div></div></dd><dt id="id-1.3.4.4.6.2.4"><span class="term"><code class="command">grub2-once</code>
+    </span></dt><dd><p>
+      Set the default boot entry for the next boot only. To get the list of
+      available boot entries use the <code class="option">--list</code> option.
+     </p><div class="example" id="id-1.3.4.4.6.2.4.2.2" data-id-title="Usage of grub2-once"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 18.4: </span><span class="title-name">Usage of grub2-once </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#id-1.3.4.4.6.2.4.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">grub2-once number_of_the_boot_entry</pre></div></div></div><div id="id-1.3.4.4.6.2.4.2.3" data-id-title="grub2-once help" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: <code class="command">grub2-once</code> help</div><p>
+              Call the program without any option to get a full list of all
+              possible options.
+            </p></div></dd></dl></div></section><section class="sect1" id="grub-rescue-target" data-id-title="Rescue mode"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.5 </span><span class="title-name">Rescue mode</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#grub-rescue-target">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      <span class="emphasis"><em>Rescue mode</em></span> is a specific <code class="systemitem">root</code> user session
+      for troubleshooting and repairing systems where the booting process
+      fails. It offers a single-user environment with local file systems and
+      core system services active. Network interfaces are not activated. To
+      enter the rescue mode, follow these steps.
+    </p><div class="procedure" id="proc-rescue-mode" data-id-title="Entering rescue mode"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 18.3: </span><span class="title-name">Entering rescue mode </span></span><a title="Permalink" class="permalink" href="cha-grub2.html#proc-rescue-mode">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Reboot the system. The boot screen appears, offering the GRUB 2 boot
+          menu.
+        </p></li><li class="step"><p>
+          Select the menu entry to boot
+          and press <span class="keycap">e</span> to edit the boot line.
+        </p></li><li class="step"><p>
+          Append the following parameter to the line containing the kernel
+          parameters:
+        </p><div class="verbatim-wrap"><pre class="screen">systemd.unit=rescue.target</pre></div></li><li class="step"><p>
+          Press <span class="keycap">Ctrl</span>+<span class="keycap">X</span> to boot with
+          these settings.
+        </p></li><li class="step"><p>
+          Enter the password for <code class="systemitem">root</code>.
+        </p></li><li class="step"><p>
+          Make all the necessary changes.
+        </p></li><li class="step"><p>
+          Enter normal operating target again by entering
+          <code class="command">systemctl isolate multi-user.target</code> or
+          <code class="command">systemctl isolate graphical.target</code> at the command
+          line.
+        </p></li></ol></div></div></section><section class="sect1" id="sec-grub2-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.6 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-grub2.html#sec-grub2-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/grub2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Extensive information about GRUB 2 is available at <a class="link" href="https://www.gnu.org/software/grub/" target="_blank">https://www.gnu.org/software/grub/</a>. Also refer to the
+   <code class="command">grub</code> info page. <span class="phrase">You can also
+   search for the keyword <span class="quote">“<span class="quote">GRUB 2</span>”</span> in the Technical Information
+   Search at <a class="link" href="https://www.suse.com/support" target="_blank">https://www.suse.com/support</a> to get
+   information about special issues.</span>
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-uefi.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 17 </span>UEFI (Unified Extensible Firmware Interface)</span></a> </div><div><a class="pagination-link next" href="cha-systemd.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 19 </span>The <code class="systemitem">systemd</code> daemon</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-grub2.html#sec-grub2-new-features"><span class="title-number">18.1 </span><span class="title-name">Main differences between GRUB legacy and GRUB 2</span></a></span></li><li><span class="sect1"><a href="cha-grub2.html#sec-grub2-file-structure"><span class="title-number">18.2 </span><span class="title-name">Configuration file structure</span></a></span></li><li><span class="sect1"><a href="cha-grub2.html#sec-grub2-yast2-config"><span class="title-number">18.3 </span><span class="title-name">Configuring the boot loader with YaST</span></a></span></li><li><span class="sect1"><a href="cha-grub2.html#sec-grub2-commands"><span class="title-number">18.4 </span><span class="title-name">Helpful GRUB 2 commands</span></a></span></li><li><span class="sect1"><a href="cha-grub2.html#grub-rescue-target"><span class="title-number">18.5 </span><span class="title-name">Rescue mode</span></a></span></li><li><span class="sect1"><a href="cha-grub2.html#sec-grub2-info"><span class="title-number">18.6 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

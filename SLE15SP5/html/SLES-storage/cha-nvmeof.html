@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Storage Administration Guide | NVMe-oF</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="NVMe-oF | SLES 15 SP5"/>
+<meta name="description" content="This chapter describes how to set up an NVMe over Fabrics host and target."/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 17. NVMe-oF"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "NVMe-oF",
+  
+    "description": "This chapter describes how to set up an NVMe over Fabrics host and target.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-fcoe.html" title="Chapter 16. Fibre Channel storage over Ethernet networks: FCoE"/><link rel="next" href="cha-multipath.html" title="Chapter 18. Managing multipath I/O for devices"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-net-storage.html">Network storage</a><span> / </span><a class="crumb" href="cha-nvmeof.html">NVMe-oF</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li><a href="part-software-raid.html" class="has-children "><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li class="active"><a href="part-net-storage.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" you-are-here"><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-nvmeof" data-id-title="NVMe-oF"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+        This chapter describes how to set up an NVMe over Fabrics host and target.
+      </p></div></div></div></div><section class="sect1" id="sec-nvmeof-overview" data-id-title="Overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.1 </span><span class="title-name">Overview</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      <span class="emphasis"><em><span class="trademark">NVM
+      Express</span>®</em></span>
+      (<span class="emphasis"><em><span class="trademark">NVMe</span>®</em></span>)
+      is an interface standard for accessing non-volatile storage, commonly SSD
+      disks. NVMe supports much higher speeds and has a lower latency than
+      SATA.
+    </p><p>
+      <span class="emphasis"><em><span class="trademark">NVMe-oF</span>™</em></span> is an
+      architecture to access NVMe storage over different networking
+      fabrics—for example, <span class="emphasis"><em>RDMA</em></span>,
+      <span class="emphasis"><em>TCP</em></span>, or <span class="emphasis"><em>NVMe over Fibre
+      Channel</em></span> (<span class="emphasis"><em>FC-NVMe</em></span>). The role of NVMe-oF
+      is similar to iSCSI. To increase the fault-tolerance, NVMe-oF has a
+      built-in support for multipathing. The NVMe-oF multipathing is not based
+      on the traditional DM-Multipathing.
+    </p><p>
+      The <span class="emphasis"><em>NVMe host</em></span> is the machine that connects to an
+      NVMe target. The <span class="emphasis"><em>NVMe target</em></span> is the machine that
+      shares its NVMe block devices.
+    </p><p>
+      NVMe is supported on SUSE Linux Enterprise Server <span class="productnumber"><span class="phrase">15 SP5</span></span>. There are Kernel modules
+      available for the NVMe block storage and NVMe-oF target and host.
+    </p><p>
+      To see if your hardware requires any special consideration, refer to
+      <a class="xref" href="cha-nvmeof.html#sec-nvmeof-hardware" title="17.4. Special hardware configuration">Section 17.4, “Special hardware configuration”</a>.
+    </p></section><section class="sect1" id="sec-nvmeof-host-configuration" data-id-title="Setting up an NVMe-oF host"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.2 </span><span class="title-name">Setting up an NVMe-oF host</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-host-configuration">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To use NVMe-oF, a target must be available with one of the supported
+      networking methods. Supported are NVMe over Fibre Channel, TCP, and
+      RDMA. The following sections describe how to connect a host to an NVMe
+      target.
+    </p><section class="sect2" id="sec-nvmeof-host-configuration-cli" data-id-title="Installing command line client"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.2.1 </span><span class="title-name">Installing command line client</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-host-configuration-cli">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To use NVMe-oF, you need the <code class="command">nvme</code> command line
+        tool. Install it with <code class="command">zypper</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">zypper in nvme-cli</code></pre></div><p>
+        Use <code class="command">nvme --help</code> to list all available subcommands.
+        Man pages are available for <code class="command">nvme</code> subcommands.
+        Consult them by executing <code class="command">man
+        nvme-<em class="replaceable">SUBCOMMAND</em></code>. For example, to
+        view the man page for the <code class="option">discover</code> subcommand, execute
+        <code class="command">man nvme-discover</code>.
+      </p></section><section class="sect2" id="sec-nvmeof-host-configuration-target-discovery" data-id-title="Discovering NVMe-oF targets"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.2.2 </span><span class="title-name">Discovering NVMe-oF targets</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-host-configuration-target-discovery">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To list available NVMe subsystems on the NVMe-oF target, you need
+        the discovery controller address and service ID.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">nvme discover -t <em class="replaceable">TRANSPORT</em> -a <em class="replaceable">DISCOVERY_CONTROLLER_ADDRESS</em> -s <em class="replaceable">SERVICE_ID</em></code></pre></div><p>
+        Replace <em class="replaceable">TRANSPORT</em> with the underlying
+        transport medium: <code class="option">loop</code>, <code class="option">rdma</code>,
+        <code class="option">tcp</code>, or <code class="option">fc</code>. Replace
+        <em class="replaceable">DISCOVERY_CONTROLLER_ADDRESS</em> with the
+        address of the discovery controller. For RDMA and TCP, this should be
+        an IPv4 address. Replace <em class="replaceable">SERVICE_ID</em> with the
+        transport service ID. If the service is IP based, like RDMA or TCP,
+        service ID specifies the port number. For Fibre Channel, the service ID
+        is not required.
+      </p><p>
+        The NVMe hosts only see the subsystems they are allowed to connect
+        to.
+      </p><p>
+        Example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nvme discover -t tcp -a 10.0.0.3 -s 4420</pre></div><p>
+        For the FC, the example looks as follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nvme discover --transport=fc \
+                --traddr=nn-0x201700a09890f5bf:pn-0x201900a09890f5bf \
+                --host-traddr=nn-0x200000109b579ef6:pn-0x100000109b579ef6</pre></div><p>
+        For more details, see <code class="command">man nvme-discover</code>.
+      </p></section><section class="sect2" id="sec-nvmeof-host-configuration-connect-target" data-id-title="Connecting to NVMe-oF targets"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.2.3 </span><span class="title-name">Connecting to NVMe-oF targets</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-host-configuration-connect-target">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        After you have identified the NVMe subsystem, you can connect it with
+        the <code class="command">nvme connect</code> command.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">nvme connect -t <em class="replaceable">transport</em> -a <em class="replaceable">DISCOVERY_CONTROLLER_ADDRESS</em> -s <em class="replaceable">SERVICE_ID</em> -n <em class="replaceable">SUBSYSTEM_NQN</em></code></pre></div><p>
+        Replace <em class="replaceable">TRANSPORT</em> with the underlying
+        transport medium: <code class="option">loop</code>, <code class="option">rdma</code>,
+        <code class="option">tcp</code> or <code class="option">fc</code>. Replace
+        <em class="replaceable">DISCOVERY_CONTROLLER_ADDRESS</em> with the
+        address of the discovery controller. For RDMA and TCP this should be an
+        IPv4 address. Replace <em class="replaceable">SERVICE_ID</em> with the
+        transport service ID. If the service is IP based, like RDMA or TCP,
+        this specifies the port number. Replace
+        <em class="replaceable">SUBSYSTEM_NQN</em> with the NVMe qualified name
+        of the desired subsystem as found by the discovery command.
+        <span class="emphasis"><em>NQN</em></span> is the abbreviation for <span class="emphasis"><em> NVMe
+        Qualified Name</em></span>. The NQN must be unique.
+      </p><p>
+        Example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">nvme connect -t tcp -a 10.0.0.3 -s 4420 -n nqn.2014-08.com.example:nvme:nvm-subsystem-sn-d78432</code></pre></div><p>
+        For the FC, the example looks as follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nvme connect --transport=fc \
+             --traddr=nn-0x201700a09890f5bf:pn-0x201900a09890f5bf \
+             --host-traddr=nn-0x200000109b579ef6:pn-0x100000109b579ef6 \
+             --nqn=nqn.2014-08.org.nvmexpress:uuid:1a9e23dd-466e-45ca-9f43-a29aaf47cb21</pre></div><p>
+        Alternatively, use <code class="command">nvme connect-all</code> to connect to
+        all discovered namespaces. For advanced usage, see <code class="command">man
+        nvme-connect</code> and <code class="command">man nvme-connect-all</code>.
+      </p><p>
+        In case of a path loss, the NVMe subsystem tries to reconnect for a
+        time period, defined by the <code class="literal">ctrl-loss-tmo</code> option of
+        the <code class="command">nvme connect</code> command. After this time (default
+        value is 600s), the path is removed and the upper layers of the block
+        layer (file system) are notified. By default, the file system is then
+        mounted read-only, which usually is not the expected behavior.
+        Therefore, it is recommended to set the
+        <code class="literal">ctrl-loss-tmo</code> option so that the NVMe subsystem
+        keeps trying to reconnect without a limit. To do so, run the following
+        command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nvme connect --ctrl-loss-tmo=-1</pre></div><p>
+        To make an NVMe over Fabrics subsystem available at boot, create a
+        <code class="filename">/etc/nvme/discovery.conf</code> file on the host with the
+        parameters passed to the <code class="command">discover</code> command (as
+        described in
+        <a class="xref" href="cha-nvmeof.html#sec-nvmeof-host-configuration-target-discovery" title="17.2.2. Discovering NVMe-oF targets">Section 17.2.2, “Discovering NVMe-oF targets”</a>. For
+        example, if you use the <code class="command">discover</code> command as follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nvme discover -t tcp -a 10.0.0.3 -s 4420</pre></div><p>
+        Add the parameters of the <code class="command">discover</code> command to the
+        <code class="filename">/etc/nvme/discovery.conf</code> file:
+      </p><div class="verbatim-wrap"><pre class="screen">echo "-t tcp -a 10.0.0.3 -s 4420" | sudo tee -a /etc/nvme/discovery.conf</pre></div><p>
+        Then enable the <span class="guimenu">nvmf-autoconnect</span> service:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl enable nvmf-autoconnect.service</pre></div></section><section class="sect2" id="sec-nvmeof-host-configuration-multipathing" data-id-title="Multipathing"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.2.4 </span><span class="title-name">Multipathing</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-host-configuration-multipathing">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        NVMe native multipathing is enabled by default. If the
+        <code class="option">CMIC</code> option in the controller identity settings is
+        set, the NVMe stack recognizes an NVME drive as a multipathed device by
+        default.
+      </p><p>
+        To manage the multipathing, you can use the following:
+      </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Managing multipathing </span></span><a title="Permalink" class="permalink" href="cha-nvmeof.html#id-1.11.6.5.4.6.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.11.6.5.4.6.4.2"><span class="term"><code class="command">nvme list-subsys</code></span></dt><dd><p>
+              Prints the layout of the multipath devices.
+            </p></dd><dt id="id-1.11.6.5.4.6.4.3"><span class="term"><code class="command">multipath -ll</code></span></dt><dd><p>
+              The command has a compatibility mode and displays NVMe
+              multipath devices. Bear in mind that you need to enable the
+              <code class="literal">enable_foreign</code> option to use the command. For
+              details, refer to <a class="xref" href="cha-multipath.html#sec-multipath-conf-misc" title="18.13. Miscellaneous options">Section 18.13, “Miscellaneous options”</a>.
+            </p></dd><dt id="id-1.11.6.5.4.6.4.4"><span class="term"><code class="option">nvme-core.multipath=N</code></span></dt><dd><p>
+              When the option is added as a boot parameter, the NVMe native
+              multipathing will be disabled.
+            </p></dd></dl></div></section></section><section class="sect1" id="sec-nvmeof-target-configuration" data-id-title="Setting up an NVMe-oF target"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.3 </span><span class="title-name">Setting up an NVMe-oF target</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-target-configuration">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-nvmeof-target-configuration-cli" data-id-title="Installing command line client"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.1 </span><span class="title-name">Installing command line client</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-target-configuration-cli">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To configure an NVMe-oF target, you need the
+        <code class="command">nvmetcli</code> command line tool. Install it with
+        <code class="command">zypper</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">zypper in nvmetcli</code></pre></div><p>
+        The current documentation for <code class="command">nvmetcli</code> is available
+        at
+        <a class="link" href="https://git.infradead.org/users/hch/nvmetcli.git/blob_plain/HEAD:/Documentation/nvmetcli.txt" target="_blank">https://git.infradead.org/users/hch/nvmetcli.git/blob_plain/HEAD:/Documentation/nvmetcli.txt</a>.
+      </p></section><section class="sect2" id="sec-nvmeof-target-configuration-steps" data-id-title="Configuration steps"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.2 </span><span class="title-name">Configuration steps</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-target-configuration-steps">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The following procedure provides an example of how to set up an
+        NVMe-oF target.
+      </p><p>
+        The configuration is stored in a tree structure. Use the command
+        <code class="command">cd</code> to navigate. Use <code class="command">ls</code> to list
+        objects. You can create new objects with <code class="command">create</code>.
+      </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Start the <code class="command">nvmetcli</code> interactive shell:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">nvmetcli</code></pre></div></li><li class="step"><p>
+            Create a new port:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd ports</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">create 1</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">ls 1/</code>
+o- 1
+  o- referrals
+  o- subsystems</pre></div></li><li class="step"><p>
+            Create an NVMe subsystem:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd /subsystems</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">create nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82/</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">ls</code>
+o- nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82
+  o- allowed_hosts
+  o- namespaces</pre></div></li><li class="step"><p>
+            Create a new namespace and set an NVMe device to it:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd namespaces</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">create 1</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd 1</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">set device path=/dev/nvme0n1</code>
+Parameter path is now '/dev/nvme0n1'.</pre></div></li><li class="step"><p>
+            Enable the previously created namespace:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd ..</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">enable</code>
+The Namespace has been enabled.</pre></div></li><li class="step"><p>
+            Display the created namespace:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd ..</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">ls</code>
+o- nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82
+  o- allowed_hosts
+  o- namespaces
+    o- 1</pre></div></li><li class="step"><p>
+            Allow all hosts to use the subsystem. Only do this in secure
+            environments.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">set attr allow_any_host=1</code>
+Parameter allow_any_host is now '1'.</pre></div><p>
+            Alternatively, you can allow only specific hosts to connect:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82/allowed_hosts/</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">create hostnqn</code></pre></div></li><li class="step"><p>
+            List all created objects:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd /</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">ls</code>
+o- /
+  o- hosts
+  o- ports
+  | o- 1
+  |   o- referrals
+  |   o- subsystems
+  o- subsystems
+    o- nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82
+      o- allowed_hosts
+      o- namespaces
+        o- 1</pre></div></li><li class="step"><p>
+            Make the target available via TCP. Use
+            <code class="literal">trtype=rdma</code> for RDMA:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd ports/1/</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">set addr adrfam=ipv4 trtype=tcp traddr=10.0.0.3 trsvcid=4420</code>
+Parameter trtype is now 'tcp'.
+Parameter adrfam is now 'ipv4'.
+Parameter trsvcid is now '4420'.
+Parameter traddr is now '10.0.0.3'.</pre></div><p>
+            Alternatively, you can make it available with Fibre Channel:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd ports/1/</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">set addr adrfam=fc trtype=fc traddr=nn-0x1000000044001123:pn-0x2000000055001123 trsvcid=none</code></pre></div></li><li class="step"><p>
+            Link the subsystem to the port:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">cd /ports/1/subsystems</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">create nqn.2014-08.org.nvmexpress:NVMf:uuid:c36f2c23-354d-416c-95de-f2b8ec353a82</code></pre></div><p>
+            Now you can verify that the port is enabled using
+            <code class="command">dmesg</code>:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>dmesg
+        ...
+[  257.872084] nvmet_tcp: enabling port 1 (10.0.0.3:4420)</pre></div></li></ol></div></div></section><section class="sect2" id="sec-nvmeof-target-configuration-backup-configuration" data-id-title="Back up and restore target configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.3 </span><span class="title-name">Back up and restore target configuration</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-target-configuration-backup-configuration">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        You can save the target configuration in a JSON file with the following
+        commands:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">nvmetcli</code>
+<code class="prompt user">(nvmetcli)&gt; </code><code class="command">saveconfig nvme-target-backup.json</code></pre></div><p>
+        To restore the configuration, use:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">restore nvme-target-backup.json</code></pre></div><p>
+        You can also wipe the current configuration:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">(nvmetcli)&gt; </code><code class="command">clear</code></pre></div></section></section><section class="sect1" id="sec-nvmeof-hardware" data-id-title="Special hardware configuration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.4 </span><span class="title-name">Special hardware configuration</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-hardware">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-nvmeof-hardware-overview" data-id-title="Overview"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.4.1 </span><span class="title-name">Overview</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-hardware-overview">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Some hardware needs special configuration to work correctly. Skim the
+        titles of the following sections to see if you are using any of the
+        mentioned devices or vendors.
+      </p></section><section class="sect2" id="sec-nvmeof-hardware-broadcom" data-id-title="Broadcom"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.4.2 </span><span class="title-name">Broadcom</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-hardware-broadcom">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        If you are using the <span class="emphasis"><em>Broadcom Emulex LightPulse Fibre Channel
+        SCSI</em></span> driver, add a Kernel configuration parameter on the
+        target and host for the <code class="literal">lpfc</code> module:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">echo "options lpfc lpfc_enable_fc4_type=3" &gt; /etc/modprobe.d/lpfc.conf</code></pre></div><p>
+        Make sure that the Broadcom adapter firmware has at least version
+        11.4.204.33. Also make sure that you have the current versions of
+        <span class="package">nvme-cli</span>, <span class="package">nvmetcli</span> and the Kernel
+        installed.
+      </p><p>
+        To enable a Fibre Channel port as an NVMe target, an additional
+        module parameter needs to be configured:
+        <code class="option">lpfc_enable_nvmet=<em class="replaceable">
+        COMMA_SEPARATED_WWPNS</em></code>. Enter the WWPN with a
+        leading <code class="literal">0x</code>, for example
+        <code class="option">lpfc_enable_nvmet=0x2000000055001122,0x2000000055003344</code>.
+        Only listed WWPNs will be configured for target mode. A Fibre Channel
+        port can either be configured as target <span class="emphasis"><em>or</em></span> as
+        initiator.
+      </p></section><section class="sect2" id="sec-nvmeof-hardware-marvell" data-id-title="Marvell"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.4.3 </span><span class="title-name">Marvell</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-hardware-marvell">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        FC-NVMe is supported on QLE269x and QLE27xx adapters. FC-NVMe
+        support is enabled by default in the Marvell® QLogic® QLA2xxx Fibre
+        Channel driver.
+      </p><p>
+        To confirm NVMe is enabled, run the following command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /sys/module/qla2xxx/parameters/ql2xnvmeenable</pre></div><p>
+        A resulting <code class="literal">1</code> means NVMe is enabled, a
+        <code class="literal">0</code> indicates it is disabled.
+      </p><p>
+        Next, ensure that the Marvell adapter firmware is at least version
+        8.08.204 by checking the output of the following command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /sys/class/scsi_host/host0/fw_version</pre></div><p>
+        Last, ensure that the latest versions available for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> of
+        <span class="package">nvme-cli</span>, <span class="package">QConvergeConsoleCLI</span>,
+        and the Kernel are installed. You may, for example, run
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper lu &amp;&amp; zypper pchk</pre></div><p>
+        to check for updates and patches.
+      </p><p>
+        For more details on installation, please refer to the FC-NVMe
+        sections in the following Marvell user guides:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            <a class="link" href="https://driverdownloads.qlogic.com/QLogicDriverDownloads_UI/ShowEula.aspx?resourceid=32769&amp;docid=96728&amp;ProductCategory=39&amp;Product=1259&amp;Os=126" target="_blank">https://driverdownloads.qlogic.com/QLogicDriverDownloads_UI/ShowEula.aspx?resourceid=32769&amp;docid=96728&amp;ProductCategory=39&amp;Product=1259&amp;Os=126</a>
+          </p></li><li class="listitem"><p>
+            <a class="link" href="https://driverdownloads.qlogic.com/QLogicDriverDownloads_UI/ShowEula.aspx?resourceid=32761&amp;docid=96726&amp;ProductCategory=39&amp;Product=1261&amp;Os=126" target="_blank">https://driverdownloads.qlogic.com/QLogicDriverDownloads_UI/ShowEula.aspx?resourceid=32761&amp;docid=96726&amp;ProductCategory=39&amp;Product=1261&amp;Os=126</a>
+          </p></li></ul></div></section></section><section class="sect1" id="sec-nvmeof-boot" data-id-title="Booting from NVMe-oF over TCP"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.5 </span><span class="title-name">Booting from NVMe-oF over TCP</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-boot">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      <span class="productname"><span class="phrase">SLES</span></span> supports booting from NVMe-oF over TCP according to
+      the
+      <a class="link" href="https://nvmexpress.org/wp-content/uploads/NVM-Express-Boot-Specification-2022.11.15-Ratified.pdf" target="_blank">NVM
+      Express® Boot Specification 1.0</a>.
+    </p><p>
+      The UEFI pre-boot environment can be configured to attempt NVMe-oF over
+      TCP connections to remote storage servers and use these for booting. The
+      pre-boot environment creates an ACPI table—NVMe Boot Firmware Table
+      (NBFT) to store information about the NVMe-oF configuration used for
+      booting. The operating system uses this table at a later boot stage to
+      set up networking and NVMe-oF connections to access the root file
+      system.
+    </p><section class="sect2" id="sec-nvmeof-tcp-requirements" data-id-title="System requirements"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.5.1 </span><span class="title-name">System requirements</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-tcp-requirements">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To boot the system from NVMe-oF over TCP, the following requirements
+        must be met:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            <span class="productname"><span class="phrase">SLES</span></span><span class="productnumber"><span class="phrase">15 SP5</span></span> or later.
+          </p></li><li class="listitem"><p>
+            A SAN storage array supporting NVMe-oF over TCP
+          </p></li><li class="listitem"><p>
+            A host system with a BIOS that supports booting from NVMe-oF over
+            TCP. Contact your hardware vendor for information about support for
+            this feature. Booting from NVMe-oF over TCP is currently only
+            supported on UEFI platforms.
+          </p></li></ul></div></section><section class="sect2" id="sec-install-nvme-tcp" data-id-title="Installation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.5.2 </span><span class="title-name">Installation</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-install-nvme-tcp">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To install <span class="productname"><span class="phrase">SLES</span></span> from NVMe-oF over TCP, proceed as
+        follows:
+      </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Use the host system's UEFI setup menus to configure NVMe-oF
+            connections to be established at boot time. Typically, you need to
+            configure both networking (local IP addresses, gateways, etc.) and
+            NVMe-oF targets (remote IP address, subsystem NQN or discovery
+            NQN). Refer to the hardware documentaion for the configuration
+            description. Your hardware vendor may provide means to manage the
+            BIOS configuration centrally and remotely. Please contact your
+            hardware vendor for additional information.
+          </p></li><li class="step"><p>
+            Prepare the installation as described in
+            <span class="intraxref">Book “Deployment Guide”</span>.
+          </p></li><li class="step"><p>
+            Start the system installation using any supported installation
+            method. You do not need to use any specific boot parameters to
+            enable installation on NVMe-oF over TCP.
+          </p></li><li class="step"><p>
+            If the BIOS has been configured correctly, the disk partitioning
+            dialog in YaST will show NVMe namespaces exported by the
+            subsystems configured in the BIOS. They will be displayed as NVMe
+            devices, where the <code class="literal">tcp</code> string indicates that the
+            devices are connected via the TCP transport. Install the operating
+            system (in particular the EFI boot partition and the root file
+            system) on these namespaces.
+          </p></li><li class="step"><p>
+            Complete the installation.
+          </p></li></ol></div></div><p>
+        After installation, the system should boot from NVMe-oF over TCP
+        automatically. If it does not, check if the boot priority is set
+        correctly in the BIOS setup.
+      </p><p>
+        The network interfaces used for booting are named
+        <code class="literal">nbft0</code>, <code class="literal">nbft1</code> and so on. To get
+        information about the NVMe-oF boot, run the command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">nvme nbft show</code></pre></div></section></section><section class="sect1" id="sec-nvmeof-more-information" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.6 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-nvmeof.html#sec-nvmeof-more-information">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_nvmeof.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      For more details about the abilities of the <code class="command">nvme</code>
+      command, refer to <code class="command">nvme nvme-help</code>.
+    </p><p>
+      The following links provide a basic introduction to NVMe and NVMe-oF:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          <a class="link" href="https://nvmexpress.org/" target="_blank">https://nvmexpress.org/</a>
+        </p></li><li class="listitem"><p>
+          <a class="link" href="https://www.nvmexpress.org/wp-content/uploads/NVMe_Over_Fabrics.pdf" target="_blank">https://www.nvmexpress.org/wp-content/uploads/NVMe_Over_Fabrics.pdf</a>
+        </p></li><li class="listitem"><p>
+          <a class="link" href="https://storpool.com/blog/demystifying-what-is-nvmeof" target="_blank">https://storpool.com/blog/demystifying-what-is-nvmeof</a>
+        </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-fcoe.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 16 </span>Fibre Channel storage over Ethernet networks: FCoE</span></a> </div><div><a class="pagination-link next" href="cha-multipath.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 18 </span>Managing multipath I/O for devices</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-nvmeof.html#sec-nvmeof-overview"><span class="title-number">17.1 </span><span class="title-name">Overview</span></a></span></li><li><span class="sect1"><a href="cha-nvmeof.html#sec-nvmeof-host-configuration"><span class="title-number">17.2 </span><span class="title-name">Setting up an NVMe-oF host</span></a></span></li><li><span class="sect1"><a href="cha-nvmeof.html#sec-nvmeof-target-configuration"><span class="title-number">17.3 </span><span class="title-name">Setting up an NVMe-oF target</span></a></span></li><li><span class="sect1"><a href="cha-nvmeof.html#sec-nvmeof-hardware"><span class="title-number">17.4 </span><span class="title-name">Special hardware configuration</span></a></span></li><li><span class="sect1"><a href="cha-nvmeof.html#sec-nvmeof-boot"><span class="title-number">17.5 </span><span class="title-name">Booting from NVMe-oF over TCP</span></a></span></li><li><span class="sect1"><a href="cha-nvmeof.html#sec-nvmeof-more-information"><span class="title-number">17.6 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

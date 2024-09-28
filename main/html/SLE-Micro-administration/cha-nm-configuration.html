@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLE Micro 5.5 | Administration Guide | NetworkManager configuration and usage</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="NetworkManager configuration and usage | SLE Micro 5.5"/>
+<meta name="description" content="NetworkManager is shipped so it can run out of the box, but you might need to reconfigure or restart the tool. This chapter focuses on these tasks."/>
+<meta name="product-name" content="SUSE Linux Enterprise Micro"/>
+<meta name="product-number" content="5.5"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 7. NetworkManager configuration and usage"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="jsindelarova@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Micro 5.5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="NetworkManager configuration and usage | SLE Micro 5.5"/>
+<meta property="og:description" content="NetworkManager is shipped so it can run out of the box, but…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="NetworkManager configuration and usage | SLE Micro 5.5"/>
+<meta name="twitter:description" content="NetworkManager is shipped so it can run out of the box, but…"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "NetworkManager configuration and usage",
+  
+    "description": "NetworkManager is shipped so it can run out of the box, but you might need to reconfigure or restart the tool. This chapter focuses on these tasks.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-nm-vs-wicked.html" title="Chapter 6. NetworkManager and wicked"/><link rel="next" href="part-slemicro-monitoring.html" title="Part III. Monitoring and debugging"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-networking-slemicro.html">Networking</a><span> / </span><a class="crumb" href="cha-nm-configuration.html">NetworkManager configuration and usage</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="preface-administration-slemicro.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-common.html" class="has-children "><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-read-only-filesystem.html" class=" "><span class="title-number">1 </span><span class="title-name">Read-only file system</span></a></li><li><a href="cha-snapshots.html" class=" "><span class="title-number">2 </span><span class="title-name">Snapshots</span></a></li><li><a href="sec-transactional-udate.html" class=" "><span class="title-number">3 </span><span class="title-name">Administration using transactional updates</span></a></li><li><a href="cha-ulp.html" class=" "><span class="title-number">4 </span><span class="title-name">User space live patching</span></a></li></ol></li><li class="active"><a href="part-networking-slemicro.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Networking</span></a><ol><li><a href="cha-network.html" class=" "><span class="title-number">5 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-nm-vs-wicked.html" class=" "><span class="title-number">6 </span><span class="title-name">NetworkManager and <code class="command">wicked</code></span></a></li><li><a href="cha-nm-configuration.html" class=" you-are-here"><span class="title-number">7 </span><span class="title-name">NetworkManager configuration and usage</span></a></li></ol></li><li><a href="part-slemicro-monitoring.html" class="has-children "><span class="title-number">III </span><span class="title-name">Monitoring and debugging</span></a><ol><li><a href="cha-health-checker.html" class=" "><span class="title-number">8 </span><span class="title-name">Health checker</span></a></li><li><a href="cha-admin-toolbox.html" class=" "><span class="title-number">9 </span><span class="title-name"><code class="literal">toolbox</code> for SLE Micro debugging</span></a></li><li><a href="cha-performance-monitoring.html" class=" "><span class="title-number">10 </span><span class="title-name">Monitoring performance</span></a></li></ol></li><li><a href="part-slemicro-troubleshooting.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adm-support-slemicro.html" class=" "><span class="title-number">11 </span><span class="title-name">Gathering system information for support</span></a></li></ol></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-nm-configuration" data-id-title="NetworkManager configuration and usage"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">5.5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">7 </span><span class="title-name">NetworkManager configuration and usage</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    NetworkManager is shipped so it can run out of the box, but you might need to
+    reconfigure or restart the tool. This chapter focuses on these tasks.
+   </p></div></div></div></div><p>
+  NetworkManager stores all network configuration as a connection, which is a collection
+  of data that describes how to create or connect to a network. These
+  connections are stored as files in the
+  <code class="filename">/etc/NetworkManager/system-connections/</code> directory.
+ </p><p>
+  A connection is active when a particular device uses the connection. The
+  device may have more than one connection configured, but only one can be
+  active at a given time. The other connections can be used to fast switch from
+  one connection to another. For example, if the active connection is not
+  available, NetworkManager tries to connect the device to another configured connection.
+ </p><p>
+  To manage connections, use the <code class="command">nmcli</code>, described in the
+  section below.
+ </p><p>
+  To change how NetworkManager behaves, change or add values to the configuration file
+  described in <a class="xref" href="cha-nm-configuration.html#sec-networkmanager-conf" title="7.3. The NetworkManager.conf configuration file">Section 7.3, “The <code class="filename">NetworkManager.conf</code> configuration file”</a>.
+ </p><section class="sect1" id="sec-restart-netmanager" data-id-title="Starting and stopping NetworkManager"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.1 </span><span class="title-name">Starting and stopping NetworkManager</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-restart-netmanager">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   As NetworkManager is a <code class="systemitem">systemd</code> service, you can use common <code class="systemitem">systemd</code> commands to
+   start, stop, or restart NetworkManager.
+  </p><p>
+   To start NetworkManager:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>systemctl start network</pre></div><p>
+   To restart NetworkManager:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>systemctl restart network</pre></div><p>
+   To stop NetworkManager:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>systemctl stop network</pre></div></section><section class="sect1" id="sec-nmcli-interface" data-id-title="The nmcli command"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.2 </span><span class="title-name">The <code class="command">nmcli</code> command</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-nmcli-interface">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   NetworkManager provides a CLI interface to manage your connections. By using the
+   <code class="command">nmcli</code> interface, you can connect to a particular network,
+   edit a connection, edit a device, etc. The generic syntax of the
+   <code class="command">nmcli</code> is as follows:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli <em class="replaceable">OPTIONS</em> <em class="replaceable">SUBCOMMAND</em> <em class="replaceable">SUBCOMMAND_ARGUMENTS</em></pre></div><p>
+   where <em class="replaceable">OPTIONS</em> are described in
+   <a class="xref" href="cha-nm-configuration.html#sec-nmcli-options" title="7.2.1. The nmcli command options">Section 7.2.1, “The <code class="command">nmcli</code> command options”</a> and
+   <em class="replaceable">SUBCOMMAND</em> can be any of the following:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.4.8.5.1"><span class="term"><code class="command">connection</code></span></dt><dd><p>
+      enables you to configure your network connection. For details, 
+      refer to <a class="xref" href="cha-nm-configuration.html#sec-connection-command" title="7.2.2. The connection subcommand">Section 7.2.2, “The <code class="command">connection</code> subcommand”</a>.
+     </p></dd><dt id="id-1.8.4.4.8.5.2"><span class="term"><code class="command">device</code></span></dt><dd><p>
+      For details, refer to <a class="xref" href="cha-nm-configuration.html#sec-device-command" title="7.2.3. The device subcommand">Section 7.2.3, “The <code class="command">device</code> subcommand”</a>.
+     </p></dd><dt id="id-1.8.4.4.8.5.3"><span class="term"><code class="command">general</code></span></dt><dd><p>
+      shows status and permissions. For details refer to
+      <a class="xref" href="cha-nm-configuration.html#sec-general-command" title="7.2.4. The general subcommand">Section 7.2.4, “The <code class="command">general</code> subcommand”</a>.
+     </p></dd><dt id="id-1.8.4.4.8.5.4"><span class="term"><code class="command">monitor</code></span></dt><dd><p>
+      monitors activity of NetworkManager and watches for changes in the state of
+      connectivity and devices. This subcommand does not take any arguments.
+     </p></dd><dt id="id-1.8.4.4.8.5.5"><span class="term"><code class="command">networking</code></span></dt><dd><p>
+      queries the networking status. For details, refer to
+      <a class="xref" href="cha-nm-configuration.html#sec-networking-command" title="7.2.5. The networking subcommand">Section 7.2.5, “The <code class="command">networking</code> subcommand”</a>.
+     </p></dd></dl></div><section class="sect2" id="sec-nmcli-options" data-id-title="The nmcli command options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.1 </span><span class="title-name">The <code class="command">nmcli</code> command options</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-nmcli-options">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Besides the subcommands and their arguments, the <code class="command">nmcli</code>
+    command can take the following options:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.4.8.6.3.1"><span class="term"><code class="option">-a|--ask</code></span></dt><dd><p>
+       the command will stop its run to ask for any missing arguments, for
+       example, for a password to connect to a network.
+      </p></dd><dt id="id-1.8.4.4.8.6.3.2"><span class="term"><code class="option">-c|--color {yes|no|auto}</code></span></dt><dd><p>
+       controls the color output: <code class="literal">yes</code> to enable the colors,
+       <code class="literal">no</code> to disable them, and <code class="literal">auto</code>
+       creates color output only when the standard output is directed to a
+       terminal.
+      </p></dd><dt id="id-1.8.4.4.8.6.3.3"><span class="term"><code class="option">-m|--mode {tabular|multiline}</code></span></dt><dd><p>
+       switches between <code class="literal">table</code> (each line describes a single
+       entry, columns define particular properties of the entry) and
+       <code class="literal">multiline</code> (each entry comprises more lines, each
+       property is on its own line). <code class="literal">tabular</code> is the default
+       value.
+      </p></dd><dt id="id-1.8.4.4.8.6.3.4"><span class="term"><code class="option">-h|--help</code></span></dt><dd><p>
+       prints help.
+      </p></dd><dt id="id-1.8.4.4.8.6.3.5"><span class="term"><code class="option">-w|--wait seconds</code></span></dt><dd><p>
+       sets a time-out period for which to wait for NetworkManager to finish operations.
+       Using this option is recommended for commands that might take longer to
+       complete, for example, connection activation.
+      </p></dd></dl></div></section><section class="sect2" id="sec-connection-command" data-id-title="The connection subcommand"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.2 </span><span class="title-name">The <code class="command">connection</code> subcommand</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-connection-command">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">connection</code> command enables you to manage connections
+    or view any information about particular connections. The <code class="command">nmcli
+    connection</code> provides the following commands to manage your network
+    connections:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.4.8.7.3.1"><span class="term"><code class="command">show</code></span></dt><dd><p>
+       to list connections:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection show</pre></div><p>
+       You can also use this command to show details about a specified
+       connection:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection show <em class="replaceable">CONNECTION_ID</em></pre></div><p>
+       where <em class="replaceable">CONNECTION_ID</em> is any of the
+       identifiers: <span class="emphasis"><em>a connection name, UUID, or a path</em></span>
+      </p></dd><dt id="id-1.8.4.4.8.7.3.2"><span class="term"><code class="command">up</code></span></dt><dd><p>
+       to activate the provided connection. Use the command to reload a
+       connection. Also run this command after you perform any change to the
+       connection.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection up [--active] [<em class="replaceable">CONNECTION_ID</em>]</pre></div><p>
+       When <code class="option">--active</code> is specified, only the active profiles
+       are displayed. The default is to display both active connections and
+       static configuration.
+      </p></dd><dt id="id-1.8.4.4.8.7.3.3"><span class="term"><code class="command">down</code></span></dt><dd><p>
+       to deactivate a connection.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection down <em class="replaceable">CONNECTION_ID</em></pre></div><p>
+       where: <em class="replaceable">CONNECTION_ID</em> is any of the
+       identifiers: <span class="emphasis"><em>a connection name, UUID, or a path</em></span>
+      </p><p>
+       If you deactivate the connection, it will not reconnect later even if it
+       has the <code class="literal">autoconnect</code> flag.
+      </p></dd><dt id="id-1.8.4.4.8.7.3.4"><span class="term"><code class="command">modify</code></span></dt><dd><p>
+       to change or delete a property of a connection.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection modify <em class="replaceable">CONNECTION_ID</em> <em class="replaceable">SETTING.PROPERTY</em> <em class="replaceable">PROPERTY_VALUE</em></pre></div><p>
+       where:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         <em class="replaceable">CONNECTION_ID</em> is any of the identifiers:
+         <span class="emphasis"><em>a connection name, UUID, or a path</em></span>
+        </p></li><li class="listitem"><p>
+         <em class="replaceable">SETTING.PROPERTY</em> is the name of the
+         property, for example, <code class="literal">ipv4.addresses</code>
+        </p></li><li class="listitem"><p>
+         <em class="replaceable">PROPERTY_VALUE</em> is the desired value of
+         <em class="replaceable">SETTING.PROPERTY</em>
+        </p></li></ul></div><p>
+       The following example deactivates the <code class="option">autoconnect</code>
+       option on the <code class="literal">ethernet1</code> connection:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection modify ethernet1 connection.autoconnect no</pre></div></dd><dt id="id-1.8.4.4.8.7.3.5"><span class="term"><code class="command">add</code></span></dt><dd><p>
+       to add a connection with the provided details. The command syntax is
+       similar to the <code class="command">modify</code> command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection add <em class="replaceable">CONNECTION_ID</em> <em class="replaceable">save YES|NO</em> <em class="replaceable">SETTING.PROPERTY</em> <em class="replaceable">PROPERTY_VALUE</em></pre></div><p>
+       You should at least specify a <code class="literal">connection.type</code> or use
+       <code class="literal">type</code>. The following example adds an Ethernet
+       connection tied to the <code class="literal">eth0</code> interface with DHCP, and
+       disables the connection's <code class="option">autoconnect</code> flag:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection add type ethernet autoconnect no ifname eth0</pre></div></dd><dt id="id-1.8.4.4.8.7.3.6"><span class="term"><code class="command">edit</code></span></dt><dd><p>
+       to edit an existing connection using an interactive editor.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection edit <em class="replaceable">CONNECTION_ID</em></pre></div></dd><dt id="id-1.8.4.4.8.7.3.7"><span class="term"><code class="command">clone</code></span></dt><dd><p>
+       to clone an already existing connection. The minimal syntax follows:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection clone <em class="replaceable">CONNECTION_ID</em> <em class="replaceable">NEW_NAME</em></pre></div><p>
+       where <em class="replaceable">CONNECTION_ID</em> is the connection to be
+       cloned.
+      </p></dd><dt id="id-1.8.4.4.8.7.3.8"><span class="term"><code class="command">delete</code></span></dt><dd><p>
+       to delete an existing connection:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection delete <em class="replaceable">CONNECTION_ID</em></pre></div></dd><dt id="id-1.8.4.4.8.7.3.9"><span class="term"><code class="command">monitor</code></span></dt><dd><p>
+       to monitor the provided connection. Each time the connection changes,
+       NetworkManager prints a line.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection monitor <em class="replaceable">CONNECTION_ID</em></pre></div></dd><dt id="id-1.8.4.4.8.7.3.10"><span class="term"><code class="command">reload</code></span></dt><dd><p>
+       to reload all connection files from the disk. As NetworkManager does not monitor
+       changes performed to the connection files, you need to use this command
+       whenever you make changes to the files. This command does not take any
+       further subcommands.
+      </p></dd><dt id="id-1.8.4.4.8.7.3.11"><span class="term"><code class="command">load</code></span></dt><dd><p>
+       to load/reload a particular connection file, run:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli connection load <em class="replaceable">CONNECTION_FILE</em></pre></div></dd></dl></div><p>
+    For details about the abovementioned commands, refer to the
+    <a class="link" href="https://developer-old.gnome.org/NetworkManager/stable/nmcli.html" target="_blank"><code class="command">nmcli</code>
+    documentation</a>.
+   </p></section><section class="sect2" id="sec-device-command" data-id-title="The device subcommand"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.3 </span><span class="title-name">The <code class="command">device</code> subcommand</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-device-command">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">device</code> subcommand enables you to show and manage
+    network interfaces. The <code class="command">nmcli device</code> command recognizes
+    the following commands:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.4.8.8.3.1"><span class="term"><code class="command">status</code></span></dt><dd><p>
+       to print the status of all devices.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device status</pre></div></dd><dt id="id-1.8.4.4.8.8.3.2"><span class="term"><code class="command">show</code></span></dt><dd><p>
+       shows detailed information about a device. If no device is specified,
+       all devices are displayed.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>mcli device show [<em class="replaceable">DEVICE_NAME</em>]</pre></div></dd><dt id="id-1.8.4.4.8.8.3.3"><span class="term"><code class="command">connect</code></span></dt><dd><p>
+       to connect a device. NetworkManager tries to find a suitable connection that will
+       be activated. If there is no compatible connection, a new profile is
+       created.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device connect <em class="replaceable">DEVICE_NAME</em></pre></div></dd><dt id="id-1.8.4.4.8.8.3.4"><span class="term"><code class="command">modify</code></span></dt><dd><p>
+       performs temporary changes to the configuration that is active on the
+       particular device. The changes are not stored in the connection profile.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device modify <em class="replaceable">DEVICE_NAME</em> [+|-] <em class="replaceable">SETTING.PROPERTY</em> <em class="replaceable">VALUE</em></pre></div><p>
+       For possible <em class="replaceable">SETTING.PROPERTY</em> values, refer
+       to <span class="emphasis"><em>nm-settings-nmcli(5)</em></span>.
+      </p><p>
+       The example below starts the IPv4 shared connection sharing on the
+       device <code class="literal">con1</code>.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli dev modify con1 ipv4.method shared</pre></div></dd><dt id="id-1.8.4.4.8.8.3.5"><span class="term"><code class="command">disconnect</code></span></dt><dd><p>
+       disconnects a device and prevents the device from automatically
+       activating further connections without manual intervention.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device disconnect <em class="replaceable">DEVICE_NAME</em></pre></div></dd><dt id="id-1.8.4.4.8.8.3.6"><span class="term"><code class="command">delete</code></span></dt><dd><p>
+       to delete the interface from the system. You can use the command to
+       delete only software devices like bonds and bridges. You cannot delete
+       hardware devices with this command.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device <em class="replaceable">DEVICE_NAME</em></pre></div></dd><dt id="id-1.8.4.4.8.8.3.7"><span class="term"><code class="command">wifi</code></span></dt><dd><p>
+       lists all available access points.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device wifi</pre></div></dd><dt id="id-1.8.4.4.8.8.3.8"><span class="term"><code class="command">wifi connect</code></span></dt><dd><p>
+       connects to a Wi-Fi network specified by its SSID or BSSID. The command
+       takes the following options:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         <code class="option">password</code> - password for secured networks
+        </p></li><li class="listitem"><p>
+         <code class="option">ifname</code> - interface that will be used for activation
+        </p></li><li class="listitem"><p>
+         <code class="option">name</code> - you can give the connection a name
+        </p></li></ul></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device wifi connect <em class="replaceable">SSID</em> [password <em class="replaceable">PASSWORD_VALUE</em>] [ifname <em class="replaceable">INTERFACE_NAME</em>]</pre></div><p>
+       To connect to a Wi-Fi <span class="emphasis"><em>GUESTWiFi</em></span> with a password
+       <code class="literal">pass$word2#@@</code>, run:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli device wifi connect <em class="replaceable">GUESTWiFi</em> password pass$word2#@@</pre></div></dd></dl></div></section><section class="sect2" id="sec-general-command" data-id-title="The general subcommand"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.4 </span><span class="title-name">The <code class="command">general</code> subcommand</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-general-command">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can use this command to view NetworkManager status and permissions, and change the
+    host name and logging level. The <code class="command">nmcli general</code>
+    recognizes the following commands:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.4.8.9.3.1"><span class="term"><code class="command">status</code></span></dt><dd><p>
+       displays the overall status of NetworkManager. Whenever you do not specify a
+       command to the <code class="command">nmcli general</code> command, status is used
+       by default.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli general status</pre></div></dd><dt id="id-1.8.4.4.8.9.3.2"><span class="term"><code class="command">hostname</code></span></dt><dd><p>
+       if you do not provide a new host name as an argument, the current host
+       name is displayed. If you specify a new host name, the value will be
+       used to set a new value.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli general hostname [<em class="replaceable">HOSTNAME</em>]</pre></div><p>
+       For example, to set <code class="literal">MyHostname</code>, run:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli general hostname MyHostname</pre></div></dd><dt id="id-1.8.4.4.8.9.3.3"><span class="term"><code class="command">permissions</code></span></dt><dd><p>
+       shows your permission for NetworkManager operations like enabling or disabling
+       networking, modifying connections, etc.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli general permissions</pre></div></dd><dt id="id-1.8.4.4.8.9.3.4"><span class="term"><code class="command">logging</code></span></dt><dd><p>
+       shows and changes NetworkManager logging levels and domains. Without any
+       arguments, the command displays current logging levels and domains.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli general logging [level <em class="replaceable">LEVEL</em> domains <em class="replaceable">DOMAIN</em>]</pre></div><p>
+       <em class="replaceable">LEVEL</em> is any of the values:
+       <code class="literal">OFF</code>, <code class="literal">ERR</code>, <code class="literal">WARN</code>,
+       <code class="literal">INFO</code>, <code class="literal">DEBUG</code>, or
+       <code class="literal">TRACE</code>.
+      </p><p>
+       <em class="replaceable">DOMAIN</em> is a list of values that can be as
+       follows: <code class="literal">PLATFORM, RFKILL, ETHER, WIFI, BT, MB, DHCP4, DHCP6,
+       PPP, WIFI_SCAN, IP4, IP6, AUTOIP4, DNS, VPN, SHARING, SUPPLICANT,
+       AGENTS, SETTINGS, SUSPEND, CORE, DEVICE, OLPC, WIMAX, INFINIBAND,
+       FIREWALL, ADSL, BOND, VLAN, BRIDGE, DBUS_PROPS, TEAM, CONCHECK, DCB,
+       DISPATCH, AUDIT, SYSTEMD, VPN_PLUGIN, PROXY</code>.
+      </p></dd></dl></div></section><section class="sect2" id="sec-networking-command" data-id-title="The networking subcommand"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.5 </span><span class="title-name">The <code class="command">networking</code> subcommand</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-networking-command">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The subcommand enables you to query the status of the network. Also, by
+    using this command, you can enable or disable networking. The
+    <code class="command">nmcli networking</code> command takes the following commands:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.4.4.8.10.3.1"><span class="term"><code class="command">on/off</code></span></dt><dd><p>
+       enables or disables networking. The <code class="command">off</code> command
+       deactivates all interfaces managed by NetworkManager.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli networking on</pre></div></dd><dt id="id-1.8.4.4.8.10.3.2"><span class="term">connectivity</span></dt><dd><p>
+       displays the network connectivity state. If <code class="option">check</code> is
+       used, NetworkManager performs a new check of the state. Otherwise, the last
+       detected state is displayed.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>nmcli networking connectivity</pre></div><p>
+       Possible states are the following:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         <span class="emphasis"><em>none</em></span> - the host is not connected to any network.
+        </p></li><li class="listitem"><p>
+         <span class="emphasis"><em>portal</em></span> - the host is behind a captive portal and
+         cannot reach the full Internet.
+        </p></li><li class="listitem"><p>
+         <span class="emphasis"><em>limited</em></span> - the host is connected to a network, but
+         it has no access to the Internet.
+        </p></li><li class="listitem"><p>
+         <span class="emphasis"><em>full</em></span> - the host is connected to a network and has
+         full access to the Internet.
+        </p></li><li class="listitem"><p>
+         <span class="emphasis"><em>unknown</em></span> - NetworkManager could not determine the network
+         state.
+        </p></li></ul></div></dd></dl></div></section></section><section class="sect1" id="sec-networkmanager-conf" data-id-title="The NetworkManager.conf configuration file"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.3 </span><span class="title-name">The <code class="filename">NetworkManager.conf</code> configuration file</span></span> <a title="Permalink" class="permalink" href="cha-nm-configuration.html#sec-networkmanager-conf">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_nm_configuration.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The main configuration file for the NetworkManager is
+   <code class="filename">/etc/NetworkManager/NetworkManager.conf</code>. This file can
+   be used to configure the behavior of NetworkManager.
+  </p><p>
+   The file consists of sections of key-value pairs. Each key-value pair must
+   belong to a section. A section starts with a name enclosed in
+   <span class="emphasis"><em>[]</em></span>. Lines beginning with a <span class="emphasis"><em>#</em></span> are
+   considered comments. The minimal configuration needs to include the
+   <code class="literal">[main]</code> section with the <code class="literal">plugins</code> value:
+  </p><div class="verbatim-wrap"><pre class="screen">    [main]
+plugins=keyfile</pre></div><p>
+   The <code class="literal">keyfile</code> plugin supports all the connection types and
+   capabilities of NetworkManager.
+  </p><p>
+   The default configuration file contains the <code class="literal">connectivity</code>
+   section that specifies the URI to check the network connection.
+  </p><p>
+   On SLE Micro, you can also use other sections. For details, refer to
+   <a class="link" href="https://linux.die.net/man/5/networkmanager.conf" target="_blank">networkmanager.conf(5)</a>
+   or
+   <a class="link" href="https://developer-old.gnome.org/NetworkManager/stable/NetworkManager.conf.html" target="_blank">Gnome's
+   developer guide</a>.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-nm-vs-wicked.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>NetworkManager and <code class="command">wicked</code></span></a> </div><div><a class="pagination-link next" href="part-slemicro-monitoring.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part III </span>Monitoring and debugging</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="section"><a href="cha-nm-configuration.html#sec-restart-netmanager"><span class="title-number">7.1 </span><span class="title-name">Starting and stopping NetworkManager</span></a></span></li><li><span class="section"><a href="cha-nm-configuration.html#sec-nmcli-interface"><span class="title-number">7.2 </span><span class="title-name">The <code class="command">nmcli</code> command</span></a></span></li><li><span class="section"><a href="cha-nm-configuration.html#sec-networkmanager-conf"><span class="title-number">7.3 </span><span class="title-name">The <code class="filename">NetworkManager.conf</code> configuration file</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

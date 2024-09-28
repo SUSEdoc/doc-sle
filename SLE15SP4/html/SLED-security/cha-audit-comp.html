@@ -1,0 +1,1531 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP4 | Security and Hardening Guide | Understanding Linux audit</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Understanding Linux audit | SLED 15 SP4"/>
+<meta name="description" content="The Linux audit framework as shipped with this version of SUSE Linux Enterprise Desktop provides a CAPP-compliant (Controlled Access Protection Profi…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 41. Understanding Linux audit"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Understanding Linux audit",
+  
+    "description": "The Linux audit framework as shipped with this version of SUSE Linux Enterprise Desktop provides a CAPP-compliant (Controlled Access Protection Profi…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-27T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-audit.html" title="Part VI. The Linux Audit Framework"/><link rel="next" href="cha-audit-setup.html" title="Chapter 42. Setting up the Linux audit framework"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-audit.html">The Linux Audit Framework</a><span> / </span><a class="crumb" href="cha-audit-comp.html">Understanding Linux audit</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and Compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">29 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">30 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">31 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">32 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">33 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">34 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">35 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">36 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">37 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">38 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">39 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">40 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="active"><a href="part-audit.html" class="has-children you-are-here"><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" you-are-here"><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">42 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">43 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">44 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk05apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-audit-comp" data-id-title="Understanding Linux audit"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    The Linux audit framework as shipped with this version of
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> provides a CAPP-compliant (Controlled Access Protection
+    Profiles) auditing system that reliably collects information about any
+    security-relevant event. The audit records can be examined to determine
+    whether any violation of the security policies has been committed, and
+    by whom.
+   </p><p>
+    Providing an audit framework is an important requirement for a
+    CC-CAPP/EAL (Common Criteria-Controlled Access Protection
+    Profiles/Evaluation Assurance Level) certification. Common Criteria (CC)
+    for Information Technology Security Information is an international
+    standard for independent security evaluations. Common Criteria helps
+    customers judge the security level of any IT product they intend to
+    deploy in mission-critical setups.
+   </p><p>
+    Common Criteria security evaluations have two sets of evaluation
+    requirements, functional and assurance requirements. Functional
+    requirements describe the security attributes of the product under
+    evaluation and are summarized under the Controlled Access Protection
+    Profiles (CAPP). Assurance requirements are summarized under the
+    Evaluation Assurance Level (EAL). EAL describes any activities that must
+    take place for the evaluators to be confident that security attributes
+    are present, effective, and implemented. Examples for activities of this
+    kind include documenting the developers' search for security
+    vulnerabilities, the patch process, and testing.
+   </p><p>
+    This guide provides a basic understanding of how audit works and how it
+    can be set up. For more information about Common Criteria itself, refer
+    to <a class="link" href="https://www.commoncriteriaportal.org/" target="_blank">the Common
+    Criteria Web site</a>.
+   </p></div></div></div></div><p>
+  Linux audit helps make your system more secure by providing you with a
+  means to analyze what is happening on your system in great detail. It does
+  not, however, provide additional security itself—it does not
+  protect your system from code malfunctions or any kind of exploits.
+  Instead, audit is useful for tracking these issues and helps you take
+  additional security measures, like <span class="phrase">AppArmor</span>, to prevent them.
+ </p><p>
+  Audit consists of several components, each contributing crucial
+  functionality to the overall framework. The audit kernel module intercepts
+  the system calls and records the relevant events. The
+  <code class="systemitem">auditd</code> daemon writes the audit
+  reports to disk. Various command line utilities take care of displaying,
+  querying, and archiving the audit trail.
+ </p><p>
+  Audit enables you to do the following:
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.6.1"><span class="term">Associate users with processes</span></dt><dd><p>
+     Audit maps processes to the user ID that started them. This makes it
+     possible for the administrator or security officer to exactly trace
+     which user owns which process and is potentially doing malicious
+     operations on the system.
+    </p><div id="id-1.7.9.3.6.1.2.2" data-id-title="Renaming user IDs" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Renaming user IDs</div><p>
+      Audit does not handle the renaming of UIDs. Therefore avoid renaming
+      UIDs (for example, changing <code class="literal">tux</code> from
+      <code class="literal">uid=1001</code> to <code class="literal">uid=2000</code>) and
+      obsolete UIDs rather than renaming them. Otherwise you would need to
+      change <code class="command">auditctl</code> data (audit rules) and would have
+      problems retrieving old data correctly.
+     </p></div></dd><dt id="id-1.7.9.3.6.2"><span class="term">Review the audit trail</span></dt><dd><p>
+     Linux audit provides tools that write the audit reports to disk and
+     translate them into human readable format.
+    </p></dd><dt id="id-1.7.9.3.6.3"><span class="term">Review particular audit events</span></dt><dd><p>
+     Audit provides a utility that allows you to filter the audit reports
+     for certain events of interest. You can filter for:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       User
+      </p></li><li class="listitem"><p>
+       Group
+      </p></li><li class="listitem"><p>
+       Audit ID
+      </p></li><li class="listitem"><p>
+       Remote Host Name
+      </p></li><li class="listitem"><p>
+       Remote Host Address
+      </p></li><li class="listitem"><p>
+       System Call
+      </p></li><li class="listitem"><p>
+       System Call Arguments
+      </p></li><li class="listitem"><p>
+       File
+      </p></li><li class="listitem"><p>
+       File Operations
+      </p></li><li class="listitem"><p>
+       Success or Failure
+      </p></li></ul></div></dd><dt id="id-1.7.9.3.6.4"><span class="term">Apply a selective audit</span></dt><dd><p>
+     Audit provides the means to filter the audit reports for events of
+     interest and to tune audit to record only selected events. You can
+     create your own set of rules and have the audit daemon record only
+     those of interest to you.
+    </p></dd><dt id="id-1.7.9.3.6.5"><span class="term">Guarantee the availability of the report data</span></dt><dd><p>
+     Audit reports are owned by <code class="systemitem">root</code> and therefore only removable
+     by <code class="systemitem">root</code>. Unauthorized users cannot remove the audit logs.
+    </p></dd><dt id="id-1.7.9.3.6.6"><span class="term">Prevent audit data loss</span></dt><dd><p>
+     If the kernel runs out of memory, the audit daemon's backlog is
+     exceeded, or its rate limit is exceeded, audit can trigger a shutdown
+     of the system to keep events from escaping audit's control. This
+     shutdown would be an immediate halt of the system triggered by the
+     audit kernel component without synchronizing the latest logs to disk.
+     The default configuration is to log a warning to syslog rather than to
+     halt the system.
+    </p><p>
+     If the system runs out of disk space when logging, the audit system can
+     be configured to perform clean shutdown. The default configuration
+     tells the audit daemon to stop logging when it runs out of disk space.
+    </p></dd></dl></div><section class="sect1" id="sec-audit-bigpicture" data-id-title="Introducing the components of Linux audit"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.1 </span><span class="title-name">Introducing the components of Linux audit</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-bigpicture">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.7.9.3.7.2" data-id-title="audispd merged into auditd" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: audispd merged into auditd</div><p>
+    In SUSE Linux Enterprise Server 15 SP4 the code for
+    <code class="systemitem">audispd</code> has
+    been merged into <code class="systemitem">auditd</code>.
+    All <code class="systemitem">audispd</code> configurations
+    are now in <code class="filename">/etc/audit/auditd.conf</code> and
+    <code class="filename">/etc/audit/plugins.d</code>.
+   </p></div><p>
+   The following figure illustrates how the various components of audit
+   interact with each other:
+  </p><div class="figure" id="fig-audit-components"><div class="figure-contents"><div class="mediaobject"><a href="images/audit_components.png"><img src="images/audit_components.png" width="75%" alt="Introducing the components of Linux audit" title="Introducing the components of Linux audit"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 41.1: </span><span class="title-name">Introducing the components of Linux audit </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#fig-audit-components">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div><p>
+   Straight arrows represent the data flow between components while dashed
+   arrows represent lines of control between components.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.7.6.1"><span class="term">auditd</span></dt><dd><p>
+      The audit daemon is responsible for writing the audit messages that
+      were generated through the audit kernel interface and triggered by
+      application and system activity to disk. The way the audit daemon is
+      started is controlled by <code class="systemitem">systemd</code>. The audit system functions
+      (when started) are controlled by
+      <code class="filename">/etc/audit/auditd.conf</code>. For more information
+      about <code class="systemitem">auditd</code> and its
+      configuration, refer to <a class="xref" href="cha-audit-comp.html#sec-audit-auditd" title="41.2. Configuring the audit daemon">Section 41.2, “Configuring the audit daemon”</a>.
+     </p></dd><dt id="id-1.7.9.3.7.6.2"><span class="term"><code class="command">auditctl</code>
+    </span></dt><dd><p>
+      The <code class="command">auditctl</code> utility controls the audit system. It
+      controls the log generation parameters and kernel settings of the
+      audit interface and the rule sets that determine which events
+      are tracked. For more information about <code class="command">auditctl</code>,
+      refer to <a class="xref" href="cha-audit-comp.html#sec-audit-auditctl" title="41.3. Controlling the audit system using auditctl">Section 41.3, “Controlling the audit system using <code class="command">auditctl</code>”</a>.
+     </p></dd><dt id="id-1.7.9.3.7.6.3"><span class="term">audit rules</span></dt><dd><p>
+      The file <code class="filename">/etc/audit/audit.rules</code> contains a
+      sequence of <code class="command">auditctl</code> commands that are loaded at
+      system boot time immediately after the audit daemon is started. For
+      more information about audit rules, refer to
+      <a class="xref" href="cha-audit-comp.html#sec-audit-rules" title="41.4. Passing parameters to the audit system">Section 41.4, “Passing parameters to the audit system”</a>.
+     </p></dd><dt id="id-1.7.9.3.7.6.4"><span class="term">aureport</span></dt><dd><p>
+      The <code class="command">aureport</code> utility allows you to create custom
+      reports from the audit event log. This report generation can easily be
+      scripted, and the output can be used by various other applications,
+      for example, to plot these results. For more information about
+      <code class="command">aureport</code>, refer to
+      <a class="xref" href="cha-audit-comp.html#sec-audit-aureport" title="41.5. Understanding the audit logs and generating reports">Section 41.5, “Understanding the audit logs and generating reports”</a>.
+     </p></dd><dt id="id-1.7.9.3.7.6.5"><span class="term">ausearch</span></dt><dd><p>
+      The <code class="command">ausearch</code> utility can search the audit log file
+      for certain events using various keys or other characteristics of the
+      logged format. For more information about <code class="command">ausearch</code>,
+      refer to <a class="xref" href="cha-audit-comp.html#sec-audit-ausearch" title="41.6. Querying the audit daemon logs with ausearch">Section 41.6, “Querying the audit daemon logs with <code class="command">ausearch</code>”</a>.
+     </p></dd><dt id="id-1.7.9.3.7.6.6"><span class="term">autrace</span></dt><dd><p>
+      The <code class="command">autrace</code> utility traces individual processes in
+      a fashion similar to <code class="command">strace</code>. The output of
+      <code class="command">autrace</code> is logged to the audit log. For more
+      information about <code class="command">autrace</code>, refer to
+      <a class="xref" href="cha-audit-comp.html#sec-audit-autrace" title="41.7. Analyzing processes with autrace">Section 41.7, “Analyzing processes with <code class="command">autrace</code>”</a>.
+     </p></dd><dt id="id-1.7.9.3.7.6.7"><span class="term">aulast</span></dt><dd><p>
+      Prints a list of the last logged-in users, similarly to
+      <code class="command">last</code>. <code class="command">aulast</code> searches back
+      through the audit logs (or the given audit log file) and displays a
+      list of all users logged in and out based on the range of time in the
+      audit logs.
+     </p></dd><dt id="id-1.7.9.3.7.6.8"><span class="term">aulastlog</span></dt><dd><p>
+      Prints the last login for all users of a machine similar to the way
+      <code class="command">lastlog</code> does. The login name, port, and last login
+      time will be printed.
+     </p></dd></dl></div></section><section class="sect1" id="sec-audit-auditd" data-id-title="Configuring the audit daemon"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.2 </span><span class="title-name">Configuring the audit daemon</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-auditd">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Before you can start generating audit logs and processing them,
+   configure the audit daemon itself.
+
+
+   The <code class="filename">/etc/audit/auditd.conf</code> configuration file
+   determines how the audit system functions when the daemon has been
+   started. For most use cases, the default settings shipped with
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> should suffice. For CAPP environments, most of these
+   parameters need tweaking. The following example is the default
+   configuration:
+  </p><div class="example" id="id-1.7.9.3.8.3" data-id-title="Default /etc/audit/auditd.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.1: </span><span class="title-name">Default /etc/audit/auditd.conf </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#id-1.7.9.3.8.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">local_events = yes
+write_logs = yes
+log_file = /var/log/audit/audit.log
+log_group = audit
+log_format = RAW
+flush = INCREMENTAL_ASYNC
+freq = 50
+max_log_file = 8
+num_logs = 5
+priority_boost = 4
+name_format = NONE
+##name = mydomain
+max_log_file_action = ROTATE
+space_left = 75
+space_left_action = SYSLOG
+verify_email = yes
+action_mail_acct = root
+admin_space_left = 50
+admin_space_left_action = SUSPEND
+disk_full_action = SUSPEND
+disk_error_action = SUSPEND
+use_libwrap = yes
+##tcp_listen_port = 60
+tcp_listen_queue = 5
+tcp_max_per_addr = 1
+##tcp_client_ports = 1024-65535
+tcp_client_max_idle = 0
+transport = TCP
+distribute_network = no
+q_depth = 1200
+overflow_action = SYSLOG
+max_restarts = 10
+plugin_dir = /etc/audit/plugins.d
+end_of_event_timeout = 2</pre></div></div></div><p>
+   Refer to <code class="command">man 5 auditd.conf</code> for an explanation of these
+   options.
+  </p><p>
+   Depending on whether you want your environment to satisfy the
+   requirements of CAPP, you need to be extra restrictive when configuring
+   the audit daemon. Where you need to use particular settings to meet the
+   CAPP requirements, a <span class="quote">“<span class="quote">CAPP Environment</span>”</span> note tells you how
+   to adjust the configuration.
+  </p><p>
+   When the daemon configuration in
+   <code class="filename">/etc/audit/auditd.conf</code> is complete, the next step is
+   to focus on controlling the amount of auditing the daemon does, and to
+   assign sufficient resources and limits to the daemon so it can operate
+   smoothly.
+  </p></section><section class="sect1" id="sec-audit-auditctl" data-id-title="Controlling the audit system using auditctl"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.3 </span><span class="title-name">Controlling the audit system using <code class="command">auditctl</code></span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-auditctl">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">auditctl</code> is responsible for controlling the status and
+   some basic system parameters of the audit daemon. It controls the amount
+   of auditing performed on the system. Using audit rules,
+   <code class="command">auditctl</code> controls which components of your system are
+   subjected to the audit and to what extent they are audited. Audit rules
+   can be passed to the audit daemon on the <code class="command">auditctl</code>
+   command line or by composing a rule set and instructing the audit
+   daemon to process this file. By default, the
+   <code class="systemitem">auditd</code> daemon is configured to
+   check for audit rules under <code class="filename">/etc/audit/audit.rules</code>.
+   For more details on audit rules, refer to
+   <a class="xref" href="cha-audit-comp.html#sec-audit-rules" title="41.4. Passing parameters to the audit system">Section 41.4, “Passing parameters to the audit system”</a>.
+  </p><p>
+   The main <code class="command">auditctl</code> commands to control basic audit
+   system parameters are:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <code class="command">auditctl</code> <code class="option">-e</code> to enable or disable
+     audit
+    </p></li><li class="listitem"><p>
+     <code class="command">auditctl</code> <code class="option">-f</code> to control the failure
+     flag
+    </p></li><li class="listitem"><p>
+     <code class="command">auditctl</code> <code class="option">-r</code> to control the rate
+     limit for audit messages
+    </p></li><li class="listitem"><p>
+     <code class="command">auditctl</code> <code class="option">-b</code> to control the backlog
+     limit
+    </p></li><li class="listitem"><p>
+     <code class="command">auditctl</code> <code class="option">-s</code> to query the current
+     status of the audit daemon
+    </p></li><li class="listitem"><p>
+      <code class="command">auditctl</code> <code class="option">-S</code> specifies which system
+      call to audit. Before running <code class="command">auditctl -S</code> on your system,
+      add <code class="option">-F arch=b64</code> to prevent the architecture mismatch
+      warning.
+     </p></li></ul></div><p>
+   The <code class="option">-e</code>, <code class="option">-f</code>, <code class="option">-r</code>, and
+   <code class="option">-b</code> options can also be specified in the
+   <code class="filename">audit.rules</code> file to avoid having to enter them each
+   time the audit daemon is started.
+  </p><p>
+   Any time you query the status of the audit daemon with
+   <code class="command">auditctl</code> <code class="option">-s</code> or change the status flag
+   with <code class="command">auditctl</code>
+   <code class="option">-e<em class="replaceable">FLAG</em></code>, a status message
+   (including information on each of the above-mentioned parameters) is
+   printed. The following example highlights the typical audit status
+   message.
+  </p><div class="example" id="ex-auditctl-status" data-id-title="Example output of auditctl -s"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.2: </span><span class="title-name">Example output of <code class="command">auditctl</code> <code class="option">-s</code> </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-auditctl-status">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">enabled 1
+failure 1
+pid 790
+rate_limit 0
+backlog_limit 64
+lost 0
+backlog 0
+backlog_wait_time 15000
+loginuid_immutable 0 unlocked</pre></div></div></div><div class="table" id="tab-audit-auditctl" data-id-title="Audit status flags"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 41.1: </span><span class="title-name">Audit status flags </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#tab-audit-auditctl">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Flag
+       </p>
+      </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Meaning [Possible Values]
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Command
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="literal">enabled</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Set the enable flag. [0..2] 0=disable, 1=enable, 2=enable and lock
+        down the configuration. Note that this only disables logging syscalls,
+        and other events may still be logged. (See
+        <code class="command">man 3 audit_set_enabled</code> in the
+        <span class="package">audit-devel</span>.)
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">auditctl</code> <code class="option">-e [0|1|2]</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="literal">flag</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Set the failure flag. [0..2] 0=silent, 1=printk, 2=panic (immediate
+        halt without synchronizing pending data to disk)
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">auditctl</code> <code class="option">-f [0|1|2]</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="literal">pid</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Process ID under which
+        <code class="systemitem">auditd</code> is running.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        —
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="literal">rate_limit</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Set a limit in messages per second. If the rate is not zero and is
+        exceeded, the action specified in the failure flag is triggered.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">auditctl</code> <code class="option">-r
+        <em class="replaceable">RATE</em></code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="literal">backlog_limit</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Specify the maximum number of outstanding audit buffers allowed. If
+        all buffers are full, the action specified in the failure flag is
+        triggered.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">auditctl</code> <code class="option">-b
+        <em class="replaceable">BACKLOG</em></code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="literal">lost</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Count the current number of lost audit messages.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        —
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        <code class="literal">backlog</code>
+       </p>
+      </td><td style="border-right: 1px solid ; ">
+       <p>
+        Count the current number of outstanding audit buffers.
+       </p>
+      </td><td>
+       <p>
+        —
+       </p>
+      </td></tr></tbody></table></div></div></section><section class="sect1" id="sec-audit-rules" data-id-title="Passing parameters to the audit system"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.4 </span><span class="title-name">Passing parameters to the audit system</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-rules">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Commands to control the audit system can be invoked individually from the
+   shell using <code class="command">auditctl</code> or batch read from a file using
+   <code class="command">auditctl -</code> <code class="option">R</code>. This latter method is
+   used by the init scripts to load rules from the file
+   <code class="filename">/etc/audit/audit.rules</code> after the audit daemon has
+   been started. The rules are executed in order from top to bottom. Each of
+   these rules would expand to a separate <code class="command">auditctl</code>
+   command. The syntax used in the rules file is the same as that used for
+   the <code class="command">auditctl</code> command.
+  </p><p>
+   Changes made to the running audit system by executing
+   <code class="command">auditctl</code> on the command line are not persistent across
+   system restarts. For changes to persist, add them to the
+   <code class="filename">/etc/audit/audit.rules</code> file and, if they are not
+   currently loaded into audit, restart the audit system to load the
+   modified rule set by using the <code class="command">systemctl restart
+   auditd</code> command.
+  </p><div class="example" id="ex-audit-rules-sysparam" data-id-title="Example audit rules—audit system parameters"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.3: </span><span class="title-name">Example audit rules—audit system parameters </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-audit-rules-sysparam">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">-b 1000<span class="callout" id="co-aurules-b">1</span>
+-f 1<span class="callout" id="co-aurules-f">2</span>
+-r 10<span class="callout" id="co-aurules-r">3</span>
+-e 1<span class="callout" id="co-aurules-e">4</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-b"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Specify the maximum number of outstanding audit buffers. Depending on
+     the level of logging activity, you might need to adjust the number of
+     buffers to avoid causing too heavy an audit load on your system.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-f"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Specify the failure flag to use. See
+     <a class="xref" href="cha-audit-comp.html#tab-audit-auditctl" title="Audit status flags">Table 41.1, “Audit status flags”</a> for possible values.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-r"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Specify the maximum number of messages per second that may be issued by
+     the kernel. See <a class="xref" href="cha-audit-comp.html#tab-audit-auditctl" title="Audit status flags">Table 41.1, “Audit status flags”</a> for details.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-e"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Enable or disable the audit subsystem.
+    </p></td></tr></table></div><p>
+   Using audit, you can track any kind of file system access to important
+   files, configurations or resources. You can add watches on these and
+   assign keys to each kind of watch for better identification in the logs.
+  </p><div class="example" id="ex-audit-rules-fs" data-id-title="Example audit rules—file system auditing"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.4: </span><span class="title-name">Example audit rules—file system auditing </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-audit-rules-fs">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">-w /etc/shadow<span class="callout" id="co-aurules-fs">1</span>
+-w /etc -p rx<span class="callout" id="co-aurules-fsmode">2</span>
+-w /etc/passwd -k fk_passwd -p rwxa<span class="callout" id="co-aurules-fskey">3</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-fs"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The <code class="literal">-w</code> option tells audit to add a watch to the
+      file specified, in this case <code class="filename">/etc/shadow</code>. All
+      system calls requesting access permissions to this file are analyzed.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-fsmode"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      This rule adds a watch to the <code class="filename">/etc</code> directory and
+      applies permission filtering for read and execute access to this
+      directory (<code class="literal">-p rx</code>). Any system call requesting any
+      of these two permissions is analyzed. Only the creation of new files
+      and the deletion of existing ones are logged as directory-related
+      events. To get more specific events for files located under this
+      particular directory, you should add a separate rule for each file. A
+      file must exist before you add a rule containing a watch on it.
+      Auditing files as they are created is not supported.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-fskey"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      This rule adds a file watch to <code class="filename">/etc/passwd</code>.
+      Permission filtering is applied for read, write, execute, and
+      attribute change permissions. The <code class="literal">-k</code> option allows
+      you to specify a key to use to filter the audit logs for this
+      particular event later (for example with <code class="command">ausearch</code>).
+      You may use the same key on different rules to be able to
+      group rules when searching for them. It is also possible to apply
+      multiple keys to a rule.
+     </p></td></tr></table></div></div></div><p>
+   System call auditing lets you track your system's behavior on a level
+   even below the application level. When designing these rules, consider
+   that auditing a great many system calls may increase your system load and
+   cause you to run out of disk space. Consider carefully which events need
+   tracking and how they can be filtered to be even more specific.
+  </p><div class="example" id="ex-audit-rules-syscall" data-id-title="Example audit rules—system call auditing"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.5: </span><span class="title-name">Example audit rules—system call auditing </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-audit-rules-syscall">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">-a exit,always -S mkdir<span class="callout" id="co-aurules-scalladd">1</span>
+-a exit,always -S access -F a1=4<span class="callout" id="co-aurules-scallfilter">2</span>
+-a exit,always -S ipc -F a0=2<span class="callout" id="co-aurules-scallipc">3</span>
+-a exit,always -S open -F success!=0<span class="callout" id="co-aurules-scalls">4</span>
+-a task,always -F auid=0<span class="callout" id="co-aurules-scalltask">5</span>
+-a task,always -F uid=0 -F auid=501 -F gid=wheel<span class="callout" id="co-aurules-scallsu">6</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scalladd"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule activates auditing for the <code class="systemitem">mkdir</code>
+     system call. The <code class="literal">-a</code> option adds system call rules.
+     This rule triggers an event whenever the <code class="systemitem">mkdir</code>
+     system call is entered (<code class="literal">exit</code>,
+     <code class="literal">always</code>). The <code class="literal">-S</code> option specifies
+     the system call to which this rule should be applied.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scallfilter"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule adds auditing to the access system call, but only if the
+     second argument of the system call (<code class="literal">mode</code>) is
+     <code class="literal">4</code> (<code class="literal">R_OK</code>).
+     <code class="literal">exit,always</code> tells audit to add an audit context to
+     this system call when entering it, and to write out a report when
+     it gets audited.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scallipc"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule adds an audit context to the IPC multiplexed system call. The
+     specific <code class="literal">ipc</code> system call is passed as the first
+     syscall argument and can be selected using <code class="option">-F
+     a0=<em class="replaceable">IPC_CALL_NUMBER</em></code>.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scalls"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule audits failed attempts to call open.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scalltask"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule is an example of a task rule (keyword:
+     <code class="literal">task</code>). It is different from the other rules above in
+     that it applies to processes that are forked or cloned. To filter these
+     kind of events, you can only use fields that are known at fork time,
+     such as UID, GID, and AUID. This example rule filters for all tasks
+     carrying an audit ID of <code class="literal">0</code>.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scallsu"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This last rule makes heavy use of filters. All filter options are
+     combined with a logical AND operator, meaning that this rule applies to
+     all tasks that carry the audit ID of <code class="literal">501</code>, run as
+     <code class="systemitem">root</code>, and have <code class="literal">wheel</code> as the group. A
+     process is given an audit ID on user login. This ID is then handed down
+     to any child process started by the initial process of the user. Even
+     if the user changes their identity, the audit ID stays the same and
+     allows tracing actions to the original user.
+    </p></td></tr></table></div><div id="id-1.7.9.3.10.11" data-id-title="Filtering system call arguments" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Filtering system call arguments</div><p>
+    For more details on filtering system call arguments, refer to
+    <a class="xref" href="cha-audit-scenarios.html#sec-audit-scenipc" title="43.6. Filtering system call arguments">Section 43.6, “Filtering system call arguments”</a>.
+   </p></div><p>
+   You cannot only add rules to the audit system, but also remove them.
+   There are different methods for deleting the entire rule set at once or
+   for deleting system call rules or file and directory watches:
+  </p><div class="example" id="ex-audit-ruledel" data-id-title="Deleting audit rules and events"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.6: </span><span class="title-name">Deleting audit rules and events </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-audit-ruledel">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">-D<span class="callout" id="co-aurules-d">1</span>
+-d exit,always -S mkdir<span class="callout" id="co-aurules-scalldel">2</span>
+-W /etc<span class="callout" id="co-aurules-fsdel">3</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-d"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Clear the queue of audit rules and delete any preexisting rules. This
+     rule is used as the first rule in
+     <code class="filename">/etc/audit/audit.rules</code> files to make sure that the
+     rules that are about to be added do not clash with any preexisting
+     ones. The <code class="command">auditctl</code> <code class="option">-D</code> command is
+     also used before doing an <code class="command">autrace</code> to avoid having
+     the trace rules clash with any rules present in the
+     <code class="filename">audit.rules</code> file.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-scalldel"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule deletes a system call rule. The <code class="literal">-d</code> option
+     must precede any system call rule that needs to be deleted from the
+     rule queue, and must match exactly.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-aurules-fsdel"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     This rule tells audit to discard the rule with the directory watch on
+     <code class="filename">/etc</code> from the rules queue. This rule deletes any
+     rule containing a directory watch on <code class="filename">/etc</code>,
+     regardless of any permission filtering or key options.
+    </p></td></tr></table></div><p>
+   To get an overview of which rules are currently in use in your audit
+   setup, run <code class="command">auditctl</code> <code class="option">-l</code>. This command
+   displays all rules with one rule per line.
+  </p><div class="example" id="id-1.7.9.3.10.16" data-id-title="Listing rules with auditctl -l"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.7: </span><span class="title-name">Listing rules with <code class="command">auditctl</code> <code class="option">-l</code> </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#id-1.7.9.3.10.16">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">exit,always watch=/etc perm=rx
+exit,always watch=/etc/passwd perm=rwxa key=fk_passwd
+exit,always watch=/etc/shadow perm=rwxa
+exit,always syscall=mkdir
+exit,always a1=4 (0x4) syscall=access
+exit,always a0=2 (0x2) syscall=ipc
+exit,always success!=0 syscall=open</pre></div></div></div><div id="id-1.7.9.3.10.17" data-id-title="Creating filter rules" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Creating filter rules</div><p>
+    You can build very sophisticated audit rules by using the various filter
+    options. Refer to the <code class="command">auditctl(8)</code> man page for more
+    information about the options available for building audit filter rules,
+    and audit rules in general.
+   </p></div></section><section class="sect1" id="sec-audit-aureport" data-id-title="Understanding the audit logs and generating reports"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.5 </span><span class="title-name">Understanding the audit logs and generating reports</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-aureport">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To understand what the <code class="command">aureport</code> utility does, it is
+   vital to know how the logs generated by the audit daemon are structured,
+   and what exactly is recorded for an event. Only then can you decide which
+   report types are most appropriate for your needs.
+  </p><section class="sect2" id="sec-audit-aureport-ustand" data-id-title="Understanding the audit logs"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">41.5.1 </span><span class="title-name">Understanding the audit logs</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-aureport-ustand">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following examples highlight two typical events that are logged by
+    audit and how their trails in the audit log are read. The audit log or
+    logs (if log rotation is enabled) are stored in the
+    <code class="filename">/var/log/audit</code> directory.
+   </p><p>
+     The logs record two types of information: record types and event
+     fields. The record types are identified by <code class="literal">type=</code> in
+     each log entry. Event fields are all other items on the left side of
+     the equals signs. In the following examples,
+     <code class="literal">type=SYSCALL</code> and <code class="literal">type=CWD</code>are
+     record types, and <code class="literal">arch=c000003e</code> and
+     <code class="literal">syscall=2</code> are event fields, followed by their values.
+   </p><p>
+     Refer to the <code class="filename">/usr/include/libaudit.h</code> file (from the
+     <span class="package">audit-devel</span> package) to see
+     a complete list of record types and their definitions.
+   </p><p>
+     Run the <code class="command">ausyscall --dump</code> command to see a table of
+     syscall numbers, and what they represent:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ausyscall --dump
+Using x86_64 syscall table:
+0       read
+1       write
+2       open
+3       close
+4       stat
+5       fstat
+[...]</pre></div><p>
+    The first example is a simple <code class="command">less</code> command. The second
+    example covers a great deal of PAM activity in the logs when a user tries
+    to remotely log in to a machine running audit.
+   </p><div class="example" id="ex-audit-aureport-logtrail" data-id-title="A simple audit event—viewing the audit log"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.8: </span><span class="title-name">A simple audit event—viewing the audit log </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-audit-aureport-logtrail">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">type=SYSCALL msg=audit(1234874638.599:5207): arch=c000003e syscall=2
+success=yes exit=4 a0=62fb60 a1=0 a2=31 a3=0 items=1 ppid=25400 pid
+=25616 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0
+tty=pts1 ses=1164 comm="less" exe="/usr/bin/less" key="doc_log"
+type=CWD msg=audit(1234874638.599:5207):  cwd="/root"
+type=PATH msg=audit(1234874638.599:5207): item=0 name="/var/log/audit/
+audit.log" inode=1219041 dev=08:06 mode=0100644 ouid=0 ogid=0 rdev=00:00</pre></div></div></div><p>
+    The above event, a simple <code class="command">less
+    /var/log/audit/audit.log</code>, wrote three messages to the log. All
+    of them are closely linked together and you would not be able to make
+    sense of one of them without the others. The first message reveals the
+    following information:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.11.3.10.1"><span class="term"><code class="literal">type</code>
+     </span></dt><dd><p>
+       The type of event recorded. In this case, it assigns the
+       <code class="literal">SYSCALL</code> type to an event triggered by a system
+       call. The <code class="literal">CWD</code> event was recorded to record the
+       current working directory at the time of the syscall. A
+       <code class="literal">PATH</code> event is generated for each path passed to
+       the system call. The open system call takes only one path argument,
+       so only generates one <code class="literal">PATH</code> event. It is important
+       to understand that the <code class="literal">PATH</code> event reports the path
+       name string argument without any further interpretation, so a
+       relative path requires manual combination with the path reported by
+       the <code class="literal">CWD</code> event to determine the object accessed.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.2"><span class="term"><code class="literal">msg</code>
+     </span></dt><dd><p>
+       A message ID enclosed in brackets. The ID splits into two parts. All
+       characters before the <code class="literal">:</code> represent a Unix epoch
+       time stamp. The number after the colon represents the actual event
+       ID. All events that are logged from one application's system call
+       have the same event ID. If the application makes a second system
+       call, it gets another event ID.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.3"><span class="term"><code class="literal">arch</code>
+     </span></dt><dd><p>
+       References the CPU architecture of the system call. Decode this
+       information using the <code class="option">-i</code> option on any of your
+       <code class="command">ausearch</code> commands when searching the logs.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.4"><span class="term"><code class="literal">syscall</code>
+     </span></dt><dd><p>
+       The type of system call as it would have been printed by an <code class="command">strace</code> on
+       this particular system call. This data is taken from the list of
+       system calls under <code class="filename">/usr/include/asm/unistd.h</code> and
+       may vary depending on the architecture. In this case,
+       <code class="literal">syscall=2</code> refers to the open system call (see
+       <code class="command">man open(2)</code>) invoked by the less application.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.5"><span class="term"><code class="literal">success</code>
+     </span></dt><dd><p>
+       Whether the system call succeeded or failed.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.6"><span class="term"><code class="literal">exit</code>
+     </span></dt><dd><p>
+       The exit value returned by the system call. For the
+       <code class="command">open</code> system call used in this example, this is the
+       file descriptor number. This varies by system call.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.7"><span class="term"><code class="literal">a0</code> to <code class="literal">a3</code>
+     </span></dt><dd><p>
+       The first four arguments to the system call in numeric form. The
+       values of these are system call dependent. In this example (an
+       <code class="command">open</code> system call), the following are used:
+      </p><div class="verbatim-wrap"><pre class="screen">a0=62fb60 a1=8000 a2=31 a3=0</pre></div><p>
+       <code class="literal">a0</code> is the start address of the passed path name.
+       <code class="literal">a1</code> is the flags. <code class="literal">8000</code> in hex
+       notation translates to <code class="literal">100000</code> in octal notation,
+       which in turn translates to <code class="literal">O_LARGEFILE</code>.
+       <code class="literal">a2</code> is the mode, which, because
+       <code class="literal">O_CREAT</code> was not specified, is unused.
+       
+       <code class="literal">a3</code> is not passed by the <code class="command">open</code>
+       system call. Check the manual page of the relevant system call to
+       find out which arguments are used with it.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.8"><span class="term"><code class="literal">items</code>
+     </span></dt><dd><p>
+       The number of strings passed to the application.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.9"><span class="term"><code class="literal">ppid</code>
+     </span></dt><dd><p>
+       The process ID of the parent of the process analyzed.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.10"><span class="term"><code class="literal">pid</code>
+     </span></dt><dd><p>
+       The process ID of the process analyzed.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.11"><span class="term"><code class="literal">auid</code>
+     </span></dt><dd><p>
+       The audit ID. A process is given an audit ID on user login. This ID
+       is then handed down to any child process started by the initial
+       process of the user. Even if the user changes their identity (for
+       example, becomes <code class="systemitem">root</code>), the audit ID stays the same. Thus
+       you can always trace actions to the original user who logged in.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.12"><span class="term"><code class="literal">uid</code>
+     </span></dt><dd><p>
+       The user ID of the user who started the process. In this case,
+       <code class="literal">0</code> for <code class="systemitem">root</code>.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.13"><span class="term"><code class="literal">gid</code>
+     </span></dt><dd><p>
+       The group ID of the user who started the process. In this case,
+       <code class="literal">0</code> for <code class="systemitem">root</code>.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.14"><span class="term"><code class="literal">euid</code>, <code class="literal">suid</code>, <code class="literal">fsuid</code>
+     </span></dt><dd><p>
+       Effective user ID, set user ID, and file system user ID of the user
+       that started the process.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.15"><span class="term"><code class="literal">egid</code>, <code class="literal">sgid</code>, <code class="literal">fsgid</code>
+     </span></dt><dd><p>
+       Effective group ID, set group ID, and file system group ID of the
+       user that started the process.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.16"><span class="term"><code class="literal">tty</code>
+     </span></dt><dd><p>
+       The terminal from which the application was started. In this case, a
+       pseudo-terminal used in an SSH session.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.17"><span class="term"><code class="literal">ses</code>
+     </span></dt><dd><p>
+       The login session ID. This process attribute is set when a user logs
+       in and can tie any process to a particular user login.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.18"><span class="term"><code class="literal">comm</code>
+     </span></dt><dd><p>
+       The application name under which it appears in the task list.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.19"><span class="term"><code class="literal">exe</code>
+     </span></dt><dd><p>
+       The resolved path name to the binary program.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.20"><span class="term"><code class="literal">subj</code>
+     </span></dt><dd><p>
+       <code class="systemitem">auditd</code> records whether the
+       process is subject to any security context, such as <span class="phrase">AppArmor</span>.
+       <code class="literal">unconstrained</code>, as in this case, means that the
+       process is not confined with <span class="phrase">AppArmor</span>. If the process had been
+       confined, the binary path name plus the <span class="phrase">AppArmor</span> profile mode would
+       have been logged.
+      </p></dd><dt id="id-1.7.9.3.11.3.10.21"><span class="term"><code class="literal">key</code>
+     </span></dt><dd><p>
+       If you are auditing many directories or files, assign
+       key strings to each of these watches. You can use these keys with
+       <code class="command">ausearch</code> to search the logs for events of this
+       type only.
+      </p></dd></dl></div><p>
+    The second message triggered by the example <code class="command">less</code> call
+    does not reveal anything apart from the current working directory when
+    the <code class="command">less</code> command was executed.
+   </p><p>
+    The third message reveals the following (the <code class="literal">type</code> and
+    <code class="literal">message</code> flags have already been introduced):
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.11.3.13.1"><span class="term"><code class="literal">item</code>
+     </span></dt><dd><p>
+       In this example, <code class="literal">item</code> references the
+       <code class="literal">a0</code> argument—a path—that is
+       associated with the original <code class="literal">SYSCALL</code> message. Had
+       the original call had more than one path argument (such as a
+       <code class="command">cp</code> or <code class="command">mv</code> command), an
+       additional <code class="literal">PATH</code> event would have been logged for
+       the second path argument.
+      </p></dd><dt id="id-1.7.9.3.11.3.13.2"><span class="term"><code class="literal">name</code>
+     </span></dt><dd><p>
+       Refers to the path name passed as an argument to the open system
+       call.
+      </p></dd><dt id="id-1.7.9.3.11.3.13.3"><span class="term"><code class="literal">inode</code>
+     </span></dt><dd><p>
+       Refers to the inode number corresponding to <code class="literal">name</code>.
+      </p></dd><dt id="id-1.7.9.3.11.3.13.4"><span class="term"><code class="literal">dev</code>
+     </span></dt><dd><p>
+       Specifies the device on which the file is stored. In this case,
+       <code class="literal">08:06</code>, which stands for
+       <code class="literal">/dev/sda1</code> or <span class="quote">“<span class="quote">first partition on the first
+       IDE device.</span>”</span>
+      </p></dd><dt id="id-1.7.9.3.11.3.13.5"><span class="term"><code class="literal">mode</code>
+     </span></dt><dd><p>
+       Numerical representation of the file's access permissions. In this
+       case, <code class="systemitem">root</code> has read and write permissions and their group
+       (<code class="systemitem">root</code>) has read access while the entire rest of the world
+       cannot access the file.
+      </p></dd><dt id="id-1.7.9.3.11.3.13.6"><span class="term"><code class="literal">ouid</code> and <code class="literal">ogid</code>
+     </span></dt><dd><p>
+       Refer to the UID and GID of the inode itself.
+      </p></dd><dt id="id-1.7.9.3.11.3.13.7"><span class="term"><code class="literal">rdev</code>
+     </span></dt><dd><p>
+       Not applicable for this example. The <code class="literal">rdev</code> entry
+       only applies to block or character devices, not to files.
+      </p></dd></dl></div><p>
+    <a class="xref" href="cha-audit-comp.html#ex-audit-aureport-sshd" title="An advanced audit event—login via SSH">Example 41.9, “An advanced audit event—login via SSH”</a> highlights the audit events
+    triggered by an incoming SSH connection. Most of the messages are
+    related to the PAM stack and reflect the different stages of the SSH PAM
+    process. Several of the audit messages carry nested PAM messages in them
+    that signify that a particular stage of the PAM process has been
+    reached. Although the PAM messages are logged by audit, audit assigns
+    its own message type to each event:
+   </p><div class="example" id="ex-audit-aureport-sshd" data-id-title="An advanced audit event—login via SSH"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.9: </span><span class="title-name">An advanced audit event—login via SSH </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#ex-audit-aureport-sshd">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">type=USER_AUTH msg=audit(1234877011.791:7731): user pid=26127 uid=0 <span class="callout" id="co-audit-sshd-auth">1</span>
+auid=4294967295 ses=4294967295 msg='op=PAM:authentication acct="root" exe="/usr/sbin/sshd"
+(hostname=jupiter.example.com, addr=192.168.2.100, terminal=ssh res=success)'
+type=USER_ACCT msg=audit(1234877011.795:7732): user pid=26127 uid=0 <span class="callout" id="co-audit-sshd-acct">2</span>
+auid=4294967295 ses=4294967295 msg='op=PAM:accounting acct="root" exe="/usr/sbin/sshd"
+(hostname=jupiter.example.com, addr=192.168.2.100, terminal=ssh res=success)'
+type=CRED_ACQ msg=audit(1234877011.799:7733): user pid=26125 uid=0 <span class="callout" id="co-audit-sshd-acq">3</span>
+auid=4294967295 ses=4294967295 msg='op=PAM:setcred acct="root" exe="/usr/sbin/sshd"
+(hostname=jupiter.example.com, addr=192.168.2.100, terminal=/dev/pts/0 res=success)'
+type=LOGIN msg=audit(1234877011.799:7734): login pid=26125 uid=0
+old auid=4294967295 new auid=0 old ses=4294967295 new ses=1172
+type=USER_START msg=audit(1234877011.799:7735): user pid=26125 uid=0 <span class="callout" id="co-audit-sshd-start">4</span>
+auid=0 ses=1172 msg='op=PAM:session_open acct="root" exe="/usr/sbin/sshd"
+(hostname=jupiter.example.com, addr=192.168.2.100, terminal=/dev/pts/0 res=success)'
+type=USER_LOGIN msg=audit(1234877011.823:7736): user pid=26128 uid=0 <span class="callout" id="co-audit-sshd-login">5</span>
+auid=0 ses=1172 msg='uid=0: exe="/usr/sbin/sshd"
+(hostname=jupiter.example.com, addr=192.168.2.100, terminal=/dev/pts/0 res=success)'
+type=CRED_REFR msg=audit(1234877011.828:7737): user pid=26128 uid=0 <span class="callout" id="co-audit-sshd-refr">6</span>
+auid=0 ses=1172 msg='op=PAM:setcred acct="root" exe="/usr/sbin/sshd"
+(hostname=jupiter.example.com, addr=192.168.2.100, terminal=/dev/pts/0 res=success)'</pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-audit-sshd-auth"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      PAM reports that is has successfully requested user authentication for
+      <code class="systemitem">root</code> from a remote host (jupiter.example.com, 192.168.2.100). The
+      terminal where this is happening is <code class="literal">ssh</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-audit-sshd-acct"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      PAM reports that it has successfully determined whether the user is
+      authorized to log in.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-audit-sshd-acq"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      PAM reports that the appropriate credentials to log in have been
+      acquired and that the terminal changed to a normal terminal
+      (<code class="literal">/dev/pts0</code>).
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-audit-sshd-start"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      PAM reports that it has successfully opened a session for
+      <code class="systemitem">root</code>.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-audit-sshd-login"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The user has successfully logged in. This event is the one used by
+      <code class="command">aureport</code> <code class="option">-l</code> to report about user
+      logins.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-audit-sshd-refr"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      PAM reports that the credentials have been successfully reacquired.
+     </p></td></tr></table></div></section><section class="sect2" id="sec-audit-aureport-gen" data-id-title="Generating custom audit reports"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">41.5.2 </span><span class="title-name">Generating custom audit reports</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-aureport-gen">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The raw audit reports stored in the <code class="filename">/var/log/audit</code>
+    directory tend to become very bulky and hard to understand. To more
+    easily find relevant messages, use the <code class="command">aureport</code>
+    utility and create custom reports.
+   </p><p>
+    The following use cases highlight a few of the possible report types
+    that you can generate with <code class="command">aureport</code>:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.11.4.4.1"><span class="term">Read audit logs from another file</span></dt><dd><p>
+       When the audit logs have moved to another machine or when you want to
+       analyze the logs of several machines on your local machine
+       without wanting to connect to each of these individually, move the
+       logs to a local file and have <code class="command">aureport</code> analyze
+       them locally:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -if myfile</code>
+
+Summary Report
+======================
+Range of time in logs: 03/02/09 14:13:38.225 - 17/02/09 14:52:27.971
+Selected time for report: 03/02/09 14:13:38 - 17/02/09 14:52:27.971
+Number of changes in configuration: 13
+Number of changes to accounts, groups, or roles: 0
+Number of logins: 6
+Number of failed logins: 13
+Number of authentications: 7
+Number of failed authentications: 573
+Number of users: 1
+Number of terminals: 9
+Number of host names: 4
+Number of executables: 17
+Number of files: 279
+Number of AVC's: 0
+Number of MAC events: 0
+Number of failed syscalls: 994
+Number of anomaly events: 0
+Number of responses to anomaly events: 0
+Number of crypto events: 0
+Number of keys: 2
+Number of process IDs: 1211
+Number of events: 5320</pre></div><p>
+       The above command, <code class="command">aureport</code> without any arguments,
+       provides only the standard general summary report generated from the
+       logs contained in <code class="filename">myfile</code>. To create more
+       detailed reports, combine the <code class="option">-if</code> option with any of
+       the options below. For example, generate a login report that is
+       limited to a certain time frame:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -l -ts 14:00 -te 15:00 -if myfile</code>
+
+Login Report
+============================================
+# date time auid host term exe success event
+============================================
+1. 17/02/09 14:21:09 root: 192.168.2.100 sshd /usr/sbin/sshd no 7718
+2. 17/02/09 14:21:15 0 jupiter /dev/pts/3 /usr/sbin/sshd yes 7724</pre></div></dd><dt id="id-1.7.9.3.11.4.4.2"><span class="term">Convert numeric entities to text</span></dt><dd><p>
+       Some information, such as user IDs, are printed in numeric form. To
+       convert these into a human-readable text format, add the
+       <code class="option">-i</code> option to your <code class="command">aureport</code>
+       command.
+      </p></dd><dt id="id-1.7.9.3.11.4.4.3"><span class="term">Create a rough summary report</span></dt><dd><p>
+       If you are interested in the current audit statistics (events,
+       logins, processes, etc.), run <code class="command">aureport</code> without any
+       other option.
+      </p></dd><dt id="id-1.7.9.3.11.4.4.4"><span class="term">Create a summary report of failed events</span></dt><dd><p>
+       If you want to break down the overall statistics of plain
+       <code class="command">aureport</code> to the statistics of failed events, use
+       <code class="command">aureport</code> <code class="option">--failed</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport --failed</code>
+
+Failed Summary Report
+======================
+Range of time in logs: 03/02/09 14:13:38.225 - 17/02/09 14:57:35.183
+Selected time for report: 03/02/09 14:13:38 - 17/02/09 14:57:35.183
+Number of changes in configuration: 0
+Number of changes to accounts, groups, or roles: 0
+Number of logins: 0
+Number of failed logins: 13
+Number of authentications: 0
+Number of failed authentications: 574
+Number of users: 1
+Number of terminals: 5
+Number of host names: 4
+Number of executables: 11
+Number of files: 77
+Number of AVC's: 0
+Number of MAC events: 0
+Number of failed syscalls: 994
+Number of anomaly events: 0
+Number of responses to anomaly events: 0
+Number of crypto events: 0
+Number of keys: 2
+Number of process IDs: 708
+Number of events: 1583</pre></div></dd><dt id="id-1.7.9.3.11.4.4.5"><span class="term">Create a summary report of successful events</span></dt><dd><p>
+       If you want to break down the overall statistics of a plain
+       <code class="command">aureport</code> to the statistics of successful events,
+       use <code class="command">aureport</code> <code class="option">--success</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport --success</code>
+
+Success Summary Report
+======================
+Range of time in logs: 03/02/09 14:13:38.225 - 17/02/09 15:00:01.535
+Selected time for report: 03/02/09 14:13:38 - 17/02/09 15:00:01.535
+Number of changes in configuration: 13
+Number of changes to accounts, groups, or roles: 0
+Number of logins: 6
+Number of failed logins: 0
+Number of authentications: 7
+Number of failed authentications: 0
+Number of users: 1
+Number of terminals: 7
+Number of host names: 3
+Number of executables: 16
+Number of files: 215
+Number of AVC's: 0
+Number of MAC events: 0
+Number of failed syscalls: 0
+Number of anomaly events: 0
+Number of responses to anomaly events: 0
+Number of crypto events: 0
+Number of keys: 2
+Number of process IDs: 558
+Number of events: 3739</pre></div></dd><dt id="id-1.7.9.3.11.4.4.6"><span class="term">Create summary reports</span></dt><dd><p>
+       In addition to the dedicated summary reports (main summary and failed
+       and success summary), use the <code class="option">--summary</code> option with
+       most of the other options to create summary reports for a particular
+       area of interest only. Not all reports support this option, however.
+       This example creates a summary report for user login events:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -u -i --summary</code>
+
+User Summary Report
+===========================
+total  auid
+===========================
+5640  root
+13  tux
+3  wilber</pre></div></dd><dt id="id-1.7.9.3.11.4.4.7"><span class="term">Create a report of events</span></dt><dd><p>
+       To get an overview of the events logged by audit, use the
+       <code class="command">aureport</code> <code class="option">-e</code> command. This command
+       generates a numbered list of all events including date, time, event
+       number, event type, and audit ID.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -e -ts 14:00 -te 14:21
+
+Event Report
+===================================
+# date time event type auid success
+===================================
+1. 17/02/09 14:20:27 7462 DAEMON_START 0 yes
+2. 17/02/09 14:20:27 7715 CONFIG_CHANGE 0 yes
+3. 17/02/09 14:20:57 7716 USER_END 0 yes
+4. 17/02/09 14:20:57 7717 CRED_DISP 0 yes
+5. 17/02/09 14:21:09 7718 USER_LOGIN -1 no
+6. 17/02/09 14:21:15 7719 USER_AUTH -1 yes
+7. 17/02/09 14:21:15 7720 USER_ACCT -1 yes
+8. 17/02/09 14:21:15 7721 CRED_ACQ -1 yes
+9. 17/02/09 14:21:15 7722 LOGIN 0 yes
+10. 17/02/09 14:21:15 7723 USER_START 0 yes
+11. 17/02/09 14:21:15 7724 USER_LOGIN 0 yes
+12. 17/02/09 14:21:15 7725 CRED_REFR 0 yes</pre></div></dd><dt id="id-1.7.9.3.11.4.4.8"><span class="term">Create a report from all process events</span></dt><dd><p>
+       To analyze the log from a process's point of view, use the
+       <code class="command">aureport</code> <code class="option">-p</code> command. This command
+       generates a numbered list of all process events including date, time,
+       process ID, name of the executable, system call, audit ID, and event
+       number.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="command">aureport -p</code>
+
+Process ID Report
+======================================
+# date time pid exe syscall auid event
+======================================
+1. 13/02/09 15:30:01 32742 /usr/sbin/cron 0 0 35
+2. 13/02/09 15:30:01 32742 /usr/sbin/cron 0 0 36
+3. 13/02/09 15:38:34 32734 /usr/lib/gdm/gdm-session-worker 0 -1 37</pre></div></dd><dt id="id-1.7.9.3.11.4.4.9"><span class="term">Create a report from all system call events</span></dt><dd><p>
+       To analyze the audit log from a system call's point of view, use the
+       <code class="command">aureport</code> <code class="option">-s</code> command. This command
+       generates a numbered list of all system call events including date,
+       time, number of the system call, process ID, name of the command that
+       used this call, audit ID, and event number.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -s</code>
+
+Syscall Report
+=======================================
+# date time syscall pid comm auid event
+=======================================
+1. 16/02/09 17:45:01 2 20343 cron -1 2279
+2. 16/02/09 17:45:02 83 20350 mktemp 0 2284
+3. 16/02/09 17:45:02 83 20351 mkdir 0 2285</pre></div></dd><dt id="id-1.7.9.3.11.4.4.10"><span class="term">Create a report from all executable events</span></dt><dd><p>
+       To analyze the audit log from an executable's point of view, use the
+       <code class="command">aureport</code> <code class="option">-x</code> command. This command
+       generates a numbered list of all executable events including date,
+       time, name of the executable, the terminal it is run in, the host
+       executing it, the audit ID, and event number.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="command">aureport -x</code>
+
+Executable Report
+====================================
+# date time exe term host auid event
+====================================
+1. 13/02/09 15:08:26 /usr/sbin/sshd sshd 192.168.2.100 -1 12
+2. 13/02/09 15:08:28 /usr/lib/gdm/gdm-session-worker :0 ? -1 13
+3. 13/02/09 15:08:28 /usr/sbin/sshd ssh 192.168.2.100 -1 14</pre></div></dd><dt id="id-1.7.9.3.11.4.4.11"><span class="term">Create a report about files</span></dt><dd><p>
+       To generate a report from the audit log that focuses on file access,
+       use the <code class="command">aureport</code> <code class="option">-f</code> command. This
+       command generates a numbered list of all file-related events
+       including date, time, name of the accessed file, number of the system
+       call accessing it, success or failure of the command, the executable
+       accessing the file, audit ID, and event number.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -f</code>
+
+File Report
+===============================================
+# date time file syscall success exe auid event
+===============================================
+1. 16/02/09 17:45:01 /etc/shadow 2 yes /usr/sbin/cron -1 2279
+2. 16/02/09 17:45:02 /tmp/ 83 yes /bin/mktemp 0 2284
+3. 16/02/09 17:45:02 /var 83 no /bin/mkdir 0 2285</pre></div></dd><dt id="id-1.7.9.3.11.4.4.12"><span class="term">Create a report about users</span></dt><dd><p>
+       To generate a report from the audit log that illustrates which users
+       are running what executables on your system, use the
+       <code class="command">aureport</code> <code class="option">-u</code> command. This command
+       generates a numbered list of all user-related events including date,
+       time, audit ID, terminal used, host, name of the executable, and an
+       event ID.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="command">aureport -u</code>
+
+User ID Report
+====================================
+# date time auid term host exe event
+====================================
+1. 13/02/09 15:08:26 -1 sshd 192.168.2.100 /usr/sbin/sshd 12
+2. 13/02/09 15:08:28 -1 :0 ? /usr/lib/gdm/gdm-session-worker 13
+3. 14/02/09 08:25:39 -1 ssh 192.168.2.101 /usr/sbin/sshd 14</pre></div></dd><dt id="id-1.7.9.3.11.4.4.13"><span class="term">Create a report about logins</span></dt><dd><p>
+       To create a report that focuses on login attempts to your machine,
+       run the <code class="command">aureport</code> <code class="option">-l</code> command. This
+       command generates a numbered list of all login-related events
+       including date, time, audit ID, host and terminal used, name of the
+       executable, success or failure of the attempt, and an event ID.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -l -i</code>
+
+Login Report
+============================================
+# date time auid host term exe success event
+============================================
+1. 13/02/09 15:08:31 tux: 192.168.2.100 sshd /usr/sbin/sshd no 19
+2. 16/02/09 12:39:05 root: 192.168.2.101 sshd /usr/sbin/sshd no 2108
+3. 17/02/09 15:29:07 geeko: ? tty3 /bin/login yes 7809</pre></div></dd><dt id="id-1.7.9.3.11.4.4.14"><span class="term">Limit a report to a certain time frame</span></dt><dd><p>
+       To analyze the logs for a particular time frame, such as only the
+       working hours of Feb 16, 2009, first find out whether this data is
+       contained in the current <code class="filename">audit.log</code> or whether
+       the logs have been rotated in by running <code class="command">aureport</code>
+       <code class="option">-t</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="command">aureport -t</code>
+
+Log Time Range Report
+=====================
+/var/log/audit/audit.log: 03/02/09 14:13:38.225 - 17/02/09 15:30:01.636</pre></div><p>
+       The current <code class="filename">audit.log</code> contains all the desired
+       data. Otherwise, use the <code class="option">-if</code> option to point the
+       <code class="command">aureport</code> commands to the log file that contains
+       the needed data.
+      </p><p>
+       Then, specify the start date and time and the end date and time of
+       the desired time frame and combine it with the report option needed.
+       This example focuses on login attempts:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -ts 02/16/09 8:00 -te 02/16/09 18:00 -l</code>
+
+Login Report
+============================================
+# date time auid host term exe success event
+============================================
+1. 16/02/09 12:39:05 root: 192.168.2.100 sshd /usr/sbin/sshd no 2108
+2. 16/02/09 12:39:12 0 192.168.2.100 /dev/pts/1 /usr/sbin/sshd yes 2114
+3. 16/02/09 13:09:28 root: 192.168.2.100 sshd /usr/sbin/sshd no 2131
+4. 16/02/09 13:09:32 root: 192.168.2.100 sshd /usr/sbin/sshd no 2133
+5. 16/02/09 13:09:37 0 192.168.2.100 /dev/pts/2 /usr/sbin/sshd yes 2139</pre></div><p>
+       The start date and time are specified with the <code class="option">-ts</code>
+       option. Any event that has a time stamp equal to or after your given
+       start time appears in the report. If you omit the date,
+       <code class="command">aureport</code> assumes that you meant
+       <span class="emphasis"><em>today</em></span>. If you omit the time, it assumes that the
+       start time should be midnight of the date specified.
+
+
+      </p><p>
+       Specify the end date and time with the <code class="option">-te</code> option.
+       Any event that has a time stamp equal to or before your given event
+       time appears in the report. If you omit the date,
+       <code class="command">aureport</code> assumes that you meant today. If you omit
+       the time, it assumes that the end time should be now. Use the same
+       format for the date and time as for <code class="option">-ts</code>.
+      </p></dd></dl></div><p>
+    All reports except the summary ones are printed in column format and
+    sent to STDOUT, which means that this data can be written to other
+    commands very easily. The visualization scripts introduced in
+    <a class="xref" href="cha-audit-comp.html#sec-audit-auviz" title="41.8. Visualizing audit data">Section 41.8, “Visualizing audit data”</a> are examples of how to further process
+    the data generated by audit.
+   </p></section></section><section class="sect1" id="sec-audit-ausearch" data-id-title="Querying the audit daemon logs with ausearch"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.6 </span><span class="title-name">Querying the audit daemon logs with <code class="command">ausearch</code></span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-ausearch">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <code class="command">aureport</code> tool helps you to create overall
+   summaries of what is happening on the system, but if you are interested
+   in the details of a particular event, <code class="command">ausearch</code> is the
+   tool to use.
+  </p><p>
+   <code class="command">ausearch</code> allows you to search the audit logs using
+   special keys and search phrases that relate to most of the flags that
+   appear in event messages in
+   <code class="filename">/var/log/audit/audit.log</code>. Not all record types
+   contain the same search phrases. There are no <code class="literal">hostname</code>
+   or <code class="literal">uid</code> entries in a <code class="literal">PATH</code> record,
+   for example.
+  </p><p>
+   When searching, make sure that you choose appropriate search criteria to
+   catch all records you need. On the other hand, you could be searching for
+   a specific type of record and still get various other related records
+   along with it. This is caused by different parts of the kernel
+   contributing additional records for events that are related to the one to
+   find. For example, you would always get a <code class="literal">PATH</code> record
+   along with the <code class="literal">SYSCALL</code> record for an
+   <code class="command">open</code> system call.
+  </p><div id="id-1.7.9.3.12.5" data-id-title="Using multiple search options" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Using multiple search options</div><p>
+    Any of the command line options can be combined with logical AND
+    operators to narrow down your search.
+   </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.12.6.1"><span class="term">Read audit logs from another file</span></dt><dd><p>
+      When the audit logs have moved to another machine or when you want to
+      analyze the logs of several machines on your local machine without
+      wanting to connect to each of these individually, move the logs to a
+      local file and have <code class="command">ausearch</code> search them locally:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ausearch -</code> <em class="replaceable">option</em> -if <em class="replaceable">myfile</em></pre></div></dd><dt id="id-1.7.9.3.12.6.2"><span class="term">Convert numeric results into text</span></dt><dd><p>
+      Some information, such as user IDs are printed in numeric form. To
+      convert these into human readable text format, add the
+      <code class="option">-i</code> option to your <code class="command">ausearch</code>
+      command.
+     </p></dd><dt id="id-1.7.9.3.12.6.3"><span class="term">Search by audit event ID</span></dt><dd><p>
+      If you have previously run an audit report or done an
+      <code class="command">autrace</code>, you should analyze the trail of a
+      particular event in the log. Most of the report types described in
+      <a class="xref" href="cha-audit-comp.html#sec-audit-aureport" title="41.5. Understanding the audit logs and generating reports">Section 41.5, “Understanding the audit logs and generating reports”</a> include audit event IDs in their
+      output. An audit event ID is the second part of an audit message ID,
+      which consists of a Unix epoch time stamp and the audit event ID
+      separated by a colon. All events that are logged from one
+      application's system call have the same event ID. Use this event ID
+      with <code class="command">ausearch</code> to retrieve this event's trail from
+      the log.
+     </p><p>
+      Use a command similar to the following:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ausearch -a 5207</code>
+----
+time-&gt;Tue Feb 17 13:43:58 2009
+type=PATH msg=audit(1234874638.599:5207): item=0 name="/var/log/audit/audit.log" inode=1219041 dev=08:06 mode=0100644 ouid=0 ogid=0 rdev=00:00
+type=CWD msg=audit(1234874638.599:5207):  cwd="/root"
+type=SYSCALL msg=audit(1234874638.599:5207): arch=c000003e syscall=2 success=yes exit=4 a0=62fb60 a1=0 a2=31 a3=0 items=1 ppid=25400 pid=25616 auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=1164 comm="less" exe="/usr/bin/less" key="doc_log"</pre></div><p>
+      The <code class="command">ausearch</code> <code class="option">-a</code> command grabs all
+      records in the logs that are related to the audit event ID provided
+      and displays them. This option can be combined with any other option.
+     </p></dd><dt id="id-1.7.9.3.12.6.4"><span class="term">Search by message type</span></dt><dd><p>
+      To search for audit records of a particular message type, use the
+      <code class="command">ausearch</code> <code class="option">-m
+      <em class="replaceable">MESSAGE_TYPE</em></code> command. Examples of
+      valid message types include <code class="literal">PATH</code>,
+      <code class="literal">SYSCALL</code>, and <code class="literal">USER_LOGIN</code>. Running
+      <code class="command">ausearch</code> <code class="option">-m</code> without a message type
+      displays a list of all message types.
+     </p></dd><dt id="id-1.7.9.3.12.6.5"><span class="term">Search by login ID</span></dt><dd><p>
+      To view records associated with a particular login user ID, use the
+      <code class="command">ausearch</code> <code class="option">-ul</code> command. It displays
+      any records related to the user login ID specified provided that user
+      had been able to log in successfully.
+     </p></dd><dt id="id-1.7.9.3.12.6.6"><span class="term">Search by user ID</span></dt><dd><p>
+      View records related to any of the user IDs (both user ID and
+      effective user ID) with <code class="command">ausearch</code>
+      <code class="option">-ua</code>. View reports related to a particular user ID
+      with <code class="command">ausearch</code> <code class="option">-ui
+      <em class="replaceable">UID</em></code>. Search for records related to
+      a particular effective user ID, use the <code class="command">ausearch</code>
+      <code class="option">-ue <em class="replaceable">EUID</em></code>. Searching for a
+      user ID means the user ID of the user creating a process. Searching
+      for an effective user ID means the user ID and privileges that are
+      required to run this process.
+     </p></dd><dt id="id-1.7.9.3.12.6.7"><span class="term">Search by group ID</span></dt><dd><p>
+      View records related to any of the group IDs (both group ID and
+      effective group ID) with the <code class="command">ausearch</code>
+      <code class="option">-ga</code> command. View reports related to a particular
+      user ID with <code class="command">ausearch</code> <code class="option">-gi
+      <em class="replaceable">GID</em></code>. Search for records related to
+      a particular effective group ID, use <code class="command">ausearch</code>
+      <code class="option">-ge <em class="replaceable">EGID</em></code>.
+     </p></dd><dt id="id-1.7.9.3.12.6.8"><span class="term">Search by command line name</span></dt><dd><p>
+      View records related to a certain command, using the
+      <code class="command">ausearch</code> <code class="option">-c
+      <em class="replaceable">COMM_NAME</em></code> command, for example,
+      <code class="command">ausearch</code> <code class="option">-c less</code> for all records
+      related to the <code class="command">less</code> command.
+     </p></dd><dt id="id-1.7.9.3.12.6.9"><span class="term">Search by executable name</span></dt><dd><p>
+      View records related to a certain executable with the
+      <code class="command">ausearch</code> <code class="option">-x
+      <em class="replaceable">EXE</em></code> command, for example
+      <code class="command">ausearch</code> <code class="option">-x /usr/bin/less</code> for all
+      records related to the <code class="command">/usr/bin/less</code> executable.
+     </p></dd><dt id="id-1.7.9.3.12.6.10"><span class="term">Search by system call name</span></dt><dd><p>
+      View records related to a certain system call with the
+      <code class="command">ausearch</code> <code class="option">-sc
+      <em class="replaceable">SYSCALL</em></code> command, for example,
+      <code class="command">ausearch -sc open</code> for all records related to the
+      <code class="command">open</code> system call.
+     </p></dd><dt id="id-1.7.9.3.12.6.11"><span class="term">Search by process ID</span></dt><dd><p>
+      View records related to a certain process ID with the
+      <code class="command">ausearch</code> <code class="option">-p
+      <em class="replaceable">PID</em></code> command, for example
+      <code class="command">ausearch</code> <code class="option">-p 13368</code> for all records
+      related to this process ID.
+     </p></dd><dt id="id-1.7.9.3.12.6.12"><span class="term">Search by event or system call success value</span></dt><dd><p>
+      View records containing a certain system call success value with
+      <code class="command">ausearch</code> <code class="option">-sv
+      <em class="replaceable">SUCCESS_VALUE</em></code>, for example,
+      <code class="command">ausearch</code> <code class="option">-sv yes</code> for all
+      successful system calls.
+     </p></dd><dt id="id-1.7.9.3.12.6.13"><span class="term">Search by file name</span></dt><dd><p>
+      View records containing a certain file name with
+      <code class="command">ausearch</code> <code class="option">-f
+      <em class="replaceable">FILE_NAME</em></code>, for example,
+      <code class="command">ausearch</code> <code class="option">-f /foo/bar</code> for all
+      records related to the <code class="filename">/foo/bar</code> file. Using the
+      file name alone would work as well, but using relative paths does not
+      work.
+     </p></dd><dt id="id-1.7.9.3.12.6.14"><span class="term">Search by terminal</span></dt><dd><p>
+      View records of events related to a certain terminal only with
+      <code class="command">ausearch</code> <code class="option">-tm
+      <em class="replaceable">TERM</em></code>, for example,
+      <code class="command">ausearch</code> <code class="option">-tm ssh</code> to view all
+      records related to events on the SSH terminal and
+      <code class="command">ausearch</code> <code class="option">-tm tty</code> to view all
+      events related to the console.
+     </p></dd><dt id="id-1.7.9.3.12.6.15"><span class="term">Search by host name</span></dt><dd><p>
+      View records related to a certain remote host name with
+      <code class="command">ausearch</code> <code class="option">-hn
+      <em class="replaceable">HOSTNAME</em></code>, for example,
+      <code class="command">ausearch</code> <code class="option">-hn jupiter.example.com</code>. You can
+      use a host name, fully qualified domain name, or numeric network
+      address.
+     </p></dd><dt id="id-1.7.9.3.12.6.16"><span class="term">Search by key field</span></dt><dd><p>
+      View records that contain a certain key assigned in the audit rule set
+      to identify events of a particular type. Use the
+      <code class="command">ausearch</code> <code class="option">-k
+      <em class="replaceable">KEY_FIELD</em></code>, for example,
+      <code class="command">ausearch</code> <code class="option">-k CFG_etc</code> to display any
+      records containing the <code class="literal">CFG_etc</code> key.
+     </p></dd><dt id="id-1.7.9.3.12.6.17"><span class="term">Search by word</span></dt><dd><p>
+      View records that contain a certain string assigned in the audit rule
+      set to identify events of a particular type. The whole string will be
+      matched on file name, host name, and terminal. Use the
+      <code class="command">ausearch</code> <code class="option">-w
+      <em class="replaceable">WORD</em></code>.
+     </p></dd><dt id="id-1.7.9.3.12.6.18"><span class="term">Limit a search to a certain time frame</span></dt><dd><p>
+      Use <code class="option">-ts</code> and <code class="option">-te</code> to limit the scope
+      of your searches to a certain time frame. The <code class="option">-ts</code>
+      option is used to specify the start date and time and the
+      <code class="option">-te</code> option is used to specify the end date and time.
+      These options can be combined with any of the above. The use of these
+      options is similar to use with <code class="command">aureport</code>.
+     </p></dd></dl></div></section><section class="sect1" id="sec-audit-autrace" data-id-title="Analyzing processes with autrace"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.7 </span><span class="title-name">Analyzing processes with <code class="command">autrace</code></span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-autrace">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   In addition to monitoring your system using the rules you set up, you can
+   also perform dedicated audits of individual processes using the
+   <code class="command">autrace</code> command. <code class="command">autrace</code> works
+   similarly to the <code class="command">strace</code> command, but gathers slightly
+   different information. The output of <code class="command">autrace</code> is
+   written to <code class="filename">/var/log/audit/audit.log</code> and does not
+   look any different from the standard audit log entries.
+  </p><p>
+   When performing an <code class="command">autrace</code> on a process, make sure
+   that any audit rules are purged from the queue to avoid these rules
+   clashing with the ones <code class="command">autrace</code> adds itself. Delete the
+   audit rules with the <code class="command">auditctl</code> <code class="option">-D</code>
+   command. This stops all normal auditing.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">auditctl -D</code>
+
+No rules
+
+<code class="command">autrace /usr/bin/less</code>
+
+Waiting to execute: /usr/bin/less
+Cleaning up...
+No rules
+Trace complete. You can locate the records with 'ausearch -i -p 7642'</pre></div><p>
+   Always use the full path to the executable to track with
+   <code class="command">autrace</code>. After the trace is complete,
+   <code class="command">autrace</code> provides the event ID of the trace, so you can
+   analyze the entire data trail with <code class="command">ausearch</code>. To
+   restore the audit system to use the audit rule set again, restart the
+   audit daemon with <code class="command">systemctl restart auditd</code>.
+  </p></section><section class="sect1" id="sec-audit-auviz" data-id-title="Visualizing audit data"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.8 </span><span class="title-name">Visualizing audit data</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-auviz">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Neither the data trail in <code class="filename">/var/log/audit/audit.log</code>
+   nor the different report types generated by <code class="command">aureport</code>,
+   described in <a class="xref" href="cha-audit-comp.html#sec-audit-aureport-gen" title="41.5.2. Generating custom audit reports">Section 41.5.2, “Generating custom audit reports”</a>, provide an
+   intuitive reading experience to the user. The <code class="command">aureport</code>
+   output is formatted in columns and thus easily available to any sed,
+   Perl, or awk scripts that users might connect to the audit framework to
+   visualize the audit data.
+  </p><p>
+   The visualization scripts (see <a class="xref" href="cha-audit-setup.html#sec-audit-viz" title="42.6. Configuring log visualization">Section 42.6, “Configuring log visualization”</a>) are one
+   example of how to use standard Linux tools available with
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> or any other Linux distribution to create easy-to-read
+   audit output. The following examples help you understand how the plain
+   audit reports can be transformed into human readable graphics.
+  </p><p>
+   The first example illustrates the relationship of programs and system
+   calls. To get to this kind of data, you need to determine the appropriate
+   <code class="command">aureport</code> command that delivers the source data from
+   which to generate the final graphic:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">aureport -s -i</code>
+
+Syscall Report
+=======================================
+# date time syscall pid comm auid event
+=======================================
+1. 16/02/09 17:45:01 open 20343 cron unset 2279
+2. 16/02/09 17:45:02 mkdir 20350 mktemp root 2284
+3. 16/02/09 17:45:02 mkdir 20351 mkdir root 2285
+...</pre></div><p>
+   The first thing that the visualization script needs to do on this report
+   is to extract only those columns that are of interest, in this example,
+   the <code class="literal">syscall</code> and the <code class="literal">comm</code> columns.
+   The output is sorted and duplicates removed then the final output is
+   written into the visualization program itself:
+  </p><div class="verbatim-wrap"><pre class="screen">LC_ALL=C aureport -s -i | awk '/^[0-9]/ { print $6" "$4 }' | sort | uniq | mkgraph</pre></div><div class="figure" id="fig-audit-mkgraph"><div class="figure-contents"><div class="mediaobject"><a href="images/audit_mkgraph.png"><img src="images/audit_mkgraph.png" width="75%" alt="Flow graph—program versus system call relationship" title="Flow graph—program versus system call relationship"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 41.2: </span><span class="title-name">Flow graph—program versus system call relationship </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#fig-audit-mkgraph">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div><p>
+   The second example illustrates the different types of events and how many
+   of each type have been logged. The appropriate
+   <code class="command">aureport</code> command to extract this kind of information
+   is <code class="command">aureport -e</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -e -i --summary
+
+Event Summary Report
+======================
+total  type
+======================
+2434  SYSCALL
+816  USER_START
+816  USER_ACCT
+814  CRED_ACQ
+810  LOGIN
+806  CRED_DISP
+779  USER_END
+99  CONFIG_CHANGE
+52  USER_LOGIN</pre></div><p>
+   Because this type of report already contains a two column output, it is
+   only fed into the visualization script and transformed into a bar chart.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> aureport -e -i --summary  | mkbar events</pre></div><div class="figure" id="fig-audit-mkbar"><div class="figure-contents"><div class="mediaobject"><a href="images/audit_mkbar.png"><img src="images/audit_mkbar.png" width="75%" alt="Bar chart—common event types" title="Bar chart—common event types"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 41.3: </span><span class="title-name">Bar chart—common event types </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#fig-audit-mkbar">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div><p>
+   For background information about the visualization of audit data, refer
+   to the Web site of the audit project at
+   <a class="link" href="http://people.redhat.com/sgrubb/audit/visualize/index.html" target="_blank">http://people.redhat.com/sgrubb/audit/visualize/index.html</a>.
+  </p></section><section class="sect1" id="sec-audit-audisp" data-id-title="Relaying audit event notifications"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">41.9 </span><span class="title-name">Relaying audit event notifications</span></span> <a title="Permalink" class="permalink" href="cha-audit-comp.html#sec-audit-audisp">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The auditing system also allows external applications to access and
+   use the <code class="systemitem">auditd</code> daemon in real
+   time. This feature is provided by so called <span class="emphasis"><em>audit
+   dispatcher</em></span> which allows, for example, intrusion detection
+   systems to use <code class="systemitem">auditd</code> to receive
+   enhanced detection information.
+  </p><p>
+   The configuration of <code class="systemitem">auditd</code> is
+   stored in <code class="filename">/etc/audit/auditd.conf</code>. The file includes
+   the following options:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.15.4.1"><span class="term"><code class="literal">q_depth</code>
+    </span></dt><dd><p>
+      Specifies the size of the event dispatcher internal queue. If syslog
+      complains about audit events getting dropped, increase this value.
+      Default is 250.
+     </p></dd><dt id="id-1.7.9.3.15.4.2"><span class="term"><code class="literal">overflow_action</code>
+    </span></dt><dd><p>
+      Specifies the way the audit daemon will react to the internal queue
+      overflow. Possible values are <code class="option">ignore</code> (nothing
+      happens), <code class="option">syslog</code> (issues a warning to syslog),
+      <code class="option">suspend</code> (stop processing events),
+      <code class="option">single</code> (the computer system will be put in single
+      user mode), or <code class="option">halt</code> (shuts the system down).
+     </p></dd><dt id="id-1.7.9.3.15.4.3"><span class="term"><code class="literal">priority_boost</code>
+    </span></dt><dd><p>
+      Specifies the priority for the audit event dispatcher (in addition to
+      the audit daemon priority itself). Default is 4 which means no change
+      in priority.
+     </p></dd><dt id="id-1.7.9.3.15.4.4"><span class="term"><code class="literal">name_format</code>
+    </span></dt><dd><p>
+      Specifies the way the computer node name is inserted into the audit
+      event. Possible values are <code class="option">none</code> (no computer name is
+      inserted), <code class="option">hostname</code> (name returned by the
+      <code class="systemitem">gethostname</code> system call),
+      <code class="option">fqd</code> (fully qualified domain name of the machine),
+      <code class="option">numeric</code> (IP address of the machine), or
+      <code class="option">user</code> (user defined string from the
+      <code class="option">name</code> option). Default is <code class="option">none</code>.
+     </p></dd><dt id="id-1.7.9.3.15.4.5"><span class="term"><code class="literal">name</code>
+    </span></dt><dd><p>
+      Specifies a user-defined string which identifies the machine. The
+      <code class="option">name_format</code> option must be set to
+      <code class="option">user</code>, otherwise this option is ignored.
+     </p></dd><dt id="id-1.7.9.3.15.4.6"><span class="term"><code class="literal">max_restarts</code>
+    </span></dt><dd><p>
+      A non-negative number that tells the audit event dispatcher how many
+      times it can try to restart a crashed plug-in. The default is 10.
+     </p></dd></dl></div><div class="example" id="id-1.7.9.3.15.5" data-id-title="Example /etc/audit/auditd.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.10: </span><span class="title-name">Example /etc/audit/auditd.conf </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#id-1.7.9.3.15.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">  q_depth = 250
+  overflow_action = SYSLOG
+  priority_boost = 4
+  name_format = HOSTNAME
+  #name = mydomain</pre></div></div></div><p>
+   The plug-in programs install their configuration files in a special
+   directory, <code class="filename">/etc/audit/plugins.d</code>.
+   The plug-in configuration files have the following options:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.9.3.15.7.1"><span class="term"><code class="literal">active</code>
+    </span></dt><dd><p>
+      Specifies if the program will use
+      <code class="systemitem">auditd</code>. Possible values are
+      <code class="option">yes</code> or <code class="option">no</code>.
+     </p></dd><dt id="id-1.7.9.3.15.7.2"><span class="term"><code class="literal">direction</code>
+    </span></dt><dd><p>
+      Specifies the way the plug-in was designed to communicate with audit.
+      It informs the event dispatcher in which directions the events flow.
+      Possible values are <code class="option">in</code> or <code class="option">out</code>.
+     </p></dd><dt id="id-1.7.9.3.15.7.3"><span class="term"><code class="literal">path</code>
+    </span></dt><dd><p>
+      Specifies the absolute path to the plug-in executable. In case of
+      internal plug-ins, this option specifies the plug-in name.
+     </p></dd><dt id="id-1.7.9.3.15.7.4"><span class="term"><code class="literal">type</code>
+    </span></dt><dd><p>
+      Specifies the way the plug-in is to be run. Possible values are
+      <code class="option">builtin</code> or <code class="option">always</code>. Use
+      <code class="option">builtin</code> for internal plug-ins
+      (<code class="literal">af_unix</code> and <code class="literal">syslog</code>) and
+      <code class="option">always</code> for most (if not all) other plug-ins. Default
+      is <code class="option">always</code>.
+     </p></dd><dt id="id-1.7.9.3.15.7.5"><span class="term"><code class="literal">args</code>
+    </span></dt><dd><p>
+      Specifies the argument that is passed to the plug-in program.
+      Normally, plug-in programs read their arguments from their
+      configuration file and do not need to receive any arguments. There is
+      a limit of two arguments.
+     </p></dd><dt id="id-1.7.9.3.15.7.6"><span class="term"><code class="literal">format</code>
+    </span></dt><dd><p>
+      Specifies the format of data that the audit dispatcher passes to the
+      plug-in program. Valid options are <code class="option">binary</code> or
+      <code class="option">string</code>. <code class="option">binary</code> passes the data
+      exactly as the event dispatcher receives them from the audit daemon.
+      <code class="option">string</code> instructs the dispatcher to change the event
+      into a string that is parseable by the audit parsing library. Default
+      is <code class="option">string</code>.
+     </p></dd></dl></div><div class="example" id="id-1.7.9.3.15.8" data-id-title="Example /etc/audit/plugins.d/syslog.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 41.11: </span><span class="title-name">Example /etc/audit/plugins.d/syslog.conf </span></span><a title="Permalink" class="permalink" href="cha-audit-comp.html#id-1.7.9.3.15.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/audit_components.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">  active = no
+  direction = out
+  path = /sbin/audisp-syslog
+  type = builtin
+  args = LOG_INFO
+  format = string</pre></div></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-audit.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part VI </span>The Linux Audit Framework</span></a> </div><div><a class="pagination-link next" href="cha-audit-setup.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 42 </span>Setting up the Linux audit framework</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-bigpicture"><span class="title-number">41.1 </span><span class="title-name">Introducing the components of Linux audit</span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-auditd"><span class="title-number">41.2 </span><span class="title-name">Configuring the audit daemon</span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-auditctl"><span class="title-number">41.3 </span><span class="title-name">Controlling the audit system using <code class="command">auditctl</code></span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-rules"><span class="title-number">41.4 </span><span class="title-name">Passing parameters to the audit system</span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-aureport"><span class="title-number">41.5 </span><span class="title-name">Understanding the audit logs and generating reports</span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-ausearch"><span class="title-number">41.6 </span><span class="title-name">Querying the audit daemon logs with <code class="command">ausearch</code></span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-autrace"><span class="title-number">41.7 </span><span class="title-name">Analyzing processes with <code class="command">autrace</code></span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-auviz"><span class="title-number">41.8 </span><span class="title-name">Visualizing audit data</span></a></span></li><li><span class="sect1"><a href="cha-audit-comp.html#sec-audit-audisp"><span class="title-number">41.9 </span><span class="title-name">Relaying audit event notifications</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

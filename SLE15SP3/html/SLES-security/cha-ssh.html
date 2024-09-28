@@ -1,0 +1,1190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP3 | Security and Hardening Guide | Securing network operations with OpenSSH</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Securing network operations with OpenSSH | SLES 15 SP3"/>
+<meta name="description" content="OpenSSH is the SSH (secure shell) implementation that ships with SUSE Linux Enterprise Server, for securing network operations such as remote adminis…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP3"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 22. Securing network operations with OpenSSH"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Securing network operations with OpenSSH",
+  
+    "description": "OpenSSH is the SSH (secure shell) implementation that ships with SUSE Linux Enterprise Server, for securing network operations such as remote adminis…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-27T00:00+02:00",
+      
+    "datePublished": "2021-06-22T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-xauth.html" title="Chapter 21. X Window System and X authentication"/><link rel="next" href="cha-security-firewall.html" title="Chapter 23. Masquerading and firewalls"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-network-security.html">Network security</a><span> / </span><a class="crumb" href="cha-ssh.html">Securing network operations with OpenSSH</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li class="active"><a href="part-network-security.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" you-are-here"><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and Compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li><li><a href="cha-security-pci-dss.html" class=" "><span class="title-number">29 </span><span class="title-name">Payment Card Industry Data Security Standard (PCI DSS)</span></a></li><li><a href="cha-security-stig.html" class=" "><span class="title-number">30 </span><span class="title-name">Hardening SUSE Linux Enterprise with STIG</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">31 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">32 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">33 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">34 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">35 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">36 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">37 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">38 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">39 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">40 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">42 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-selinux.html" class="has-children "><span class="title-number">VI </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">43 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VII </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">44 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">45 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">46 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">47 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-ssh" data-id-title="Securing network operations with OpenSSH"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    OpenSSH is the SSH (secure shell) implementation that ships with SUSE Linux Enterprise Server,
+    for securing network operations such as remote administration, file
+    transfers, and tunneling insecure protocols. SSH encrypts all traffic
+    between two hosts, including authentication, to protect against
+    eavesdropping and connection hijacking. This chapter covers basic
+    operations, plus host key rotation and certificate authentication, which
+    are useful for managing larger SSH deployments.
+   </p></div></div></div></div><section class="sect1" id="sec-ssh-overview" data-id-title="OpenSSH overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.1 </span><span class="title-name">OpenSSH overview</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SSH is a network protocol that provides end-to-end protection for
+   communications between the computers on your network, or between
+   computers on your network and systems outside your network. You may
+   open an SSH session to any other computer, as long as you have a login
+   and the correct authentication methods for the remote computer.
+  </p><p>
+   SSH is a client-server protocol. Any host running the
+   <code class="systemitem">sshd</code>
+   daemon can accept SSH connections from any other host. Every host running
+   <code class="systemitem">sshd</code> can have their own
+   custom configurations, such as limiting who can have access, and which
+   authentication methods are allowed.
+  </p><p>
+   Authentication and encryption are provided by encryption key pairs. Each
+   key pair has a public key and a private key. Public keys encrypt, and
+   private keys decrypt. Public keys are meant to be freely shared, while
+   private keys must be protected and not shared. When a private key is
+   compromised, anyone who has possession of it can masquerade as the
+   original key owner.
+  </p><p>
+   SSH provides very strong protection, because the server and client
+   must both authenticate to each other. When a client first attempts to
+   open an SSH session, the server presents its public host key. If the
+   client already possesses a copy of this key (stored in
+   <code class="filename">~/.ssh/known_hosts</code> on the client machine), the
+   client knows to trust the server. If the client does not have the
+   appropriate host key, it is asked whether it should trust the server:
+  </p><div class="verbatim-wrap"><pre class="screen">The authenticity of host '192.168.22.219 (192.168.22.219)'
+   can't be established. ECDSA key fingerprint is
+   SHA256:yXf6pjV26N0fegvEYIt3HgG95s3Q1X6WYRhtHLF99pUo.
+   Are you sure you want to continue connecting (yes/no/[fingerprint])?</pre></div><p>
+   The user can type yes, no, or paste their copy of the host key
+   fingerprint for comparison.
+  </p><div id="id-1.8.6.4.3.8" data-id-title="Matching host key fingerprints" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Matching host key fingerprints</div><p>
+    Distributing copies of your host key fingerprints to your users
+    enables them to verify that they are receiving the correct host
+    keys. When they paste their copy of a host key fingerprint,
+    <code class="command">ssh</code> compares the fingerprints, and accepts the
+    offered host key when the fingerprints match. This ensures a more
+    accurate match than a visual comparison.
+   </p><p>
+    You can't rely on users to use correct verification methods. If the
+    fingerprints do not match, the user can still type
+    <code class="literal">yes</code>, or copy the fingerprint in the message, and
+    complete the connection. A stronger alternative is to use
+    certificate authentication, which provides a global authentication
+    mechansism, and does not require perfect behavior from users
+    (see <a class="xref" href="cha-ssh.html#sec-ssh-certificate-auth" title="22.8. OpenSSH certificate authentication">Section 22.8, “OpenSSH certificate authentication”</a>).
+   </p></div><p>
+   If the public keys of a host have changed, the connection is denied with
+   a scary warning:
+  </p><div class="verbatim-wrap"><pre class="screen">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ECDSA key sent by the remote host is
+SHA256:keNu/rJFWmpQu9B0SjIuo8NLjbeDY/x3Tktpl7oDJqo.
+Please contact your system administrator.
+Add correct host key in /home/geeko/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /home/geeko/.ssh/known_hosts:210
+You can use following command to remove the offending key:
+ssh-keygen -R 192.168.121.219 -f /home/geeko/.ssh/known_hosts
+ECDSA host key for 192.168.121.219 has changed and you have requested strict
+checking.
+Host key verification failed.</pre></div><p>
+   The remedy is to delete the offending key from
+   <code class="filename">~/.ssh/known_hosts</code> with the command given
+   in the scary warning, then re-connect and accept the new host key.
+   
+  </p><p>
+   The <span class="package">openssh</span> package installs the server, client,
+   file transfer commands, and some utilities.
+  </p><p>
+   OpenSSH supports several different types of authentication:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.6.4.3.14.1"><span class="term">Password authentication</span></dt><dd><p>
+      Uses any system login and password on the remote machine. This is the
+      simplest and most flexible authentication because you can open an SSH
+      session from anywhere, on any machine. It is also the least secure,
+      because it is vulnerable to password-cracking and keystroke logging.
+      </p></dd><dt id="id-1.8.6.4.3.14.2"><span class="term">Public key authentication</span></dt><dd><p>
+      Authenticates with your personal SSH keys, rather than a login and
+      password. This is less flexible than password authentication,
+      because you can open SSH sessions only from a machine that holds
+      your private identity key. It is much stronger because it is not
+      vulnerable to password cracking or keystroke logging; an attacker must
+      possess your private key and know its passphrase.
+     </p><p>
+       See <a class="xref" href="cha-ssh.html#sec-ssh-gnome-keyring" title="22.9. Automated public key logins with gnome-keyring">Section 22.9, “Automated public key logins with gnome-keyring”</a> to learn how to use
+       <code class="command">gnome-keyring</code> for automated public key
+       authentication in GNOME sessions.
+      </p><p>
+       See <a class="xref" href="cha-ssh.html#sec-ssh-authentic-agent" title="22.10.1. Using ssh-agent in an X session">Section 22.10.1, “Using <code class="command">ssh-agent</code> in an X session”</a> to learn how to use
+       <code class="literal">ssh-agent</code> for automated public key
+       authentication in console sessions.
+      </p></dd><dt id="id-1.8.6.4.3.14.3"><span class="term">Passphrase-less public key authentication</span></dt><dd><p>
+       Public key authentication, paired with private identity keys that do
+       not have passphrases. This is useful for automated services, like
+       scripts and cron jobs. You must protect private keys, because anyone
+       who gains access to them can easily masquerade as the key owner.
+      </p></dd><dt id="id-1.8.6.4.3.14.4"><span class="term">Certificate authentication</span></dt><dd><p>
+       OpenSSH supports certification authentication, for easier key
+       management, stronger authentication, and large-scale SSH deployments.
+      </p></dd></dl></div><p>
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> installs the OpenSSH package by default, providing the
+  following commands:
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.6.4.3.16.1"><span class="term"><code class="command">ssh</code></span></dt><dd><p>
+     The client command for initiating an SSH connection to a remote host.
+    </p></dd><dt id="id-1.8.6.4.3.16.2"><span class="term"><code class="command">scp</code></span></dt><dd><p>
+     Secure file copy from or to a remote host.
+    </p></dd><dt id="id-1.8.6.4.3.16.3"><span class="term"><code class="command">sftp</code></span></dt><dd><p>
+     Secure file transfer between a client and an SFTP server.
+     (Note that the SFTP protocol (SSH FTP) is not related to FTPS or
+     FTPES (FTP over SSL/TLS), but was written independently.)
+    </p></dd><dt id="id-1.8.6.4.3.16.4"><span class="term"><code class="command">ssh-add</code></span></dt><dd><p>
+     Add private key identities to the authentication agent,
+     <code class="literal">ssh-agent</code>.
+    </p></dd><dt id="id-1.8.6.4.3.16.5"><span class="term"><code class="command">ssh-agent</code></span></dt><dd><p>
+     Manages a user's private identity keys and their passphrases, for
+     public key authentication. <code class="literal">ssh-agent</code> holds the
+     passphrases in memory and applies them as needed, so that users do not
+     have to re-type their passphrases to authenticate.
+    </p></dd><dt id="id-1.8.6.4.3.16.6"><span class="term"><code class="command">ssh-copy-id</code></span></dt><dd><p>
+     Securely transfer a public key to a remote host, to set up
+     public key authentication.
+    </p></dd></dl></div></section><section class="sect1" id="sec-ssh-server-config" data-id-title="Server hardening"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.2 </span><span class="title-name">Server hardening</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-server-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  OpenSSH ships with a usable default server configuration, but there are
+  additional steps you can take to secure your server.
+ </p><div id="id-1.8.6.4.4.3" data-id-title="Maintaining access to a remote SSH server" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Maintaining access to a remote SSH server</div><p>
+   When you make changes to any SSH server, either have physical
+   access to the machine, or keep an active root SSH session open until
+   you have tested your changes, and everything works correctly. Then you can revert or correct your changes if something goes wrong.
+  </p></div><p>
+  The default server configuration file, <code class="filename">/etc/ssh/sshd_config</code>,
+  contains the default configuration, and all the defaults are commented
+  out. Override any default item by entering your own configuration item,
+  uncommented, like the following example that sets a different listening
+  port, and specifies the listening IPv4 address on a multi-homed host:
+ </p><div class="verbatim-wrap"><pre class="screen">#Port 22
+Port <em class="replaceable">2022</em>
+
+#ListenAddress 0.0.0.0
+ListenAddress <em class="replaceable">192.168.10.100</em></pre></div><div id="id-1.8.6.4.4.6" data-id-title="Update /etc/services" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Update /etc/services</div><p>
+  When you use non-standard listening ports, first check the
+  <code class="filename">/etc/services</code> file for unused ports.
+  Select any unused port above 1024. Then document the ports you are using
+  in <code class="filename">/etc/services</code>.
+ </p></div><p>
+  It is a best practice to disallow root logins. Instead, log into the
+  remote machine as an unprivileged user, then use <code class="command">sudo</code>
+  to run commands as root. If you really want to allow root logins, the
+  following server configuration example shows how to configure the server
+  to accept only public-key authentication
+  (<a class="xref" href="cha-ssh.html#sec-ssh-public-key-auth" title="22.6. Public key authentication">Section 22.6, “Public key authentication”</a>) for the root user with the
+  <code class="literal">PermitRootLogin prohibit-password</code> and
+  <code class="literal">PasswordAuthentication</code> options.
+ </p><p>
+  The following settings for <code class="filename">/etc/ssh/sshd_config</code>
+  strengthen access controls:
+ </p><div class="example" id="ex-sshd-conf" data-id-title="Example sshd.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 22.1: </span><span class="title-name">Example sshd.conf </span></span><a title="Permalink" class="permalink" href="cha-ssh.html#ex-sshd-conf">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="programlisting"># Check if the file modes and ownership of the user’s files and
+# home directory are correct before allowing them to login
+StrictModes yes
+
+# If your machine has more than one IP address, define which address or
+# addresses it listens on
+ListenAddress <em class="replaceable">192.168.10.100</em>
+
+# Allow only members of the listed groups to log in
+AllowGroups <em class="replaceable">ldapadmins backupadmins</em>
+
+# Or, deny certain groups. If you use both, DenyGroups is read first
+DenyGroups <em class="replaceable">users</em>
+
+# Allow or deny certain users. If you use both, DenyUsers is read first
+AllowUsers <em class="replaceable">user1 user2@example.com user3</em>
+DenyUsers <em class="replaceable">user4 user5@192.168.10.10</em>
+
+# Allow root logins only with public key authentication
+PermitRootLogin prohibit-password
+
+# Disable password authentication and allow only public key authentication
+# for all users
+PasswordAuthentication no
+
+# Length of time the server waits for a user to log in and complete the
+# connection. The default is 120 seconds:
+LoginGraceTime <em class="replaceable">60</em>
+
+# Limit the number of failed connection attempts. The default is 6
+MaxAuthTries <em class="replaceable">4</em></pre></div></div></div><p>
+  After changing <code class="filename">/etc/ssh/sshd_config</code>, run the syntax
+  checker:
+ </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">sshd -t</code></pre></div><p>
+  The syntax checker only checks for correct syntax, and does not find
+  configuration errors. When you are finished, reload the configuration:
+ </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl reload sshd.service</code></pre></div><p>
+  Check the server's key directories for correct permissions.
+ </p><p>
+  <code class="filename">/etc/ssh</code> should be mode 0755/drwxr-xr-x, owned by
+  root:root.
+ </p><p>
+  Private keys should be 0600/-rw-------, owned by root:root.
+ </p><p>
+  Public keys should be 0644/-rw-r--r--, owned by root:root.
+ </p></section><section class="sect1" id="sec-ssh-password-auth" data-id-title="Password authentication"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.3 </span><span class="title-name">Password authentication</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-password-auth">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   With password authentication, all you need is the login and password of
+   a user on the remote machine, and
+   <code class="systemitem">sshd</code> set up and running on the
+   remote machine. You do not need any personal SSH keys. In the following
+   example, user suzanne opens an SSH session to the host
+   sun:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh suzanne@sun</code></pre></div><p>
+   suzanne will be prompted to enter the remote password.
+   Type <code class="literal">exit</code> and press <span class="keycap">Enter</span> to close an
+   SSH session.
+  </p><p>
+   If the user name is the same on both machines, you can omit it, and then
+   using <code class="command">ssh <em class="replaceable">HOST_NAME</em></code> is
+   sufficient. After a successful authentication, you can work on the
+   command line or use interactive applications, such as YaST in text
+   mode.
+  </p><p>
+   You may also run non-interactive commands (log in, run the command, then
+   the session closes all in one command) on remote systems using the
+   <code class="command">ssh <em class="replaceable">USER_NAME HOST COMMAND</em></code>
+   syntax.
+   <em class="replaceable">COMMAND</em> must be properly quoted. Multiple
+   commands can be concatenated as on a local shell:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh suzanne@sun "df -h &amp;&amp; du -sh  /home"</code>
+<code class="prompt user">&gt; </code><code class="command">ssh suzanne@sun "sudo nano /etc/ssh/sshd_config"</code></pre></div><p>
+   When you run <code class="command">sudo</code> on the remote machine, you will be
+   prompted for the <code class="command">sudo</code> password.
+  </p></section><section class="sect1" id="sec-ssh-authentic-gen-key" data-id-title="Managing user and host encryption keys"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.4 </span><span class="title-name">Managing user and host encryption keys</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-gen-key">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     There are several key types to choose from: DSA, RSA, ECDSA, ECDSA-SK,
+     Ed25519, and Ed25519-SK. DSA was deprecated several years ago, and was
+     disabled in OpenSSH 7.0 and should not be used. RSA is the most
+     universal as it is older, and more widely used. (As of OpenSSH
+     8.2, RSA is deprecated for host keys. Use ECDSA or Ed25519 for host
+     keys.)
+   </p><p>
+     Ed25519 and ECDSA are stronger and faster. Ed25519 is
+     considered to be the strongest. If you must support older clients
+     that do not support Ed25519 or ECDSA, create host keys in all three
+     formats.
+   </p><div id="id-1.8.6.4.6.4" data-id-title="Older clients are unsafe" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Older clients are unsafe</div><p>
+       Some older SSH clients do not support ECDSA and ED25519. ECDSA and
+       ED25519 were released with OpenSSH 6.5 in 2014. It is
+       important to keep security services updated, and, if possible,
+       to not allow unsafe old clients.
+     </p></div><p>
+     SSH keys serve two purposes: authenticating servers to clients, and
+     authenticating clients to servers (see
+     <a class="xref" href="cha-ssh.html#sec-ssh-public-key-auth" title="22.6. Public key authentication">Section 22.6, “Public key authentication”</a>). Server host keys are stored
+     in <code class="filename">/etc/ssh</code>. Users' personal keys are stored in
+     <code class="filename">/home/<em class="replaceable">user</em>/.ssh</code>.
+    </p><p>
+     <code class="filename">/home/<em class="replaceable">user</em>/.ssh</code> is
+     created when the user creates a new SSH key.
+   </p><p>
+     Host keys must not have passphrases.
+   </p><p>
+     In most cases, private user keys should have strong passphrases.
+   </p><section class="sect2" id="sec-create-ssh-key-client" data-id-title="Creating user SSH key pairs"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.4.1 </span><span class="title-name">Creating user SSH key pairs</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-create-ssh-key-client">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+       The following procedure shows how to create user OpenSSH encryption
+       keys.
+      </p><div class="procedure" id="pro-create-ssh-client-keys" data-id-title="Creating default and customized keys"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 22.1: </span><span class="title-name">Creating default and customized keys </span></span><a title="Permalink" class="permalink" href="cha-ssh.html#pro-create-ssh-client-keys">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      To generate a user key pair with the default parameters (RSA, 3072
+      bits), use the <code class="command">ssh-keygen</code> command with no options.
+      Protect your private key with a strong passphrase:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen</code>
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/tux/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in id_rsa
+Your public key has been saved in id_rsa.pub
+The key fingerprint is:
+SHA256:z0uJIuc7Doy07bFTe1ppZHLVrkD/bWWlBAF/PcHjblU user@host2
+The key's randomart image is:
++---[RSA 3072]----+
+|          ..o... |
+|           o . +E|
+|        . . o +.=|
+|       . o . o o+|
+|  .   . S . . o +|
+| . =  .= * + . = |
+|  o *.o.= * . +  |
+|   ..Bo+.. . .   |
+|    oo==  .      |
++----[SHA256]-----+</pre></div></li><li class="step"><p>
+        Create an RSA key pair with a longer bit length:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -b 4096</code></pre></div><p>
+        OpenSSH RSA keys can be a maximum of 16,384 bits. However, longer bit
+        lengths are not necessarily more desirable. See the GnuPG FAQ for
+        more information, <a class="link" href="https://www.gnupg.org/faq/gnupg-faq.html#no_default_of_rsa4096" target="_blank">https://www.gnupg.org/faq/gnupg-faq.html#no_default_of_rsa4096</a>.
+      </p></li><li class="step"><p>
+       You may create as many user keys as you want, for accessing
+       different servers. Each key pair must have a unique name, and  optionally, a comment. These help you remember what each
+       key pair is for. Create an RSA key pair with a custom name and a
+       comment:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -f <em class="replaceable">backup-server-key -C "infrastructure backup server"</em></code></pre></div></li><li class="step"><p>
+       Create an Ed25519 key pair with a custom name and a comment:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -t ed25519 -f <em class="replaceable">ldap-server-key -C "Internal LDAP server"</em></code></pre></div><p>
+       Ed25519 keys are fixed at 256 bits, which is equivalent in
+       cryptographic strength to RSA 4096.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-create-ssh-host-keys" data-id-title="Creating SSH server host keys"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.4.2 </span><span class="title-name">Creating SSH server host keys</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-create-ssh-host-keys">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Host keys are managed a little differently. A host key must not
+      have a passphrase, and the key pairs are stored in
+      <code class="filename">/etc/ssh</code>.
+      OpenSSH automatically generates a set of host keys when it is
+      installed, like the following example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ls -l /etc/ssh</code>
+total 608
+-rw------- 1 root root 577834 2021-05-06 04:48 moduli
+-rw-r--r-- 1 root root   2403 2021-05-06 04:48 ssh_config
+-rw-r----- 1 root root   3420 2021-05-06 04:48 sshd_config
+-rw------- 1 root root   1381 2022-02-10 06:55 ssh_host_dsa_key
+-rw-r--r-- 1 root root    604 2022-02-10 06:55 ssh_host_dsa_key.pub
+-rw------- 1 root root    505 2022-02-10 06:55 ssh_host_ecdsa_key
+-rw-r--r-- 1 root root    176 2022-02-10 06:55 ssh_host_ecdsa_key.pub
+-rw------- 1 root root    411 2022-02-10 06:55 ssh_host_ed25519_key
+-rw-r--r-- 1 root root     96 2022-02-10 06:55 ssh_host_ed25519_key.pub
+-rw------- 1 root root   2602 2022-02-10 06:55 ssh_host_rsa_key
+-rw-r--r-- 1 root root    568 2022-02-10 06:55 ssh_host_rsa_key.pub</pre></div><p>
+      <code class="command">ssh-keygen</code> has a special option, <code class="option">-A</code>,
+      for creating new host keys. This creates new keys for each of the key
+      types for which host keys do not exist, with the default key file
+      path, an empty passphrase, default bit size for the key type, and an
+      empty comment. The following example creates a complete new
+      set of host keys by first deleting the existing keys, then creating a
+      new set:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">rm /etc/ssh/ssh_host*</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen -A</code></pre></div><p>
+      You can replace selected key pairs by first deleting only the
+      keys you want to replace, because <code class="command">ssh-keygen -A</code>
+      does not replace existing keys.
+    </p><div id="id-1.8.6.4.6.10.7" data-id-title="Do not use DSA keys" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Do not use DSA keys</div><p>
+        <code class="command">ssh-keygen -A</code> creates DSA keys, even though
+        they have been deprecated as unsafe for several years. In OpenSSH
+        7.0 they are still created, but disabled by not being listed in
+        <code class="filename">sshd_config</code>. You may safely delete DSA keys.
+      </p></div><p>
+     When you want to rotate host keys
+     (see <a class="xref" href="cha-ssh.html#sec-ssh-sshdserver-rotation" title="22.5. Rotating host keys">Section 22.5, “Rotating host keys”</a>), you must create
+     the new keys individually, because they must exist at the same time as
+     your old host keys. Your users will authenticate with the old keys,
+     and then receive the list of new keys. They need unique names,
+     to not conflict with the old keys. The following example creates new
+     RSA and Ed25519 host keys, labeled with the year and month they were
+     created. Remember, the new host keys must not have passphrases:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">cd /etc/ssh</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen -b 4096 -f "<em class="replaceable">SSH_HOST_RSA_2022_02</em>"</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen -t ed25519 -f "<em class="replaceable">SSH_HOST_ED25519_2022_02</em>"</code></pre></div><p>
+      You may name your new keys whatever you want.
+    </p></section></section><section class="sect1" id="sec-ssh-sshdserver-rotation" data-id-title="Rotating host keys"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.5 </span><span class="title-name">Rotating host keys</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sshdserver-rotation">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As of version 6.8, OpenSSH includes a protocol extension that
+    supports host key rotation. SSH server admins must periodically
+    retire old host keys and create new keys, for example if a key has been
+    compromised, or it is time to upgrade to stronger keys. Before OpenSSH
+    6.8, if <code class="literal">StrictHostKeyChecking</code>
+    was set to <code class="literal">yes</code> in <code class="filename">ssh_config</code>
+    on user machines, users would see a warning that the host key had
+    changed, and were not allowed to connect. Then the users would have to
+    manually delete the server's public key from their
+    <code class="filename">known_hosts</code> file, reconnect, and manually accept the
+    new key. Any automated SSH connections, such as scheduled backups, would
+    fail.
+   </p><p>
+     The new host key rotation scheme provides a method to distribute new
+     keys without service interruptions. When clients connect, the server
+     sends them a list of new keys. Then the next time they log in they are
+     asked if they wish to accept the changes. Give users a few days to
+     connect and receive the new keys, and then you can remove the old keys.
+     The users' <code class="filename">known_hosts</code> files are automatically
+     updated, with new keys added and the old keys removed.
+   </p><p>
+      Setting up host key rotations requires creating new keys on the server,
+      some changes to <code class="filename">/etc/ssh/sshd_config</code> on the
+      server, and to <code class="filename">/etc/ssh/ssh_config</code> on the clients.
+   </p><p>
+     First, create your new key or keys. The following example creates a new
+     RSA key and a new Ed25519 key, with unique names and comments. A useful
+     convention is to name them with the creation date. Remember, a host key
+     must not have a passphrase:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ssh-keygen -t rsa -f ssh_host_rsa_2022-01 -C "main server"</code>
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in ssh_host_rsa_2022-01
+Your public key has been saved in ssh_host_rsa_2022-01.pub
+The key fingerprint is:
+SHA256:F1FIF2aqOz7D3mGdsjzHpH/kjUWZehBN3uG7FM4taAQ main server
+The key's randomart image is:
++---[RSA 3072]----+
+|         .Eo*.oo |
+|          .B .o.o|
+|          o . .++|
+|         . o ooo=|
+|        S . o +*.|
+|         o o.oooo|
+|       .o ++oo.= |
+|       .+=o+o + .|
+|       .oo++..   |
++----[SHA256]-----+
+
+<code class="prompt root"># </code><code class="command">ssh-keygen -t ed25519 -f ssh_host_ed25519_2022-01 -C "main server"</code>
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in ssh_host_ed25519_2022-01
+Your public key has been saved in ssh_host_ed25519_2022-01.pub
+The key fingerprint is:
+SHA256:2p9K0giXv7WsRnLjwjs4hJ8EFcoX1FWR4nQz6fxnjxg main server
+The key's randomart image is:
++--[ED25519 256]--+
+|   .+o ...o+     |
+| . .... o *      |
+|  o..  o = o     |
+|  ..   .. o      |
+|   o. o S  .     |
+|  . oo.*+   E o  |
+|   + ++==..  = o |
+|    = +oo= o. . .|
+|     ..=+o=      |
++----[SHA256]-----+</pre></div><p>
+     Record the fingerprints, for users to verify the new keys.
+   </p><p>
+     Add the new key names to <code class="filename">/etc/ssh/sshd_config</code>, and
+     uncomment any existing keys that are in use:
+   </p><div class="verbatim-wrap"><pre class="screen">## Old keys
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+
+## New replacement keys
+HostKey /etc/ssh/ssh_host_rsa_2022-01
+HostKey /etc/ssh/ssh_host_ed25519_2022-01</pre></div><p>
+      Save your changes, then restart <code class="systemitem">sshd</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">systemctl restart sshd.service</code></pre></div><p>
+      The <code class="filename">/etc/ssh/ssh_config</code> file on user machines must
+      include the following settings:
+    </p><div class="verbatim-wrap"><pre class="screen">UpdateHostKeys ask
+StrictHostKeyChecking yes</pre></div><p>
+      Test connecting from a client by opening an SSH session to the server
+      to receive the new keys list. Log out, then log back in. When you log
+      back in you should see something like the following message:
+    </p><div class="verbatim-wrap"><pre class="screen">The server has updated its host keys.
+These changes were verified by the server's existing trusted key.
+Deprecating obsolete hostkey: ED25519
+SHA256:V28d3VpHgjsCoV04RBCZpLo5c0kEslCZDVdIUnCvqPI
+Deprecating obsolete hostkey:
+RSA SHA256:+NR4DVdbsUNsqJPIhISzx+eqD4x/awCCwijZ4a9eP8I
+Accept updated hostkeys? (yes/no):yes</pre></div><p>
+      You may set <code class="literal">UpdateHostKeys ask</code> to
+      <code class="literal">UpdateHostKeys yes</code> to apply the changes
+      automatically, and avoid asking users to approve the changes.
+    </p><p>
+      For more information:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <a class="xref" href="cha-ssh.html#sec-ssh-authentic-gen-key" title="22.4. Managing user and host encryption keys">Section 22.4, “Managing user and host encryption keys”</a>
+      </p></li><li class="listitem"><p>
+      <a class="link" href="http://blog.djm.net.au/2015/02/key-rotation-in-openssh-68.html" target="_blank">http://blog.djm.net.au/2015/02/key-rotation-in-openssh-68.html</a>
+     </p></li><li class="listitem"><p>
+       man 5 ssh_config, man 5 sshd_config
+     </p></li></ul></div></section><section class="sect1" id="sec-ssh-public-key-auth" data-id-title="Public key authentication"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.6 </span><span class="title-name">Public key authentication</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-public-key-auth">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Public key authentication uses your own personal identity key to
+   authenticate, rather than a user account password.
+  </p><p>
+   The following example shows how to create a new personal
+   RSA key pair with a comment, so you know what it is for. First change to
+   your <code class="filename">~/.ssh</code> directory (or create it if it does not
+   exist), then create the new key pair. Give it a strong passphrase, and
+   write the passphrase in a safe place:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">cd ~/.ssh</code>
+<code class="prompt user">&gt; </code><code class="command">ssh-keygen -C <em class="replaceable">"web server1"</em> -f <em class="replaceable">id-web1</em> -t rsa -b <em class="replaceable">4096</em></code></pre></div><p>
+   Next, copy your new public key to the machine you want access to. You
+   must already have a user account on this machine, and SSH access to
+   copy it over the network:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-copy-id -i <em class="replaceable">id-web1 user@web1</em></code></pre></div><p>
+   Then try logging in with your new key:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh -i <em class="replaceable">id-web1 user@web1</em></code>
+Enter passphrase for key 'id-web1':
+Last login: Sat Jul 11 11:09:53 2022 from 192.168.10.122
+Have a lot of fun...</pre></div><p>
+   You should be asked for your private key passphrase, and not the
+   password for your user account.
+  </p><p>
+   To be effective, public key authentication should be enforced on
+   the remote machine, and password authentication not allowed (see
+   <a class="xref" href="cha-ssh.html#ex-sshd-conf" title="Example sshd.conf">Example 22.1, “Example sshd.conf”</a>). If you do not have public key
+   authentication access on the remote machine already, you cannot copy your
+   new public key with <code class="command">ssh-copy-id</code>, and must use other
+   means, such as manually copying it from a USB stick to the
+   <code class="filename">~/.ssh/authorized_keys</code> file of the remote
+   user account.
+  </p></section><section class="sect1" id="sec-ssh-passphrase-less-auth" data-id-title="Passphrase-less public key authentication"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.7 </span><span class="title-name">Passphrase-less public key authentication</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-passphrase-less-auth">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This is public key authentication without a passphrase. Create
+    your new private identity keys without a passphrase, and then use them
+    the same way as passphrase-protected keys. This is useful for automated
+    services, such as scripts and cron jobs. However, anyone who succeeds in
+    stealing the private key can easily masquerade as you, so you need to be
+    very protective of a passphrase-less private key.
+  </p><p>
+   An alternative to using keys without passphrases is
+   <code class="literal">gnome-keyring</code>, which
+   remembers and applies your private keys and passphrases for you.
+   <code class="literal">gnome-keyring</code> is for GNOME desktop sessions
+   (<a class="xref" href="cha-ssh.html#sec-ssh-gnome-keyring" title="22.9. Automated public key logins with gnome-keyring">Section 22.9, “Automated public key logins with gnome-keyring”</a>).
+  </p><p>
+   For console sessions, use <code class="literal">ssh-agent</code>
+   (<a class="xref" href="cha-ssh.html#sec-ssh-authentic-agent" title="22.10.1. Using ssh-agent in an X session">Section 22.10.1, “Using <code class="command">ssh-agent</code> in an X session”</a>).
+  </p></section><section class="sect1" id="sec-ssh-certificate-auth" data-id-title="OpenSSH certificate authentication"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.8 </span><span class="title-name">OpenSSH certificate authentication</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-certificate-auth">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   OpenSSH introduced certificate authentication in OpenSSH 5.4.
+   Certificate authentication is similar to public key authentication,
+   except hosts and users authenticate to each other with digitally-signed
+   encryption certificates instead of encryption keys. Certificate
+   authentication provides central management for server and user
+   certificates, eliminating the need to manually copy user public keys to
+   multiple hosts. It increases security by giving more control to
+   administrators, and less to users.
+  </p><p>
+   Certificates consist of a public encryption key, a user-defined identity
+   string, zero or more user names or host names, and other options.
+   User and host public keys are signed by a Certificate Authority (CA)
+   private signing key to create an encryption certificate. Users and hosts
+   trust the public CA key, rather than trusting individual user and host
+   public encryption keys.
+  </p><p>
+   Traditional OpenSSH public key authentication requires copying user
+   public keys to every SSH server they need access to (to the appropriate
+   <code class="filename">~/.ssh/authorized_keys</code> files), and relying on
+   users to verify new SSH server host keys before accepting them (stored
+   in <code class="filename">~/.ssh/known_hosts</code>). This is
+   error-prone and complicated to manage. Another disadvantage is OpenSSH
+   keys never expire. When you need to revoke a particular public key, you
+   have to find and remove all of its copies on your network.
+  </p><p>
+   Automating the whole process (for example, with Ansible) is virtually a
+   necessity. Large organizations, such as Meta
+   (see <a class="link" href="https://engineering.fb.com/2016/09/12/security/scalable-and-secure-access-with-ssh/" target="_blank">https://engineering.fb.com/2016/09/12/security/scalable-and-secure-access-with-ssh/</a>),
+   automate the process completely, so they can revoke and replace
+   certificates, and even certificate authorities, as often as they want
+   without disrupting operations.
+  </p><p>
+   A prerequisite is the ability to open SSH sessions to all hosts on your
+   network, and perform tasks like editing configuration files and restarting <code class="systemitem">sshd</code>.
+  </p><p>
+   Setting up an OpenSSH certificate authority involves the following steps:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+   Set up a secure trusted server to host your certificate authority,
+   for signing host and user keys. Create a new key pair for signing
+   keys. The private key signs user and host keys, and the public key is
+   copied to all users who are allowed access to the server.
+  </p></li><li class="listitem"><p>
+   Receive and sign host public keys, then distribute the new host
+   certificates to their respective hosts. Host certificates go in
+   <code class="filename">/etc/ssh</code>, just like host keys.
+  </p></li><li class="listitem"><p>
+   Receive and sign user public keys, then distribute the new user
+   certificates to their owners. User certificates go in
+   <code class="filename">~/.ssh</code>, just like user keys.
+  </p></li><li class="listitem"><p>
+     Edit configuration files on servers and users' machines, and stop and
+     start <code class="systemitem">sshd</code> on hosts as
+     necessary.
+   </p></li><li class="listitem"><p>
+   Revoke certificates as needed, for example when you suspect a certificate
+   has been compromised, a user has left your organization, or a server has
+   been retired. Revoking a certificate is considerably simpler than finding
+   and removing all relevant public key copies.
+  </p></li></ul></div><p>
+    Users and server admins create and protect their own OpenSSH keys. It is
+    safe to freely share public keys. It is safe to transfer the new
+    certificates by insecure methods, such as email, because they require
+    their private keys to validate.
+   </p><p>
+   Note that SSH certificates follow the OpenPGP standard, rather than
+   SSL/TLS, and that the certificate format is OpenPGP, not X.509.
+  </p><section class="sect2" id="sec-ssh-certificate-create-signing-keys" data-id-title="Setting up a new certificate authority"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.8.1 </span><span class="title-name">Setting up a new certificate authority</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-certificate-create-signing-keys">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section describes how to set up a new certificate
+   authority (CA). Give careful consideration to organizing
+   your CA, to keep it manageable and efficient.
+  </p><div id="id-1.8.6.4.10.11.3" data-id-title="Protect your certificate authority" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Protect your certificate authority</div><p>
+    It is extremely important to protect the machine that hosts
+    your certificate authority. Your CA is literally the key to
+    your entire network. Anyone who gains access to your CA can
+    create their own certificates and freely access your network
+    resources, or even compromise your servers and the CA itself.
+    A common practice is to use a dedicated machine that is started only
+    when you need to sign keys.
+   </p></div><p>
+    It is a best practice to create one signing key for servers,
+    and another signing key for clients. If you have a large number of
+    certificates to manage, it can be helpful to create your
+    CAs for hosts and clients on separate machines. If you prefer
+    using a single machine, give each CA its own directory.
+    The examples in this section use <code class="filename">/ca-ssh-hosts</code>
+    and <code class="filename">/ca-ssh-users</code>. The example machine is
+    <em class="replaceable">ca.example.com</em>.
+   </p><p>
+    If your security policy requires
+    keeping copies of users' and host's public keys, store them in their own
+    subdirectories, for easier tracking and avoiding key name collisions.
+   </p><div id="id-1.8.6.4.10.11.6" data-id-title="RSA signing keys deprecated" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: RSA signing keys deprecated</div><p>
+     OpenSSH 8.2, released February 2020, deprecates RSA signing keys.
+     Use Ed25519 or ECDSA.
+    </p></div><p>
+    The following examples create two signing keys, one for signing
+    host keys, and one for user keys. Give them strong passphrases:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen -t ed25519 -f <em class="replaceable">/ca-ssh-hosts/ca-host-sign-key -C "signing key for host certificates"</em></code>
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in ca-host-sign-key
+Your public key has been saved in ca-host-sign-key.pub
+The key fingerprint is:
+SHA256:STuQ7HgDrPcEa7ybNIW0n6kPbj28X5HN8GgwllBbAt0
+ signing key for host certificates
+The key's randomart image is:
++--[ED25519 256]--+
+|      o+o..      |
+|   . . o.=E      |
+|    = + B .      |
+|   + O + = B     |
+|  . O * S = +    |
+|   o B + o .     |
+|    =o=   .      |
+|   o.*+  .       |
+|   .=.o+.        |
++----[SHA256]-----+</pre></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen -t ed25519 -f <em class="replaceable">/ca-ssh-users/ca-user-sign-key -C "signing key for user certificates"</em></code>
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in ca-user-sign-key
+Your public key has been saved in ca-user-sign-key.pub
+The key fingerprint is:
+SHA256:taYj8tTnjkzgfHRvQ6HTj8a37PY6rwv96V1x+GHRjIk signing key for user certificates
+The key's randomart image is:
++--[ED25519 256]--+
+|                 |
+|             . +.|
+|          . E o.o|
+|         . + . ..|
+|      . S * o .+.|
+|     o + + = +..+|
+|    . = * . O + o|
+|     + = = o =oo+|
+|      . o.o  oOX=|
++----[SHA256]-----+</pre></div><p>
+  Copy your public user signing key (be sure you are copying the PUBLIC
+  key) to <code class="filename">/etc/ssh</code> on all hosts running SSH servers.
+  Then enter the full path of the public user signing key to
+  <code class="filename">/etc/ssh/sshd_config</code> on the hosts:
+ </p><div class="verbatim-wrap"><pre class="screen">TrustedUserCAKeys <em class="replaceable">/etc/ssh/ca-user-sign-key.pub</em></pre></div><p>
+  Then restart <code class="systemitem">sshd</code>.
+ </p></section><section class="sect2" id="sec-ssh-certificate-create-host-certs" data-id-title="Creating host certificates"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.8.2 </span><span class="title-name">Creating host certificates</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-certificate-create-host-certs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The following example signs a host public key to create a host
+   certificate for a database server:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen -s <em class="replaceable">/ca-ssh-hosts/ca-host-sign-key</em></code> \
+   <code class="command">-n <em class="replaceable">venus,venus.example.com</em> -I <em class="replaceable">"db-server host cert"</em></code> \
+   <code class="command">-h -V +4w <em class="replaceable">/etc/ssh/ssh_host_ed25519_key.pub</em></code>
+Enter passphrase:
+Signed host key /etc/ssh/ssh_host_ed25519_key-cert.pub: id
+"db-server host cert" serial 0 for venus,venus.example.com
+valid from 2022-08-08T14:20:00 to 2022-09-05T15:21:19</pre></div><p>
+       If there is more than one host key on a server, sign all of them.
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       <code class="option">-s</code> is your private signing key.
+      </p></li><li class="listitem"><p>
+       <code class="option">-n</code> is your list of principals. For host
+       certificates, the principals are the machine's host name
+       and fully-qualified domain name.
+      </p></li><li class="listitem"><p>
+       <code class="option">-I</code> is the identity string. This is any
+       comment or description you want. The string is logged, to help you
+       quickly find relevant log entries.
+      </p></li><li class="listitem"><p>
+       <code class="option">-h</code> creates a host certificate.
+     </p></li><li class="listitem"><p>
+      <code class="option">-V</code> sets the expiration date for the certificate. In
+      the example, the certificate expires in four weeks. (See
+      the "-V validity_interval" section of
+      <code class="command">man 1 ssh-keygen</code> for allowed time formats.)
+     </p></li></ul></div><p>
+    Verify that your new certificate is built the way you want:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -Lf /etc/ssh/ssh_host_ed25519_key-cert.pub</code>
+ /etc/ssh/ssh_host_ed25519_key-cert.pub:
+        Type: ssh-ed25519-cert-v01@openssh.com host certificate
+        Public key: ED25519-CERT SHA256:/
+         U7C+qABXYyuvueUuhFKzzVINq3d7IULRLwBstvVC+Q
+        Signing CA: ED25519 SHA256:
+         STuQ7HgDrPcEa7ybNIW0n6kPbj28X5HN8GgwllBbAt0 (using ssh-ed25519)
+        Key ID: "db-server host cert"
+        Serial: 0
+        Valid: from 2022-08-08T14:20:00 to 2022-09-05T15:21:19
+        Principals:
+                venus
+                venus.example.com
+        Critical Options: (none)
+        Extensions: (none)</pre></div><p>
+    Add the full path of the new host certificate to
+    <code class="filename">/etc/ssh/sshd_config</code>, to make it
+    available to clients:
+   </p><div class="verbatim-wrap"><pre class="screen">HostCertificate <em class="replaceable">/etc/ssh/ssh_host_ed25519_key-cert.pub</em></pre></div><p>
+    Restart <code class="systemitem">sshd</code> to load your
+    changes:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl restart sshd.service</code></pre></div><p>
+    See
+    <a class="xref" href="cha-ssh.html#sec-ssh-certificate-user-config" title="22.8.3. CA configuration for users">Section 22.8.3, “CA configuration for users”</a> to learn how to
+    configure clients to accept host certificates.
+   </p></section><section class="sect2" id="sec-ssh-certificate-user-config" data-id-title="CA configuration for users"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.8.3 </span><span class="title-name">CA configuration for users</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-certificate-user-config">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following example shows how to configure clients to trust your CA
+    rather than individual keys. The example grants access to a single
+    server. This entry must be on a single unbroken  line in your users'
+    <code class="filename">~/.ssh/known_hosts</code> files. Move the original
+    <code class="filename">~/.ssh/known_hosts</code> file, and create a new
+    file that contains only the CA configuration. Or, create a global
+    configuration in <code class="filename">/etc/ssh/ssh_known_hosts</code>, which
+    has the advantage of being un-editable by unprivileged users:
+   </p><div class="verbatim-wrap"><pre class="screen">@cert-authority db,db.example.com ssh-ed25519
+ AAAAC3NzaC1lZDI1NTE5AAAAIH1pF6DN4BdsfUKWuyiGt/leCvuZ/fPu
+ YxY7+4V68Fz0 signing key for user certificates</pre></div><p>
+     List each server the user is allowed to access in a comma-delimited
+     list, for example
+     <code class="literal"><em class="replaceable">venus,venus.example.com,saturn,saturn.example.com</em></code>. You may also
+     grant access to all servers in domains with wildcards, for example
+     <code class="literal">*.example.com,*.example2.com</code>.
+    </p><p>
+     Try connecting to the server. You should be prompted for the password
+     of the remote account, without being prompted to verify the host
+     certificate.
+    </p></section><section class="sect2" id="sec-ssh-certificate-user-certs" data-id-title="Creating user certificates"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.8.4 </span><span class="title-name">Creating user certificates</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-certificate-user-certs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Sign the user's public key:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">ssh-keygen <em class="replaceable">/ca-ssh-hosts/ca-user-sign-key -I "suzanne's cert" -n suzanne -V +52w user-key.pub</em></code>
+ Signed user key .ssh/ed25519key-cert.pub: id "suzanne's cert" serial 0
+ for suzanne valid from 2022-09-14T12:57:00 to 2023-09-13T12:58:21</pre></div><p>
+    The principal on user certificates is always the username. Store the
+    user's certificate in <code class="filename">~/.ssh</code> on the user's machine.
+   </p><p>
+    User certificates replace the <code class="filename">~/.ssh/authorized_keys</code> files. Remove this file from a user account on the remote
+    machine, then try opening an SSH session to that account. You should be
+    able to log  in without being prompted for a password. (Remember, the
+    server should have a
+    <code class="literal">TrustedUserCAKeys /etc/ssh/<em class="replaceable">ca-user-sign-key.pub</em></code>
+    line in its
+    <code class="filename">/etc/ssh/sshd_config</code> file, so that the server
+    knows to trust your certificate authority.)
+   </p><p>
+    Additionally, look for <code class="literal">Accepted publickey for
+     <em class="replaceable">suzanne</em></code> messages in
+    your log files.
+    </p></section><section class="sect2" id="sec-ssh-certificate-revoke-host-keys" data-id-title="Revoking host keys"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.8.5 </span><span class="title-name">Revoking host keys</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-certificate-revoke-host-keys">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When you need to revoke a certificate because a server has been
+    compromised or retired, add the certificate's corresponding
+    public key to a file on every client, for example
+    <code class="filename">/etc/ssh/revoked_keys</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">ssh-ed25519-cert-v01@openssh.com
+    AAAAIHNzaC1lZDI1NTE5LWNlcnQtdjAxQG9wZW5zc2guY29tAAAAIK6hyvFAhFI+0hkKehF/
+    506fD1VdcW29ykfFJn1CPK9lAAAAIAawaXbbEFiQOAe5LGclrCHSLWbEeUauK5+CAuhTJyz0
+    AAAAAAAAAAAAAAACAAAAE2RiLXNlcnZlciBob3N0IGNlcnQAAAAeAAAABXZlbnVzAAAAEXZl
+    bnVzLmV4YW1wbGUuY29tAAAAAGMabhQAAAAAYz9YgQAAAAAAAAAAAAAAAAAAADMAAAALc3No
+    LWVkMjU1MTkAAAAgfWkXoM3gF2x9Qpa7KIa3+V4K+5n98+5jFjv7hXrwXPQAAABTAAAAC3Nz
+    aC1lZDI1NTE5AAAAQI+mbJsQjt/9bLiURse8DF3yTa6Yk3HpoE2uf9FW/
+    KeLsw2wPeDv0d6jv49Wgr5T3xHYPf+VPJQW35ntFiHTlQg= root@db</pre></div><p>
+    This file must be named in <code class="filename">/etc/ssh/sshd_config</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">RevokedKeys /etc/ssh/revoked_keys</pre></div></section></section><section class="sect1" id="sec-ssh-gnome-keyring" data-id-title="Automated public key logins with gnome-keyring"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.9 </span><span class="title-name">Automated public key logins with gnome-keyring</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-gnome-keyring">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <span class="package">gnome-keyring</span> package is installed and enabled
+   by default when the GNOME desktop environment is installed.
+   <code class="literal">gnome-keyring</code> is integrated with your
+   system login, automatically unlocking your secrets storage at login.
+   When you change your login password, <code class="literal">gnome-keyring</code>
+   automatically updates itself with your new password.
+  </p><p>
+   <code class="literal">gnome-keyring</code> automatically loads all key pairs in
+   <code class="filename">~/.ssh</code>, for each pair that has a
+   <code class="filename">*.pub</code> file. You may manually load other keys with
+   the <code class="command">ssh-add</code> command, for example:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-add <em class="replaceable">~/.otherkeys/my_key</em></code></pre></div><p>
+   List all loaded keys:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-add -L</code></pre></div><p>
+   When you start up your system and then open an SSH session, you will be
+   prompted for your private key passphrase.
+  </p><p>
+    <code class="literal">gnome-keyring</code> will remember the passphrase for the rest of your
+    session. You will not have to re-enter the passphrase until after a system
+    restart.
+   </p></section><section class="sect1" id="sec-ssh-ssh-agent" data-id-title="Automated public key logins in the console with ssh-agent"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.10 </span><span class="title-name">Automated public key logins in the console with ssh-agent</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-ssh-agent">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <span class="package">openssh</span> package
+    provides the <code class="command">ssh-agent</code> utility, which retains your
+    private keys and passphrases, and automatically applies your passphrases
+    for you during the current session.
+   </p><p>
+    Configure <code class="command">ssh-agent</code> to start automatically and load
+    your keys by entering the following lines in your
+    <code class="filename">~/.profile</code> file:
+   </p><div class="verbatim-wrap"><pre class="screen">eval "$(ssh-agent)"
+ssh-add</pre></div><p>
+    The first line starts <code class="command">ssh-agent</code>, and the second line
+    loads all the keys in your <code class="filename">~/.ssh</code> folder.
+    When you open an SSH session that requires public key authentication,
+    you will be prompted for the passphrase. After the passphrase has been
+    provided once, you will not have to enter it again, until after you
+    restart your system.
+   </p><p>
+    You may configure <code class="filename">~/.profile</code> to load only
+    specific keys, like the following example that loads
+    <code class="filename">id_rsa</code> and <code class="filename">id_ed25519</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ssh-add <em class="replaceable">id_rsa id_ed25519</em></pre></div><section class="sect2" id="sec-ssh-authentic-agent" data-id-title="Using ssh-agent in an X session"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.10.1 </span><span class="title-name">Using <code class="command">ssh-agent</code> in an X session</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-authentic-agent">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, <code class="command">ssh-agent</code> is automatically
+     started by the GNOME display manager. To also invoke
+     <code class="command">ssh-add</code> to add your keys to the agent at the
+     beginning of an X session, do the following:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Log in as the desired user and check whether the file
+       <code class="filename">~/.xinitrc</code> exists.
+      </p></li><li class="step"><p>
+       If it does not exist, use an existing template or copy it from
+       <code class="filename">/etc/skel</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">if [ -f ~/.xinitrc.template ]; then mv ~/.xinitrc.template ~/.xinitrc; \
+else cp /etc/skel/.xinitrc.template ~/.xinitrc; fi</pre></div></li><li class="step"><p>
+       If you have copied the template, search for the following lines and
+       uncomment them. If <code class="filename">~/.xinitrc</code> already existed,
+       add the following lines (without comment signs).
+      </p><div class="verbatim-wrap"><pre class="screen"># if test -S "$SSH_AUTH_SOCK" -a -x "$SSH_ASKPASS"; then
+#       ssh-add &lt; /dev/null
+# fi</pre></div></li><li class="step"><p>
+       When starting a new X session, you will be prompted for your SSH
+       passphrase.
+      </p></li></ol></div></div></section></section><section class="sect1" id="sec-ssh-change-passphrase" data-id-title="Changing an SSH private key passphrase"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.11 </span><span class="title-name">Changing an SSH private key passphrase</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-change-passphrase">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   You may change or remove the passphrase from a private key with
+   <code class="command">ssh-keygen</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -pf ~/.ssh/<em class="replaceable">server1</em></code>
+Enter old passphrase:
+Key has comment 'shared videos server1'
+Enter new passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved with the new passphrase.</pre></div></section><section class="sect1" id="sec-ssh-get-key-fingerprint" data-id-title="Retrieving a key fingerprint"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.12 </span><span class="title-name">Retrieving a key fingerprint</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-get-key-fingerprint">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Use the <code class="command">ssh-keygen</code> to display the public key
+   fingerprint. The following example prints the SHA256 hash for a
+   ED25519 key:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -lf <em class="replaceable">ldap-server</em></code>
+256 SHA256:W45lbmj24ZoASbrqW0q9+NhF04muvfKZ+FkRa2cCiqo comment (ED25519)</pre></div><p>
+   Add the <code class="command">-v</code> flag to display the ASCII art
+   representation of the key:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh-keygen -lvf <em class="replaceable">ldap-server</em></code>
+256 SHA256:W45lbmj24ZoASbrqW0q9+NhF04muvfKZ+FkRa2cCiqo comment (ED25519)
++--[ED25519 256]--+
+|                 |
+|                 |
+|    .. .         |
+|  .o..+ +        |
+| ...o+ BSo+      |
+|. ..o.o =X       |
+|...o o..* =      |
+|o.*.* =+ = .     |
+|E*o*+O. o.o      |
++----[SHA256]-----+</pre></div></section><section class="sect1" id="sec-ssh-programm-x" data-id-title="Starting X11 applications on a remote host"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.13 </span><span class="title-name">Starting X11 applications on a remote host</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-programm-x">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can run graphical applications that are installed on a
+    remote machine on your local computer.
+    <code class="literal">X11Forwarding Yes</code> must be set in the
+    <code class="filename">/etc/ssh/sshd_config</code> file on the remote machine.
+    Then, when you run <code class="command">ssh</code> with the <code class="option">-X</code>
+    option, the <code class="envar">DISPLAY</code> variable is automatically set on the
+    remote machine, and all X output is exported to the local machine over
+    the SSH connection. At the same time, X applications started remotely
+    cannot be intercepted by unauthorized users.
+   </p><p>
+    A quick test is to run a simple game from the remote machine, such as
+    GNOME Mines:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ssh wilber@sun</code>
+Password:
+Last login: Tue May 10 11:29:06 2022 from 192.168.163.13
+Have a lot of fun...
+
+wilber@sun<code class="prompt user">&gt; </code> <code class="command">gnome-mines</code></pre></div><p>
+     The remote application should appear on your local machine just as
+     though it were installed locally. (Note that network lag will affect
+     performance.) Close the remote application in the usual way, such as
+     clicking the close button. This closes only the application, and your
+     SSH session remains open.
+   </p><div id="id-1.8.6.4.15.6" data-id-title="X11 forwarding does not work on Wayland" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: X11 forwarding does not work on Wayland</div><p>
+     X11 forwarding requires the X Windows System, which is the default on
+     SLE, and not the Wayland display server protocol. The X Windows
+     System has built-in networking, while Wayland does not. Wayland is not
+     supported on SLE.
+    </p><p>
+     Use the following command to learn if your system runs X or Wayland:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">echo $XDG_SESSION_TYPE</code>
+x11</pre></div><p>
+     If Wayland is in use, it looks like the following example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">echo $XDG_SESSION_TYPE</code>
+wayland</pre></div><p>
+     The systemd way is to query with <code class="command">loginctl</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">loginctl show-session "$XDG_SESSION_ID" -p Type</code>
+Type=x11
+
+<code class="prompt user">&gt; </code><code class="command">loginctl show-session "$XDG_SESSION_ID" -p Type</code>
+Type=wayland</pre></div></div></section><section class="sect1" id="sec-ssh-programm-forwarding" data-id-title="Agent forwarding"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.14 </span><span class="title-name">Agent forwarding</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-programm-forwarding">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By adding the <code class="option">-A</code> option, the ssh-agent authentication
+    mechanism is carried over to the next machine. This way, you can work
+    from different machines without having to enter a password, but only if
+    you have distributed your public key to the destination hosts and
+    properly saved it there. (Refer to
+    <a class="xref" href="cha-ssh.html#sec-ssh-public-key-auth" title="22.6. Public key authentication">Section 22.6, “Public key authentication”</a> to learn how
+    to copy your public keys to other hosts.)
+   </p><p>
+    <code class="literal">AllowAgentForwarding yes</code> is the default in
+    <code class="filename">/etc/ssh/sshd_config</code>. Change it to
+    <code class="literal">No</code> to disable it.
+   </p></section><section class="sect1" id="sec-ssh-copy" data-id-title="scp—secure copy"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.15 </span><span class="title-name"><code class="command">scp</code>—secure copy</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-copy">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">scp</code> copies files to or from a remote machine.  If
+   the user name on jupiter is different than the user name on
+   sun, specify the latter using the
+   <code class="option"><em class="replaceable">USER_NAME</em>&amp;host</code> format. If
+   the file should be copied into a directory other than the remote
+   user's home directory, specify it as
+   sun:<em class="replaceable">DIRECTORY</em>. The following
+   examples show how to copy a file from a local to a remote machine and
+   vice versa.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>scp ~/MyLetter.tex tux@sun:/tmp <span class="callout" id="co-scp-local-remote">1</span>
+<code class="prompt user">&gt; </code>scp tux@sun:/tmp/MyLetter.tex ~ <span class="callout" id="co-scp-remote-local">2</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-scp-local-remote"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>local to remote</p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-scp-remote-local"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>remote to local</p></td></tr></table></div><div id="id-1.8.6.4.17.5" data-id-title="The -l option" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: The <code class="option">-l</code> option</div><p>
+    With the <code class="command">ssh</code> command, the option
+    <code class="option">-l</code> can be used to specify a remote user (as an
+    alternative to the
+    <code class="option"><em class="replaceable">USER_NAME</em>&amp;host</code>
+    format). With <code class="command">scp</code> the option <code class="option">-l</code>
+    is used to limit the bandwidth consumed by <code class="command">scp</code>.
+   </p></div><p>
+   After the correct password is entered, <code class="command">scp</code> starts the
+   data transfer. It displays a progress bar and the time remaining for each
+   file that is copied. Suppress all output with the <code class="option">-q</code>
+   option.
+  </p><p>
+   <code class="command">scp</code> also provides a recursive copying feature for
+   entire directories. The command
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>scp -r src/ sun:backup/</pre></div><p>
+   copies the entire contents of the directory <code class="filename">src</code>
+   including all subdirectories to the <code class="filename">~/backup</code>
+   directory on the host sun. If this subdirectory does not
+   exist, it is created automatically.
+  </p><p>
+   The <code class="option">-p</code> option tells <code class="command">scp</code> to leave the
+   time stamp of files unchanged. <code class="option">-C</code> compresses the data
+   transfer. This minimizes the data volume to transfer, but creates a
+   heavier burden on the processors of both machines.
+  </p></section><section class="sect1" id="sec-ssh-sftp" data-id-title="sftp—secure file transfer"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.16 </span><span class="title-name"><code class="command">sftp</code>—secure file transfer</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sftp">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-ssh-sftp-using" data-id-title="Using sftp"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.16.1 </span><span class="title-name">Using <code class="command">sftp</code></span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sftp-using">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If you want to copy several files from or to different locations,
+   <code class="command">sftp</code> is a convenient alternative to
+   <code class="command">scp</code>. It opens a shell with a set of commands similar
+   to a regular FTP shell. Type <code class="command">help</code> at the sftp-prompt
+   to get a list of available commands. More details are available from the
+   <code class="command">sftp</code> man page.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>sftp sun
+Enter passphrase for key '/home/tux/.ssh/id_rsa':
+Connected to sun.
+sftp&gt; help
+Available commands:
+bye                                Quit sftp
+cd path                            Change remote directory to 'path'
+[...]</pre></div></section><section class="sect2" id="sec-ssh-sftp-perms" data-id-title="Setting permissions for file uploads"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">22.16.2 </span><span class="title-name">Setting permissions for file uploads</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-sftp-perms">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As with a regular FTP server, a user can download and upload files to a
+    remote machine running an SFTP server
+    by using the <code class="command">put</code> command. By default the
+    files will be uploaded to the remote host with the same
+    permissions as on the local host. There are two options to
+    automatically alter these permissions:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.6.4.18.3.3.1"><span class="term">Setting a umask</span></dt><dd><p>
+       A umask works as a filter against the permissions of the original
+       file on the local host. It can only withdraw permissions:
+      </p><div class="informaltable"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+           <p>
+            permissions original
+           </p>
+          </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+           <p>
+            umask
+           </p>
+          </th><th style="border-bottom: 1px solid ; ">
+           <p>
+            permissions uploaded
+           </p>
+          </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+           <p>
+            0666
+           </p>
+          </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+           <p>
+            0002
+           </p>
+          </td><td style="border-bottom: 1px solid ; ">
+           <p>
+            0664
+           </p>
+          </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+           <p>
+            0600
+           </p>
+          </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+           <p>
+            0002
+           </p>
+          </td><td style="border-bottom: 1px solid ; ">
+           <p>
+            0600
+           </p>
+          </td></tr><tr><td style="border-right: 1px solid ; ">
+           <p>
+            0775
+           </p>
+          </td><td style="border-right: 1px solid ; ">
+           <p>
+            0025
+           </p>
+          </td><td>
+           <p>
+            0750
+           </p>
+          </td></tr></tbody></table></div><p>
+       To apply a umask on an SFTP server, edit the file
+       <code class="filename">/etc/ssh/sshd_configuration</code>. Search for the line
+       beginning with <code class="literal">Subsystem sftp</code> and add the
+       <code class="option">-u</code> parameter with the desired setting, for example:
+      </p><div class="verbatim-wrap"><pre class="screen">Subsystem sftp /usr/lib/ssh/sftp-server -u 0002</pre></div></dd><dt id="id-1.8.6.4.18.3.3.2"><span class="term">Explicitly setting the permissions</span></dt><dd><p>
+       Explicitly setting the permissions sets the same permissions for all
+       files uploaded via SFTP. Specify a three-digit pattern such as
+       <code class="literal">600</code>, <code class="literal">644</code>, or
+       <code class="literal">755</code> with <code class="option">-u</code>. When both
+       <code class="option">-m</code> and <code class="option">-u</code> are specified,
+       <code class="literal">-u</code> is ignored.
+      </p><p>
+       To apply explicit permissions for uploaded files on an SFTP server,
+       edit the file <code class="filename">/etc/ssh/sshd_config</code>.
+       Search for the line beginning with <code class="literal">Subsystem sftp</code>
+       and add the <code class="option">-m</code> parameter with the desired setting,
+       for example:
+      </p><div class="verbatim-wrap"><pre class="screen">Subsystem sftp /usr/lib/ssh/sftp-server -m 600</pre></div></dd></dl></div><div id="id-1.8.6.4.18.3.4" data-id-title="Viewing the SSH daemon log file" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Viewing the SSH daemon log file</div><p>
+    To watch the log entries from the <code class="systemitem">sshd</code> use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> journalctl -u sshd</pre></div></div></section></section><section class="sect1" id="sec-ssh-port-forwarding" data-id-title="Port forwarding (SSH tunneling)"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.17 </span><span class="title-name">Port forwarding (SSH tunneling)</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-ssh-port-forwarding">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">ssh</code> can also be used to redirect TCP/IP connections.
+   This feature, also called <code class="literal">SSH tunneling</code>, redirects TCP
+   connections to a certain port to another machine via an encrypted
+   channel.
+  </p><p>
+   With the following command, any connection directed to jupiter port 25
+   (SMTP) is redirected to the SMTP port on sun. This is
+   especially useful for those using SMTP servers without SMTP-AUTH or
+   POP-before-SMTP features. From any arbitrary location connected to a
+   network, e-mail can be transferred to the <span class="quote">“<span class="quote">home</span>”</span> mail server
+   for delivery.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ssh -L 25:sun:25 jupiter</pre></div><p>
+   Similarly, all POP3 requests (port 110) on jupiter can be
+   forwarded to the POP3 port of sun with this command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ssh -L 110:sun:110 jupiter</pre></div><p>
+   Both commands must be executed as <code class="systemitem">root</code>, because the connection
+   is made to privileged local ports. E-mail is sent and retrieved by
+   normal users in an existing SSH connection. The SMTP and POP3 host
+   must be set to <code class="literal">localhost</code> for this to
+   work. Additional information can be found in the manual pages for
+   each of the programs described above and in the OpenSSH package
+   documentation under
+   <code class="filename">/usr/share/doc/packages/openssh</code>.
+  </p></section><section class="sect1" id="sec-security-ssh-moreinfo" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.18 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-ssh.html#sec-security-ssh-moreinfo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP3/xml/security_ssh.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.6.4.20.3.1"><span class="term"><a class="link" href="https://www.openssh.com" target="_blank">https://www.openssh.com</a>
+    </span></dt><dd><p>
+      The home page of OpenSSH
+     </p></dd><dt id="id-1.8.6.4.20.3.2"><span class="term"><a class="link" href="https://en.wikibooks.org/wiki/OpenSSH" target="_blank">https://en.wikibooks.org/wiki/OpenSSH</a>
+    </span></dt><dd><p>
+      The OpenSSH Wikibook
+     </p></dd><dt id="id-1.8.6.4.20.3.3"><span class="term"><code class="command">man sshd</code>
+    </span></dt><dd><p>
+      The man page of the OpenSSH daemon
+     </p></dd><dt id="id-1.8.6.4.20.3.4"><span class="term"><code class="command">man ssh_config</code>
+    </span></dt><dd><p>
+      The man page of the OpenSSH SSH client configuration files
+     </p></dd><dt id="id-1.8.6.4.20.3.5"><span class="term"><code class="command">man scp</code>
+    , </span><span class="term"><code class="command">man sftp</code>
+    , </span><span class="term"><code class="command">man ssh</code>
+    , </span><span class="term"><code class="command">man ssh-add</code>
+    , </span><span class="term"><code class="command">man ssh-copy-id</code>
+    , </span><span class="term"><code class="command">man ssh-keygen</code>
+    </span></dt><dd><p>
+      Man pages of several binary files to securely copy files
+      (<code class="command">scp</code>, <code class="command">sftp</code>), to log in
+      (<code class="command">slogin</code>, <code class="command">ssh</code>), and to manage
+      keys.
+     </p></dd><dt id="id-1.8.6.4.20.3.6"><span class="term">
+     <code class="filename">/usr/share/doc/packages/openssh-common/README.SUSE</code>
+    , </span><span class="term">
+     <code class="filename">/usr/share/doc/packages/openssh-common/README.FIPS</code>
+    </span></dt><dd><p>
+      SUSE package specific documentation; changes in defaults with
+      respect to upstream, notes on FIPS mode etc.
+     </p></dd></dl></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-xauth.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 21 </span>X Window System and X authentication</span></a> </div><div><a class="pagination-link next" href="cha-security-firewall.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 23 </span>Masquerading and firewalls</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-overview"><span class="title-number">22.1 </span><span class="title-name">OpenSSH overview</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-server-config"><span class="title-number">22.2 </span><span class="title-name">Server hardening</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-password-auth"><span class="title-number">22.3 </span><span class="title-name">Password authentication</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-authentic-gen-key"><span class="title-number">22.4 </span><span class="title-name">Managing user and host encryption keys</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-sshdserver-rotation"><span class="title-number">22.5 </span><span class="title-name">Rotating host keys</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-public-key-auth"><span class="title-number">22.6 </span><span class="title-name">Public key authentication</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-passphrase-less-auth"><span class="title-number">22.7 </span><span class="title-name">Passphrase-less public key authentication</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-certificate-auth"><span class="title-number">22.8 </span><span class="title-name">OpenSSH certificate authentication</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-gnome-keyring"><span class="title-number">22.9 </span><span class="title-name">Automated public key logins with gnome-keyring</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-ssh-agent"><span class="title-number">22.10 </span><span class="title-name">Automated public key logins in the console with ssh-agent</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-change-passphrase"><span class="title-number">22.11 </span><span class="title-name">Changing an SSH private key passphrase</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-get-key-fingerprint"><span class="title-number">22.12 </span><span class="title-name">Retrieving a key fingerprint</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-programm-x"><span class="title-number">22.13 </span><span class="title-name">Starting X11 applications on a remote host</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-programm-forwarding"><span class="title-number">22.14 </span><span class="title-name">Agent forwarding</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-copy"><span class="title-number">22.15 </span><span class="title-name"><code class="command">scp</code>—secure copy</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-sftp"><span class="title-number">22.16 </span><span class="title-name"><code class="command">sftp</code>—secure file transfer</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-ssh-port-forwarding"><span class="title-number">22.17 </span><span class="title-name">Port forwarding (SSH tunneling)</span></a></span></li><li><span class="sect1"><a href="cha-ssh.html#sec-security-ssh-moreinfo"><span class="title-number">22.18 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

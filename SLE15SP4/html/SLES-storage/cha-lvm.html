@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP4 | Storage Administration Guide | LVM configuration</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="LVM configuration | SLES 15 SP4"/>
+<meta name="description" content="This chapter describes the principles behind Logical Volume Manager (LVM) and its basic features that make it useful under many circumstances. The Ya…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 5. LVM configuration"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "LVM configuration",
+  
+    "description": "This chapter describes the principles behind Logical Volume Manager (LVM) and its basic features that make it useful under many circumstances. The Ya…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-lvm.html" title="Part II. Logical volumes (LVM)"/><link rel="next" href="cha-lvm-snapshots.html" title="Chapter 6. LVM volume snapshots"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-lvm.html">Logical volumes (LVM)</a><span> / </span><a class="crumb" href="cha-lvm.html">LVM configuration</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li class="active"><a href="part-lvm.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" you-are-here"><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li><a href="part-software-raid.html" class="has-children "><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li><a href="part-net-storage.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-lvm" data-id-title="LVM configuration"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">5 </span><span class="title-name">LVM configuration</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This chapter describes the principles behind Logical Volume Manager (LVM)
+    and its basic features that make it useful under many circumstances. The
+    YaST LVM configuration can be reached from the YaST Expert Partitioner.
+    This partitioning tool enables you to edit and delete existing partitions
+    and create new ones that should be used with LVM.
+   </p></div></div></div></div><div id="id-1.11.4.2.3" data-id-title="Risks" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Risks</div><p>
+   Using LVM might be associated with increased risk, such as data loss. Risks
+   also include application crashes, power failures, and faulty commands. Save
+   your data before implementing LVM or reconfiguring volumes. Never work
+   without a backup.
+  </p></div><section class="sect1" id="sec-lvm-explained" data-id-title="Understanding the logical volume manager"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.1 </span><span class="title-name">Understanding the logical volume manager</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-explained">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   LVM enables flexible distribution of hard disk space over several physical
+   volumes (hard disks, partitions, LUNs). It was developed because the need to
+   change the segmentation of hard disk space might arise only after the
+   initial partitioning has already been done during installation. Because it
+   is difficult to modify partitions on a running system, LVM provides a
+   virtual pool (volume group or VG) of storage space from which logical
+   volumes (LVs) can be created as needed. The operating system accesses these
+   LVs instead of the physical partitions. Volume groups can span more than one
+   disk, so that several disks or parts of them can constitute one single VG.
+   In this way, LVM provides a kind of abstraction from the physical disk space
+   that allows its segmentation to be changed in a much easier and safer way
+   than through physical repartitioning.
+  </p><p>
+   <a class="xref" href="cha-lvm.html#fig-lvm-explain" title="Physical partitioning versus LVM">Figure 5.1, “Physical partitioning versus LVM”</a> compares physical
+   partitioning (left) with LVM segmentation (right). On the left side, one
+   single disk has been divided into three physical partitions (PART), each
+   with a mount point (MP) assigned so that the operating system can access
+   them. On the right side, two disks have been divided into two and three
+   physical partitions each. Two LVM volume groups (VG 1 and VG 2)
+   have been defined. VG 1 contains two partitions from DISK 1 and
+   one from DISK 2. VG 2 contains the remaining two partitions from
+   DISK 2.
+  </p><div class="figure" id="fig-lvm-explain"><div class="figure-contents"><div class="mediaobject"><a href="images/lvm.png"><img src="images/lvm.png" width="100%" alt="Physical partitioning versus LVM" title="Physical partitioning versus LVM"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 5.1: </span><span class="title-name">Physical partitioning versus LVM </span></span><a title="Permalink" class="permalink" href="cha-lvm.html#fig-lvm-explain">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div><p>
+   In LVM, the physical disk partitions that are incorporated in a volume group
+   are called physical volumes (PVs). Within the volume groups in
+   <a class="xref" href="cha-lvm.html#fig-lvm-explain" title="Physical partitioning versus LVM">Figure 5.1, “Physical partitioning versus LVM”</a>, four logical
+   volumes (LV 1 through LV 4) have been defined, which can be used
+   by the operating system via the associated mount points (MP). The border
+   between different logical volumes need not be aligned with any partition
+   border. See the border between LV 1 and LV 2 in this example.
+  </p><p>
+   LVM features:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Several hard disks or partitions can be combined in a large logical
+     volume.
+    </p></li><li class="listitem"><p>
+     Provided the configuration is suitable, an LV (such as
+     <code class="filename">/usr</code>) can be enlarged when the free space is
+     exhausted.
+    </p></li><li class="listitem"><p>
+     Using LVM, it is possible to add hard disks or LVs in a running system.
+     However, this requires hotpluggable hardware that is capable of such
+     actions.
+    </p></li><li class="listitem"><p>
+     It is possible to activate a <span class="emphasis"><em>striping mode</em></span> that
+     distributes the data stream of a logical volume over several physical
+     volumes. If these physical volumes reside on different disks, this can
+     improve the reading and writing performance like RAID 0.
+    </p></li><li class="listitem"><p>
+     The snapshot feature enables consistent backups (especially for servers)
+     in the running system.
+    </p></li></ul></div><div id="id-1.11.4.2.4.8" data-id-title="LVM and RAID" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: LVM and RAID</div><p>
+    Even though LVM also supports RAID levels 0, 1, 4, 5 and 6, we recommend
+    using <code class="literal">mdraid</code> (see <a class="xref" href="cha-raid.html" title="Chapter 7. Software RAID configuration">Chapter 7, <em>Software RAID configuration</em></a>). However,
+    LVM works fine with RAID 0 and 1, as RAID 0 is similar to common
+    logical volume management (individual logical blocks are mapped onto blocks
+    on the physical devices). LVM used on top of RAID 1 can keep track of
+    mirror synchronization and is fully able to manage the synchronization
+    process. With higher RAID levels you need a management daemon that monitors
+    the states of attached disks and can inform administrators if there is a
+    problem in the disk array. LVM includes such a daemon, but in exceptional
+    situations such as a device failure, the daemon does not work properly.
+   </p></div><div id="id-1.11.4.2.4.9" data-id-title="IBM Z: LVM root file system" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: IBM Z: LVM root file system</div><p>
+    If you configure the system with a root file system on LVM or software RAID
+    array, you must place <code class="filename">/boot</code> on a separate, non-LVM or
+    non-RAID partition, otherwise the system will fail to boot. The recommended
+    size for such a partition is 500 MB and the recommended file system is
+    Ext4.
+   </p></div><p>
+   With these features, using LVM already makes sense for heavily-used home PCs
+   or small servers. If you have a growing data stock, as in the case of
+   databases, music archives, or user directories, LVM is especially useful. It
+   allows file systems that are larger than the physical hard disk. However,
+   keep in mind that working with LVM is different from working with
+   conventional partitions.
+  </p><p>
+   You can manage new or existing LVM storage objects by using the YaST
+   Partitioner. Instructions and further information about configuring LVM are
+   available in the official
+   <a class="link" href="https://tldp.org/HOWTO/LVM-HOWTO/" target="_blank"><em class="citetitle">LVM
+   HOWTO</em></a>.
+  </p></section><section class="sect1" id="sec-lvm-vg" data-id-title="Creating volume groups"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.2 </span><span class="title-name">Creating volume groups</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-vg">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   An LVM volume group (VG) organizes the Linux LVM partitions into a logical
+   pool of space. You can carve out logical volumes from the available space in
+   the group. The Linux LVM partitions in a group can be on the same or
+   different disks. You can add partitions or entire disks to expand the size
+   of the group.
+  </p><p>
+   To use an entire disk, it must not contain any partitions. When using
+   partitions, they must not be mounted. YaST will automatically change their
+   partition type to <code class="literal">0x8E Linux LVM</code> when adding them to a
+   VG.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Launch YaST and open the <span class="guimenu">Partitioner</span>.
+    </p></li><li class="step"><p>
+     In case you need to reconfigure your existing partitioning setup, proceed
+     as follows. Refer to <span class="intraxref">Book “Deployment Guide”, Chapter 10 “<span class="guimenu">Expert Partitioner</span>”, Section 10.1 “Using the <span class="guimenu">Expert Partitioner</span>”</span> for details.
+     Skip this step if you only want to use unused disks or partitions that
+     already exist.
+    </p><div id="id-1.11.4.2.5.4.2.2" data-id-title="Physical volumes on unpartitioned disks" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Physical volumes on unpartitioned disks</div><p>
+      You can use an unpartitioned disk as a physical volume (PV) if that disk
+      is <span class="emphasis"><em>not</em></span> the one where the operating system is
+      installed and from which it boots.
+     </p><p>
+      As unpartitioned disks appear as <span class="emphasis"><em>unused</em></span> at the
+      system level, they can easily be overwritten or wrongly accessed.
+     </p></div><ol type="a" class="substeps"><li class="step"><p>
+       To use an entire hard disk that already contains partitions, delete all
+       partitions on that disk.
+      </p></li><li class="step"><p>
+       To use a partition that is currently mounted, unmount it.
+      </p></li></ol></li><li class="step"><p>
+     In the left panel, select <span class="guimenu">Volume Management</span>.
+    </p><p>
+     A list of existing Volume Groups opens in the right panel.
+    </p></li><li class="step"><p>
+     At the lower left of the Volume Management page, click <span class="guimenu">Add Volume
+     Group</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/yast2_lvm4_a.png"><img src="images/yast2_lvm4_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+     Define the volume group as follows:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Specify the <span class="guimenu">Volume Group Name</span>.
+      </p><p>
+       If you are creating a volume group at install time, the name
+       <code class="literal">system</code> is suggested for a volume group that will
+       contain the <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> system files.
+      </p></li><li class="step"><p>
+       Specify the <span class="guimenu">Physical Extent Size</span>.
+      </p><p>
+       The <span class="guimenu">Physical Extent Size</span> defines the size of a
+       physical block in the volume group. All the disk space in a volume group
+       is handled in chunks of this size. Values can be from 1 KB to 16 GB in
+       powers of 2. This value is normally set to 4 MB.
+      </p><p>
+       In LVM1, a 4 MB physical extent allowed a maximum LV size of 256 GB
+       because it supports only up to 65534 extents per LV. LVM2, which is used
+       on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, does not restrict the number of physical extents.
+       Having many extents has no impact on I/O performance to the logical
+       volume, but it slows down the LVM tools.
+      </p><div id="id-1.11.4.2.5.4.5.2.2.4" data-id-title="Physical extent sizes" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Physical extent sizes</div><p>
+        Different physical extent sizes should not be mixed in a single VG. The
+        extent should not be modified after the initial setup.
+       </p></div></li><li class="step"><p>
+       In the <span class="guimenu">Available Physical Volumes</span> list, select the
+       Linux LVM partitions that you want to make part of this volume group,
+       then click <span class="guimenu">Add</span> to move them to the <span class="guimenu">Selected
+       Physical Volumes</span> list.
+      </p></li><li class="step"><p>
+       Click <span class="guimenu">Finish</span>.
+      </p><p>
+       The new group appears in the <span class="guimenu">Volume Groups</span> list.
+      </p></li></ol></li><li class="step"><p>
+     On the Volume Management page, click <span class="guimenu">Next</span>, verify that
+     the new volume group is listed, then click <span class="guimenu">Finish</span>.
+    </p></li><li class="step"><p>
+     To check which physical devices are part of the volume group, open the
+     YaST Partitioner at any time in the running system and click
+     <span class="guimenu">Volume Management</span> › <span class="guimenu">Edit</span> › <span class="guimenu">Physical Devices</span>. Leave this screen with
+     <span class="guimenu">Abort</span>.
+    </p><div class="figure" id="fig-yast2-lvm-physical-volumes"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_lvm5_a.png"><img src="images/yast2_lvm5_a.png" width="100%" alt="Physical volumes in the volume group named DATA" title="Physical volumes in the volume group named DATA"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 5.2: </span><span class="title-name">Physical volumes in the volume group named DATA </span></span><a title="Permalink" class="permalink" href="cha-lvm.html#fig-yast2-lvm-physical-volumes">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></li></ol></div></div></section><section class="sect1" id="sec-lvm-lv" data-id-title="Creating logical volumes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.3 </span><span class="title-name">Creating logical volumes</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-lv">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A logical volume provides a pool of space similar to what a hard disk does.
+   To make this space usable, you need to define logical volumes. A logical
+   volume is similar to a regular partition—you can format and mount it.
+  </p><p>
+   Use the YaST Partitioner to create logical volumes from an existing volume
+   group. Assign at least one logical volume to each volume group. You can
+   create new logical volumes as needed until all free space in the volume
+   group has been exhausted. An LVM logical volume can optionally be thinly
+   provisioned, allowing you to create logical volumes with sizes that overbook
+   the available free space (see <a class="xref" href="cha-lvm.html#sec-lvm-lv-thin" title="5.3.1. Thinly provisioned logical volumes">Section 5.3.1, “Thinly provisioned logical volumes”</a> for more
+   information).
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Normal volume:</span>
+      (Default) The volume’s space is allocated immediately.
+     </p></li><li class="listitem"><p><span class="formalpara-title">Thin pool:</span>
+      The logical volume is a pool of space that is reserved for use with thin
+      volumes. The thin volumes can allocate their needed space from it on
+      demand.
+     </p></li><li class="listitem"><p><span class="formalpara-title">Thin volume:</span>
+      The volume is created as a sparse volume. The volume allocates needed
+      space on demand from a thin pool.
+     </p></li><li class="listitem"><p><span class="formalpara-title">Mirrored volume:</span>
+      The volume is created with a defined count of mirrors.
+     </p></li></ul></div><div class="procedure" id="pro-lvm-lv" data-id-title="Setting up a logical volume"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 5.1: </span><span class="title-name">Setting up a logical volume </span></span><a title="Permalink" class="permalink" href="cha-lvm.html#pro-lvm-lv">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Launch YaST and open the <span class="guimenu">Partitioner</span>.
+    </p></li><li class="step"><p>
+     In the left panel, select <span class="guimenu">Volume Management</span>. A list of
+     existing Volume Groups opens in the right panel.
+    </p></li><li class="step"><p>
+     Select the volume group in which you want to create the volume and choose
+     <span class="guimenu">Logical Volumes</span> › <span class="guimenu">Add Logical
+     Volume</span>.
+    </p></li><li class="step"><p>
+     Provide a <span class="guimenu">Name</span> for the volume and choose
+     <span class="guimenu">Normal Volume</span> (refer to
+     <a class="xref" href="cha-lvm.html#sec-lvm-lv-thin" title="5.3.1. Thinly provisioned logical volumes">Section 5.3.1, “Thinly provisioned logical volumes”</a> for setting up thinly provisioned
+     volumes). Proceed with <span class="guimenu">Next</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/yast2_lvm9_a.png"><img src="images/yast2_lvm9_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+     Specify the size of the volume and whether to use multiple stripes.
+    </p><p>
+     Using a striped volume, the data will be distributed among several
+     physical volumes. If these physical volumes reside on different hard
+     disks, this generally results in a better reading and writing performance
+     (like RAID 0). The maximum number of available stripes is equal to
+     the number of physical volumes. The default (<code class="literal">1</code> is to
+     not use multiple stripes.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/yast2_lvm10_a.png"><img src="images/yast2_lvm10_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+     Choose a <span class="guimenu">Role</span> for the volume. Your choice here only
+     affects the default values for the upcoming dialog. They can be changed in
+     the next step. If in doubt, choose <span class="guimenu">Raw Volume
+     (Unformatted)</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/yast2_lvm11_a.png"><img src="images/yast2_lvm11_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+     Under <span class="guimenu">Formatting Options</span>, select <span class="guimenu">Format
+     Partition</span>, then select the <span class="guimenu">File system</span>. The
+     content of the <span class="guimenu">Options</span> menu depends on the file system.
+     Usually there is no need to change the defaults.
+    </p><p>
+     Under <span class="guimenu">Mounting Options</span>, select <span class="guimenu">Mount
+     partition</span>, then select the mount point. Click <span class="guimenu">Fstab
+     Options</span> to add special mounting options for the volume.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Finish</span>.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Next</span>, verify that the changes are listed, then
+     click <span class="guimenu">Finish</span>.
+    </p></li></ol></div></div><section class="sect2" id="sec-lvm-lv-thin" data-id-title="Thinly provisioned logical volumes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.3.1 </span><span class="title-name">Thinly provisioned logical volumes</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-lv-thin">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    An LVM logical volume can optionally be thinly provisioned. Thin
+    provisioning allows you to create logical volumes with sizes that overbook
+    the available free space. You create a thin pool that contains unused space
+    reserved for use with an arbitrary number of thin volumes. A thin volume is
+    created as a sparse volume and space is allocated from a thin pool as
+    needed. The thin pool can be expanded dynamically when needed for
+    cost-effective allocation of storage space. Thinly provisioned volumes also
+    support snapshots which can be managed with Snapper—see
+    <span class="intraxref">Book “Administration Guide”, Chapter 10 “System recovery and snapshot management with Snapper”</span> for more information.
+   </p><p>
+    To set up a thinly provisioned logical volume, proceed as described in
+    <a class="xref" href="cha-lvm.html#pro-lvm-lv" title="Setting up a logical volume">Procedure 5.1, “Setting up a logical volume”</a>. When it comes to choosing the volume type, do
+    not choose <span class="guimenu">Normal Volume</span>, but rather <span class="guimenu">Thin
+    Volume</span> or <span class="guimenu">Thin Pool</span>.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.4.2.6.6.4.1"><span class="term"><span class="guimenu">Thin pool</span></span></dt><dd><p>
+       The logical volume is a pool of space that is reserved for use with thin
+       volumes. The thin volumes can allocate their needed space from it on
+       demand.
+      </p></dd><dt id="id-1.11.4.2.6.6.4.2"><span class="term"><span class="guimenu">Thin volume</span></span></dt><dd><p>
+       The volume is created as a sparse volume. The volume allocates needed
+       space on demand from a thin pool.
+      </p></dd></dl></div><div id="id-1.11.4.2.6.6.5" data-id-title="Thinly provisioned volumes in a cluster" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Thinly provisioned volumes in a cluster</div><p>
+     To use thinly provisioned volumes in a cluster, the thin pool and the thin
+     volumes that use it must be managed in a single cluster resource. This
+     allows the thin volumes and thin pool to always be mounted exclusively on
+     the same node.
+    </p></div></section><section class="sect2" id="sec-lvm-lv-mirror" data-id-title="Creating mirrored volumes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.3.2 </span><span class="title-name">Creating mirrored volumes</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-lv-mirror">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    A logical volume can be created with several mirrors. LVM ensures that data
+    written to an underlying physical volume is mirrored onto a different
+    physical volume. Thus even though a physical volume crashes, you can still
+    access the data on the logical volume. LVM also keeps a log file to manage
+    the synchronization process. The log contains information about which
+    volume regions are currently undergoing synchronization with mirrors. By
+    default the log is stored on disk and if possible on a different disk than
+    are the mirrors. But you may specify a different location for the log, for
+    example volatile memory.
+   </p><p>
+    Currently there are two types of mirror implementation available: "normal"
+    (non-raid) <code class="literal">mirror</code> logical volumes and
+    <code class="literal">raid1</code> logical volumes.
+   </p><p>
+    After you create mirrored logical volumes, you can perform standard
+    operations with mirrored logical volumes like activating, extending, and
+    removing.
+   </p><section class="sect3" id="sec-mirroring-procedure" data-id-title="Setting up mirrored non-RAID logical volumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.3.2.1 </span><span class="title-name">Setting up mirrored non-RAID logical volumes</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-mirroring-procedure">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To create a mirrored volume use the <code class="command">lvcreate</code> command.
+     The following example creates a 500 GB logical volume with two
+     mirrors called <span class="emphasis"><em>lv1</em></span>, which uses a volume group
+     <span class="emphasis"><em>vg1</em></span>.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvcreate -L 500G -m 2 -n lv1 vg1</pre></div><p>
+     Such a logical volume is a linear volume (without striping) that provides
+     three copies of the file system. The <code class="literal">m</code> option specifies
+     the count of mirrors. The <code class="literal">L</code> option specifies the size
+     of the logical volumes.
+    </p><p>
+     The logical volume is divided into regions of the 512 KB default size. If
+     you need a different size of regions, use the <code class="literal">-R</code> option
+     followed by the desired region size in megabytes. Or you can configure the
+     preferred region size by editing the <code class="literal">mirror_region_size</code>
+     option in the <code class="filename">lvm.conf</code> file.
+    </p></section><section class="sect3" id="sec-raid1-lvm-mirroring" data-id-title="Setting up raid1 logical volumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.3.2.2 </span><span class="title-name">Setting up <code class="literal">raid1</code> logical volumes</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-raid1-lvm-mirroring">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     As LVM supports RAID you can implement mirroring by using RAID1. Such
+     implementation provides the following advantages compared to the non-raid
+     mirrors:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       LVM maintains a fully redundant bitmap area for each mirror image, which
+       increases its fault handling capabilities.
+      </p></li><li class="listitem"><p>
+       Mirror images can be temporarily split from the array and then merged
+       back.
+      </p></li><li class="listitem"><p>
+       The array can handle transient failures.
+      </p></li><li class="listitem"><p>
+       The LVM RAID 1 implementation supports snapshots.
+      </p></li></ul></div><p>
+     On the other hand, this type of mirroring implementation does not enable
+     to create a logical volume in a clustered volume group.
+    </p><p>
+     To create a mirror volume by using RAID, issue the command
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvcreate --type raid1 -m 1 -L 1G -n lv1 vg1</pre></div><p>
+     where the options/parameters have the following meanings:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       <code class="literal">--type</code> - you need to specify
+       <code class="literal">raid1</code>, otherwise the command uses the implicit
+       segment type <code class="literal">mirror</code> and creates a non-raid mirror.
+      </p></li><li class="listitem"><p>
+       <code class="literal">-m</code> - specifies the count of mirrors.
+      </p></li><li class="listitem"><p>
+       <code class="literal">-L</code> - specifies the size of the logical volume.
+      </p></li><li class="listitem"><p>
+       <code class="literal">-n</code> - by using this option you specify a name of the
+       logical volume.
+      </p></li><li class="listitem"><p>
+       <code class="literal">vg1</code> - is a name of the volume group used by the
+       logical volume.
+      </p></li></ul></div><p>
+     LVM creates a logical volume of one extent size for each data volume in
+     the array. If you have two mirrored volumes, LVM creates another two
+     volumes that stores metadata.
+    </p><p>
+     After you create a RAID logical volume, you can use the volume in the same
+     way as a common logical volume. You can activate it, extend it, etc.
+    </p></section></section></section><section class="sect1" id="sec-lvm-activate-vgs" data-id-title="Automatically activating non-root LVM volume groups"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.4 </span><span class="title-name">Automatically activating non-root LVM volume groups</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-activate-vgs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Activation behavior for non-root LVM volume groups is controlled in the
+   <code class="literal">/etc/lvm/lvm.conf</code> file and by the
+   <em class="parameter">auto_activation_volume_list</em> parameter. By default,
+   the parameter is empty and all volumes are activated. To activate only some
+   volume groups, add the names in quotes and separate them with commas, for
+   example:
+  </p><div class="verbatim-wrap"><pre class="screen">auto_activation_volume_list = [ "vg1", "vg2/lvol1", "@tag1", "@*" ]</pre></div><p>
+   If you have defined a list in the
+   <em class="parameter">auto_activation_volume_list</em> parameter, the following
+   will happen:
+   
+  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+     Each logical volume is first checked against this list.
+    </p></li><li class="listitem"><p>
+     If it does not match, the logical volume will not be activated.
+    </p></li></ol></div><p>
+   By default, non-root LVM volume groups are automatically activated on system
+   restart by dracut. This parameter allows you to activate all volume groups
+   on system restart, or to activate only specified non-root LVM volume groups.
+  </p></section><section class="sect1" id="sec-lvm-vg-resize" data-id-title="Resizing an existing volume group"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.5 </span><span class="title-name">Resizing an existing volume group</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-vg-resize">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The space provided by a volume group can be expanded at any time in the
+   running system without service interruption by adding physical volumes. This
+   will allow you to add logical volumes to the group or to expand the size of
+   existing volumes as described in <a class="xref" href="cha-lvm.html#sec-lvm-lv-resize" title="5.6. Resizing a logical volume">Section 5.6, “Resizing a logical volume”</a>.
+  </p><p>
+   It is also possible to reduce the size of the volume group by removing
+   physical volumes. YaST only allows to remove physical volumes that are
+   currently unused. To find out which physical volumes are currently in use,
+   run the following command. The partitions (physical volumes) listed in the
+   <code class="literal">PE Ranges</code> column are the ones in use:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> pvs -o vg_name,lv_name,pv_name,seg_pe_ranges
+root's password:
+  VG   LV    PV         PE Ranges
+             /dev/sda1
+  DATA DEVEL /dev/sda5  /dev/sda5:0-3839
+  DATA       /dev/sda5
+  DATA LOCAL /dev/sda6  /dev/sda6:0-2559
+  DATA       /dev/sda7
+  DATA       /dev/sdb1
+  DATA       /dev/sdc1</pre></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Launch YaST and open the <span class="guimenu">Partitioner</span>.
+    </p></li><li class="step"><p>
+     In the left panel, select <span class="guimenu">Volume Management</span>. A list of
+     existing Volume Groups opens in the right panel.
+    </p></li><li class="step"><p>
+     Select the volume group you want to change, activate the <span class="guimenu">Physical
+     Volumes</span> tab, then click <span class="guimenu">Change</span>.
+    </p><div class="informalfigure"><div class="mediaobject"><a href="images/yast2_lvm8_a.png"><img src="images/yast2_lvm8_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+     Do one of the following:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Add:</span>
+        Expand the size of the volume group by moving one or more physical
+        volumes (LVM partitions) from the <span class="guimenu">Available Physical
+        Volumes</span> list to the <span class="guimenu">Selected Physical
+        Volumes</span> list.
+       </p></li><li class="listitem"><p><span class="formalpara-title">Remove:</span>
+        Reduce the size of the volume group by moving one or more physical
+        volumes (LVM partitions) from the <span class="guimenu">Selected Physical
+        Volumes</span> list to the <span class="guimenu">Available Physical
+        Volumes</span> list.
+       </p></li></ul></div></li><li class="step"><p>
+     Click <span class="guimenu">Finish</span>.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Next</span>, verify that the changes are listed, then
+     click <span class="guimenu">Finish</span>.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-lvm-lv-resize" data-id-title="Resizing a logical volume"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.6 </span><span class="title-name">Resizing a logical volume</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-lv-resize">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   In case there is unused free space available in the volume group, you can
+   enlarge a logical volume to provide more usable space. You may also reduce
+   the size of a volume to free space in the volume group that can be used by
+   other logical volumes.
+  </p><div id="id-1.11.4.2.9.3" data-id-title="Online resizing" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <span class="quote">“<span class="quote">Online</span>”</span> resizing</div><p>
+    When reducing the size of a volume, YaST automatically resizes its file
+    system, too. Whether a volume that is currently mounted can be resized
+    <span class="quote">“<span class="quote">online</span>”</span> (that is while being mounted), depends on its file
+    system. Growing the file system online is supported by Btrfs, XFS, Ext3,
+    and Ext4.
+   </p><p>
+    Shrinking the file system online is only supported by Btrfs. To shrink the
+    Ext2/3/4 file systems, you need to unmount them. Shrinking volumes
+    formatted with XFS is not possible, since XFS does not support file system
+    shrinking.
+   </p></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Launch YaST and under <span class="guimenu">System</span>, open the <span class="guimenu">Partitioner</span>.
+    </p></li><li class="step"><p>
+     In the left panel, select the LVM volume group.
+    </p></li><li class="step"><p>
+     Select the logical volume you want to change in the right panel. 
+    </p></li><li class="step"><p>
+         Click <span class="guimenu">Device</span> and then <span class="guimenu">Resize</span>.
+      </p><div class="informalfigure"><div class="mediaobject"><a href="images/yast2_lvm12_a.png"><img src="images/yast2_lvm12_a.png" width="100%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+     Set the intended size by using one of the following options:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Maximum size. </span>
+        Expand the size of the logical volume to use all space left in the
+        volume group.
+       </p></li><li class="listitem"><p><span class="formalpara-title">Minimum size. </span>
+        Reduce the size of the logical volume to the size occupied by the data
+        and the file system metadata.
+       </p></li><li class="listitem"><p><span class="formalpara-title">Custom size. </span>
+        Specify the new size for the volume. The value must be within the range
+        of the minimum and maximum values listed above. Use K, M, G, T for
+        Kilobytes, Megabytes, Gigabytes and Terabytes (for example
+        <code class="literal">20G</code>).
+       </p></li></ul></div></li><li class="step"><p>
+     Click <span class="guimenu">Next</span>, verify that the change is listed, then
+     click <span class="guimenu">Finish</span>.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-lvm-delete" data-id-title="Deleting a volume group or a logical volume"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.7 </span><span class="title-name">Deleting a volume group or a logical volume</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-delete">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.11.4.2.10.2" data-id-title="Data loss" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Data loss</div><p>
+    Deleting a volume group destroys all of the data in each of its member
+    partitions. Deleting a logical volume destroys all data stored on the
+    volume.
+   </p></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Launch YaST and open the <span class="guimenu">Partitioner</span>.
+    </p></li><li class="step"><p>
+     In the left panel, select <span class="guimenu">Volume Management</span>. A list of
+     existing volume groups opens in the right panel.
+    </p></li><li class="step"><p>
+     Select the volume group or the logical volume you want to remove and click
+     <span class="guimenu">Delete</span>.
+    </p></li><li class="step"><p>
+     Depending on your choice, warning dialogs are shown. Confirm them with
+     <span class="guimenu">Yes</span>.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Next</span>, verify that the deleted volume group is
+     listed—deletion is indicated by a red-colored font—then click
+     <span class="guimenu">Finish</span>.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-lvm-onboot" data-id-title="Disabling LVM on boot"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.8 </span><span class="title-name">Disabling LVM on boot</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-onboot">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If there is an error on the LVM storage, the scanning of LVM volumes may
+   prevent the emergency/rescue shell from being entered. This makes further problem diagnosis
+   impossible. To disable this scanning in case of an LVM storage failure,
+   you can pass the <code class="option">nolvm</code> option on the kernel command line.
+  </p></section><section class="sect1" id="sec-lvm-cli" data-id-title="Using LVM commands"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.9 </span><span class="title-name">Using LVM commands</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-cli">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   For information about using LVM commands, see the <code class="command">man</code>
+   pages for the commands described in the following table. All commands need
+   to be executed with <code class="systemitem">root</code> privileges. Either use
+   <code class="command">sudo</code> <em class="replaceable">COMMAND</em> (recommended), or
+   execute them directly as <code class="systemitem">root</code>.
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">LVM commands </span></span><a title="Permalink" class="permalink" href="cha-lvm.html#id-1.11.4.2.12.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.11.4.2.12.3.2"><span class="term"><code class="command">pvcreate <em class="replaceable">DEVICE</em></code></span></dt><dd><p>
+      Initializes a device (such as <code class="filename">/dev/sdb1</code>) for use by
+      LVM as a physical volume. If there is any file system on the specified
+      device, a warning appears. Bear in mind that <code class="command">pvcreate</code>
+      checks for existing file systems only if <code class="command">blkid</code> is
+      installed (which is done by default). If <code class="command">blkid</code> is not
+      available, <code class="command">pvcreate</code> will not produce any warning and
+      you may lose your file system without any warning.
+     </p></dd><dt id="id-1.11.4.2.12.3.3"><span class="term"><code class="command">pvdisplay <em class="replaceable">DEVICE</em></code></span></dt><dd><p>
+      Displays information about the LVM physical volume, such as whether it is
+      currently being used in a logical volume.
+     </p></dd><dt id="id-1.11.4.2.12.3.4"><span class="term"><code class="command">vgcreate -c y <em class="replaceable">VG_NAME</em> <em class="replaceable">DEV1</em> [<em class="replaceable">DEV2</em>...]</code></span></dt><dd><p>
+      Creates a clustered volume group with one or more specified devices.
+     </p></dd><dt id="id-1.11.4.2.12.3.5"><span class="term"><code class="command">vgcreate --activationmode <em class="replaceable">ACTIVATION_MODE</em> <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Configures the mode of volume group activation. You can specify one of
+      the following values:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <code class="literal">complete</code> - only the logical volumes that are not
+        affected by missing physical volumes can be activated, even though the
+        particular logical volume can tolerate such a failure.
+       </p></li><li class="listitem"><p>
+        <code class="literal">degraded</code> - is the default activation mode. If there
+        is a sufficient level of redundancy to activate a logical volume, the
+        logical volume can be activated even though some physical volumes are
+        missing.
+       </p></li><li class="listitem"><p>
+        <code class="literal">partial</code> - the LVM tries to activate the volume group
+        even though some physical volumes are missing. If a non-redundant
+        logical volume is missing important physical volumes, then the logical
+        volume usually cannot be activated and is handled as an error target.
+       </p></li></ul></div></dd><dt id="id-1.11.4.2.12.3.6"><span class="term"><code class="command">vgchange -a [ey|n] <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Activates (<code class="literal">-a ey</code>) or deactivates (<code class="literal">-a
+      n</code>) a volume group and its logical volumes for input/output.
+     </p><p>
+      When activating a volume in a cluster, ensure that you use the
+      <code class="literal">ey</code> option. This option is used by default in the load
+      script.
+     </p></dd><dt id="id-1.11.4.2.12.3.7"><span class="term"><code class="command">vgremove <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Removes a volume group. Before using this command, remove the logical
+      volumes, then deactivate the volume group.
+     </p></dd><dt id="id-1.11.4.2.12.3.8"><span class="term"><code class="command">vgdisplay <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Displays information about a specified volume group.
+     </p><p>
+      To find the total physical extent of a volume group, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>vgdisplay <em class="replaceable">VG_NAME</em> | grep "Total PE"</pre></div></dd><dt id="id-1.11.4.2.12.3.9"><span class="term"><code class="command">lvcreate -L <em class="replaceable">SIZE</em> -n <em class="replaceable">LV_NAME</em> <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Creates a logical volume of the specified size.
+     </p></dd><dt id="id-1.11.4.2.12.3.10"><span class="term"><code class="command">lvcreate -L <em class="replaceable">SIZE</em> --thinpool <em class="replaceable">POOL_NAME</em> <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Creates a thin pool named <code class="literal">myPool</code> of the specified size
+      from the volume group <em class="replaceable">VG_NAME</em>.
+     </p><p>
+      The following example creates a thin pool with a size of 5 GB from the
+      volume group <code class="literal">LOCAL</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvcreate -L 5G --thinpool myPool LOCAL</pre></div></dd><dt id="id-1.11.4.2.12.3.11"><span class="term"><code class="command">lvcreate -T <em class="replaceable">VG_NAME</em>/<em class="replaceable">POOL_NAME</em> -V <em class="replaceable">SIZE</em> -n <em class="replaceable">LV_NAME</em></code></span></dt><dd><p>
+      Creates a thin logical volume within the pool
+      <em class="replaceable">POOL_NAME</em>. The following example creates a 1GB
+      thin volume named <code class="literal">myThin1</code> from the pool
+      <code class="literal">myPool</code> on the volume group <code class="literal">LOCAL</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvcreate -T LOCAL/myPool -V 1G -n myThin1</pre></div></dd><dt id="id-1.11.4.2.12.3.12"><span class="term"><code class="command">lvcreate -T <em class="replaceable">VG_NAME</em>/<em class="replaceable">POOL_NAME</em> -V <em class="replaceable">SIZE</em> -L <em class="replaceable">SIZE</em> -n <em class="replaceable">LV_NAME</em></code></span></dt><dd><p>
+      It is also possible to combine thin pool and thin logical volume creation
+      in one command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvcreate -T LOCAL/myPool -V 1G -L 5G -n myThin1</pre></div></dd><dt id="id-1.11.4.2.12.3.13"><span class="term"><code class="command">lvcreate --activationmode <em class="replaceable">ACTIVATION_MODE</em> <em class="replaceable">LV_NAME</em></code></span></dt><dd><p>
+      Configures the mode of logical volume activation. You can specify one of
+      the following values:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <code class="literal">complete</code> - the logical volume can be activated only
+        if all its physical volumes are active.
+       </p></li><li class="listitem"><p>
+        <code class="literal">degraded</code> - is the default activation mode. If there
+        is a sufficient level of redundancy to activate a logical volume, the
+        logical volume can be activated even though some physical volumes are
+        missing.
+       </p></li><li class="listitem"><p>
+        <code class="literal">partial</code> - the LVM tries to activate the volume even
+        though some physical volumes are missing. In this case part of the
+        logical volume may be unavailable and it might cause data loss. This
+        option is typically not used, but might be useful when restoring data.
+       </p></li></ul></div><p>
+      You can specify the activation mode also in
+      <code class="filename">/etc/lvm/lvm.conf</code> by specifying one of the above
+      described values of the <code class="literal">activation_mode</code> configuration
+      option.
+     </p></dd><dt id="id-1.11.4.2.12.3.14"><span class="term"><code class="command">lvcreate -s [-L <em class="replaceable">SIZE</em>] -n <em class="replaceable">SNAP_VOLUME</em> <em class="replaceable">SOURCE_VOLUME_PATH</em> <em class="replaceable">VG_NAME</em></code></span></dt><dd><p>
+      Creates a snapshot volume for the specified logical volume. If the size
+      option (<code class="option">-L</code> or <code class="option">--size</code>) is not included,
+      the snapshot is created as a thin snapshot.
+     </p></dd><dt id="id-1.11.4.2.12.3.15"><span class="term"><code class="command">lvremove /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em></code></span></dt><dd><p>
+      Removes a logical volume.
+     </p><p>
+      Before using this command, close the logical volume by unmounting it with
+      the <code class="command">umount</code> command.
+     </p></dd><dt id="id-1.11.4.2.12.3.16"><span class="term"><code class="command">lvremove <em class="replaceable">SNAP_VOLUME_PATH</em></code></span></dt><dd><p>
+      Removes a snapshot volume.
+     </p></dd><dt id="id-1.11.4.2.12.3.17"><span class="term"><code class="command">lvconvert --merge <em class="replaceable">SNAP_VOLUME_PATH</em></code></span></dt><dd><p>
+      Reverts the logical volume to the version of the snapshot.
+     </p></dd><dt id="id-1.11.4.2.12.3.18"><span class="term"><code class="command">vgextend <em class="replaceable">VG_NAME</em> <em class="replaceable">DEVICE</em></code></span></dt><dd><p>
+      Adds the specified device (physical volume) to an existing volume group.
+     </p></dd><dt id="id-1.11.4.2.12.3.19"><span class="term"><code class="command">vgreduce <em class="replaceable">VG_NAME</em> <em class="replaceable">DEVICE</em></code></span></dt><dd><p>
+      Removes a specified physical volume from an existing volume group.
+     </p><p>
+      Ensure that the physical volume is not currently being used by a logical
+      volume. If it is, you must move the data to another physical volume by
+      using the <code class="command">pvmove</code> command.
+     </p></dd><dt id="id-1.11.4.2.12.3.20"><span class="term"><code class="command">lvextend -L <em class="replaceable">SIZE</em> /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em></code></span></dt><dd><p>
+      Extends the size of a specified logical volume. Afterward, you must also
+      expand the file system to take advantage of the newly available space.
+      See <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing file systems">Chapter 2, <em>Resizing file systems</em></a> for details.
+     </p></dd><dt id="id-1.11.4.2.12.3.21"><span class="term"><code class="command">lvreduce -L <em class="replaceable">SIZE</em> /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em></code></span></dt><dd><p>
+      Reduces the size of a specified logical volume.
+     </p><p>
+      Ensure that you reduce the size of the file system first before shrinking
+      the volume, otherwise you risk losing data. See
+      <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing file systems">Chapter 2, <em>Resizing file systems</em></a> for details.
+     </p></dd><dt id="id-1.11.4.2.12.3.22"><span class="term"><code class="command">lvrename /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em> /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">NEW_LV_NAME</em></code></span></dt><dd><p>
+      Renames an existing LVM logical volume. It does not change the volume
+      group name.
+     </p></dd></dl></div><div id="id-1.11.4.2.12.4" data-id-title="Bypassing udev on volume creation" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Bypassing udev on volume creation</div><p>
+    In case you want to manage LV device nodes and symbolic links by using LVM
+    instead of by using udev rules, you can achieve this by disabling
+    notifications from udev with one of the following methods:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Configure <code class="literal">activation/udev_rules = 0</code> and
+      <code class="literal">activation/udev_sync = 0</code> in
+      <code class="filename">/etc/lvm/lvm.conf</code>.
+     </p><p>
+      Note that specifying <code class="option">--nodevsync</code> with the
+      <code class="command">lvcreate</code> command has the same effect as
+      <code class="literal">activation/udev_sync = 0</code>; setting
+      <code class="literal">activation/udev_rules = 0</code> is still required.
+     </p></li><li class="listitem"><p>
+      Setting the environment variable <code class="envar">DM_DISABLE_UDEV</code>:
+     </p><div class="verbatim-wrap"><pre class="screen">export DM_DISABLE_UDEV=1</pre></div><p>
+      This will also disable notifications from udev. In addition, all udev
+      related settings from <code class="filename">/etc/lvm/lvm.conf</code> will be
+      ignored.
+     </p></li></ul></div></div><section class="sect2" id="sec-lvm-cli-resize" data-id-title="Resizing a logical volume with commands"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.9.1 </span><span class="title-name">Resizing a logical volume with commands</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-cli-resize">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">lvresize</code>, <code class="command">lvextend</code>, and
+    <code class="command">lvreduce</code> commands are used to resize logical volumes.
+    See the man pages for each of these commands for syntax and options
+    information. To extend an LV there must be enough unallocated space
+    available on the VG.
+   </p><p>
+    The recommended way to grow or shrink a logical volume is to use the YaST
+    Partitioner. When using YaST, the size of the file system in the volume
+    will automatically be adjusted, too.
+   </p><p>
+    LVs can be extended or shrunk manually while they are being used, but this
+    may not be true for a file system on them. Extending or shrinking the LV
+    does not automatically modify the size of file systems in the volume. You
+    must use a different command to grow the file system afterward. For
+    information about resizing file systems, see
+    <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing file systems">Chapter 2, <em>Resizing file systems</em></a>.
+   </p><p>
+    Ensure that you use the right sequence when manually resizing an LV:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      If you extend an LV, you must extend the LV before you attempt to grow
+      the file system.
+     </p></li><li class="listitem"><p>
+      If you shrink an LV, you must shrink the file system before you attempt
+      to shrink the LV.
+     </p></li></ul></div><p>
+    To extend the size of a logical volume:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      If the logical volume contains an Ext2 or Ext4 file system, which do not
+      support online growing, dismount it. In case it contains file systems
+      that are hosted for a virtual machine (such as a Xen VM), shut down the
+      VM first.
+     </p></li><li class="step"><p>
+      At the terminal prompt, enter the following command to grow the size of
+      the logical volume:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvextend -L +<em class="replaceable">SIZE</em> /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em></pre></div><p>
+      For <em class="replaceable">SIZE</em>, specify the amount of space you want
+      to add to the logical volume, such as 10 GB. Replace
+      <code class="filename">/dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em></code>
+      with the Linux path to the logical volume, such as
+      <code class="filename">/dev/LOCAL/DATA</code>. For example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvextend -L +10GB /dev/vg1/v1</pre></div></li><li class="step"><p>
+      Adjust the size of the file system. See <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing file systems">Chapter 2, <em>Resizing file systems</em></a>
+      for details.
+     </p></li><li class="step"><p>
+      In case you have dismounted the file system, mount it again.
+     </p></li></ol></div></div><p>
+    For example, to extend an LV with a (mounted and active) Btrfs on it by 10
+    GB:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvextend −L +10G /dev/LOCAL/DATA
+<code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem resize +10G /dev/LOCAL/DATA</pre></div><p>
+    To shrink the size of a logical volume:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      If the logical volume does not contain a Btrfs file system, dismount it.
+      In case it contains file systems that are hosted for a virtual machine
+      (such as a Xen VM), shut down the VM first. Note that volumes with the
+      XFS file system cannot be reduced in size.
+     </p></li><li class="step"><p>
+      Adjust the size of the file system. See <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing file systems">Chapter 2, <em>Resizing file systems</em></a>
+      for details.
+     </p></li><li class="step"><p>
+      At the terminal prompt, enter the following command to shrink the size of
+      the logical volume to the size of the file system:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvreduce /dev/<em class="replaceable">VG_NAME</em>/<em class="replaceable">LV_NAME</em></pre></div></li><li class="step"><p>
+      In case you have unmounted the file system, mount it again.
+     </p></li></ol></div></div><p>
+    For example, to shrink an LV with a Btrfs on it by 5 GB:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem resize -size 5G /dev/LOCAL/DATA
+sudo lvreduce /dev/LOCAL/DATA</pre></div><div id="id-1.11.4.2.12.5.15" data-id-title="Resizing the Volume and the File System with a Single Command" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Resizing the Volume and the File System with a Single Command</div><p>
+     Starting with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> 12 SP1, <code class="command">lvextend</code>,
+     <code class="command">lvresize</code>, and <code class="command">lvreduce</code> support the
+     option <code class="option">--resizefs</code> which will not only change the size of
+     the volume, but will also resize the file system. Therefore the examples
+     for <code class="command">lvextend</code> and <code class="command">lvreduce</code> shown
+     above can alternatively be run as follows:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvextend --resizefs −L +10G /dev/LOCAL/DATA
+<code class="prompt user">&gt; </code><code class="command">sudo</code> lvreduce  --resizefs -L -5G /dev/LOCAL/DATA</pre></div><p>
+     Note that the <code class="option">--resizefs</code> is supported for the following
+     file systems: ext2/3/4, Btrfs, XFS. Resizing Btrfs with this option is
+     currently only available on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, since it is not yet accepted
+     upstream.
+    </p></div></section><section class="sect2" id="sec-lvm-cli-lvmcache" data-id-title="Using LVM cache volumes"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.9.2 </span><span class="title-name">Using LVM cache volumes</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-cli-lvmcache">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    LVM supports the use of fast block devices (such as an SSD device) as
+    write-back or write-through caches for large slower block devices. The
+    cache logical volume type uses a small and fast LV to improve the
+    performance of a large and slow LV.
+   </p><p>
+    To set up LVM caching, you need to create two logical volumes on the
+    caching device. A large one is used for the caching itself, a smaller
+    volume is used to store the caching metadata. These two volumes need to be
+    part of the same volume group as the original volume. When these volumes
+    are created, they need to be converted into a cache pool which needs to be
+    attached to the original volume:
+   </p><div class="procedure" id="id-1.11.4.2.12.6.4" data-id-title="Setting up a cached logical volume"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 5.2: </span><span class="title-name">Setting up a cached logical volume </span></span><a title="Permalink" class="permalink" href="cha-lvm.html#id-1.11.4.2.12.6.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Create the original volume (on a slow device) if not already existing.
+     </p></li><li class="step"><p>
+      Add the physical volume (from a fast device) to the same volume group the
+      original volume is part of and create the cache data volume on the
+      physical volume.
+     </p></li><li class="step"><p>
+      Create the cache metadata volume. The size should be 1/1000 of the size
+      of the cache data volume, with a minimum size of 8 MB.
+     </p></li><li class="step"><p>
+      Combine the cache data volume and metadata volume into a cache pool
+      volume:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvconvert --type cache-pool --poolmetadata <em class="replaceable">VOLUME_GROUP/METADATA_VOLUME</em> <em class="replaceable">VOLUME_GROUP/CACHING_VOLUME</em></pre></div></li><li class="step"><p>
+      Attach the cache pool to the original volume:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvconvert --type cache --cachepool <em class="replaceable">VOLUME_GROUP/CACHING_VOLUME</em> <em class="replaceable">VOLUME_GROUP/ORIGINAL_VOLUME</em></pre></div></li></ol></div></div><p>
+    For more information on LVM caching, see the lvmcache(7) man page.
+   </p></section></section><section class="sect1" id="sec-lvm-tagging" data-id-title="Tagging LVM2 storage objects"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">5.10 </span><span class="title-name">Tagging LVM2 storage objects</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A tag is an unordered keyword or term assigned to the metadata of a storage
+   object. Tagging allows you to classify collections of LVM storage objects in
+   ways that you find useful by attaching an unordered list of tags to their
+   metadata.
+  </p><section class="sect2" id="sec-lvm-tagging-using" data-id-title="Using LVM2 tags"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.10.1 </span><span class="title-name">Using LVM2 tags</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-using">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After you tag the LVM2 storage objects, you can use the tags in commands to
+    accomplish the following tasks:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Select LVM objects for processing according to the presence or absence of
+      specific tags.
+     </p></li><li class="listitem"><p>
+      Use tags in the configuration file to control which volume groups and
+      logical volumes are activated on a server.
+     </p></li><li class="listitem"><p>
+      Override settings in a global configuration file by specifying tags in
+      the command.
+     </p></li></ul></div><p>
+    A tag can be used in place of any command line LVM object reference that
+    accepts:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      a list of objects
+     </p></li><li class="listitem"><p>
+      a single object as long as the tag expands to a single object
+     </p></li></ul></div><p>
+    Replacing the object name with a tag is not supported everywhere yet. After
+    the arguments are expanded, duplicate arguments in a list are resolved by
+    removing the duplicate arguments, and retaining the first instance of each
+    argument.
+   </p><p>
+    Wherever there might be ambiguity of argument type, you must prefix a tag
+    with the commercial at sign (@) character, such as
+    <code class="literal">@mytag</code>. Elsewhere, using the <span class="quote">“<span class="quote">@</span>”</span> prefix is
+    optional.
+   </p></section><section class="sect2" id="sec-lvm-tagging-requirements" data-id-title="Requirements for creating LVM2 tags"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.10.2 </span><span class="title-name">Requirements for creating LVM2 tags</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-requirements">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Consider the following requirements when using tags with LVM:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.4.2.13.4.3.1"><span class="term">Supported characters</span></dt><dd><p>
+       An LVM tag word can contain the ASCII uppercase characters A to Z,
+       lowercase characters a to z, numbers 0 to 9, underscore (_), plus (+),
+       hyphen (-), and period (.). The word cannot begin with a hyphen. The
+       maximum length is 128 characters.
+      </p></dd><dt id="id-1.11.4.2.13.4.3.2"><span class="term">Supported storage objects</span></dt><dd><p>
+       You can tag LVM2 physical volumes, volume groups, logical volumes, and
+       logical volume segments. PV tags are stored in its volume group’s
+       metadata. Deleting a volume group also deletes the tags in the orphaned
+       physical volume. Snapshots cannot be tagged, but their origin can be
+       tagged.
+      </p><p>
+       LVM1 objects cannot be tagged because the disk format does not support
+       it.
+      </p></dd></dl></div></section><section class="sect2" id="sec-lvm-tagging-syntax" data-id-title="Command line tag syntax"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.10.3 </span><span class="title-name">Command line tag syntax</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-syntax">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.4.2.13.5.2.1"><span class="term"><code class="option">--addtag</code><em class="replaceable">TAG_INFO</em></span></dt><dd><p>
+       Add a tag to (or <span class="emphasis"><em>tag</em></span>) an LVM2 storage object.
+       Example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --addtag @db1 vg1</pre></div></dd><dt id="id-1.11.4.2.13.5.2.2"><span class="term"><code class="option">--deltag</code><em class="replaceable">TAG_INFO</em></span></dt><dd><p>
+       Remove a tag from (or <span class="emphasis"><em>untag</em></span>) an LVM2 storage
+       object. Example:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --deltag @db1 vg1</pre></div></dd><dt id="id-1.11.4.2.13.5.2.3"><span class="term"><code class="option">--tag</code><em class="replaceable">TAG_INFO</em></span></dt><dd><p>
+       Specify the tag to use to narrow the list of volume groups or logical
+       volumes to be activated or deactivated.
+      </p><p>
+       Enter the following to activate the volume if it has a tag that matches
+       the tag provided (example):
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvchange -ay --tag @db1 vg1/vol2</pre></div></dd></dl></div></section><section class="sect2" id="sec-lvm-tagging-config" data-id-title="Configuration file syntax"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.10.4 </span><span class="title-name">Configuration file syntax</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-config">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following sections show example configurations for certain use cases.
+   </p><section class="sect3" id="sec-lvm-tagging-configuration-hostnames-enable" data-id-title="Enabling host name tags in the lvm.conf file"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.10.4.1 </span><span class="title-name">Enabling host name tags in the <code class="filename">lvm.conf</code> file</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-configuration-hostnames-enable">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Add the following code to the <code class="filename">/etc/lvm/lvm.conf</code> file
+     to enable host tags that are defined separately on host in a
+     <code class="filename">/etc/lvm/lvm_&lt;<em class="replaceable">HOSTNAME</em>&gt;.conf</code>
+     file.
+    </p><div class="verbatim-wrap"><pre class="screen">tags {
+   # Enable hostname tags
+   hosttags = 1
+}</pre></div><p>
+     You place the activation code in the
+     <code class="filename">/etc/lvm/lvm_&lt;<em class="replaceable">HOSTNAME</em>&gt;.conf</code>
+     file on the host. See
+     <a class="xref" href="cha-lvm.html#sec-lvm-tagging-configuration-activate" title="5.10.4.3. Defining activation">Section 5.10.4.3, “Defining activation”</a>.
+    </p></section><section class="sect3" id="sec-lvm-tagging-configuration-hostnames-define" data-id-title="Defining tags for host names in the lvm.conf file"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.10.4.2 </span><span class="title-name">Defining tags for host names in the lvm.conf file</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-configuration-hostnames-define">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><div class="verbatim-wrap"><pre class="screen">tags {
+
+   tag1 { }
+      # Tag does not require a match to be set.
+
+   tag2 {
+      # If no exact match, tag is not set.
+      host_list = [ "hostname1", "hostname2" ]
+   }
+}</pre></div></section><section class="sect3" id="sec-lvm-tagging-configuration-activate" data-id-title="Defining activation"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.10.4.3 </span><span class="title-name">Defining activation</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-configuration-activate">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     You can modify the <code class="filename">/etc/lvm/lvm.conf</code> file to activate
+     LVM logical volumes based on tags.
+    </p><p>
+     In a text editor, add the following code to the file:
+    </p><div class="verbatim-wrap"><pre class="screen">  activation {
+      volume_list = [ "vg1/lvol0", "@database" ]
+  }</pre></div><p>
+     Replace <code class="literal">@database</code> with your tag. Use
+     <code class="literal">"@*"</code> to match the tag against any tag set on the host.
+    </p><p>
+     The activation command matches against <em class="replaceable">VGNAME</em>,
+     <em class="replaceable">VGNAME/LVNAME</em>, or
+     @<em class="replaceable">TAG</em> set in the metadata of volume groups and
+     logical volumes. A volume group or logical volume is activated only if a
+     metadata tag matches. The default if there is no match, is not to
+     activate.
+    </p><p>
+     If <code class="literal">volume_list</code> is not present and tags are defined on
+     the host, then it activates the volume group or logical volumes only if a
+     host tag matches a metadata tag.
+    </p><p>
+     If <code class="literal">volume_list</code> is defined, but empty, and no tags are
+     defined on the host, then it does not activate.
+    </p><p>
+     If volume_list is undefined, it imposes no limits on LV activation (all
+     are allowed).
+    </p></section><section class="sect3" id="sec-lvm-tagging-configuration-activate-multi" data-id-title="Defining activation in multiple host name configuration files"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.10.4.4 </span><span class="title-name">Defining activation in multiple host name configuration files</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-configuration-activate-multi">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     You can use the activation code in a host’s configuration file
+     (<code class="filename">/etc/lvm/lvm_&lt;<em class="replaceable">HOST_TAG</em>&gt;.conf</code>)
+     when host tags are enabled in the <code class="filename">lvm.conf</code> file. For
+     example, a server has two configuration files in the
+     <code class="filename">/etc/lvm/</code> directory:
+    </p><table style="border: 0; " class="simplelist"><tr><td><code class="filename">lvm.conf</code></td></tr><tr><td><code class="filename">lvm_&lt;<em class="replaceable">HOST_TAG</em>&gt;.conf</code></td></tr></table><p>
+     At start-up, load the <code class="filename">/etc/lvm/lvm.conf</code> file, and
+     process any tag settings in the file. If any host tags were defined, it
+     loads the related
+     <code class="filename">/etc/lvm/lvm_&lt;<em class="replaceable">HOST_TAG</em>&gt;.conf</code>
+     file. When it searches for a specific configuration file entry, it
+     searches the host tag file first, then the <code class="filename">lvm.conf
+     </code>file, and stops at the first match. Within the
+     <code class="filename">lvm_&lt;<em class="replaceable">HOST_TAG</em>&gt;.conf</code>
+     file, use the reverse order that tags were set in. This allows the file
+     for the last tag set to be searched first. New tags set in the host tag
+     file will trigger additional configuration file loads.
+    </p></section></section><section class="sect2" id="sec-lvm-tagging-activate-cluster" data-id-title="Using tags for a simple activation control in a cluster"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.10.5 </span><span class="title-name">Using tags for a simple activation control in a cluster</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-activate-cluster">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can set up a simple host name activation control by enabling the
+    <code class="literal">hostname_tags</code> option in the
+    <code class="filename">/etc/lvm/lvm.conf</code> file. Use the same file on every
+    machine in a cluster so that it is a global setting.
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      In a text editor, add the following code to the
+      <code class="filename">/etc/lvm/lvm.conf</code> file:
+     </p><div class="verbatim-wrap"><pre class="screen">tags {
+   hostname_tags = 1
+}</pre></div></li><li class="step"><p>
+      Replicate the file to all hosts in the cluster.
+     </p></li><li class="step"><p>
+      From any machine in the cluster, add <code class="literal">db1</code> to the list
+      of machines that activate <code class="filename">vg1/lvol2</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvchange --addtag @db1 vg1/lvol2</pre></div></li><li class="step"><p>
+      On the <code class="filename">db1</code> server, enter the following to activate
+      it:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> lvchange -ay vg1/vol2</pre></div></li></ol></div></div></section><section class="sect2" id="sec-lvm-tagging-activate-cluster-preferred" data-id-title="Using tags to activate on preferred hosts in a cluster"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">5.10.6 </span><span class="title-name">Using tags to activate on preferred hosts in a cluster</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-activate-cluster-preferred">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The examples in this section demonstrate two methods to accomplish the
+    following:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Activate volume group <code class="filename">vg1</code> only on the database hosts
+      <code class="filename">db1</code> and <code class="filename">db2</code>.
+     </p></li><li class="listitem"><p>
+      Activate volume group <code class="filename">vg2</code> only on the file server
+      host <code class="filename">fs1</code>.
+     </p></li><li class="listitem"><p>
+      Activate nothing initially on the file server backup host
+      <code class="filename">fsb1</code>, but be prepared for it to take over from the
+      file server host <code class="filename">fs1</code>.
+     </p></li></ul></div><section class="sect3" id="sec-lvm-tagging-activate-cluster-preferred-opt1" data-id-title="Option 1: centralized admin and static configuration replicated between hosts"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.10.6.1 </span><span class="title-name">Option 1: centralized admin and static configuration replicated between hosts</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-activate-cluster-preferred-opt1">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     In the following solution, the single configuration file is replicated
+     among multiple hosts.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Add the <code class="literal">@database</code> tag to the metadata of volume group
+       <code class="filename">vg1</code>. In a terminal, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --addtag @database vg1</pre></div></li><li class="step"><p>
+       Add the <code class="literal">@fileserver</code> tag to the metadata of volume
+       group <code class="filename">vg2</code>. In a terminal, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --addtag @fileserver vg2</pre></div></li><li class="step"><p>
+       In a text editor, modify the<code class="filename"> /etc/lvm/lvm.conf</code> file
+       with the following code to define the <code class="literal">@database</code>,
+       <code class="literal">@fileserver</code>, <code class="literal">@fileserverbackup</code>
+       tags.
+      </p><div class="verbatim-wrap"><pre class="screen">tags {
+   database {
+      host_list = [ "db1", "db2" ]
+   }
+   fileserver {
+      host_list = [ "fs1" ]
+   }
+   fileserverbackup {
+      host_list = [ "fsb1" ]
+   }
+}
+
+activation {
+   # Activate only if host has a tag that matches a metadata tag
+   volume_list = [ "@*" ]
+}</pre></div></li><li class="step"><p>
+       Replicate the modified<code class="filename"> /etc/lvm/lvm.conf</code> file to
+       the four hosts: <code class="filename">db1</code>, <code class="filename">db2</code>,
+       <code class="filename">fs1</code>, and <code class="filename">fsb1</code>.
+      </p></li><li class="step"><p>
+       If the file server host goes down, <code class="filename">vg2</code> can be
+       brought up on <code class="filename">fsb1</code> by entering the following
+       commands in a terminal on any node:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --addtag @fileserverbackup vg2
+<code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange -ay vg2</pre></div></li></ol></div></div></section><section class="sect3" id="sec-lvm-tagging-activate-cluster-preferred-opt2" data-id-title="Option 2: localized admin and configuration"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">5.10.6.2 </span><span class="title-name">Option 2: localized admin and configuration</span></span> <a title="Permalink" class="permalink" href="cha-lvm.html#sec-lvm-tagging-activate-cluster-preferred-opt2">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_lvm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     In the following solution, each host holds locally the information about
+     which classes of volume to activate.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Add the <code class="literal">@database</code> tag to the metadata of volume group
+       <code class="filename">vg1</code>. In a terminal, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --addtag @database vg1</pre></div></li><li class="step"><p>
+       Add the <code class="literal">@fileserver</code> tag to the metadata of volume
+       group <code class="filename">vg2</code>. In a terminal, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange --addtag @fileserver vg2</pre></div></li><li class="step"><p>
+       Enable host tags in the <code class="filename">/etc/lvm/lvm.conf</code> file:
+      </p><ol type="a" class="substeps"><li class="step"><p>
+         In a text editor, modify the <code class="filename">/etc/lvm/lvm.conf</code>
+         file with the following code to enable host tag configuration files.
+        </p><div class="verbatim-wrap"><pre class="screen">tags {
+   hosttags = 1
+}</pre></div></li><li class="step"><p>
+         Replicate the modified <code class="filename">/etc/lvm/lvm.conf</code> file to
+         the four hosts: <code class="filename">db1</code>, <code class="filename">db2</code>,
+         <code class="filename">fs1</code>, and <code class="filename">fsb1</code>.
+        </p></li></ol></li><li class="step"><p>
+       On host <code class="filename">db1</code>, create an activation configuration
+       file for the database host <code class="filename">db1</code>. In a text editor,
+       create <code class="filename">/etc/lvm/lvm_db1.conf</code> file and add the
+       following code:
+      </p><div class="verbatim-wrap"><pre class="screen">activation {
+   volume_list = [ "@database" ]
+}</pre></div></li><li class="step"><p>
+       On host <code class="filename">db2</code>, create an activation configuration
+       file for the database host <code class="filename">db2</code>. In a text editor,
+       create <code class="filename">/etc/lvm/lvm_db2.conf</code> file and add the
+       following code:
+      </p><div class="verbatim-wrap"><pre class="screen">activation {
+   volume_list = [ "@database" ]
+}</pre></div></li><li class="step"><p>
+       On host fs1, create an activation configuration file for the file server
+       host <code class="filename">fs1</code>. In a text editor, create
+       <code class="filename">/etc/lvm/lvm_fs1.conf</code> file and add the following
+       code:
+      </p><div class="verbatim-wrap"><pre class="screen">activation {
+   volume_list = [ "@fileserver" ]
+}</pre></div></li><li class="step"><p>
+       If the file server host <code class="filename">fs1</code> goes down, to bring up
+       a spare file server host fsb1 as a file server:
+      </p><ol type="a" class="substeps"><li class="step"><p>
+         On host <code class="filename">fsb1</code>, create an activation configuration
+         file for the host <code class="filename">fsb1</code>. In a text editor, create
+         <code class="filename">/etc/lvm/lvm_fsb1.conf</code> file and add the following
+         code:
+        </p><div class="verbatim-wrap"><pre class="screen">activation {
+   volume_list = [ "@fileserver" ]
+}</pre></div></li><li class="step"><p>
+         In a terminal, enter one of the following commands:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange -ay vg2
+<code class="prompt user">&gt; </code><code class="command">sudo</code> vgchange -ay @fileserver</pre></div></li></ol></li></ol></div></div></section></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-lvm.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part II </span>Logical volumes (LVM)</span></a> </div><div><a class="pagination-link next" href="cha-lvm-snapshots.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>LVM volume snapshots</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-explained"><span class="title-number">5.1 </span><span class="title-name">Understanding the logical volume manager</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-vg"><span class="title-number">5.2 </span><span class="title-name">Creating volume groups</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-lv"><span class="title-number">5.3 </span><span class="title-name">Creating logical volumes</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-activate-vgs"><span class="title-number">5.4 </span><span class="title-name">Automatically activating non-root LVM volume groups</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-vg-resize"><span class="title-number">5.5 </span><span class="title-name">Resizing an existing volume group</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-lv-resize"><span class="title-number">5.6 </span><span class="title-name">Resizing a logical volume</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-delete"><span class="title-number">5.7 </span><span class="title-name">Deleting a volume group or a logical volume</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-onboot"><span class="title-number">5.8 </span><span class="title-name">Disabling LVM on boot</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-cli"><span class="title-number">5.9 </span><span class="title-name">Using LVM commands</span></a></span></li><li><span class="sect1"><a href="cha-lvm.html#sec-lvm-tagging"><span class="title-number">5.10 </span><span class="title-name">Tagging LVM2 storage objects</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

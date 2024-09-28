@@ -1,0 +1,1632 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Administration Guide | The Apache HTTP server</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="The Apache HTTP server | SLES 15 SP5"/>
+<meta name="description" content="According to the surveys from and , the Apache HTTP Server (Apache) is one of the world's most popular Web servers. Developed by the Apache Software …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 42. The Apache HTTP server"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "The Apache HTTP server",
+  
+    "description": "According to the surveys from and , the Apache HTTP Server (Apache) is one of the world's most popular Web servers. Developed by the Apache Software …",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-17T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-slp.html" title="Chapter 41. SLP"/><link rel="next" href="cha-ftp.html" title="Chapter 43. Setting up an FTP server with YaST"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-services.html">Services</a><span> / </span><a class="crumb" href="cha-apache2.html">The Apache HTTP server</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="preface-administration.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-administration.html" class="has-children "><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name"><code class="command">sudo</code> basics</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">3 </span><span class="title-name">Using YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST in text mode</span></a></li><li><a href="cha-yast-lang.html" class=" "><span class="title-number">5 </span><span class="title-name">Changing language and country settings with YaST</span></a></li><li><a href="cha-yast-userman.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing users with YaST</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">7 </span><span class="title-name">YaST online update</span></a></li><li><a href="cha-yast-software.html" class=" "><span class="title-number">8 </span><span class="title-name">Installing or removing software</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">9 </span><span class="title-name">Managing software with command line tools</span></a></li><li><a href="cha-snapper.html" class=" "><span class="title-number">10 </span><span class="title-name">System recovery and snapshot management with Snapper</span></a></li><li><a href="cha-klp.html" class=" "><span class="title-number">11 </span><span class="title-name">Live kernel patching with KLP</span></a></li><li><a href="cha-ulp.html" class=" "><span class="title-number">12 </span><span class="title-name">User space live patching</span></a></li><li><a href="cha-transactional-updates.html" class=" "><span class="title-number">13 </span><span class="title-name">Transactional updates</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">14 </span><span class="title-name">Remote graphical sessions with VNC</span></a></li><li><a href="cha-net-rsync.html" class=" "><span class="title-number">15 </span><span class="title-name">File copying with RSync</span></a></li></ol></li><li><a href="part-boot.html" class="has-children "><span class="title-number">II </span><span class="title-name">Booting a Linux system</span></a><ol><li><a href="cha-boot.html" class=" "><span class="title-number">16 </span><span class="title-name">Introduction to the boot process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">17 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" "><span class="title-number">18 </span><span class="title-name">The boot loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">19 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li><a href="part-system.html" class="has-children "><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">20 </span><span class="title-name">32-bit and 64-bit applications in a 64-bit system environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">21 </span><span class="title-name"><code class="command">journalctl</code>: query the <code class="systemitem">systemd</code> journal</span></a></li><li><a href="cha-update-alternative.html" class=" "><span class="title-number">22 </span><span class="title-name"><code class="command">update-alternatives</code>: managing multiple versions of commands and files</span></a></li><li><a href="cha-network.html" class=" "><span class="title-number">23 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-print.html" class=" "><span class="title-number">24 </span><span class="title-name">Printer operation</span></a></li><li><a href="cha-gui-desktop.html" class=" "><span class="title-number">25 </span><span class="title-name">Graphical user interface</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">26 </span><span class="title-name">Accessing file systems with FUSE</span></a></li><li><a href="cha-tuning-multikernel.html" class=" "><span class="title-number">27 </span><span class="title-name">Installing multiple kernel versions</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing kernel modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">29 </span><span class="title-name">Dynamic kernel device management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">30 </span><span class="title-name">Special system features</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">31 </span><span class="title-name">Using NetworkManager</span></a></li></ol></li><li><a href="part-hardware.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Hardware configuration</span></a><ol><li><a href="sec-yast-hw-keym.html" class=" "><span class="title-number">32 </span><span class="title-name">Setting up your system keyboard layout</span></a></li><li><a href="sec-yast-hw-sound.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up sound cards</span></a></li><li><a href="sec-yast-hw-print.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a printer</span></a></li><li><a href="cha-power-mgmt.html" class=" "><span class="title-number">35 </span><span class="title-name">Power management</span></a></li><li><a href="cha-nvdimm.html" class=" "><span class="title-number">36 </span><span class="title-name">Persistent memory</span></a></li></ol></li><li class="active"><a href="part-services.html" class="has-children you-are-here"><span class="title-number">V </span><span class="title-name">Services</span></a><ol><li><a href="cha-yast-serviceman.html" class=" "><span class="title-number">37 </span><span class="title-name">Service management with YaST</span></a></li><li><a href="cha-ntp.html" class=" "><span class="title-number">38 </span><span class="title-name">Time synchronization with NTP</span></a></li><li><a href="cha-dns.html" class=" "><span class="title-number">39 </span><span class="title-name">The domain name system</span></a></li><li><a href="cha-dhcp.html" class=" "><span class="title-number">40 </span><span class="title-name">DHCP</span></a></li><li><a href="cha-slp.html" class=" "><span class="title-number">41 </span><span class="title-name">SLP</span></a></li><li><a href="cha-apache2.html" class=" you-are-here"><span class="title-number">42 </span><span class="title-name">The Apache HTTP server</span></a></li><li><a href="cha-ftp.html" class=" "><span class="title-number">43 </span><span class="title-name">Setting up an FTP server with YaST</span></a></li><li><a href="cha-squid.html" class=" "><span class="title-number">44 </span><span class="title-name">Squid caching proxy server</span></a></li><li><a href="cha-wbem.html" class=" "><span class="title-number">45 </span><span class="title-name">Web Based Enterprise Management using SFCB</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">46 </span><span class="title-name">Help and documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">47 </span><span class="title-name">Gathering system information for support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">48 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An example network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-apache2" data-id-title="The Apache HTTP server"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">42 </span><span class="title-name">The Apache HTTP server</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    According to the surveys from <a class="link" href="https://www.netcraft.com/" target="_blank">https://www.netcraft.com/</a>
+    and <a class="link" href="https://w3techs.com/" target="_blank">https://w3techs.com/</a>, the Apache HTTP Server
+    (Apache) is one of the world's most popular Web servers. Developed by the
+    Apache Software Foundation
+    (<a class="link" href="https://www.apache.org/" target="_blank">https://www.apache.org/</a>), it is available for
+    most operating systems. <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span> includes Apache version 2.4. This
+    chapter describes how to install, configure and operate Apache. It also
+    shows how to use additional modules, such as SSL, and how to troubleshoot
+    Apache.
+   </p></div></div></div></div><section class="sect1" id="sec-apache2-quickstart" data-id-title="Quick start"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.1 </span><span class="title-name">Quick start</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-quickstart">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section will help you quickly configure and start Apache.
+   You must be <code class="systemitem">root</code> to install and configure Apache.
+  </p><section class="sect2" id="sec-apache-quickstart-requirements" data-id-title="Requirements"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.1.1 </span><span class="title-name">Requirements</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache-quickstart-requirements">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Make sure the following requirements are met before trying to set up the
+    Apache Web server:
+   </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+      The machine's network is configured properly. For more information about
+      this topic, refer to <a class="xref" href="cha-network.html" title="Chapter 23. Basic networking">Chapter 23, <em>Basic networking</em></a>.
+     </p></li><li class="listitem"><p>
+      The machine's exact system time is maintained by synchronizing with a
+      time server. This is necessary because parts of the HTTP protocol depend
+      on the correct time. See <a class="xref" href="cha-ntp.html" title="Chapter 38. Time synchronization with NTP">Chapter 38, <em>Time synchronization with NTP</em></a> to learn more about
+      this topic.
+     </p></li><li class="listitem"><p>
+      The latest security updates are installed. If in doubt, run a YaST
+      Online Update.
+     </p></li><li class="listitem"><p>
+      The default Web server port (<code class="literal">80</code>) is opened in the
+      firewall. For this, configure <code class="systemitem">firewalld</code> to allow the service
+      <code class="literal">http</code> in the public zone. See
+      <span class="intraxref">Book “Security and Hardening Guide”, Chapter 23 “Masquerading and firewalls”, Section 23.4.3 “Configuring the firewall on the command line”</span> for details.
+     </p></li></ol></div></section><section class="sect2" id="sec-apache2-quickstart-installation" data-id-title="Installation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.1.2 </span><span class="title-name">Installation</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-quickstart-installation">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Apache on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is not installed by default. To install it with a
+    standard, predefined configuration that runs <span class="quote">“<span class="quote">out of the box</span>”</span>,
+    proceed as follows:
+   </p><div class="procedure" id="id-1.3.7.7.3.4.3" data-id-title="Installing Apache with the default configuration"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 42.1: </span><span class="title-name">Installing Apache with the default configuration </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#id-1.3.7.7.3.4.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start YaST and select <span class="guimenu">Software</span> › <span class="guimenu">Software Management</span>.
+     </p></li><li class="step"><p>
+      Choose <span class="guimenu">Filter</span> › <span class="guimenu">Patterns</span> and select <span class="guimenu">Web and LAMP Server</span>.
+     </p></li><li class="step"><p>
+      Confirm the installation of the dependent packages to finish the
+      installation process.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-apache-quickstart-start" data-id-title="Start"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.1.3 </span><span class="title-name">Start</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache-quickstart-start">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can start Apache automatically at boot time or start it manually.
+   </p><p>
+    To make sure that Apache is automatically started during boot in the
+    targets <code class="literal">multi-user.target</code> and
+    <code class="literal">graphical.target</code>, execute the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl enable apache2.service</pre></div><p>
+    For more information about the
+    <code class="systemitem">systemd</code> targets in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+    and a description of the YaST <span class="guimenu">Services Manager</span>, refer to
+    <a class="xref" href="cha-systemd.html#sec-boot-runlevel-edit" title="19.4. Managing services with YaST">Section 19.4, “Managing services with YaST”</a>.
+   </p><p>
+    To manually start Apache using the shell, run <code class="command">systemctl start
+    apache2.service</code>.
+   </p><div class="procedure" id="id-1.3.7.7.3.5.7" data-id-title="Checking if Apache is running"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 42.2: </span><span class="title-name">Checking if Apache is running </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#id-1.3.7.7.3.5.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+     If you do not receive error messages when starting Apache, this usually
+     indicates that the Web server is running. To test this:
+    </p><ol class="procedure" type="1"><li class="step"><p>
+      Start a browser and open <a class="link" href="http://localhost/" target="_blank">http://localhost/</a>.
+     </p><p>
+      If Apache is up and running, you get a test page stating <span class="quote">“<span class="quote">It
+      works!</span>”</span>.
+     </p></li><li class="step"><p>
+      If you do not see this page, refer to
+      <a class="xref" href="cha-apache2.html#sec-apache2-troubleeshooting" title="42.9. Troubleshooting">Section 42.9, “Troubleshooting”</a>.
+     </p></li></ol></div></div><p>
+    Now that the Web server is running, you can add your own documents, adjust
+    the configuration according to your needs, or add functionality by
+    installing modules.
+   </p></section></section><section class="sect1" id="sec-apache2-configuration" data-id-title="Configuring Apache"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.2 </span><span class="title-name">Configuring Apache</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> offers two configuration options:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually" title="42.2.2. Configuring Apache manually">Configuring Apache manually</a>
+    </p></li><li class="listitem"><p>
+     <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast" title="42.2.3. Configuring Apache with YaST">Configuring Apache with YaST</a>
+    </p></li></ul></div><p>
+   Manual configuration offers a higher level of detail, but lacks the
+   convenience of the YaST GUI.
+  </p><div id="id-1.3.7.7.4.5" data-id-title="Reload or restart Apache after configuration changes" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Reload or restart Apache after configuration changes</div><p>
+    Most configuration changes require a reload (some also a restart) of Apache
+    to take effect. Manually reload Apache with <code class="command">systemctl reload
+    apache2.service</code> or use one of the restart options as described in
+    <a class="xref" href="cha-apache2.html#sec-apache2-start-stop" title="42.3. Starting and stopping Apache">Section 42.3, “Starting and stopping Apache”</a>.
+   </p><p>
+    If you configure Apache with YaST, this can be taken care of
+    automatically if you set <span class="guimenu">HTTP Service</span> to
+    <span class="guimenu">Enabled</span> as described in
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration" title="42.2.3.2. HTTP server configuration">Section 42.2.3.2, “HTTP server configuration”</a>.
+   </p></div><section class="sect2" id="sec-apache2-configuration-manually-configfiles" data-id-title="Apache configuration files"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.2.1 </span><span class="title-name">Apache configuration files</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-configfiles">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This section gives an overview of the Apache configuration files. If you
+    use YaST for configuration, you do not need to touch these
+    files—however, the information might be useful for you to switch to
+    manual configuration later on.
+   </p><p>
+    Apache configuration files can be found in two different locations:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-configfiles-etc-sysconfig-apache2" title="42.2.1.1. /etc/sysconfig/apache2"><code class="filename">/etc/sysconfig/apache2</code></a>
+     </p></li><li class="listitem"><p>
+      <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-configfiles-etc-apache2" title="42.2.1.2. /etc/apache2/"><code class="filename">/etc/apache2/</code></a>
+     </p></li></ul></div><section class="sect3" id="sec-apache2-configuration-manually-configfiles-etc-sysconfig-apache2" data-id-title="/etc/sysconfig/apache2"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.2.1.1 </span><span class="title-name"><code class="filename">/etc/sysconfig/apache2</code></span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-configfiles-etc-sysconfig-apache2">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     <code class="filename">/etc/sysconfig/apache2</code> controls global Apache settings,
+     like modules to load, additional configuration files to
+     include, flags with which the server should be started, and flags that
+     should be added to the command line. Every configuration option in this
+     file is extensively documented and therefore not mentioned here. For a
+     general-purpose Web server, the settings in
+     <code class="filename">/etc/sysconfig/apache2</code> should be sufficient for any
+     configuration needs.
+    </p></section><section class="sect3" id="sec-apache2-configuration-manually-configfiles-etc-apache2" data-id-title="/etc/apache2/"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.2.1.2 </span><span class="title-name"><code class="filename">/etc/apache2/</code></span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-configfiles-etc-apache2">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     <code class="filename">/etc/apache2/</code> hosts all configuration files for
+     Apache. In the following, the purpose of each file is explained. Each file
+     includes several configuration options (also called
+     <span class="emphasis"><em>directives</em></span>). Every configuration option in these
+     files is extensively documented and therefore not mentioned here.
+    </p><p>
+     The Apache configuration files are organized as follows:
+    </p><div class="verbatim-wrap"><pre class="screen">/etc/apache2/
+     |
+     |- charset.conv
+     |- conf.d/
+     |   |
+     |   |- *.conf
+     |
+     |- default-server.conf
+     |- errors.conf
+     |- global.conf
+     |- httpd.conf
+     |- listen.conf
+     |- loadmodule.conf
+     |- magic
+     |- mime.types
+     |- mod_*.conf
+     |- protocols.conf
+     |- server-tuning.conf
+     |- ssl-global.conf
+     |- ssl.*
+     |- sysconfig.d
+     |   |
+     |   |- global.conf
+     |   |- include.conf
+     |   |- loadmodule.conf . .
+     |
+     |- uid.conf
+     |- vhosts.d
+     |   |- *.conf</pre></div><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Apache configuration files in /etc/apache2/ </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#id-1.3.7.7.4.6.6.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.3.7.7.4.6.6.5.2"><span class="term"><code class="filename">charset.conv</code></span></dt><dd><p>
+        Specifies which character sets to use for different languages. Do not
+        edit this file.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.3"><span class="term"><code class="filename">conf.d/*.conf</code></span></dt><dd><p>
+        Configuration files added by other modules. These configuration files
+        can be included into your virtual host configuration where needed. See
+        <code class="filename">vhosts.d/vhost.template</code> for examples. By doing so,
+        you can provide different module sets for different virtual hosts.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.4"><span class="term"><code class="filename">default-server.conf</code></span></dt><dd><p>
+        Global configuration for all virtual hosts with reasonable defaults.
+        Instead of changing the values, overwrite them with a virtual host
+        configuration.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.5"><span class="term"><code class="filename">errors.conf</code></span></dt><dd><p>
+        Defines how Apache responds to errors. To customize these messages for
+        all virtual hosts, edit this file. Otherwise overwrite these directives
+        in your virtual host configurations.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.6"><span class="term"><code class="filename">global.conf</code></span></dt><dd><p>
+        General configuration of the main Web server process, such as the access
+        path, error logs, or the level of logging.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.7"><span class="term"><code class="filename">httpd.conf</code></span></dt><dd><p>
+        The main Apache server configuration file. Avoid changing this file. It
+        primarily contains include statements and global settings. Overwrite
+        global settings in the pertinent configuration files listed here.
+        Change host-specific settings (such as document root) in your virtual
+        host configuration.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.8"><span class="term"><code class="filename">listen.conf</code></span></dt><dd><p>
+        Binds Apache to specific IP addresses and ports. Name-based virtual
+        hosting is also configured here. For details, see
+        <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost-named-vhosts" title="42.2.2.1.1. Name-based virtual hosts">Section 42.2.2.1.1, “Name-based virtual hosts”</a>.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.9"><span class="term"><code class="filename">magic</code></span></dt><dd><p>
+        Data for the mime_magic module that helps Apache automatically
+        determine the MIME type of an unknown file. Do not change this file.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.10"><span class="term"><code class="filename">mime.types</code></span></dt><dd><p>
+        MIME types known by the system (this is a link to
+        <code class="filename">/etc/mime.types</code>). Do not edit this file. If you
+        need to add MIME types not listed here, add them to
+        <code class="filename">mod_mime-defaults.conf</code>.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.11"><span class="term"><code class="filename">mod_*.conf</code></span></dt><dd><p>
+        Configuration files for the modules that are installed by default.
+        Refer to <a class="xref" href="cha-apache2.html#sec-apache2-modules" title="42.4. Installing, activating and configuring modules">Section 42.4, “Installing, activating and configuring modules”</a> for details.
+        Configuration files for optional modules reside in the directory
+        <code class="filename">conf.d</code>.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.12"><span class="term"><code class="filename">protocols.conf</code></span></dt><dd><p>
+        Configuration directives for serving pages over HTTP2 connection.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.13"><span class="term"><code class="filename">server-tuning.conf</code></span></dt><dd><p>
+        Contains configuration directives for the different MPMs (see
+        <a class="xref" href="cha-apache2.html#sec-apache2-modules-mpm" title="42.4.4. Multiprocessing modules">Section 42.4.4, “Multiprocessing modules”</a>) and general configuration
+        options that control Apache's performance. Properly test your Web
+        server when making changes here.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.14"><span class="term"><code class="filename">ssl-global.conf</code> and <code class="filename">ssl.*</code></span></dt><dd><p>
+        Global SSL configuration and SSL certificate data. Refer to
+        <a class="xref" href="cha-apache2.html#sec-apache2-ssl" title="42.6. Setting up a secure Web server with SSL">Section 42.6, “Setting up a secure Web server with SSL”</a> for details.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.15"><span class="term"><code class="filename">sysconfig.d/*.conf</code></span></dt><dd><p>
+        Configuration files automatically generated from
+        <code class="filename">/etc/sysconfig/apache2</code>. Do not change any of these
+        files—edit <code class="filename">/etc/sysconfig/apache2</code> instead.
+        Do not put other configuration files in this directory.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.16"><span class="term"><code class="filename">uid.conf</code></span></dt><dd><p>
+        Specifies under which user and group ID Apache runs. Do not change this
+        file.
+       </p></dd><dt id="id-1.3.7.7.4.6.6.5.17"><span class="term"><code class="filename">vhosts.d/*.conf</code></span></dt><dd><p>
+        Your virtual host configuration should be located here. The directory
+        contains template files for virtual hosts with and without SSL. Every
+        file in this directory ending with <code class="filename">.conf</code> is
+        automatically included in the Apache configuration. Refer to
+        <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost" title="42.2.2.1. Virtual host configuration">Section 42.2.2.1, “Virtual host configuration”</a> for details.
+       </p></dd></dl></div></section></section><section class="sect2" id="sec-apache2-configuration-manually" data-id-title="Configuring Apache manually"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.2.2 </span><span class="title-name">Configuring Apache manually</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Configuring Apache manually involves editing plain text configuration files
+    as user <code class="systemitem">root</code>.
+   </p><section class="sect3" id="sec-apache2-configuration-manually-vhost" data-id-title="Virtual host configuration"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.2.2.1 </span><span class="title-name">Virtual host configuration</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-vhost">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The term <span class="emphasis"><em>virtual host</em></span> refers to Apache's ability to
+     serve multiple universal resource identifiers (URIs) from the same
+     physical machine. This means that several domains, such as www.example.com and
+     www.example.net, are run by a single Web server on one physical machine.
+    </p><p>
+     It is common practice to use virtual hosts to save administrative effort
+     (only a single Web server needs to be maintained) and hardware expenses
+     (each domain does not require a dedicated server). Virtual hosts can be
+     name based, IP based, or port based.
+    </p><p>
+     To list all existing virtual hosts, use the command
+     <code class="command">apache2ctl</code> <code class="option">-S</code>. This outputs a list
+     showing the default server and all virtual hosts together with their IP
+     addresses and listening ports. Furthermore, the list also contains an
+     entry for each virtual host showing its location in the configuration
+     files.
+    </p><p>
+     Virtual hosts can be configured via YaST as described in
+     <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-virtual-hosts" title="42.2.3.1.4. Virtual hosts">Section 42.2.3.1.4, “Virtual hosts”</a> or
+     by manually editing a configuration file. By default, Apache in
+     <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is prepared for one configuration file per virtual host in
+     <code class="filename">/etc/apache2/vhosts.d/</code>. All files in this directory
+     with the extension <code class="filename">.conf</code> are automatically included
+     to the configuration. A basic template for a virtual host is provided in
+     this directory (<code class="filename">vhost.template</code> or
+     <code class="filename">vhost-ssl.template</code> for a virtual host with SSL
+     support).
+    </p><div id="id-1.3.7.7.4.7.3.6" data-id-title="Always create a virtual host configuration" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Always create a virtual host configuration</div><p>
+      It is recommended to always create a virtual host configuration file,
+      even if your Web server only hosts one domain. By doing so, you not only
+      have the domain-specific configuration in one file, but you can always
+      fall back to a working basic configuration by simply moving, deleting or
+      renaming the configuration file for the virtual host. For the same
+      reason, you should also create separate configuration files for each
+      virtual host.
+     </p><p>
+      When using name-based virtual hosts it is recommended to set up a default
+      configuration that will be used when a domain name does not match a
+      virtual host configuration. The default virtual host is the one whose
+      configuration is loaded first. Since the order of the configuration files
+      is determined by file name, start the file name of the default virtual
+      host configuration with an underscore character (<code class="literal">_</code>) to
+      make sure it is loaded first (for example:
+      <code class="filename">_default_vhost.conf</code>).
+     </p></div><p>
+     The
+     <code class="systemitem">&lt;VirtualHost&gt;</code><code class="systemitem">&lt;/VirtualHost&gt;</code>
+     block holds the information that applies to a particular domain. When
+     Apache receives a client request for a defined virtual host, it uses the
+     directives enclosed in this section. Almost all directives can be used in
+     a virtual host context. See
+     <a class="link" href="https://httpd.apache.org/docs/2.4/mod/quickreference.html" target="_blank">https://httpd.apache.org/docs/2.4/mod/quickreference.html</a>
+     for further information about Apache's configuration directives.
+    </p><section class="sect4" id="sec-apache2-configuration-manually-vhost-named-vhosts" data-id-title="Name-based virtual hosts"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.2.1.1 </span><span class="title-name">Name-based virtual hosts</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-vhost-named-vhosts">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      With name-based virtual hosts, more than one Web site is served per IP
+      address. Apache uses the host field in the HTTP header that is sent by
+      the client to connect the request to a matching
+      <code class="systemitem">ServerName</code> entry of one of the virtual host
+      declarations. If no matching <code class="systemitem">ServerName</code> is
+      found, the first specified virtual host is used as a default.
+     </p><p>
+      The first step is to create a <code class="literal">&lt;VirtualHost&gt;</code>
+      block for each different name-based host that you want to serve. Inside
+      each <code class="literal">&lt;VirtualHost&gt;</code> block, you will need at
+      minimum a <code class="literal">ServerName</code> directive to designate which host
+      is served and a <code class="literal">DocumentRoot</code> directive to show where
+      in the file system the content for that host resides.
+     </p><div class="example" id="ex-apache2-virtual-hosts-name-based" data-id-title="Basic examples of name-based VirtualHost entries"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 42.1: </span><span class="title-name">Basic examples of name-based <code class="systemitem">VirtualHost</code> entries </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#ex-apache2-virtual-hosts-name-based">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;VirtualHost *:80&gt;
+# This first-listed virtual host is also the default for *:80
+ServerName www.example.com
+ServerAlias example.com
+DocumentRoot /srv/www/htdocs/domain
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:80&gt;
+ServerName other.example.com
+DocumentRoot /srv/www/htdocs/otherdomain
+&lt;/VirtualHost&gt;</pre></div></div></div><p>
+      The opening <code class="systemitem">VirtualHost</code> tag takes the IP address
+      (or fully qualified domain name) as an argument in a name-based virtual
+      host configuration. A port number directive is optional.
+     </p><p>
+      The wild card <span class="emphasis"><em>*</em></span> is also allowed as a substitute for
+      the IP address. When using IPv6 addresses, the address must be included
+      in square brackets.
+     </p><div class="example" id="ex-apache-directives-virtualhost-name-based" data-id-title="Name-based VirtualHost directives"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 42.2: </span><span class="title-name">Name-based <code class="systemitem">VirtualHost</code> directives </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#ex-apache-directives-virtualhost-name-based">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;VirtualHost 192.168.3.100:80&gt;
+  ...
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost 192.168.3.100&gt;
+  ...
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:80&gt;
+  ...
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *&gt;
+  ...
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost [2002:c0a8:364::]&gt;
+  ...
+&lt;/VirtualHost&gt;</pre></div></div></div></section><section class="sect4" id="sec-apache2-configuration-manually-vhost-ip-vhosts" data-id-title="IP-based virtual hosts"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.2.1.2 </span><span class="title-name">IP-based virtual hosts</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-vhost-ip-vhosts">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      This alternative virtual host configuration requires the setup of
+      multiple IP addresses for a machine. One instance of Apache hosts several
+      domains, each of which is assigned a different IP.
+     </p><p>
+      The physical server must have one IP address for each IP-based virtual
+      host. If the machine does not have multiple network cards, virtual
+      network interfaces (IP aliasing) can also be used.
+     </p><p>
+      The following example shows Apache running on a machine with the IP
+      <code class="systemitem">192.168.3.100</code>, hosting two domains
+      on the additional IP addresses
+      <code class="systemitem">192.168.3.101</code> and
+      <code class="systemitem">192.168.3.102</code>. A separate
+      <code class="systemitem">VirtualHost</code> block is needed for every virtual
+      server.
+     </p><div class="example" id="ex-apache-directives-virtualhost-ip-based" data-id-title="IP-based VirtualHost directives"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 42.3: </span><span class="title-name">IP-based <code class="systemitem">VirtualHost</code> directives </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#ex-apache-directives-virtualhost-ip-based">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;VirtualHost 192.168.3.101&gt;
+  ...
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost 192.168.3.102&gt;
+  ...
+&lt;/VirtualHost&gt;</pre></div></div></div><p>
+      Here, <code class="systemitem">VirtualHost</code> directives are only specified
+      for interfaces other than <code class="systemitem">192.168.3.100</code>. When a
+      <code class="systemitem">Listen</code> directive is also configured for
+      <code class="systemitem">192.168.3.100</code>, a separate IP-based virtual host must
+      be created to answer HTTP requests to that interface—otherwise the
+      directives found in the default server configuration
+      (<code class="filename">/etc/apache2/default-server.conf</code>) are applied.
+     </p></section><section class="sect4" id="sec-apache2-configuration-manually-vhost-basic-configuration" data-id-title="Basic virtual host configuration"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.2.1.3 </span><span class="title-name">Basic virtual host configuration</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-manually-vhost-basic-configuration">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      At least the following directives should be in each virtual host
+      configuration to set up a virtual host. See
+      <code class="filename">/etc/apache2/vhosts.d/vhost.template</code> for more
+      options.
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.4.7.3.10.3.1"><span class="term"><code class="systemitem">ServerName</code></span></dt><dd><p>
+         The fully qualified domain name under which the host should be
+         addressed.
+        </p></dd><dt id="id-1.3.7.7.4.7.3.10.3.2"><span class="term"><code class="systemitem">DocumentRoot</code></span></dt><dd><p>
+         Path to the directory from which Apache should serve files for this
+         host. For security reasons, access to the entire file system is
+         forbidden by default, so you must explicitly unlock this directory
+         within a <code class="systemitem">Directory</code> container.
+        </p></dd><dt id="id-1.3.7.7.4.7.3.10.3.3"><span class="term"><code class="systemitem">ServerAdmin</code></span></dt><dd><p>
+         E-mail address of the server administrator. This address is, for
+         example, shown on error pages Apache creates.
+        </p></dd><dt id="id-1.3.7.7.4.7.3.10.3.4"><span class="term"><code class="systemitem">ErrorLog</code></span></dt><dd><p>
+         The error log file for this virtual host. Although it is not necessary
+         to create separate error log files for each virtual host, it is common
+         practice to do so, because it makes the debugging of errors much
+         easier. <code class="filename">/var/log/apache2/</code> is the default
+         directory for Apache's log files.
+        </p></dd><dt id="id-1.3.7.7.4.7.3.10.3.5"><span class="term"><code class="systemitem">CustomLog</code></span></dt><dd><p>
+         The access log file for this virtual host. Although it is not
+         necessary to create separate access log files for each virtual host,
+         it is common practice to do so, because it allows the separate
+         analysis of access statistics for each host.
+         <code class="filename">/var/log/apache2/</code> is the default directory for
+         Apache's log files.
+        </p></dd></dl></div><p>
+      As mentioned above, access to the whole file system is forbidden by
+      default for security reasons. Therefore, explicitly unlock the
+      directories in which you have placed the files Apache should
+      serve—for example the <code class="systemitem">DocumentRoot</code>:
+     </p><div class="verbatim-wrap"><pre class="screen">&lt;Directory "/srv/www/www.example.com/htdocs"&gt;
+  Require all granted
+&lt;/Directory&gt;</pre></div><div id="id-1.3.7.7.4.7.3.10.6" data-id-title="Require all granted" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="literal">Require all granted</code></div><p>
+       In previous versions of Apache, the statement <code class="literal">Require all
+       granted</code> was expressed as:
+      </p><div class="verbatim-wrap"><pre class="screen">Order allow,deny
+Allow from all</pre></div><p>
+       This old syntax is still supported by the
+       <code class="literal">mod_access_compat</code> module.
+      </p></div><p>
+      The complete configuration file looks like this:
+     </p><div class="example" id="ex-apache-directives-virtualhost-basic-configuration" data-id-title="Basic VirtualHost configuration"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 42.4: </span><span class="title-name">Basic <code class="systemitem">VirtualHost</code> configuration </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#ex-apache-directives-virtualhost-basic-configuration">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;VirtualHost 192.168.3.100&gt;
+  ServerName www.example.com
+  DocumentRoot /srv/www/www.example.com/htdocs
+  ServerAdmin webmaster@example.com
+  ErrorLog /var/log/apache2/www.example.com_log
+  CustomLog /var/log/apache2/www.example.com-access_log common
+  &lt;Directory "/srv/www/www.example.com/htdocs"&gt;
+  Require all granted
+  &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</pre></div></div></div></section></section></section><section class="sect2" id="sec-apache2-configuration-yast" data-id-title="Configuring Apache with YaST"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.2.3 </span><span class="title-name">Configuring Apache with YaST</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  To configure your Web server with YaST, start YaST and select
+  <span class="guimenu">Network Services</span> › <span class="guimenu">HTTP
+  Server</span>. When starting the module for the first time,
+  the <span class="guimenu">HTTP Server Wizard</span> starts, prompting you to make a few
+  basic decisions concerning administration of the server. After having
+  finished the wizard, the <span class="guimenu">HTTP Server Configuration</span> dialog
+  starts each time you call the <span class="guimenu">HTTP Server</span> module. For more
+  information, see
+  <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration" title="42.2.3.2. HTTP server configuration">Section 42.2.3.2, “HTTP server configuration”</a>.
+ </p><section class="sect3" id="sec-apache2-configuration-yast-wizard" data-id-title="HTTP server wizard"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.2.3.1 </span><span class="title-name">HTTP server wizard</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-wizard">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The HTTP Server Wizard consists of five steps. In the last step of the
+   dialog, you may enter the expert configuration mode to make even more
+   specific settings.
+  </p><section class="sect4" id="sec-apache2-configuration-yast-wizard-network-device" data-id-title="Network device selection"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.1.1 </span><span class="title-name">Network device selection</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-network-device">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Here, specify the network interfaces and ports Apache uses to listen for
+    incoming requests. You can select any combination of existing network
+    interfaces and their respective IP addresses. Ports from all three ranges
+    (well-known ports, registered ports, and dynamic or private ports) that are
+    not reserved by other services can be used. The default setting is to
+    listen on all network interfaces (IP addresses) on port
+    <code class="systemitem">80</code>.
+   </p><p>
+    Check <span class="guimenu">Open Port In Firewall</span> to open the ports in the
+    firewall that the Web server listens on. This is necessary to make the Web
+    server available on the network, which can be a LAN, WAN, or the public
+    Internet. Keeping the port closed is only useful in test situations where
+    no external access to the Web server is necessary. If you have multiple
+    network interfaces, click <span class="guimenu">Firewall Details</span> to specify on
+    which interface(s) the port(s) should be opened.
+   </p><p>
+    Click <span class="guimenu">Next</span> to continue with the configuration.
+   </p></section><section class="sect4" id="sec-apache2-configuration-yast-wizard-modules" data-id-title="Modules"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.1.2 </span><span class="title-name">Modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-modules">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <span class="guimenu">Modules</span> configuration option allows for the
+    activation or deactivation of the script languages that the Web server
+    should support. For the activation or deactivation of other modules, refer
+    to
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration-modules" title="42.2.3.2.2. Server modules">Section 42.2.3.2.2, “Server modules”</a>.
+    Click <span class="guimenu">Next</span> to advance to the next dialog.
+   </p></section><section class="sect4" id="sec-apache2-configuration-yast-wizard-default-host" data-id-title="Default host"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.1.3 </span><span class="title-name">Default host</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-default-host">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This option pertains to the default Web server. As explained in
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost" title="42.2.2.1. Virtual host configuration">Section 42.2.2.1, “Virtual host configuration”</a>, Apache can
+    serve multiple virtual hosts from a single physical machine. The first
+    declared virtual host in the configuration file is commonly called the
+    <span class="emphasis"><em>default host</em></span>. Each virtual host inherits the default
+    host's configuration.
+   </p><p>
+    To edit the host settings (also called <span class="emphasis"><em>directives</em></span>),
+    select the appropriate entry in the table then click
+    <span class="guimenu">Edit</span>. To add new directives, click
+    <span class="guimenu">Add</span>. To delete a directive, select it and click
+    <span class="guimenu">Delete</span>.
+   </p><div class="figure" id="fig-apache2-configuration-yast-host"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_apache_wizard3.png"><img src="images/yast2_apache_wizard3.png" alt="HTTP server wizard: default host" title="HTTP server wizard: default host"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 42.1: </span><span class="title-name">HTTP server wizard: default host </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#fig-apache2-configuration-yast-host">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div><p>
+    Here is list of the default settings of the server:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.4.8.4.5.6.1"><span class="term"><code class="systemitem">Document Root</code></span></dt><dd><p>
+       Path to the directory from which Apache serves files for this host.
+       <code class="filename">/srv/www/htdocs</code> is the default location.
+      </p></dd><dt id="id-1.3.7.7.4.8.4.5.6.2"><span class="term"><code class="systemitem">Alias</code></span></dt><dd><p>
+       Using <code class="systemitem">Alias</code> directives, URLs can be mapped to
+       physical file system locations. This means that a certain path even
+       outside the <code class="literal">Document Root</code> in the file system can be
+       accessed via a URL aliasing that path.
+      </p><p>
+       The default <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <code class="systemitem">Alias</code>
+       <code class="filename">/icons</code> points to
+       <code class="filename">/usr/share/apache2/icons</code> for the Apache icons
+       displayed in the directory index view.
+      </p></dd><dt id="id-1.3.7.7.4.8.4.5.6.3"><span class="term"><code class="systemitem">ScriptAlias</code></span></dt><dd><p>
+       Similar to the <code class="systemitem">Alias</code> directive, the
+       <code class="systemitem">ScriptAlias</code> directive maps a URL to a file
+       system location. The difference is that
+       <code class="systemitem">ScriptAlias</code> designates the target directory as
+       a CGI location, meaning that CGI scripts should be executed in that
+       location.
+      </p></dd><dt id="id-1.3.7.7.4.8.4.5.6.4"><span class="term"><code class="systemitem">Directory</code></span></dt><dd><p>
+       With <code class="systemitem">Directory</code> settings, you can enclose a
+       group of configuration options that will only apply to the specified
+       directory.
+      </p><p>
+       Access and display options for the directories
+       <code class="filename">/srv/www/htdocs</code>,
+       <code class="filename">/usr/share/apache2/icons</code> and
+       <code class="filename">/srv/www/cgi-bin</code> are configured here. It should not
+       be necessary to change the defaults.
+      </p></dd><dt id="id-1.3.7.7.4.8.4.5.6.5"><span class="term"><code class="systemitem">Include</code></span></dt><dd><p>
+       With include, additional configuration files can be specified. Two
+       <code class="systemitem">Include</code> directives are already preconfigured:
+       <code class="filename">/etc/apache2/conf.d/</code> is the directory containing
+       the configuration files that come with external modules. With this
+       directive, all files in this directory ending in
+       <code class="filename">.conf</code> are included. With the second directive,
+       <code class="filename">/etc/apache2/conf.d/apache2-manual.conf</code>, the
+       <code class="filename">apache2-manual</code> configuration file is included.
+      </p></dd><dt id="id-1.3.7.7.4.8.4.5.6.6"><span class="term"><code class="systemitem">Server Name</code></span></dt><dd><p>
+       This specifies the default URL used by clients to contact the Web
+       server. Use a fully qualified domain name (FQDN) to reach the Web server
+       at <code class="literal">http://<em class="replaceable">FQDN</em>/</code> or its IP
+       address. You cannot choose an arbitrary name here—the server must
+       be <span class="quote">“<span class="quote">known</span>”</span> under this name.
+      </p></dd><dt id="id-1.3.7.7.4.8.4.5.6.7"><span class="term"><code class="systemitem">Server Administrator E-Mail</code></span></dt><dd><p>
+       E-mail address of the server administrator. This address is, for
+       example, shown on error pages Apache creates.
+      </p></dd></dl></div><p>
+    After finishing with the <span class="guimenu">Default Host</span> step, click
+    <span class="guimenu">Next</span> to continue with the configuration.
+   </p></section><section class="sect4" id="sec-apache2-configuration-yast-wizard-virtual-hosts" data-id-title="Virtual hosts"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.1.4 </span><span class="title-name">Virtual hosts</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-virtual-hosts">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    In this step, the wizard displays a list of already configured virtual
+    hosts (see <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost" title="42.2.2.1. Virtual host configuration">Section 42.2.2.1, “Virtual host configuration”</a>). If
+    you have not made manual changes prior to starting the YaST HTTP wizard,
+    no virtual host is present.
+   </p><p>
+    To add a host, click <span class="guimenu">Add</span> to open a dialog in which to
+    enter basic information about the host, such as <span class="guimenu">Server
+    Name</span>, <span class="guimenu">Server Contents Root</span>
+    (<code class="systemitem">DocumentRoot</code>), and the <span class="guimenu">Administrator
+    E-Mail</span>. <span class="guimenu">Server Resolution</span> is used to determine
+    how a host is identified (name based or IP based). Specify the name or IP
+    address with <span class="guimenu">Change Virtual Host ID</span>
+   </p><p>
+    Clicking <span class="guimenu">Next</span> advances to the second part of the virtual
+    host configuration dialog.
+   </p><p>
+    In part two of the virtual host configuration you can specify whether to
+    enable CGI scripts and which directory to use for these scripts. It is also
+    possible to enable SSL. If you do so, you must specify the path to the
+    certificate as well. See <a class="xref" href="cha-apache2.html#sec-apache2-ssl-configuration" title="42.6.2. Configuring Apache with SSL">Section 42.6.2, “Configuring Apache with SSL”</a>
+    for details on SSL and certificates. With the <span class="guimenu">Directory
+    Index</span> option, you can specify which file to display when the
+    client requests a directory (by default, <code class="filename">index.html</code>).
+    Add one or more file names (space-separated) to change this. With
+    <span class="guimenu">Enable Public HTML</span>, the content of the users public
+    directories
+    (<code class="filename">~<em class="replaceable">USER</em>/public_html/</code>) is
+    made available on the server under
+    <code class="literal">http://www.example.com/~<em class="replaceable">USER</em></code>.
+   </p><div id="id-1.3.7.7.4.8.4.6.6" data-id-title="Creating virtual hosts" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Creating virtual hosts</div><p>
+     It is not possible to add virtual hosts at will. If using name-based
+     virtual hosts, each host name must be resolved on the network. If using
+     IP-based virtual hosts, you can assign only one host to each IP address
+     available.
+    </p></div></section><section class="sect4" id="sec-apache2-configuration-yast-wizard-summary" data-id-title="Summary"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.1.5 </span><span class="title-name">Summary</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-summary">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This is the final step of the wizard. Here, determine how and when the
+    Apache server is started: when booting or manually. Also see a short
+    summary of the configuration made so far. If you are satisfied with your
+    settings, click <span class="guimenu">Finish</span> to complete configuration. To
+    change something, click <span class="guimenu">Back</span> until you have reached the
+    desired dialog. Clicking <span class="guimenu">HTTP Server Expert
+    Configuration</span> opens the dialog described in
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration" title="42.2.3.2. HTTP server configuration">Section 42.2.3.2, “HTTP server configuration”</a>.
+   </p><div class="figure" id="fig-apache2-configuration-yast-summary"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_apache_wizard5.png"><img src="images/yast2_apache_wizard5.png" alt="HTTP server wizard: summary" title="HTTP server wizard: summary"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 42.2: </span><span class="title-name">HTTP server wizard: summary </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#fig-apache2-configuration-yast-summary">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></section></section><section class="sect3" id="sec-apache2-configuration-yast-server-configuration" data-id-title="HTTP server configuration"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.2.3.2 </span><span class="title-name">HTTP server configuration</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <span class="guimenu">HTTP Server Configuration</span> dialog also lets you make
+   even more adjustments to the configuration than the wizard (which only runs
+   if you configure your Web server for the first time). It consists of four
+   tabs described in the following. No configuration option you change here is
+   effective immediately—you always must confirm your changes with
+   <span class="guimenu">Finish</span> to make them effective. Clicking
+   <span class="guimenu">Abort</span> leaves the configuration module and discards your
+   changes.
+  </p><section class="sect4" id="sec-apache2-configuration-yast-server-configuration-listen" data-id-title="Listen ports and addresses"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.2.1 </span><span class="title-name">Listen ports and addresses</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration-listen">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    In <span class="guimenu">HTTP Service</span>, select whether Apache should be running
+    (<span class="guimenu">Enabled</span>) or stopped (<span class="guimenu">Disabled</span>). In
+    <span class="guimenu">Listen on Ports</span>, <span class="guimenu">Add</span>,
+    <span class="guimenu">Edit</span>, or <span class="guimenu">Delete</span> addresses and ports
+    on which the server should be available. The default is to listen on all
+    interfaces on port <code class="literal">80</code>. You should always check
+    <span class="guimenu">Open Port In Firewall</span>, because otherwise the Web server
+    is not reachable from outside. Keeping the port closed is only useful in
+    test situations where no external access to the Web server is necessary. If
+    you have multiple network interfaces, click <span class="guimenu">Firewall
+    Details</span> to specify on which interface(s) the port(s) should be
+    opened.
+   </p><p>
+    With <span class="guimenu">Log Files</span>, watch either the access log file or the
+    error log file. This is useful if you want to test your configuration. The
+    log file opens in a separate window from which you can also restart or
+    reload the Web server. For details, see
+    <a class="xref" href="cha-apache2.html#sec-apache2-start-stop" title="42.3. Starting and stopping Apache">Section 42.3, “Starting and stopping Apache”</a>. These commands are effective
+    immediately and their log messages are also displayed immediately.
+   </p><div class="figure" id="fig-apache2-configuration-yast-server-configuration-listen"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_apache_config_listen.png"><img src="images/yast2_apache_config_listen.png" alt="HTTP server configuration: listen ports and addresses" title="HTTP server configuration: listen ports and addresses"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 42.3: </span><span class="title-name">HTTP server configuration: listen ports and addresses </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#fig-apache2-configuration-yast-server-configuration-listen">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></section><section class="sect4" id="sec-apache2-configuration-yast-server-configuration-modules" data-id-title="Server modules"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.2.2 </span><span class="title-name">Server modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration-modules">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can change the status (enabled or disabled) of Apache2 modules by
+    clicking <span class="guimenu">Toggle Status</span>. Click <span class="guimenu">Add
+    Module</span> to add a new module that is already installed but not yet
+    listed. Learn more about modules in <a class="xref" href="cha-apache2.html#sec-apache2-modules" title="42.4. Installing, activating and configuring modules">Section 42.4, “Installing, activating and configuring modules”</a>.
+   </p><div class="figure" id="fig-apache2-configuration-yast-server-configuration-modules"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_apache_config_modules.png"><img src="images/yast2_apache_config_modules.png" alt="HTTP server configuration: server modules" title="HTTP server configuration: server modules"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 42.4: </span><span class="title-name">HTTP server configuration: server modules </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#fig-apache2-configuration-yast-server-configuration-modules">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></section><section class="sect4" id="sec-apache2-configuration-yast-server-configuration-host" data-id-title="Main host or hosts"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">42.2.3.2.3 </span><span class="title-name">Main host or hosts</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration-host">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2_yast_i.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    These dialogs are identical to the ones already described. Refer to
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-default-host" title="42.2.3.1.3. Default host">Section 42.2.3.1.3, “Default host”</a> and
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-wizard-virtual-hosts" title="42.2.3.1.4. Virtual hosts">Section 42.2.3.1.4, “Virtual hosts”</a>.
+   </p></section></section></section></section><section class="sect1" id="sec-apache2-start-stop" data-id-title="Starting and stopping Apache"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.3 </span><span class="title-name">Starting and stopping Apache</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-start-stop">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If configured with YaST as described in
+   <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast" title="42.2.3. Configuring Apache with YaST">Section 42.2.3, “Configuring Apache with YaST”</a>, Apache is started at boot
+   time in the <code class="systemitem">multi-user.target</code> and
+   <code class="systemitem">graphical.target</code>. You can change this behavior
+   using YaST's <span class="guimenu">Services Manager</span> or with the
+   <code class="command">systemctl</code> command line tool (<code class="command">systemctl
+   enable</code> or <code class="command">systemctl disable</code>).
+  </p><p>
+   To start, stop or manipulate Apache on a running system, use either the
+   <code class="command">systemctl</code> or the <code class="command">apachectl</code> commands as
+   described below.
+  </p><p>
+   For general information about <code class="command">systemctl</code> commands, refer
+   to <a class="xref" href="cha-systemd.html#sec-boot-systemd-basics-services" title="19.2.1. Managing services in a running system">Section 19.2.1, “Managing services in a running system”</a>.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.5.6.1"><span class="term"><code class="command">systemctl status apache2.service</code></span></dt><dd><p>
+      Checks if Apache is started.
+     </p></dd><dt id="id-1.3.7.7.5.6.2"><span class="term"><code class="command">systemctl start apache2.service</code></span></dt><dd><p>
+      Starts Apache if it is not already running.
+     </p></dd><dt id="id-1.3.7.7.5.6.3"><span class="term"><code class="command">systemctl stop apache2.service</code></span></dt><dd><p>
+      Stops Apache by terminating the parent process.
+     </p></dd><dt id="id-1.3.7.7.5.6.4"><span class="term"><code class="command">systemctl restart apache2.service</code></span></dt><dd><p>
+      Stops and then restarts Apache. Starts the Web server if it was not
+      running before.
+     </p></dd><dt id="id-1.3.7.7.5.6.5"><span class="term"><code class="command">systemctl try-restart apache2.service</code></span></dt><dd><p>
+      Stops then restarts Apache only if it is already running.
+     </p></dd><dt id="id-1.3.7.7.5.6.6"><span class="term"><code class="command">systemctl reload apache2.service</code></span></dt><dd><p>
+      Stops the Web server by advising all forked Apache processes to first
+      finish their requests before shutting down. As each process dies, it is
+      replaced by a newly started one, resulting in a complete
+      <span class="quote">“<span class="quote">restart</span>”</span> of Apache.
+     </p><div id="id-1.3.7.7.5.6.6.2.2" data-id-title="Restarting Apache in production environments" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Restarting Apache in production environments</div><p>
+       This command allows activating changes in the Apache configuration
+       without causing connection break-offs.
+      </p></div></dd><dt id="id-1.3.7.7.5.6.7"><span class="term"><code class="command">systemctl stop apache2.service</code></span></dt><dd><p>
+      Stops the Web server after a defined period of time configured with
+      <code class="systemitem">GracefulShutdownTimeout</code> to ensure that existing
+      requests can be finished.
+     </p></dd><dt id="id-1.3.7.7.5.6.8"><span class="term"><code class="command">apachectl configtest</code></span></dt><dd><p>
+      Checks the syntax of the configuration files without affecting a running
+      Web server. Because this check is forced every time the server is
+      started, reloaded or restarted, it is usually not necessary to run the
+      test explicitly (if a configuration error is found, the Web server is not
+      started, reloaded or restarted).
+     </p></dd><dt id="id-1.3.7.7.5.6.9"><span class="term"><code class="command">apachectl status</code> and <code class="command">apachectl fullstatus</code></span></dt><dd><p>
+      Dumps a short or full status screen, respectively. Requires the module
+      <code class="systemitem">mod_status</code> to be enabled and a text-based
+      browser (such as <code class="command">links</code> or <code class="command">w3m</code>) to
+      be installed. In addition to that, <code class="literal">STATUS</code> must be
+      added to <code class="systemitem">APACHE_SERVER_FLAGS</code> in the file
+      <code class="filename">/etc/sysconfig/apache2</code>.
+     </p></dd></dl></div><div id="id-1.3.7.7.5.7" data-id-title="Additional flags" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Additional flags</div><p>
+    If you specify additional flags to the commands, these are passed through
+    to the Web server.
+   </p></div></section><section class="sect1" id="sec-apache2-modules" data-id-title="Installing, activating and configuring modules"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.4 </span><span class="title-name">Installing, activating and configuring modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Apache software is built in a modular fashion: all functionality except
+   certain core tasks are handled by modules. This has progressed so far that even
+   HTTP is processed by a module (<code class="systemitem">http_core</code>).
+  </p><p>
+   Apache modules can be compiled into the Apache binary at build time or be
+   dynamically loaded at runtime. Refer to
+   <a class="xref" href="cha-apache2.html#sec-apache2-modules-activating" title="42.4.2. Activation and deactivation">Section 42.4.2, “Activation and deactivation”</a> for details of how to load
+   modules dynamically.
+  </p><p>
+   Apache modules are organized into the following categories:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.6.5.1"><span class="term">Base modules</span></dt><dd><p>
+      Base modules are compiled into Apache by default. Apache in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+      has only <code class="systemitem">mod_so</code> (needed to load other modules)
+      and <code class="systemitem">http_core</code> compiled in. All others are
+      available as shared objects: rather than being included in the server
+      binary itself, they can be included at runtime.
+     </p></dd><dt id="id-1.3.7.7.6.5.2"><span class="term">Extension modules</span></dt><dd><p>
+      Modules labeled as extensions are included in the Apache
+      software package, but are usually not compiled into the server
+      statically. In <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, they are available as shared objects that
+      can be loaded into Apache at runtime.
+     </p></dd><dt id="id-1.3.7.7.6.5.3"><span class="term">External modules</span></dt><dd><p>
+      Modules labeled external are not included in the official Apache
+      distribution. However, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> provides several of them.
+     </p></dd><dt id="id-1.3.7.7.6.5.4"><span class="term">Multiprocessing modules (MPMs)</span></dt><dd><p>
+      MPMs are responsible for accepting and handling requests to the Web
+      server, representing the core of the Web server software.
+     </p></dd></dl></div><section class="sect2" id="sec-apache2-modules-installing" data-id-title="Module installation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.4.1 </span><span class="title-name">Module installation</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-installing">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you have done a default installation as described in
+    <a class="xref" href="cha-apache2.html#sec-apache2-quickstart-installation" title="42.1.2. Installation">Section 42.1.2, “Installation”</a>, the following
+    modules are already installed: all base and extension modules, the
+    multiprocessing module Prefork MPM, and the external module
+    <code class="systemitem">mod_python</code>.
+   </p><p>
+    You can install additional external modules by starting YaST and choosing
+    <span class="guimenu">Software</span> › <span class="guimenu">Software
+    Management</span>. Now choose
+    <span class="guimenu">View</span> › <span class="guimenu">Search</span>
+    and search for <code class="literal">apache</code>. Among other packages, the results
+    list contains all available external Apache modules.
+   </p></section><section class="sect2" id="sec-apache2-modules-activating" data-id-title="Activation and deactivation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.4.2 </span><span class="title-name">Activation and deactivation</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-activating">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Activate or deactivate particular modules either manually or with YaST.
+    In YaST, script language modules (PHP 8 and Python) need to
+    be enabled or disabled with the module configuration described in
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-wizard" title="42.2.3.1. HTTP server wizard">Section 42.2.3.1, “HTTP server wizard”</a>. All other modules
+    can be enabled or disabled as described in
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast-server-configuration-modules" title="42.2.3.2.2. Server modules">Section 42.2.3.2.2, “Server modules”</a>.
+   </p><p>
+    If you prefer to activate or deactivate the modules manually, use the
+    commands <code class="command">a2enmod</code> <em class="replaceable">MODULE</em> or
+    <code class="command">a2dismod</code> <em class="replaceable">MODULE</em>,
+    respectively. <code class="command">a2enmod -l</code> outputs a list of all currently
+    active modules.
+   </p><div id="id-1.3.7.7.6.7.4" data-id-title="Including configuration files for external modules" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Including configuration files for external modules</div><p>
+     If you have activated external modules manually, make sure to load their
+     configuration files in all virtual host configurations. Configuration
+     files for external modules are located under
+     <code class="filename">/etc/apache2/conf.d/</code> and are loaded in
+     <code class="filename">/etc/apache2/default-server.conf</code> by default. For more
+     fine-grained control you can comment out the inclusion in
+     <code class="filename">/etc/apache2/default-server.conf</code> and add it to
+     specific virtual hosts only. See
+     <code class="filename">/etc/apache2/vhosts.d/vhost.template</code> for examples.
+    </p></div></section><section class="sect2" id="sec-apache2-modules-base-extension" data-id-title="Base and extension modules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.4.3 </span><span class="title-name">Base and extension modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-base-extension">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    All base and extension modules are described in detail in the Apache
+    documentation. Only a brief description of the most important modules is
+    available here. Refer to
+    <a class="link" href="https://httpd.apache.org/docs/2.4/mod/" target="_blank">http://httpd.apache.org/docs/2.4/mod/</a>
+    to learn details about each module.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.6.8.3.1"><span class="term"><code class="systemitem">mod_actions</code></span></dt><dd><p>
+       Provides methods to execute a script whenever a certain MIME type (such
+       as <code class="systemitem">application/pdf</code>), a file with a specific
+       extension (like <code class="filename">.rpm</code>), or a certain request method
+       (such as <code class="systemitem">GET</code>) is requested. This module is
+       enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.2"><span class="term"><code class="systemitem">mod_alias</code></span></dt><dd><p>
+       Provides <code class="systemitem">Alias</code> and
+       <code class="systemitem">Redirect</code> directives with which you can map a
+       URL to a specific directory (<code class="systemitem">Alias</code>) or redirect
+       a requested URL to another location. This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.3"><span class="term"><code class="systemitem">mod_auth*</code></span></dt><dd><p>
+       The authentication modules provide different authentication methods:
+       basic authentication with <code class="systemitem">mod_auth_basic</code> or
+       digest authentication with <code class="systemitem">mod_auth_digest</code>.
+      </p><p>
+       <code class="systemitem">mod_auth_basic</code> and
+       <code class="systemitem">mod_auth_digest</code> must be combined with an
+       authentication provider module, <code class="systemitem">mod_authn_*</code>
+       (for example, <code class="systemitem">mod_authn_file</code> for text
+       file–based authentication) and with an authorization module
+       <code class="systemitem">mod_authz_*</code> (for example,
+       <code class="systemitem">mod_authz_user</code> for user authorization).
+      </p><p>
+       More information about this topic is available in the
+       <em class="citetitle">Authentication HOWTO</em> at
+       <a class="link" href="https://httpd.apache.org/docs/2.4/howto/auth.html" target="_blank">https://httpd.apache.org/docs/2.4/howto/auth.html</a>.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.4"><span class="term"><code class="systemitem">mod_auth_openidc</code></span></dt><dd><p>
+       <code class="systemitem">mod_auth_openidc</code> the only certified way to use
+       OpenID Connect with the Apache HTTP server. (See
+       <a class="link" href="https://openid.net/developers/certified/" target="_blank">https://openid.net/developers/certified/</a>.)
+      </p></dd><dt id="id-1.3.7.7.6.8.3.5"><span class="term"><code class="systemitem">mod_autoindex</code></span></dt><dd><p>
+       Autoindex generates directory listings when no index file (for example,
+       <code class="filename">index.html</code>) is present. The look and feel of these
+       indexes is configurable. This module is enabled by default. However,
+       directory listings are disabled by default via the
+       <code class="systemitem">Options</code> directive—overwrite this setting
+       in your virtual host configuration. The default configuration file for
+       this module is located at
+       <code class="filename">/etc/apache2/mod_autoindex-defaults.conf</code>.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.6"><span class="term"><code class="systemitem">mod_cgi</code></span></dt><dd><p>
+       <code class="systemitem">mod_cgi</code> is needed to execute CGI scripts. This
+       module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.7"><span class="term"><code class="systemitem">mod_deflate</code></span></dt><dd><p>
+       Using this module, Apache can be configured to compress given file types
+       on the fly before delivering them.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.8"><span class="term"><code class="systemitem">mod_dir</code></span></dt><dd><p>
+       <code class="systemitem">mod_dir</code> provides the
+       <code class="systemitem">DirectoryIndex</code> directive with which you can
+       configure which files are automatically delivered when a directory is
+       requested (<code class="filename">index.html</code> by default). It also provides
+       an automatic redirect to the correct URL when a directory request does
+       not contain a trailing slash. This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.9"><span class="term"><code class="systemitem">mod_env</code></span></dt><dd><p>
+       Controls the environment that is passed to CGI scripts or SSI pages.
+       Environment variables can be set or unset or passed from the shell that
+       invoked the <code class="systemitem">httpd</code> process. This
+       module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.10"><span class="term"><code class="systemitem">mod_expires</code></span></dt><dd><p>
+       With <code class="systemitem">mod_expires</code>, you can control how often
+       proxy and browser caches refresh your documents by sending an
+       <code class="systemitem">Expires</code> header. This module is enabled by
+       default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.11"><span class="term"><code class="systemitem">mod_http2</code></span></dt><dd><p>
+       With <code class="systemitem">mod_http2</code>, Apache gains support for the
+       HTTP/2 protocol. It can be enabled by specifying <code class="literal">Protocols h2
+       http/1.1</code> in a <code class="systemitem">VirtualHost</code>.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.12"><span class="term"><code class="systemitem">mod_include</code></span></dt><dd><p>
+       <code class="systemitem">mod_include</code> lets you use Server Side Includes
+       (SSI), which provide a basic functionality to generate HTML pages
+       dynamically. This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.13"><span class="term"><code class="systemitem">mod_info</code></span></dt><dd><p>
+       Provides a comprehensive overview of the server configuration under
+       http://localhost/server-info/. For security reasons, you should always
+       limit access to this URL. By default only
+       <code class="systemitem">localhost</code> is allowed to
+       access this URL. <code class="systemitem">mod_info</code> is configured at
+       <code class="filename">/etc/apache2/mod_info.conf</code>.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.14"><span class="term"><code class="systemitem">mod_log_config</code></span></dt><dd><p>
+       With this module, you can configure the look of the Apache log files.
+       This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.15"><span class="term"><code class="systemitem">mod_mime</code></span></dt><dd><p>
+       The mime module ensures that a file is delivered with the correct MIME
+       header based on the file name's extension (for example
+       <code class="systemitem">text/html</code> for HTML documents). This module is
+       enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.16"><span class="term"><code class="systemitem">mod_negotiation</code></span></dt><dd><p>
+       Necessary for content negotiation. See
+       <a class="link" href="https://httpd.apache.org/docs/2.4/content-negotiation.html" target="_blank">http://httpd.apache.org/docs/2.4/content-negotiation.html</a>
+       for more information. This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.17"><span class="term"><code class="systemitem">mod_rewrite</code></span></dt><dd><p>
+       Provides the functionality of <code class="systemitem">mod_alias</code>, but
+       offers more features and flexibility. With
+       <code class="systemitem">mod_rewrite</code>, you can redirect URLs based on
+       multiple rules, request headers, and more.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.18"><span class="term"><code class="systemitem">mod_setenvif</code></span></dt><dd><p>
+       Sets environment variables based on details of the client's request,
+       such as the browser string the client sends, or the client's IP address.
+       This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.19"><span class="term"><code class="systemitem">mod_spelling</code></span></dt><dd><p>
+       <code class="systemitem">mod_spelling</code> attempts to automatically correct
+       typographical errors in URLs, such as capitalization errors.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.20"><span class="term"><code class="systemitem">mod_ssl</code></span></dt><dd><p>
+       Enables encrypted connections between Web server and clients. See
+       <a class="xref" href="cha-apache2.html#sec-apache2-ssl" title="42.6. Setting up a secure Web server with SSL">Section 42.6, “Setting up a secure Web server with SSL”</a> for details. This module is enabled by
+       default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.21"><span class="term"><code class="systemitem">mod_status</code></span></dt><dd><p>
+       Provides information on server activity and performance under
+       http://localhost/server-status/. For security reasons, you should always
+       limit access to this URL. By default, only
+       <code class="systemitem">localhost</code> is allowed to
+       access this URL. <code class="systemitem">mod_status</code> is configured at
+       <code class="filename">/etc/apache2/mod_status.conf</code>.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.22"><span class="term"><code class="systemitem">mod_suexec</code></span></dt><dd><p>
+       <code class="systemitem">mod_suexec</code> lets you run CGI scripts under a
+       different user and group. This module is enabled by default.
+      </p></dd><dt id="id-1.3.7.7.6.8.3.23"><span class="term"><code class="systemitem">mod_userdir</code></span></dt><dd><p>
+       Enables user-specific directories available under
+       <code class="filename">~<em class="replaceable">USER</em>/</code>. The
+       <code class="systemitem">UserDir</code> directive must be specified in the
+       configuration. This module is enabled by default.
+      </p></dd></dl></div></section><section class="sect2" id="sec-apache2-modules-mpm" data-id-title="Multiprocessing modules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.4.4 </span><span class="title-name">Multiprocessing modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-mpm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> provides two different multiprocessing modules (MPMs) for use
+    with Apache:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <a class="xref" href="cha-apache2.html#sec-apache2-modules-mpm-prefork" title="42.4.4.1. Prefork MPM">Prefork MPM</a>
+     </p></li><li class="listitem"><p>
+      <a class="xref" href="cha-apache2.html#sec-apache2-modules-mpm-worker" title="42.4.4.2. Worker MPM">Worker MPM</a>
+     </p></li></ul></div><section class="sect3" id="sec-apache2-modules-mpm-prefork" data-id-title="Prefork MPM"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.4.4.1 </span><span class="title-name">Prefork MPM</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-mpm-prefork">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The prefork MPM implements a non-threaded, preforking Web server. It makes
+     the Web server behave similarly to Apache version 1.x. In this version it
+     isolates each request and handles it by forking a separate child process.
+     Thus problematic requests cannot affect others, avoiding a lockup of the
+     Web server.
+    </p><p>
+     While providing stability with this process-based approach, the prefork
+     MPM consumes more system resources than its counterpart, the worker MPM.
+     The prefork MPM is considered the default MPM for Unix-based operating
+     systems.
+    </p><div id="id-1.3.7.7.6.9.4.4" data-id-title="MPMs in this document" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: MPMs in this document</div><p>
+      This document assumes Apache is used with the prefork MPM.
+     </p></div></section><section class="sect3" id="sec-apache2-modules-mpm-worker" data-id-title="Worker MPM"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.4.4.2 </span><span class="title-name">Worker MPM</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-mpm-worker">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The worker MPM provides a multi-threaded Web server. A thread is a
+     <span class="quote">“<span class="quote">lighter</span>”</span> form of a process. The advantage of a thread over a
+     process is its lower resource consumption. Instead of only forking child
+     processes, the worker MPM serves requests by using threads with server
+     processes. The preforked child processes are multi-threaded. This approach
+     makes Apache perform better by consuming fewer system resources than the
+     prefork MPM.
+    </p><p>
+     One major disadvantage is the stability of the worker MPM: if a thread
+     becomes corrupt, all threads of a process can be affected. In the worst
+     case, this may result in a server crash. Especially when using the Common
+     Gateway Interface (CGI) with Apache under heavy load, internal server
+     errors might occur because of threads being unable to communicate with
+     system resources. Another argument against using the worker MPM with
+     Apache is that not all available Apache modules are thread-safe and thus
+     cannot be used with the worker MPM.
+    </p><div id="id-1.3.7.7.6.9.5.4" data-id-title="Using PHP modules with MPMs" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Using PHP modules with MPMs</div><p>
+      Not all available PHP modules are thread-safe. Using the worker MPM with
+      <code class="systemitem">mod_php</code> is strongly discouraged.
+     </p></div></section></section><section class="sect2" id="sec-apache2-modules-external" data-id-title="External modules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.4.5 </span><span class="title-name">External modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-external">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Find a list of all external modules shipped with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> here. Find
+    the module's documentation in the listed directory.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.6.10.3.1"><span class="term"><code class="systemitem">mod_apparmor</code></span></dt><dd><p>
+       Adds support to Apache to provide <span class="phrase">AppArmor</span> confinement to individual CGI
+       scripts handled by modules like
+       <code class="systemitem">mod_php8</code>.
+      </p><table style="border: 0; " class="simplelist"><tr><td>
+        Package Name: <code class="systemitem">apache2-mod_apparmor</code></td></tr><tr><td>
+        More Information: <span class="intraxref">Book “Security and Hardening Guide”</span></td></tr></table></dd><dt id="id-1.3.7.7.6.10.3.2"><span class="term"><code class="systemitem">mod_php8</code></span></dt><dd><p>
+       PHP is a server-side, cross-platform HTML embedded scripting language.
+      </p><table style="border: 0; " class="simplelist"><tr><td>
+        Package Name: <code class="systemitem">apache2-mod_php8</code></td></tr><tr><td>
+        Configuration File: <code class="filename">/etc/apache2/conf.d/php8.conf</code></td></tr></table></dd><dt id="id-1.3.7.7.6.10.3.3"><span class="term"><code class="systemitem">mod_python</code></span></dt><dd><p>
+       <code class="systemitem">mod_python</code> allows embedding Python within the
+       Apache HTTP server for a considerable boost in performance and added
+       flexibility in designing Web-based applications.
+      </p><table style="border: 0; " class="simplelist"><tr><td>
+        Package Name: <code class="systemitem">apache2-mod_python</code></td></tr><tr><td>
+        More Information:
+        <code class="filename">/usr/share/doc/packages/apache2-mod_python</code></td></tr></table></dd><dt id="id-1.3.7.7.6.10.3.4"><span class="term"><code class="systemitem">mod_security</code></span></dt><dd><p>
+       <code class="systemitem">mod_security</code> provides a Web application
+       firewall to protect Web applications from a range of attacks. It also
+       enables HTTP traffic monitoring and real-time analysis.
+      </p><table style="border: 0; " class="simplelist"><tr><td>
+        Package Name: <code class="systemitem">apache2-mod_security2</code></td></tr><tr><td>
+        Configuration File: <code class="filename">/etc/apache2/conf.d/mod_security2.conf</code></td></tr><tr><td>
+        More Information: <code class="filename">/usr/share/doc/packages/apache2-mod_security2</code></td></tr><tr><td>
+        Documentation: <a class="link" href="https://github.com/SpiderLabs/ModSecurity" target="_blank">https://github.com/SpiderLabs/ModSecurity</a></td></tr></table></dd></dl></div></section><section class="sect2" id="sec-apache2-modules-building-modules" data-id-title="Compilation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.4.6 </span><span class="title-name">Compilation</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-modules-building-modules">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Apache can be extended by advanced users by writing custom modules. To
+    develop modules for Apache or compile third-party modules, the package
+    <code class="systemitem">apache2-devel</code> is required along with the
+    corresponding development tools. <code class="systemitem">apache2-devel</code>
+    also contains the <code class="command">apxs2</code> tools, which are necessary for
+    compiling additional modules for Apache.
+   </p><p>
+    <code class="command">apxs2</code> enables the compilation and installation of
+    modules from source code (including the required changes to the
+    configuration files), which creates <span class="emphasis"><em>dynamic shared
+    objects</em></span> (DSOs) that can be loaded into Apache at runtime.
+   </p><p>
+    The <code class="command">apxs2</code> binaries are located under
+    <code class="filename">/usr/sbin</code>:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <code class="filename">/usr/sbin/apxs2</code>—suitable for building an
+      extension module that works with any MPM. The installation location is
+      <code class="filename">/usr/lib64/apache2</code>.
+     </p></li><li class="listitem"><p>
+      <code class="filename">/usr/sbin/apxs2-prefork</code>—suitable for prefork
+      MPM modules. The installation location is
+      <code class="filename">/usr/lib64/apache2-prefork</code>.
+     </p></li><li class="listitem"><p>
+      <code class="filename">/usr/sbin/apxs2-worker</code>—suitable for worker MPM
+      modules. The installation location is
+      <code class="filename">/usr/lib64/apache2-worker</code>.
+     </p></li></ul></div><p>
+    Install and activate a module from source code with the following commands:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cd /path/to/module/source
+<code class="prompt user">&gt; </code><code class="command">sudo</code> apxs2 -cia <em class="replaceable">MODULE</em>.c</pre></div><p>
+    where <code class="option">-c</code> compiles the module, <code class="option">-i</code> installs
+    it, and <code class="option">-a</code> activates it. Other options of
+    <code class="command">apxs2</code> are described in the
+    <code class="systemitem">apxs2(1)</code> man page.
+   </p></section></section><section class="sect1" id="sec-apache2-cgi" data-id-title="Enabling CGI scripts"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.5 </span><span class="title-name">Enabling CGI scripts</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-cgi">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Apache's Common Gateway Interface (CGI) lets you create dynamic content with
+   programs or scripts (CGI scripts). CGI scripts can be written
+   in any programming language. Mostly, script languages such as PHP are used.
+  </p><p>
+   To enable Apache to deliver content created by CGI scripts,
+   <code class="systemitem">mod_cgi</code> needs to be activated.
+   <code class="systemitem">mod_alias</code> is also needed. Both modules are enabled
+   by default. Refer to <a class="xref" href="cha-apache2.html#sec-apache2-modules-activating" title="42.4.2. Activation and deactivation">Section 42.4.2, “Activation and deactivation”</a> for
+   details on activating modules.
+  </p><div id="id-1.3.7.7.7.4" data-id-title="CGI security" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: CGI security</div><p>
+    Allowing the server to execute CGI scripts is a potential security hole.
+    Refer to <a class="xref" href="cha-apache2.html#sec-apache2-security" title="42.8. Avoiding security problems">Section 42.8, “Avoiding security problems”</a> for additional information.
+   </p></div><section class="sect2" id="sec-apache2-cgi-configuration" data-id-title="Apache configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.5.1 </span><span class="title-name">Apache configuration</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-cgi-configuration">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    In <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, the execution of CGI scripts is only allowed in the
+    directory <code class="filename">/srv/www/cgi-bin/</code>. This location is already
+    configured to execute CGI scripts. If you have created a virtual host
+    configuration (see
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost" title="42.2.2.1. Virtual host configuration">Section 42.2.2.1, “Virtual host configuration”</a>) and want to
+    place your scripts in a host-specific directory, you must unlock and
+    configure this directory.
+   </p><div class="example" id="ex-apache2-cgi-configuration" data-id-title="VirtualHost CGI configuration"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 42.5: </span><span class="title-name">VirtualHost CGI configuration </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#ex-apache2-cgi-configuration">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">ScriptAlias /cgi-bin/ "/srv/www/www.example.com/cgi-bin/"<span class="callout" id="co-apache2-cgi-script-alias">1</span>
+
+&lt;Directory "/srv/www/www.example.com/cgi-bin/"&gt;
+ Options +ExecCGI<span class="callout" id="co-apache2-cgi-options">2</span>
+ AddHandler cgi-script .cgi .pl<span class="callout" id="co-apache2-cgi-handler">3</span>
+ Require all granted<span class="callout" id="co-apache2-cgi-order">4</span>
+&lt;/Directory&gt;</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apache2-cgi-script-alias"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Tells Apache to handle all files within this directory as CGI scripts.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apache2-cgi-options"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Enables CGI script execution
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apache2-cgi-handler"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Tells the server to treat files with the extensions .pl and .cgi as CGI
+       scripts. Adjust according to your needs.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apache2-cgi-order"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       The <code class="systemitem">Require</code> directive controls the default
+       access state. In this case, access is granted to the specified directory
+       without limitation. For more information on authentication and
+       authorization, see
+       <a class="link" href="https://httpd.apache.org/docs/2.4/howto/auth.html" target="_blank">https://httpd.apache.org/docs/2.4/howto/auth.html</a>.
+      </p></td></tr></table></div></div></div></section><section class="sect2" id="sec-apache2-cgi-example-script" data-id-title="Running an example script"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.5.2 </span><span class="title-name">Running an example script</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-cgi-example-script">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    CGI programming differs from <span class="quote">“<span class="quote">regular</span>”</span> programming in that the CGI programs
+    and scripts must be preceded by a MIME-Type header such as
+    <code class="literal">Content-type: text/html</code>. This header is sent to the
+    client, so it understands what kind of content it receives. Secondly, the
+    script's output must be something the client, usually a Web browser,
+    understands—HTML or plain text or images, for example.
+   </p><p>
+    A simple test script available under
+    <code class="filename">/usr/share/doc/packages/apache2/test-cgi</code> is part of
+    the Apache package. It outputs the content of certain environment variables as
+    plain text. Copy this script to either
+    <code class="filename">/srv/www/cgi-bin/</code> or the script directory of your
+    virtual host (<code class="filename">/srv/www/www.example.com/cgi-bin/</code>) and name it
+    <code class="filename">test.cgi</code>. Edit the file to have
+    <code class="literal">#!/bin/sh</code> as the first line.
+   </p><p>
+    Files accessible by the Web server should be owned by the user
+    <code class="systemitem">root</code>. For additional information
+    see <a class="xref" href="cha-apache2.html#sec-apache2-security" title="42.8. Avoiding security problems">Section 42.8, “Avoiding security problems”</a>. Because the Web server runs
+    with a different user, the CGI scripts must be world-executable and
+    world-readable. Change into the CGI directory and use the command
+    <code class="command">chmod 755 test.cgi</code> to apply the proper permissions.
+   </p><p>
+    Now call <code class="literal">http://localhost/cgi-bin/test.cgi</code> or
+    <code class="literal">http://www.example.com/cgi-bin/test.cgi</code>. You should see the
+    <span class="quote">“<span class="quote">CGI/1.0 test script report</span>”</span>.
+   </p></section><section class="sect2" id="sec-apache2-cgi-troubleshooting" data-id-title="CGI troubleshooting"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.5.3 </span><span class="title-name">CGI troubleshooting</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-cgi-troubleshooting">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you do not see the output of the test program but an error message
+    instead, check the following:
+   </p><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">CGI troubleshooting </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#id-1.3.7.7.7.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+      <span class="emphasis"><em>Have you reloaded the server after having changed the
+      configuration?</em></span> If not, reload with <code class="command">systemctl reload
+      apache2.service</code>.
+     </p></li><li class="listitem"><p>
+      <span class="emphasis"><em>If you have configured your custom CGI directory, is it
+      configured properly?</em></span> If in doubt, try the script within the
+      default CGI directory <code class="filename">/srv/www/cgi-bin/</code> and call it
+      with <code class="literal">http://localhost/cgi-bin/test.cgi</code>.
+     </p></li><li class="listitem"><p>
+      <span class="emphasis"><em>Are the file permissions correct?</em></span> Change into the
+      CGI directory and execute <code class="command">ls -l test.cgi</code>. The output
+      should start with
+     </p><div class="verbatim-wrap"><pre class="screen">-rwxr-xr-x  1 root root</pre></div></li><li class="listitem"><p>
+      Make sure that the script does not contain programming errors. If you
+      have not changed <code class="filename">test.cgi</code>, this should not be the
+      case, but if you are using your own programs, always make sure that they
+      do not contain programming errors.
+     </p></li></ul></div></section></section><section class="sect1" id="sec-apache2-ssl" data-id-title="Setting up a secure Web server with SSL"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.6 </span><span class="title-name">Setting up a secure Web server with SSL</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Whenever sensitive data, such as credit card information, is transferred
+   between Web server and client, it is desirable to have a secure, encrypted
+   connection with authentication. <code class="systemitem">mod_ssl</code> provides
+   strong encryption using the secure sockets layer (SSL) and transport layer
+   security (TLS) protocols for HTTP communication between a client and the Web
+   server. Using TLS/SSL, a private connection between Web server and client is
+   established. Data integrity is ensured and client and server can
+   authenticate each other.
+  </p><p>
+   For this purpose, the server sends an SSL certificate that holds information
+   proving the server's valid identity before any request to a URL is answered.
+   In turn, this guarantees that the server is the uniquely correct end point
+   for the communication. Additionally, the certificate generates an encrypted
+   connection between client and server that can transport information without
+   the risk of exposing sensitive, plain-text content.
+  </p><p>
+   <code class="systemitem">mod_ssl</code> does not implement the TLS/SSL protocols
+   itself, but acts as an interface between Apache and an SSL library. In
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, the OpenSSL library is used. OpenSSL is automatically
+   installed with Apache.
+  </p><p>
+   The most visible effect of using <code class="systemitem">mod_ssl</code> with
+   Apache is that URLs are prefixed with <code class="literal">https://</code> instead of
+   <code class="literal">http://</code>.
+  </p><section class="sect2" id="sec-apache2-ssl-certificate" data-id-title="Creating an SSL certificate"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.6.1 </span><span class="title-name">Creating an SSL certificate</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl-certificate">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To use TLS/SSL with the Web server, you need to create an SSL certificate.
+    This certificate is needed for the authorization between Web server and
+    client, so that each party can identify the other party. To ensure
+    the integrity of the certificate, it must be signed by a party every user
+    trusts.
+   </p><p>
+    There are three types of certificates you can create: a
+    <span class="quote">“<span class="quote">test</span>”</span> certificate for testing purposes only, a self-signed
+    certificate for a defined circle of users that trust you, and a certificate
+    signed by an independent, publicly known certificate authority (CA).
+   </p><p>
+    Creating a certificate is a two step process. First, a private key for the
+    certificate authority is generated then the server certificate is signed
+    with this key.
+   </p><div id="id-1.3.7.7.8.6.5" data-id-title="More information" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: More information</div><p>
+     To learn more about concepts and definitions of TLS/SSL, refer to
+     <a class="link" href="https://httpd.apache.org/docs/2.4/ssl/ssl_intro.html" target="_blank">https://httpd.apache.org/docs/2.4/ssl/ssl_intro.html</a>.
+    </p></div><section class="sect3" id="sec-apache2-ssl-certificate-test" data-id-title="Creating a test certificate"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.6.1.1 </span><span class="title-name">Creating a <span class="quote">“<span class="quote">test</span>”</span> certificate</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl-certificate-test">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To generate a test certificate, call the script
+     <code class="command">/usr/bin/gensslcert</code>. It creates or overwrites the files
+     listed below. Use <code class="command">gensslcert</code>'s optional switches to
+     fine-tune the certificate. Call <code class="command">/usr/bin/gensslcert </code>
+     <code class="option">-h</code> for more information.
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       <code class="filename">/etc/apache2/ssl.crt/ca.crt</code>
+      </p></li><li class="listitem"><p>
+       <code class="filename">/etc/apache2/ssl.crt/server.crt</code>
+      </p></li><li class="listitem"><p>
+       <code class="filename">/etc/apache2/ssl.key/server.key</code>
+      </p></li><li class="listitem"><p>
+       <code class="filename">/etc/apache2/ssl.csr/server.csr</code>
+      </p></li></ul></div><p>
+     A copy of <code class="filename">ca.crt</code> is also placed at
+     <code class="filename">/srv/www/htdocs/CA.crt</code> for download.
+    </p><div id="id-1.3.7.7.8.6.6.5" data-id-title="For testing purposes only" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: For testing purposes only</div><p>
+      A test certificate should never be used on a production system. Only use
+      it for testing purposes.
+     </p></div></section><section class="sect3" id="sec-apache2-ssl-certificate-custom" data-id-title="Creating a self-signed certificate"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.6.1.2 </span><span class="title-name">Creating a self-signed certificate</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl-certificate-custom">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     If you are setting up a secure Web server for an intranet or for a defined
+     circle of users, it is probably sufficient if you sign a certificate with
+     your own certificate authority (CA). Note that visitors to such a site
+     will see a warning like <span class="quote">“<span class="quote">this is an untrusted site</span>”</span>, as Web
+     browsers do not recognize self-signed certificates.
+    </p><div id="id-1.3.7.7.8.6.7.3" data-id-title="Self-signed certificates" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Self-signed certificates</div><p>
+      Only use a self-signed certificate on a Web server that is accessed by
+      people who know and trust you as a certificate authority. It is not
+      recommended to use such a certificate for a public shop, for example.
+     </p></div><p>
+     First you need to generate a certificate signing request (CSR). You are
+     going to use <code class="command">openssl</code>, with <code class="literal">PEM</code> as
+     the certificate format. During this step, you will be asked for a
+     passphrase, and to answer several questions. Remember the passphrase you
+     enter as you will need it in the future.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> openssl req -new &gt; new.cert.csr
+Generating a 1024 bit RSA private key
+..++++++
+.........++++++
+writing new private key to 'privkey.pem'
+Enter PEM pass phrase:<span class="callout" id="co-ssl-self-pass1">1</span>
+Verifying - Enter PEM pass phrase:<span class="callout" id="co-ssl-self-pass2">2</span>
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:<span class="callout" id="co-ssl-self-country">3</span>
+State or Province Name (full name) [Some-State]:<span class="callout" id="co-ssl-self-state">4</span>
+Locality Name (eg, city) []:<span class="callout" id="co-ssl-self-city">5</span>
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:<span class="callout" id="co-ssl-self-org">6</span>
+Organizational Unit Name (eg, section) []:<span class="callout" id="co-ssl-self-uname">7</span>
+Common Name (for example server FQDN, or YOUR name) []:<span class="callout" id="co-ssl-self-cname">8</span>
+Email Address []:<span class="callout" id="co-ssl-self-email">9</span>
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:<span class="callout" id="co-ssl-self-challenge">10</span>
+An optional company name []:<span class="callout" id="co-ssl-self-optional">11</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-pass1"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in your passphrase.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-pass2"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill it in once more (and remember it).
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-country"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in your 2 letter country code, such as <code class="literal">GB</code> or
+       <code class="literal">CZ</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-state"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in the name of the state where you live.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-city"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in the city name, such as <code class="literal">Prague</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-org"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in the name of the organization you work for.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-uname"><span class="callout">7</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in your organization unit, or leave blank if you have none.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-cname"><span class="callout">8</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in either the domain name of the server, or your first and last
+       name.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-email"><span class="callout">9</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in your work e-mail address.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-challenge"><span class="callout">10</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Leave the challenge password empty, otherwise you need to enter it
+       every time you restart the Apache Web server.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-ssl-self-optional"><span class="callout">11</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Fill in the optional company name, or leave blank.
+      </p></td></tr></table></div><p>
+     Now you can generate the certificate. You are going to use
+     <code class="command">openssl</code> again, and the format of the certificate is the
+     default <code class="literal">PEM</code>.
+    </p><div class="procedure" id="id-1.3.7.7.8.6.7.8" data-id-title="Generating the certificate"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 42.3: </span><span class="title-name">Generating the certificate </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#id-1.3.7.7.8.6.7.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Export the private part of the key to <code class="filename">new.cert.key</code>.
+       You will be prompted for the passphrase you entered when creating the
+       certificate signing request (CSR).
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> openssl rsa -in privkey.pem -out new.cert.key</pre></div></li><li class="step"><p>
+       Generate the public part of the certificate according to the information
+       you filled out in the signing request. The <code class="option">-days</code> option
+       specifies the length of time before the certificate expires. You can
+       revoke a certificate, or replace one before it expires.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> openssl x509 -in new.cert.csr -out new.cert.cert -req \
+-signkey new.cert.key -days 365</pre></div></li><li class="step"><p>
+       Copy the certificate files to the relevant directories, so that the
+       Apache server can read them. Make sure that the private key
+       <code class="filename">/etc/apache2/ssl.key/server.key</code> is not
+       world-readable, while the public PEM certificate
+       <code class="filename">/etc/apache2/ssl.crt/server.crt</code> is.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cp new.cert.cert /etc/apache2/ssl.crt/server.crt
+<code class="prompt user">&gt; </code><code class="command">sudo</code> cp new.cert.key /etc/apache2/ssl.key/server.key</pre></div></li></ol></div></div><div id="id-1.3.7.7.8.6.7.9" data-id-title="Public certificate location" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Public certificate location</div><p>
+      The last step is to copy the public certificate file from
+      <code class="filename">/etc/apache2/ssl.crt/server.crt</code> to a location where
+      your users can access it to incorporate it into the list of known and
+      trusted CAs in their Web browsers. Otherwise a browser complains that the
+      certificate was issued by an unknown authority.
+     </p></div></section><section class="sect3" id="sec-apache2-ssl-certificate-official" data-id-title="Getting an officially signed certificate"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.6.1.3 </span><span class="title-name">Getting an officially signed certificate</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl-certificate-official">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     There are several official certificate authorities that sign your
+     certificates. The certificate is signed by a trustworthy third party, so
+     can be fully trusted. Publicly operating secure Web servers usually have
+     an officially signed certificate. A list of the most used Certificate
+     Authorities (CAs) is available at
+     <a class="link" href="https://en.wikipedia.org/wiki/Certificate_authority#Providers" target="_blank">https://en.wikipedia.org/wiki/Certificate_authority#Providers</a>.
+    </p><p>
+     When requesting an officially signed certificate, you do not send a
+     certificate to the CA. Instead, issue a Certificate Signing Request
+
+     (CSR). To create a CSR, run the following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>openssl req -new -newkey rsa:2048 -nodes -keyout newkey.pem -out newreq.pem</pre></div><p>
+
+     You are asked to enter a distinguished name. This requires you to answer a
+     few questions, such as country name or organization name. Enter valid
+     data—everything you enter here later shows up in the certificate and
+     is checked. You do not need to answer every question. If one does not
+     apply to you or you want to leave it blank, use <span class="quote">“<span class="quote">.</span>”</span>. Common
+     name is the name of the CA itself—choose a significant name, such as
+     <em class="replaceable">My company</em> CA. Last, a challenge password and
+     an alternative company name must be entered.
+    </p><p>
+     Find the CSR in the directory from which you called the script. The file
+     is named <code class="filename">newreq.pem</code>.
+    </p></section></section><section class="sect2" id="sec-apache2-ssl-configuration" data-id-title="Configuring Apache with SSL"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.6.2 </span><span class="title-name">Configuring Apache with SSL</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl-configuration">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The default port for TLS/SSL requests on the Web server side is 443. There
+    is no conflict between a <span class="quote">“<span class="quote">regular</span>”</span> Apache listening on port 80
+    and an TLS/SSL-enabled Apache listening on port 443. In fact, HTTP and
+    HTTPS can be run with the same Apache instance. Usually separate virtual
+    hosts are used to dispatch requests to port 80 and port 443 to separate
+    virtual servers.
+   </p><div id="id-1.3.7.7.8.7.3" data-id-title="Firewall configuration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Firewall configuration</div><p>
+     Do not forget to open the firewall for SSL-enabled Apache on port 443.
+     This can be done with <code class="systemitem">firewalld</code> as described in
+     <span class="intraxref">Book “Security and Hardening Guide”, Chapter 23 “Masquerading and firewalls”, Section 23.4.3 “Configuring the firewall on the command line”</span>.
+    </p></div><p>
+    The SSL module is enabled by default in the global server configuration. In
+    case it has been disabled on your host, activate it with the following
+    command: <code class="command">a2enmod ssl</code>. To finally enable SSL, the server
+    needs to be started with the flag <span class="quote">“<span class="quote">SSL</span>”</span>. To do so, call
+    <code class="command">a2enflag SSL</code> (case-sensitive!). If you have chosen to
+    encrypt your server certificate with a password, you should also increase
+    the value for <code class="systemitem">APACHE_TIMEOUT</code> in
+    <code class="filename">/etc/sysconfig/apache2</code>, so you have enough time to
+    enter the passphrase when Apache starts. Restart the server to make these
+    changes active. A reload is not sufficient.
+   </p><p>
+    The virtual host configuration directory contains a template
+    <code class="filename">/etc/apache2/vhosts.d/vhost-ssl.template</code> with
+    SSL-specific directives that are extensively documented. Refer to
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost" title="42.2.2.1. Virtual host configuration">Section 42.2.2.1, “Virtual host configuration”</a> for the general
+    virtual host configuration.
+   </p><p>
+    To get started, copy the template to
+    <code class="filename">/etc/apache2/vhosts.d/<em class="replaceable">MYSSL-HOST</em>.conf</code>
+    and edit it. Adjusting the values for the following directives should be
+    sufficient:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <code class="systemitem">DocumentRoot</code>
+     </p></li><li class="listitem"><p>
+      <code class="systemitem">ServerName</code>
+     </p></li><li class="listitem"><p>
+      <code class="systemitem">ServerAdmin</code>
+     </p></li><li class="listitem"><p>
+      <code class="systemitem">ErrorLog</code>
+     </p></li><li class="listitem"><p>
+      <code class="systemitem">TransferLog</code>
+     </p></li></ul></div><section class="sect3" id="sec-apache2-ssl-configuration-name-based" data-id-title="Name-based virtual hosts and SSL"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">42.6.2.1 </span><span class="title-name">Name-based virtual hosts and SSL</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-ssl-configuration-name-based">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     By default it is not possible to run multiple SSL-enabled virtual hosts on
+     a server with only one IP address. Name-based virtual hosting requires
+     that Apache knows which server name has been requested. The problem with
+     SSL connections is, that such a request can only be read after the SSL
+     connection has already been established (by using the default virtual
+     host). As a result, users will receive a warning message stating that the
+     certificate does not match the server name.
+    </p><p>
+     <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> comes with an extension to the SSL protocol called Server
+     Name Indication (SNI) addresses this issue by sending the name of the
+     virtual domain as part of the SSL negotiation. This enables the server to
+     <span class="quote">“<span class="quote">switch</span>”</span> to the correct virtual domain early and present the
+     browser the correct certificate.
+    </p><p>
+     SNI is enabled by default on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. To enable Name-Based Virtual
+     Hosts for SSL, configure the server as described in
+     <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost-named-vhosts" title="42.2.2.1.1. Name-based virtual hosts">Section 42.2.2.1.1, “Name-based virtual hosts”</a>
+     (you need to use port <code class="literal">443</code> rather than port
+     <code class="literal">80</code> with SSL).
+    </p><div id="id-1.3.7.7.8.7.8.5" data-id-title="SNI browser support" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: SNI browser support</div><p>
+      SNI must also be supported on the client side. However, SNI is supported
+      by most browsers, except for certain older browsers. For more
+      information, see
+      <a class="link" href="https://en.wikipedia.org/wiki/Server_Name_Indication#Support" target="_blank">https://en.wikipedia.org/wiki/Server_Name_Indication#Support</a>.
+     </p><p>
+      To configure handling of non-SNI capable browsers, use the directive
+      <code class="systemitem">SSLStrictSNIVHostCheck</code>. When set to
+      <code class="literal">on</code> in the server configuration, non-SNI capable
+      browser will be rejected for all virtual hosts. When set to
+      <code class="literal">on</code> within a <code class="systemitem">VirtualHost</code>
+      directive, access to this particular host will be rejected.
+     </p><p>
+      When set to <code class="literal">off</code> in the server configuration, the
+      server will behave as if not having SNI support. SSL requests will be
+      handled by the <span class="emphasis"><em>first</em></span> virtual host defined (for port
+      443).
+     </p></div></section></section></section><section class="sect1" id="sec-apache2-multiple-instances" data-id-title="Running multiple Apache instances on the same server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.7 </span><span class="title-name">Running multiple Apache instances on the same server</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-multiple-instances">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Running multiple Apache instances on the same server has several advantages
+   over running multiple virtual hosts (see
+   <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost" title="42.2.2.1. Virtual host configuration">Section 42.2.2.1, “Virtual host configuration”</a>):
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     When a virtual host needs to be disabled for some time, you need to change
+     the Web server configuration and restart it so that the change takes
+     effect.
+    </p></li><li class="listitem"><p>
+     In case of problems with one virtual host, you need to restart all of
+     them.
+    </p></li></ul></div><p>
+   You can run the default Apache instance as usual:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start apache2.service</pre></div><p>
+   It reads the default <code class="filename">/etc/sysconfig/apache2</code> file. If
+   the file is not present, or it is present but it does not set the
+   <code class="systemitem">APACHE_HTTPD_CONF</code> variable, it reads
+   <code class="filename">/etc/apache2/httpd.conf</code>.
+  </p><p>
+   To activate another Apache instance, run:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start apache2@<em class="replaceable">INSTANCE_NAME</em></pre></div><p>
+   For example:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start apache2@example_web.org</pre></div><p>
+   By default, the instance uses
+   <code class="filename">/etc/apache2@example_web.org/httpd.conf</code> as a main
+   configuration file, which can be overwritten by setting
+   <code class="systemitem">APACHE_HTTPD_CONF</code> in
+   <code class="filename">/etc/sysconfig/apache2@example_web.org</code>.
+  </p><p>
+   An example to set up an additional instance of Apache follows. Note that you
+   need to execute all the commands as <code class="systemitem">root</code>.
+  </p><div class="procedure" id="id-1.3.7.7.9.13" data-id-title="Configuring an additional Apache instance"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 42.4: </span><span class="title-name">Configuring an additional Apache instance </span></span><a title="Permalink" class="permalink" href="cha-apache2.html#id-1.3.7.7.9.13">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Create a new configuration file based on
+     <code class="filename">/etc/sysconfig/apache2</code>, for example
+     <code class="filename">/etc/sysconfig/apache2@example_web.org</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cp /etc/sysconfig/apache2 /etc/sysconfig/apache2@example_web.org</pre></div></li><li class="step"><p>
+     Edit the file <code class="filename">/etc/sysconfig/apache2@example_web.org</code>
+     and change the line containing
+    </p><div class="verbatim-wrap"><pre class="screen">APACHE_HTTPD_CONF</pre></div><p>
+     to
+    </p><div class="verbatim-wrap"><pre class="screen">APACHE_HTTPD_CONF="/etc/apache2/httpd@example_web.org.conf"</pre></div></li><li class="step"><p>
+     Create the file
+     <code class="filename">/etc/apache2/httpd@example_web.org.conf</code> based on
+     <code class="filename">/etc/apache2/httpd.conf</code>.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cp /etc/apache2/httpd.conf /etc/apache2/httpd@example_web.org.conf</pre></div></li><li class="step"><p>
+     Edit <code class="filename">/etc/apache2/httpd@example_web.org.conf</code> and
+     change
+    </p><div class="verbatim-wrap"><pre class="screen">Include /etc/apache2/listen.conf</pre></div><p>
+     to
+    </p><div class="verbatim-wrap"><pre class="screen">Include /etc/apache2/listen@example_web.org.conf</pre></div><p>
+     Review all the directives and change them to fit your needs. You
+     probably want to change
+    </p><div class="verbatim-wrap"><pre class="screen">Include /etc/apache2/global.conf</pre></div><p>
+     and create new <code class="filename">global@example_web.org.conf</code> for each
+     instance. We suggest to change
+    </p><div class="verbatim-wrap"><pre class="screen">ErrorLog /var/log/apache2/error_log</pre></div><p>
+     to
+    </p><div class="verbatim-wrap"><pre class="screen">ErrorLog /var/log/apache2/error@example_web.org_log</pre></div><p>
+     to have separate logs for each instance.
+    </p></li><li class="step"><p>
+     Create <code class="filename">/etc/apache2/listen@example_web.org.conf</code> based
+     on <code class="filename">/etc/apache2/listen.conf</code>.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cp /etc/apache2/listen.conf /etc/apache2/listen@example_web.org.conf</pre></div></li><li class="step"><p>
+     Edit <code class="filename">/etc/apache2/listen@example_web.org.conf</code> and
+     change
+    </p><div class="verbatim-wrap"><pre class="screen">Listen 80</pre></div><p>
+     to the port number you want the new instance to run on, for example 82:
+    </p><div class="verbatim-wrap"><pre class="screen">Listen 82</pre></div><p>
+     To run the new Apache instance over a secured protocol (see
+     <a class="xref" href="cha-apache2.html#sec-apache2-ssl" title="42.6. Setting up a secure Web server with SSL">Section 42.6, “Setting up a secure Web server with SSL”</a>), change also the line
+    </p><div class="verbatim-wrap"><pre class="screen">Listen 443</pre></div><p>
+     for example to
+    </p><div class="verbatim-wrap"><pre class="screen">Listen 445</pre></div></li><li class="step"><p>
+     Start the new Apache instance:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl start apache2@example_web.org</pre></div></li><li class="step"><p>
+     Check if the server is running by pointing your Web browser at
+     <code class="literal">http://server_name:82</code>. If you previously changed the
+     name of the error log file for the new instance, you can check it:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> tail -f /var/log/apache2/error@example_web.org_log</pre></div></li></ol></div></div><p>
+   Here are several points to consider when setting up more Apache instances on
+   the same server:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     The file
+     <code class="filename">/etc/sysconfig/apache2@<em class="replaceable">INSTANCE_NAME</em></code>
+     can include the same variables as
+     <code class="filename">/etc/sysconfig/apache2</code>, including module loading and
+     MPM setting.
+    </p></li><li class="listitem"><p>
+     The default Apache instance does not need to be running while other
+     instances run.
+    </p></li><li class="listitem"><p>
+     The Apache helper utilities <code class="command">a2enmod</code>,
+     <code class="command">a2dismod</code> and <code class="command">apachectl</code> operate on
+     the default Apache instance if not specified otherwise with the
+     <code class="systemitem">HTTPD_INSTANCE</code> environment variable. The
+     following example
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> export HTTPD_INSTANCE=example_web.org
+<code class="prompt user">&gt; </code><code class="command">sudo</code> a2enmod access_compat
+<code class="prompt user">&gt; </code><code class="command">sudo</code> a2enmod status
+<code class="prompt user">&gt; </code><code class="command">sudo</code> apachectl start</pre></div><p>
+     will add <code class="systemitem">access_compat</code> and
+     <code class="systemitem">status</code> modules to the
+     <code class="systemitem">APACHE_MODULES</code> variable of
+     <code class="filename">/etc/sysconfig/apache2@example_web.org</code>, and then
+     start the <code class="literal">example_web.org</code> instance.
+    </p></li></ul></div></section><section class="sect1" id="sec-apache2-security" data-id-title="Avoiding security problems"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.8 </span><span class="title-name">Avoiding security problems</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-security">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A Web server exposed to the public Internet requires an ongoing
+   administrative effort. It is inevitable that security issues appear, both
+   related to the software and to accidental misconfiguration. Here are some
+   tips for how to deal with them.
+  </p><section class="sect2" id="sec-apache2-security-up-to-date" data-id-title="Up-to-date software"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.8.1 </span><span class="title-name">Up-to-date software</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-security-up-to-date">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If there are vulnerabilities found in the Apache software, a security
+    advisory will be issued by SUSE. It contains instructions for fixing the
+    vulnerabilities, which in turn should be applied when possible. The SUSE
+    security announcements are available from the following locations:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Web page. </span>
+       <a class="link" href="https://www.suse.com/support/security/" target="_blank">https://www.suse.com/support/security/</a>
+      </p></li><li class="listitem"><p><span class="formalpara-title">Mailing list archive. </span>
+       <a class="link" href="https://lists.opensuse.org/archives/list/security-announce@lists.opensuse.org/" target="_blank">https://lists.opensuse.org/archives/list/security-announce@lists.opensuse.org/</a>
+      </p></li><li class="listitem"><p><span class="formalpara-title">List of security announcements. </span>
+       <a class="link" href="https://www.suse.com/support/update/" target="_blank">https://www.suse.com/support/update/</a>
+      </p></li></ul></div></section><section class="sect2" id="sec-apache2-security-permissions" data-id-title="DocumentRoot permissions"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.8.2 </span><span class="title-name">DocumentRoot permissions</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-security-permissions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By default in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, the <code class="systemitem">DocumentRoot</code>
+    directory <code class="filename">/srv/www/htdocs</code> and the CGI directory
+    <code class="filename">/srv/www/cgi-bin</code> belong to the user and group
+    <code class="systemitem">root</code>. You should not change these permissions. If
+    the directories are writable for all, any user can place files into them.
+    These files might then be executed by Apache with the permissions of
+    <code class="systemitem">wwwrun</code>, which may give the user unintended access
+    to file system resources. Use subdirectories of
+    <code class="filename">/srv/www</code> to place the
+    <code class="systemitem">DocumentRoot</code> and CGI directories for your virtual
+    hosts and make sure that directories and files belong to user and group
+    <code class="systemitem">root</code>.
+   </p></section><section class="sect2" id="sec-apache2-security-filesystem" data-id-title="File system access"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.8.3 </span><span class="title-name">File system access</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-security-filesystem">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By default, access to the whole file system is denied in
+    <code class="filename">/etc/apache2/httpd.conf</code>. You should never overwrite
+    these directives, but specifically enable access to all directories Apache
+    should be able to read. For details, see
+    <a class="xref" href="cha-apache2.html#sec-apache2-configuration-manually-vhost-basic-configuration" title="42.2.2.1.3. Basic virtual host configuration">Section 42.2.2.1.3, “Basic virtual host configuration”</a>.
+    In doing so, ensure that no critical files, such as password or system
+    configuration files, can be read from the outside.
+   </p></section><section class="sect2" id="sec-apache2-security-cgi" data-id-title="CGI scripts"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.8.4 </span><span class="title-name">CGI scripts</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-security-cgi">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Interactive scripts in PHP, SSI or any other programming language can
+    run arbitrary commands and therefore present a general security
+    issue. Scripts that will be executed from the server should only be
+    installed from sources the server administrator trusts—allowing users
+    to run their own scripts is generally not a good idea. It is also
+    recommended to do security audits for all scripts.
+   </p><p>
+    To make the administration of scripts as easy as possible, it is common
+    practice to limit the execution of CGI scripts to specific directories
+    instead of globally allowing them. The directives
+    <code class="systemitem">ScriptAlias</code> and <code class="systemitem">Option
+    ExecCGI</code> are used for configuration. The <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> default
+    configuration does not allow execution of CGI scripts from everywhere.
+   </p><p>
+    All CGI scripts run as the same user, so different scripts can potentially
+    conflict with each other. The module suEXEC lets you run CGI scripts under
+    a different user and group.
+   </p></section><section class="sect2" id="sec-apache2-security-users" data-id-title="User directories"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.8.5 </span><span class="title-name">User directories</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-security-users">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When enabling user directories (with <code class="systemitem">mod_userdir</code>
+    or <code class="systemitem">mod_rewrite</code>) you should strongly consider not
+    allowing <code class="filename">.htaccess</code> files, which would allow users to
+    overwrite security settings. At least you should limit the user's
+    engagement by using the directive <code class="systemitem">AllowOverRide</code>.
+    In <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, <code class="filename">.htaccess</code> files are enabled by
+    default, but the user is not allowed to overwrite any
+    <code class="systemitem">Option</code> directives when using
+    <code class="systemitem">mod_userdir</code> (see the
+    <code class="filename">/etc/apache2/mod_userdir.conf</code> configuration file).
+   </p></section></section><section class="sect1" id="sec-apache2-troubleeshooting" data-id-title="Troubleshooting"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.9 </span><span class="title-name">Troubleshooting</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-troubleeshooting">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If Apache does not start, the Web page is not accessible, or users cannot
+   connect to the Web server, it is important to find the cause of the problem.
+   Here are typical places to look for error explanations and important
+   things to check:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.11.3.1"><span class="term">Output of the <code class="systemitem">apache2.service</code> subcommand:</span></dt><dd><p>
+      Instead of starting and stopping the Web server with the binary
+      <code class="filename">/usr/sbin/apache2ctl</code>, rather use the
+      <code class="command">systemctl</code> commands instead (described in
+      <a class="xref" href="cha-apache2.html#sec-apache2-start-stop" title="42.3. Starting and stopping Apache">Section 42.3, “Starting and stopping Apache”</a>). <code class="command">systemctl
+      status apache2.service</code> is verbose about errors, and it even
+      provides tips and hints for fixing configuration errors.
+     </p></dd><dt id="id-1.3.7.7.11.3.2"><span class="term">Log files and verbosity</span></dt><dd><p>
+      In case of both fatal and nonfatal errors, check the Apache log files for
+      causes, mainly the error log file located at
+      <code class="filename">/var/log/apache2/error_log</code> by default. Additionally,
+      you can control the verbosity of the logged messages with the
+      <code class="systemitem">LogLevel</code> directive if more detail is needed in
+      the log files.
+     </p><div id="id-1.3.7.7.11.3.2.2.2" data-id-title="A simple test" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: A simple test</div><p>
+       Watch the Apache log messages with the command <code class="command">tail -F
+       /var/log/apache2/<em class="replaceable">MY_ERROR_LOG</em></code>. Then
+       run <code class="command">systemctl restart apache2.service</code>. Now, try to
+       connect with a browser and check the output.
+      </p></div></dd><dt id="id-1.3.7.7.11.3.3"><span class="term">Firewall and ports</span></dt><dd><p>
+      A common mistake is to not open the ports for Apache in the firewall
+      configuration of the server. If you configure Apache with YaST, there
+      is a separate option available to take care of this specific issue (see
+      <a class="xref" href="cha-apache2.html#sec-apache2-configuration-yast" title="42.2.3. Configuring Apache with YaST">Section 42.2.3, “Configuring Apache with YaST”</a>). If you are configuring
+      Apache manually, open firewall ports for HTTP and HTTPS via YaST's
+      firewall module.
+     </p></dd></dl></div><p>
+   If the error cannot be tracked down with any of these, check the online
+   Apache bug database at
+   <a class="link" href="https://httpd.apache.org/bug_report.html" target="_blank">https://httpd.apache.org/bug_report.html</a>. Additionally,
+   the Apache user community can be reached via a mailing list available at
+   <a class="link" href="https://httpd.apache.org/userslist.html" target="_blank">https://httpd.apache.org/userslist.html</a>.
+  </p></section><section class="sect1" id="sec-apache2-more-information" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">42.10 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-more-information">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The package <code class="systemitem">apache2-doc</code> contains the complete
+   Apache manual in multiple localizations for local installation and reference.
+   It is not installed by default—the quickest way to install it is to
+   use the command <code class="command">zypper in apache2-doc</code>. Having been
+   installed, the Apache manual is available at
+   <a class="link" href="http://localhost/manual/" target="_blank">http://localhost/manual/</a>. You may also access it on the
+   Web at <a class="link" href="https://httpd.apache.org/docs-2.4/" target="_blank">https://httpd.apache.org/docs-2.4/</a>. SUSE-specific
+   configuration hints are available in the directory
+   <code class="filename">/usr/share/doc/packages/apache2/README.*</code>.
+  </p><section class="sect2" id="sec-apache2-more-information-apache22" data-id-title="Apache 2.4"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.10.1 </span><span class="title-name">Apache 2.4</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-more-information-apache22">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    For a list of new features in Apache 2.4, refer to
+    <a class="link" href="https://httpd.apache.org/docs/2.4/new_features_2_4.html" target="_blank">https://httpd.apache.org/docs/2.4/new_features_2_4.html</a>.
+    Information about upgrading from version 2.2 to 2.4 is available at
+    <a class="link" href="https://httpd.apache.org/docs-2.4/upgrading.html" target="_blank">https://httpd.apache.org/docs-2.4/upgrading.html</a>.
+   </p></section><section class="sect2" id="sec-apache2-more-information-modules" data-id-title="Apache modules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.10.2 </span><span class="title-name">Apache modules</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-more-information-modules">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    More information about external Apache modules that are briefly described
+    in <a class="xref" href="cha-apache2.html#sec-apache2-modules-external" title="42.4.5. External modules">Section 42.4.5, “External modules”</a> is available at the
+    following locations:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.12.4.3.1"><span class="term"><code class="systemitem">mod_apparmor</code></span></dt><dd><p>
+       <a class="link" href="https://en.opensuse.org/SDB:AppArmor" target="_blank">https://en.opensuse.org/SDB:AppArmor</a>
+      </p></dd><dt id="id-1.3.7.7.12.4.3.2"><span class="term"><code class="systemitem">mod_php8</code></span></dt><dd><p>
+       <a class="link" href="https://www.php.net/manual/en/install.unix.apache2.php" target="_blank">https://www.php.net/manual/en/install.unix.apache2.php</a>
+      </p><p>
+       You can obtain detailed information about
+       <code class="systemitem">mod_php8</code> configuration in its
+       well-commented main configuration file
+       <code class="filename">/etc/php8/apache2/php.ini</code>.
+      </p></dd><dt id="id-1.3.7.7.12.4.3.3"><span class="term"><code class="systemitem">mod_python</code></span></dt><dd><p>
+       <a class="link" href="https://www.modpython.org/" target="_blank">https://www.modpython.org/</a>
+      </p></dd><dt id="id-1.3.7.7.12.4.3.4"><span class="term"><code class="systemitem">mod_security</code></span></dt><dd><p>
+       <a class="link" href="https://github.com/SpiderLabs/ModSecurity" target="_blank">https://github.com/SpiderLabs/ModSecurity</a>
+      </p></dd></dl></div></section><section class="sect2" id="sec-apache2-more-information-cgi" data-id-title="Development"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.10.3 </span><span class="title-name">Development</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-more-information-cgi">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    More information about developing Apache modules or about getting involved
+    in the Apache Web server project are available at the following locations:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.7.7.12.5.3.1"><span class="term">Apache developer information</span></dt><dd><p>
+       <a class="link" href="https://httpd.apache.org/dev/" target="_blank">https://httpd.apache.org/dev/</a>
+      </p></dd><dt id="id-1.3.7.7.12.5.3.2"><span class="term">Apache developer documentation</span></dt><dd><p>
+       <a class="link" href="https://httpd.apache.org/docs/2.4/developer/" target="_blank">https://httpd.apache.org/docs/2.4/developer/</a>
+      </p></dd></dl></div></section><section class="sect2" id="sec-apache2-more-information-miscellaneous-sources" data-id-title="Miscellaneous sources"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">42.10.4 </span><span class="title-name">Miscellaneous sources</span></span> <a title="Permalink" class="permalink" href="cha-apache2.html#sec-apache2-more-information-miscellaneous-sources">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/apache2.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you experience difficulties specific to Apache in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, take a
+    look at the Technical Information Search at
+    <a class="link" href="https://www.suse.com/support" target="_blank">https://www.suse.com/support</a>. The history of Apache is
+    provided at
+    <a class="link" href="https://httpd.apache.org/ABOUT_APACHE.html" target="_blank">https://httpd.apache.org/ABOUT_APACHE.html</a>. This page
+    also explains why the server is called Apache.
+   </p></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-slp.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 41 </span>SLP</span></a> </div><div><a class="pagination-link next" href="cha-ftp.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 43 </span>Setting up an FTP server with YaST</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-quickstart"><span class="title-number">42.1 </span><span class="title-name">Quick start</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-configuration"><span class="title-number">42.2 </span><span class="title-name">Configuring Apache</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-start-stop"><span class="title-number">42.3 </span><span class="title-name">Starting and stopping Apache</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-modules"><span class="title-number">42.4 </span><span class="title-name">Installing, activating and configuring modules</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-cgi"><span class="title-number">42.5 </span><span class="title-name">Enabling CGI scripts</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-ssl"><span class="title-number">42.6 </span><span class="title-name">Setting up a secure Web server with SSL</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-multiple-instances"><span class="title-number">42.7 </span><span class="title-name">Running multiple Apache instances on the same server</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-security"><span class="title-number">42.8 </span><span class="title-name">Avoiding security problems</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-troubleeshooting"><span class="title-number">42.9 </span><span class="title-name">Troubleshooting</span></a></span></li><li><span class="sect1"><a href="cha-apache2.html#sec-apache2-more-information"><span class="title-number">42.10 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

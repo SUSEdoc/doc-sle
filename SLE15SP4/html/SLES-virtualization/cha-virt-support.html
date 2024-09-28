@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP4 | Virtualization Guide | Virtualization limits and support</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Virtualization limits and support | SLES 15 SP4"/>
+<meta name="description" content="QEMU is only supported when used for virtualization together with the KVM or Xen hypervisors. The TCG accelerator is not supported, even when it is d…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 7. Virtualization limits and support"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Virtualization limits and support",
+  
+    "description": "Virtualization limits and support",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-05T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-vt-installation.html" title="Chapter 6. Installation of virtualization components"/><link rel="next" href="part-virt-libvirt.html" title="Part II. Managing virtual machines with libvirt"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-intro.html">Introduction</a><span> / </span><a class="crumb" href="cha-virt-support.html">Virtualization limits and support</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li class="active"><a href="part-virt-intro.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" you-are-here"><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name"><code class="systemitem">libvirt</code> daemons</span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">16 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">17 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">18 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">19 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">20 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">21 </span><span class="title-name">Software TPM emulator</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">22 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">23 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">24 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">26 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">27 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">28 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">29 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">30 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">32 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">34 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">35 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">36 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">37 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">38 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-virt-support" data-id-title="Virtualization limits and support"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.12.3.8.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+      QEMU is only supported when used for virtualization together with the
+      KVM or Xen hypervisors. The TCG accelerator is not supported, even
+      when it is distributed within SUSE products. Users must not rely on
+      QEMU TCG to provide guest isolation, or for any security guarantees. See
+      also
+      <a class="link" href="https://qemu-project.gitlab.io/qemu/system/security.html" target="_blank">https://qemu-project.gitlab.io/qemu/system/security.html</a>.
+    </p></div><section class="sect1" id="sec-architecture-support" data-id-title="Architecture support"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.1 </span><span class="title-name">Architecture support</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#sec-architecture-support">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-kvm-requires-hardware" data-id-title="KVM hardware requirements"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.1.1 </span><span class="title-name">KVM hardware requirements</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#sec-kvm-requires-hardware">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Currently, SUSE supports KVM full virtualization on AMD64/Intel 64, AArch64,
+    IBM Z and IBM LinuxONE hosts.
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      On the AMD64/Intel 64 architecture, KVM is designed around hardware
+      virtualization features included in AMD* (AMD-V) and Intel* (VT-x) CPUs.
+      It supports virtualization features of chipsets and PCI devices, such as
+      an I/O Memory Mapping Unit (<a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-iommu" title="IOMMU">IOMMU</a>) and
+      Single Root I/O Virtualization (<a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>). You can
+      test whether your CPU supports hardware virtualization with the following
+      command:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>egrep '(vmx|svm)' /proc/cpuinfo</pre></div><p>
+      If this command returns no output, your processor either does not support
+      hardware virtualization, or this feature has been disabled in the BIOS or
+      firmware.
+     </p><p>
+      The following Web sites identify AMD64/Intel 64 processors that support
+      hardware virtualization:
+      <a class="link" href="http://ark.intel.com/Products/VirtualizationTechnology" target="_blank">http://ark.intel.com/Products/VirtualizationTechnology</a>
+      (for Intel CPUs), and <a class="link" href="http://products.amd.com/" target="_blank">http://products.amd.com/</a> (for
+      AMD CPUs).
+     </p></li><li class="listitem"><p>
+      On the Arm architecture, Armv8-A processors include support for
+      virtualization.
+     </p></li><li class="listitem"><p>
+      On the Arm architecture, we only support running QEMU/KVM via the
+      CPU model <code class="literal">host</code> (it is named
+      <code class="literal">host-passthrough</code> in Virtual Machine Manager or <code class="systemitem">libvirt</code>).
+     </p></li></ul></div><div id="id-1.12.3.8.4.2.4" data-id-title="KVM kernel modules not loading" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: KVM kernel modules not loading</div><p>
+     The KVM kernel modules only load if the CPU hardware virtualization
+     features are available.
+    </p></div><p>
+    <span class="phrase"> The general minimum hardware requirements for the
+    VM Host Server are the same as outlined in
+    <span class="intraxref">Book “Deployment Guide”, Chapter 2 “Installation on AMD64 and Intel 64”, Section 2.1 “Hardware requirements”</span>.</span>
+     However,
+    additional RAM for each virtualized guest is needed. It should at least be
+    the same amount that is needed for a physical installation. It is also
+    strongly recommended to have at least one processor core or hyper-thread
+    for each running guest.
+   </p><div id="id-1.12.3.8.4.2.6" data-id-title="AArch64" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: AArch64</div><p>
+     AArch64 is a continuously evolving platform. It does not have a
+     traditional standards and compliance certification program to enable
+     interoperability with operating systems and hypervisors. Ask your vendor
+     for the support statement on SUSE Linux Enterprise Server.
+    </p></div><div id="id-1.12.3.8.4.2.7" data-id-title="POWER" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: POWER</div><p>
+     Running KVM or Xen hypervisors on the POWER platform is not
+     supported.
+    </p></div></section><section class="sect2" id="sec-xen-requires-hardware" data-id-title="Xen hardware requirements"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.1.2 </span><span class="title-name">Xen hardware requirements</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#sec-xen-requires-hardware">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    SUSE supports Xen on AMD64/Intel 64.
+   </p></section></section><section class="sect1" id="virt-hypervisors-limits" data-id-title="Hypervisor limits"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.2 </span><span class="title-name">Hypervisor limits</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-hypervisors-limits">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   New features and virtualization limits for Xen and KVM are outlined in
+   the <a class="link" href="https://www.suse.com/releasenotes/" target="_blank">Release
+   Notes</a> for each Service Pack (SP).
+  </p><p>
+   Only packages that are part of the official repositories for SUSE Linux Enterprise Server are
+   supported. Conversely, all optional subpackages and plug-ins (for QEMU,
+   <code class="systemitem">libvirt</code>) provided at
+   <a class="link" href="https://packagehub.suse.com/" target="_blank">packagehub</a> are
+   not supported.
+  </p><p>
+   For the maximum total virtual CPUs per host, see
+   <a class="link" href="https://documentation.suse.com/sles-15/html/SLES-all/article-virtualization-best-practices.html#sec-vt-best-perf-cpu-assign" target="_blank">recommendations
+   in the Virtualization Best Practices Guide regarding over-commitment of
+   physical CPUs</a>. The total number of virtual CPUs should be
+   proportional to the number of available physical CPUs.
+  </p><div id="id-1.12.3.8.5.5" data-id-title="32-bit hypervisor" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: 32-bit hypervisor</div><p>
+    With <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> 11 SP2, we removed virtualization host facilities from
+    32-bit editions. 32-bit guests are not affected and are fully supported
+    using the provided 64-bit hypervisor.
+   </p></div><section class="sect2" id="virt-kvm-limits" data-id-title="KVM limits"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.1 </span><span class="title-name">KVM limits</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-kvm-limits">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Supported (and tested) virtualization limits of a <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+    <span class="productnumber"><span class="phrase">15 SP4</span></span> host running Linux guests on AMD64/Intel 64. For other operating
+    systems, refer to the specific vendor.
+   </p><div class="table" id="id-1.12.3.8.5.6.3" data-id-title="KVM VM limits"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.1: </span><span class="title-name">KVM VM limits </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.5.6.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Maximum virtual CPUs per VM
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         288
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         Maximum memory per VM
+        </p>
+       </td><td>
+        <p>
+         6 TiB
+        </p>
+       </td></tr></tbody></table></div></div><div id="id-1.12.3.8.5.6.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+     KVM host limits are identical to SUSE Linux Enterprise Server (see the corresponding section of
+     release notes), except for:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       <span class="emphasis"><em>Maximum virtual CPUs per VM</em></span>: See recommendations in
+       the <em class="citetitle">Virtualization Best Practices Guide</em> regarding
+       over-commitment of physical CPUs at
+       <a class="link" href="https://documentation.suse.com/sles-15/html/SLES-all/article-virtualization-best-practices.html#sec-vt-best-perf-cpu-assign" target="_blank">https://documentation.suse.com/sles-15/html/SLES-all/article-virtualization-best-practices.html#sec-vt-best-perf-cpu-assign</a>.
+       The total virtual CPUs should be proportional to the available physical
+       CPUs.
+      </p></li></ul></div></div></section><section class="sect2" id="virt-xen-limits" data-id-title="Xen limits"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.2.2 </span><span class="title-name">Xen limits</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-xen-limits">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><div class="table" id="id-1.12.3.8.5.7.2" data-id-title="Xen VM limits"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.2: </span><span class="title-name">Xen VM limits </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.5.7.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Maximum virtual CPUs per VM
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         32 (general HVM recommendation), 64 (HVM Windows guest), 128 (trusted
+         HVMs), or 512 (PV)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         Maximum memory per VM
+        </p>
+       </td><td>
+        <p>
+         2 TiB (64-bit guest), 16 GiB (32-bit guest with PAE)
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.3.8.5.7.3" data-id-title="Xen host limits"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.3: </span><span class="title-name">Xen host limits </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.5.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Maximum total physical CPUs
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         1024
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Maximum total virtual CPUs per host
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         See recommendations in the Virtualization Best Practices Guide
+         regarding over-commitment of physical CPUs in
+         <a class="link" href="https://documentation.suse.com/sles-15/html/SLES-all/article-virtualization-best-practices.html#sec-vt-best-perf-cpu-assign" target="_blank">https://documentation.suse.com/sles-15/html/SLES-all/article-virtualization-best-practices.html#sec-vt-best-perf-cpu-assign</a>.
+         The total virtual CPUs should be proportional to the available
+         physical CPUs
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Maximum physical memory
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Recommendation is to stay below the 16 TiB address boundary.
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+          <p>
+            Suspend and hibernate modes
+          </p>
+        </td><td>
+          <p>
+            Not supported.
+          </p>
+        </td></tr></tbody></table></div></div></section></section><section class="sect1" id="virt-support-hosts" data-id-title="Supported host environments (hypervisors)"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.3 </span><span class="title-name">Supported host environments (hypervisors)</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-support-hosts">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section describes the support status of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber"><span class="phrase">15 SP4</span></span>
+   running as a guest operating system on top of various virtualization hosts
+   (hypervisors).
+  </p><div class="table" id="id-1.12.3.8.6.3" data-id-title="The following SUSE host environments are supported"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.4: </span><span class="title-name">The following SUSE host environments are supported </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.6.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        SUSE Linux Enterprise Server
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Hypervisors
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        SUSE Linux Enterprise Server 11 SP4
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Xen and KVM
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        SUSE Linux Enterprise Server 12 SP1 to SP5
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Xen and KVM
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        SUSE Linux Enterprise Server 15 GA to SP4
+       </p>
+      </td><td>
+       <p>
+        Xen and KVM
+       </p>
+      </td></tr></tbody></table></div></div><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">The following third-party host environments are supported </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.6.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     <a class="link" href="https://xenserver.org/" target="_blank">Citrix XenServer</a>
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/supported-suse-virtual-machines-on-hyper-v" target="_blank">Hyper-V</a>
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://www.nutanix.com/products/acropolis" target="_blank">Nutanix
+     Acropolis Hypervisor with AOS</a>
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://www.oracle.com/fr/virtualization/virtualbox/" target="_blank">Oracle
+     VM Server 3.4</a>
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://www.oracle.com/linux/" target="_blank">Oracle Linux KVM 7,
+     8</a>
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://www.vmware.com/products/esxi-and-esx.html" target="_blank">VMware
+     ESXi 6.5, 6.7, 7.0, 8.0</a>
+    </p></li><li class="listitem"><p>
+     Windows Server 2022
+    </p></li></ul></div><p>
+   You can also search in the
+   <a class="link" href="https://www.suse.com/yessearch/Search.jsp" target="_blank">SUSE YES
+   certification database</a>
+  </p><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">The level of support is as follows </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.6.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     Support for SUSE host operating systems is full L3 (both for the guest and
+     host) in accordance with the respective
+     <a class="link" href="https://www.suse.com/lifecycle/" target="_blank">product life
+     cycle</a>.
+    </p></li><li class="listitem"><p>
+     SUSE provides full L3 support for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> guests within
+     third-party host environments.
+    </p></li><li class="listitem"><p>
+     Support for the host and cooperation with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> guests must be
+     provided by the host system's vendor.
+    </p></li></ul></div></section><section class="sect1" id="virt-support-guests" data-id-title="Supported guest operating systems"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.4 </span><span class="title-name">Supported guest operating systems</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-support-guests">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section lists the support status for various guest operating systems
+   virtualized on top of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber"><span class="phrase">15 SP4</span></span> for KVM and Xen
+   hypervisors.
+  </p><div id="id-1.12.3.8.7.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+    Microsoft Windows guests can be rebooted by <code class="systemitem">libvirt</code>/<code class="command">virsh</code> only if paravirtualized
+    drivers are installed in the guest. Refer to
+    <a class="link" href="https://www.suse.com/products/vmdriverpack/" target="_blank">https://www.suse.com/products/vmdriverpack/</a> for more
+    details on downloading and installing PV drivers.
+   </p></div><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">The following guest operating systems are fully supported (L3): </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     SUSE Linux Enterprise Server 11 SP4
+    </p></li><li class="listitem"><p>
+     SUSE Linux Enterprise Server 12 SP3, 12 SP4, 12 SP5
+    </p></li><li class="listitem"><p>
+     SUSE Linux Enterprise Server 15 GA, 15 SP1, 15 SP2, 15 SP3, 15 SP4
+    </p></li><li class="listitem"><p>
+     Windows Server 2008 SP2+, 2008 R2 SP1+, 2012+, 2012 R2+, 2016, 2019, 2022
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://www.windowsservercatalog.com/results.aspx?text=suse&amp;bCatID=1282&amp;avc=10&amp;ava=0&amp;OR=5" target="_blank">Microsoft
+     Windows Server Catalog</a>
+    </p></li><li class="listitem"><p>
+     Oracle Linux 6, 7, 8 (KVM hypervisor only)
+    </p></li></ul></div><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">The following guest operating systems are supported as a technology preview (L2, fixes if reasonable): </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.7.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     SLED 15 SP3
+    </p></li></ul></div><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">Red Hat and CentOS guest operating systems are fully supported (L3) if the customer has purchased SUSE Liberty Linux.  </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.7.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+       Refer to the SUSE Liberty Linux documentation at <a class="link" href="https://documentation.suse.com/liberty" target="_blank">https://documentation.suse.com/liberty</a> for the list of
+       available combinations and supported releases. In other cases, they are
+       supported on a limited basis (L2, fixes if reasonable).
+     </p></li></ul></div><div id="id-1.12.3.8.7.7" data-id-title="RHEL PV drivers" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: RHEL PV drivers</div><p>
+    Starting from RHEL 7.2, Red Hat removed Xen PV drivers.
+   </p></div><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">The following guest operating systems are supported on a commercially reasonable basis (L2, fixes if reasonable): </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.7.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     Windows 8+, 8.1+, 10+
+    </p></li></ul></div><div class="itemizedlist"><div class="title-container"><div class="itemizedlist-title-wrap"><div class="itemizedlist-title"><span class="title-number-name"><span class="title-name">All other guest operating systems </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.7.9">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><ul class="itemizedlist"><li class="listitem"><p>
+     In other combinations, L2 support is provided but fixes are available only
+     if feasible. SUSE fully supports the host OS (hypervisor). The guest OS
+     issues need to be supported by the respective OS vendor. If an issue fix
+     involves both the host and guest environments, the customer needs to
+     approach both SUSE and the guest VM OS vendor.
+    </p></li><li class="listitem"><p>
+     All guest operating systems are supported both fully virtualized and
+     paravirtualized. The exception is Windows systems, which are only
+     supported fully virtualized (but they can use PV drivers:
+     <a class="link" href="https://www.suse.com/products/vmdriverpack/" target="_blank">https://www.suse.com/products/vmdriverpack/</a>),
+     and OES operating systems, which are supported only paravirtualized.
+    </p></li><li class="listitem"><p>
+     All guest operating systems are supported both in 32-bit and 64-bit
+     environments, unless stated otherwise.
+    </p></li></ul></div><section class="sect2" id="sec-kvm-requires-guests-virt-drivers" data-id-title="Availability of paravirtualized drivers"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.4.1 </span><span class="title-name">Availability of paravirtualized drivers</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#sec-kvm-requires-guests-virt-drivers">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To improve the performance of the guest operating system, paravirtualized
+    drivers are provided when available. Although they are not required, it is
+    strongly recommended to use them.
+   </p><p>
+    Starting with SUSE Linux Enterprise Server 12 SP2, we switched to a PVops kernel. We are no longer
+    using a dedicated <span class="package">kernel-xen</span> package:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The <span class="package">kernel-default+kernel-xen</span> on dom0 was replaced by
+      the <span class="package">kernel-default</span> package.
+     </p></li><li class="listitem"><p>
+      The <span class="package">kernel-xen</span> package on PV domU was replaced by the
+      <span class="package">kernel-default</span> package.
+     </p></li><li class="listitem"><p>
+      The <span class="package">kernel-default+xen-kmp</span> on HVM domU was replaced by
+      <span class="package">kernel-default</span>.
+     </p></li></ul></div><p>
+    For SUSE Linux Enterprise Server 12 SP1 and older (down to 10 SP4), the paravirtualized drivers
+    are included in a dedicated <span class="package">kernel-xen</span> package.
+   </p><p>
+    The paravirtualized drivers are available as follows:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.3.8.7.10.7.1"><span class="term">SUSE Linux Enterprise Server 12 / 12 SP1 / 12 SP2</span></dt><dd><p>
+       Included in kernel
+      </p></dd><dt id="id-1.12.3.8.7.10.7.2"><span class="term">SUSE Linux Enterprise Server 11 / 11 SP1 / 11 SP2 / 11 SP3 / 11 SP4</span></dt><dd><p>
+       Included in kernel
+      </p></dd><dt id="id-1.12.3.8.7.10.7.3"><span class="term">SUSE Linux Enterprise Server 10 SP4</span></dt><dd><p>
+       Included in kernel
+      </p></dd><dt id="id-1.12.3.8.7.10.7.4"><span class="term">Red Hat</span></dt><dd><p>
+       Available since Red Hat Enterprise Linux 5.4. Starting from Red Hat Enterprise Linux 7.2, Red Hat removed
+       the PV drivers.
+      </p></dd><dt id="id-1.12.3.8.7.10.7.5"><span class="term">Windows</span></dt><dd><p>
+       SUSE has developed virtio-based drivers for Windows, which are
+       available in the Virtual Machine Driver Pack (VMDP). For more
+       information, see
+       <a class="link" href="https://www.suse.com/products/vmdriverpack/" target="_blank">https://www.suse.com/products/vmdriverpack/</a>.
+      </p></dd></dl></div></section></section><section class="sect1" id="virt-migration-support" data-id-title="Supported VM migration scenarios"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.5 </span><span class="title-name">Supported VM migration scenarios</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-migration-support">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports migrating a virtual machine from one physical host to
+   another.
+  </p><section class="sect2" id="virt-migration-offline" data-id-title="Offline migration scenarios"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.5.1 </span><span class="title-name">Offline migration scenarios</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-migration-offline">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    SUSE supports offline migration, powering off a guest VM, then moving it
+    to a host running a different SLE product, from SLE 12 to SLE 15
+    SP<em class="replaceable">X</em>. The following host operating system
+    combinations are fully supported (L3) for migrating guests from one host to
+    another:
+   </p><div class="table" id="id-1.12.3.8.8.3.3" data-id-title="Supported offline migration guests"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.5: </span><span class="title-name">Supported offline migration guests </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.8.3.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col style="text-align: center; " class="c1"/><col style="text-align: center; " class="c2"/><col style="text-align: center; " class="c3"/><col style="text-align: center; " class="c4"/><col style="text-align: center; " class="c5"/><col style="text-align: center; " class="c6"/><col style="text-align: center; " class="c7"/><col style="text-align: center; " class="c8"/><col style="text-align: center; " class="c9"/></colgroup><thead><tr valign="middle"><th style="text-align: right; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Target SLES host
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+         12 SP3
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+         12 SP4
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          12 SP5
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 GA
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 SP1
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 SP2
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 SP3
+       </th><th style="text-align: center; vertical-align: middle; border-bottom: 1px solid ; " rowspan="2">
+          15 SP4
+       </th></tr><tr><th style="text-align: left; border-right: 1px solid ; border-bottom: 1px solid ; ">
+        Source SLES host
+       </th></tr></thead><tbody><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>12 SP3</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>12 SP4</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">(<span style="color:#30BA78;">✓</span>)</td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>12 SP5</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>15 GA</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>15 SP1</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>15 SP2</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; "><span class="bold"><strong>15 SP3</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; "><span style="color:#30BA78;">✓</span>
+       </td></tr></tbody></table></div></div><div class="informaltable"><table style="border: none;"><colgroup><col style="width: .5in; text-align: left; "/><col style="width: 100%; text-align: left; "/></colgroup><tbody><tr><td style="text-align: left; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: left; ">
+        <p>
+         Fully compatible and fully supported
+        </p>
+       </td></tr><tr><td style="text-align: left; ">(<span style="color:#30BA78;">✓</span>)</td><td style="text-align: left; ">
+        <p>
+         Supported for KVM hypervisor only.
+        </p>
+       </td></tr><tr><td style="text-align: left; "><span style="color:red;">❌</span>
+       </td><td style="text-align: left; ">
+        <p>
+         Not supported
+        </p>
+       </td></tr></tbody></table></div></section><section class="sect2" id="virt-migration-live" data-id-title="Live migration scenarios"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.5.2 </span><span class="title-name">Live migration scenarios</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-migration-live">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This section lists support status of various live migration scenarios when
+    running virtualized on top of SLES. Also, refer to the supported
+    <a class="link" href="https://documentation.suse.com/sles-15/html/SLES-all/cha-libvirt-managing.html#libvirt-admin-live-migration-requirements" target="_blank">live
+    migration requirements</a>. The following host operating system
+    combinations are fully supported (L3 in accordance with the respective
+    <a class="link" href="https://www.suse.com/lifecycle" target="_blank">product life
+    cycle</a>).
+   </p><div id="id-1.12.3.8.8.4.3" data-id-title="Live migration" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Live migration</div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       SUSE always supports live migration of virtual machines between hosts
+       running SLES with successive service pack numbers. For example, from
+       SLES 15 SP2 to 15 SP3.
+      </p></li><li class="listitem"><p>
+       SUSE strives to support live migration of virtual machines from a host
+       running a service pack under LTSS to a host running a newer service
+       pack, within the same major version of SUSE Linux Enterprise Server. For example, virtual
+       machine migration from a SLES 12 SP2 host to a SLES 12 SP5 host. SUSE
+       only performs minimal testing of LTSS-to-newer migration scenarios and
+       recommends thorough on-site testing before attempting to migrate
+       critical virtual machines.
+      </p></li></ul></div></div><div id="id-1.12.3.8.8.4.4" data-id-title="Xen live migration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Xen live migration</div><p>
+     Live migration between SLE 11 and SLE 12 is not supported because of the
+     different tool stack, see the
+     <a class="link" href="https://www.suse.com/releasenotes/x86_64/SUSE-SLES/12/#fate-317306" target="_blank">
+     Release notes</a> for more details.
+    </p></div><div class="table" id="id-1.12.3.8.8.4.5" data-id-title="Supported live-migration guests"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.6: </span><span class="title-name">Supported live-migration guests </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.8.4.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col style="text-align: center; " class="c1"/><col style="text-align: center; " class="c2"/><col style="text-align: center; " class="c3"/><col style="text-align: center; " class="c4"/><col style="text-align: center; " class="c5"/><col style="text-align: center; " class="c6"/><col style="text-align: center; " class="c7"/><col style="text-align: center; " class="c8"/></colgroup><thead><tr valign="middle"><th style="text-align: right; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Target SLES host
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+         12 SP4
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          12 SP5
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 GA
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 SP1
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 SP2
+       </th><th style="text-align: center; vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; " rowspan="2">
+          15 SP3
+       </th><th style="text-align: center; vertical-align: middle; border-bottom: 1px solid ; " rowspan="2">
+          15 SP4
+       </th></tr><tr><th style="text-align: left; border-right: 1px solid ; border-bottom: 1px solid ; ">
+        Source SLES host
+       </th></tr></thead><tbody><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>12 SP3</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>12 SP4</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">(<span style="color:#30BA78;">✓</span>)</td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>12 SP5</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>15 GA</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>15 SP1</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span class="bold"><strong>15 SP2</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="text-align: center; border-right: 1px solid ; "><span class="bold"><strong>15 SP3</strong></span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; "><span style="color:#30BA78;">✓</span>
+       </td></tr></tbody></table></div></div><div class="informaltable"><table style="border: none;"><colgroup><col style="width: .5in; text-align: left; "/><col style="width: 100%; text-align: left; "/></colgroup><tbody><tr><td style="text-align: left; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: left; ">
+        <p>
+         Fully compatible and fully supported
+        </p>
+       </td></tr><tr><td style="text-align: left; ">(<span style="color:#30BA78;">✓</span>)</td><td style="text-align: left; ">
+        <p>
+         Supported for KVM hypervisor only.
+        </p>
+       </td></tr><tr><td style="text-align: left; "><span style="color:red;">❌</span>
+       </td><td style="text-align: left; ">
+        <p>
+         Not supported
+        </p>
+       </td></tr></tbody></table></div></section></section><section class="sect1" id="virt-support-feature-support" data-id-title="Feature support"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.6 </span><span class="title-name">Feature support</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-support-feature-support">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="virt-support-feature-support-host" data-id-title="Xen host (Dom0)"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.6.1 </span><span class="title-name">Xen host (Dom0)</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-support-feature-support-host">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><div class="table" id="id-1.12.3.8.9.3.2" data-id-title="Feature support—host (Dom0)"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.7: </span><span class="title-name">Feature support—host (<code class="literal">Dom0</code>) </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.9.3.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col style="text-align: center; " class="c2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Features
+       </th><th style="text-align: center; border-bottom: 1px solid ; ">
+         Xen
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Network and block device hotplugging
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Physical <a class="xref" href="gloss-vt-glossary.html#gloss-vt-cpu-hotplug" title="CPU hotplugging">CPU hotplugging</a>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Virtual <a class="xref" href="gloss-vt-glossary.html#gloss-vt-cpu-hotplug" title="CPU hotplugging">CPU hotplugging</a>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Virtual <a class="xref" href="gloss-vt-glossary.html#gloss-vt-cpu-pinning" title="CPU pinning">CPU pinning</a>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Virtual <a class="xref" href="gloss-vt-glossary.html#gloss-vt-cpu-capping" title="CPU capping">CPU capping</a>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Intel* VT-x2: FlexPriority, FlexMigrate (migration constraints apply
+         to dissimilar CPU architectures)
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Intel* VT-d2 (DMA remapping with interrupt filtering and queued
+         invalidation)
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+         AMD* IOMMU (I/O page table with guest-to-host physical address
+         translation)
+       </td><td style="text-align: center; "><span style="color:#30BA78;">✓</span>
+       </td></tr></tbody></table></div></div><div id="id-1.12.3.8.9.3.3" data-id-title="Adding or removing physical CPUs at runtime is not supported" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Adding or removing physical CPUs at runtime is not supported</div><p>
+     The addition or removal of physical CPUs at runtime is not supported.
+     However, virtual CPUs can be added or removed for each VM Guest while
+     offline.
+    </p></div></section><section class="sect2" id="virt-support-feature-support-fv" data-id-title="Guest feature support"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">7.6.2 </span><span class="title-name">Guest feature support</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#virt-support-feature-support-fv">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.12.3.8.9.4.2" data-id-title="Live migration of Xen PV guests" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Live migration of Xen PV guests</div><p>
+     For live migration, both source and target system architectures need to
+     match; that is, the processors (AMD* or Intel*) must be the same. Unless
+     CPU ID masking is used, such as with Intel FlexMigration, the target
+     should feature the same processor revision or a more recent processor
+     revision than the source. If VMs are moved among different systems, the
+     same rules apply for each move. To avoid failing optimized code at runtime
+     or application start-up, source and target CPUs need to expose the same
+     processor extensions. Xen exposes the physical CPU extensions to the VMs
+     transparently. To summarize, guests can be 32-bit or 64-bit, but the
+     <a class="xref" href="gloss-vt-glossary.html#gloss-vt-vhs" title="VHS">VHS</a> must be identical.
+    </p></div><div id="id-1.12.3.8.9.4.3" data-id-title="Windows guest" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Windows guest</div><p>
+     Hotplugging of virtual network and virtual block devices, and resizing,
+     shrinking, and restoring dynamic virtual memory are supported in Xen and
+     KVM only if PV drivers are being used
+     (<a class="link" href="https://www.suse.com/products/vmdriverpack/" target="_blank">VMDP</a>).
+    </p></div><div id="id-1.12.3.8.9.4.4" data-id-title="Intel flexMigration" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Intel flexMigration</div><p>
+     For machines that support Intel FlexMigration, CPU-ID masking and faulting
+     allow more flexibility in cross-CPU migration.
+    </p></div><div id="id-1.12.3.8.9.4.5" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+     For KVM, a detailed description of supported limits, features,
+     recommended settings and scenarios, and other useful information is
+     maintained in <code class="filename">kvm-supported.txt</code>. This file is part of
+     the KVM package and can be found in
+     <code class="filename">/usr/share/doc/packages/qemu-kvm</code>.
+    </p></div><div class="table" id="id-1.12.3.8.9.4.6" data-id-title="Guest feature support for Xen and KVM"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 7.8: </span><span class="title-name">Guest feature support for Xen and KVM </span></span><a title="Permalink" class="permalink" href="cha-virt-support.html#id-1.12.3.8.9.4.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col style="text-align: center; " class="c2"/><col style="text-align: center; " class="c3"/><col style="text-align: center; " class="c4"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Features
+       </th><th style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Xen PV guest (DomU)
+       </th><th style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Xen FV guest
+       </th><th style="text-align: center; border-bottom: 1px solid ; ">
+         KVM FV guest
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Virtual network and virtual block device hotplugging
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Virtual <a class="xref" href="gloss-vt-glossary.html#gloss-vt-cpu-hotplug" title="CPU hotplugging">CPU hotplugging</a>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Virtual <a class="xref" href="gloss-vt-glossary.html#gloss-vt-cpu-overcommit" title="CPU over-commitment">CPU over-commitment</a>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Dynamic virtual memory resize
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         VM save and restore
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         VM Live Migration
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span> [1]
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span> [1]
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         VM snapshot
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Advanced debugging with GDBC
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Dom0 metrics visible to VM
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         Memory ballooning
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:red;">❌</span>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+         PCI Pass-Through
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span> [2]
+       </td><td style="text-align: center; border-right: 1px solid ; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: center; border-bottom: 1px solid ; "><span style="color:#30BA78;">✓</span>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+         AMD SEV
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; border-right: 1px solid ; "><span style="color:red;">❌</span>
+       </td><td style="text-align: center; "><span style="color:#30BA78;">✓</span> [3]
+       </td></tr></tbody></table></div></div><div class="informaltable"><table style="border: none;"><colgroup><col style="width: .5in; text-align: left; " class="c1"/><col style="width: 100%; text-align: left; " class="c2"/></colgroup><tbody><tr><td style="text-align: left; "><span style="color:#30BA78;">✓</span>
+       </td><td style="text-align: left; ">
+        <p>
+         Fully compatible and fully supported
+        </p>
+       </td></tr><tr><td style="text-align: left; "><span style="color:red;">❌</span>
+       </td><td style="text-align: left; ">
+        <p>
+         Not supported
+        </p>
+       </td></tr><tr><td style="text-align: left; ">
+        [1]
+       </td><td style="text-align: left; ">
+         See <a class="xref" href="cha-libvirt-managing.html#libvirt-admin-live-migration-requirements" title="11.7.1. Migration requirements">Section 11.7.1, “Migration requirements”</a>.
+       </td></tr><tr><td style="text-align: left; ">
+        [2]
+       </td><td style="text-align: left; ">
+         NetWare guests are excluded.
+       </td></tr><tr><td style="text-align: left; ">
+        [3]
+       </td><td style="text-align: left; ">
+        See
+       <a class="link" href="https://documentation.suse.com/sles/15-SP3/html/SLES-amd-sev/article-amd-sev.html" target="_blank">https://documentation.suse.com/sles/15-SP3/html/SLES-amd-sev/article-amd-sev.html</a>
+       </td></tr></tbody></table></div></section></section><section class="sect1" id="vt-support-nested" data-id-title="Nested virtualization"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">7.7 </span><span class="title-name">Nested virtualization</span></span> <a title="Permalink" class="permalink" href="cha-virt-support.html#vt-support-nested">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/virt_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Nested virtualization allows you to run a virtual machine inside another VM
+   while still using hardware acceleration from the host. It has very bad
+   performance and adds more complexity while debugging. Nested virtualization
+   is mostly used for testing purposes. In SUSE Linux Enterprise Server, nested virtualization is a
+   Technology Preview. It is only provided for testing purposes and is not
+   supported. Bugs can be reported but they will be treated with low priority.
+   Any attempt to live-migrate or to save or restore VMs in the presence of
+   nested virtualization is also explicitly unsupported.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-vt-installation.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 6 </span>Installation of virtualization components</span></a> </div><div><a class="pagination-link next" href="part-virt-libvirt.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part II </span>Managing virtual machines with <code class="systemitem">libvirt</code></span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-virt-support.html#sec-architecture-support"><span class="title-number">7.1 </span><span class="title-name">Architecture support</span></a></span></li><li><span class="sect1"><a href="cha-virt-support.html#virt-hypervisors-limits"><span class="title-number">7.2 </span><span class="title-name">Hypervisor limits</span></a></span></li><li><span class="sect1"><a href="cha-virt-support.html#virt-support-hosts"><span class="title-number">7.3 </span><span class="title-name">Supported host environments (hypervisors)</span></a></span></li><li><span class="sect1"><a href="cha-virt-support.html#virt-support-guests"><span class="title-number">7.4 </span><span class="title-name">Supported guest operating systems</span></a></span></li><li><span class="sect1"><a href="cha-virt-support.html#virt-migration-support"><span class="title-number">7.5 </span><span class="title-name">Supported VM migration scenarios</span></a></span></li><li><span class="sect1"><a href="cha-virt-support.html#virt-support-feature-support"><span class="title-number">7.6 </span><span class="title-name">Feature support</span></a></span></li><li><span class="sect1"><a href="cha-virt-support.html#vt-support-nested"><span class="title-number">7.7 </span><span class="title-name">Nested virtualization</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

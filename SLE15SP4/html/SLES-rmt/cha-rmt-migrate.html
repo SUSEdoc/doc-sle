@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP4 | Repository Mirroring Tool Guide | Migrate from SMT to RMT</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Migrate from SMT to RMT | SLES 15 SP4"/>
+<meta name="description" content="This chapter describes the migration from SMT on SLES 11 or 12 to RMT on SLES 15."/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Repository Mirroring Tool Guide"/>
+<meta name="chapter-title" content="Chapter 3. Migrate from SMT to RMT"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="taroth@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Repository Mirroring Tool Guide"/>
+<meta property="og:description" content="Use RMT, a proxy system for SUSE Customer Center"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Repository Mirroring Tool Guide"/>
+<meta name="twitter:description" content="Use RMT, a proxy system for SUSE Customer Center"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Migrate from SMT to RMT",
+  
+    "description": "Migrate from SMT to RMT",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-02T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-rmt-installation.html" title="Chapter 2. RMT installation and configuration"/><link rel="next" href="cha-rmt-mirroring.html" title="Chapter 4. Mirroring repositories on the RMT server"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">RMT Guide</a><span> / </span><a class="crumb" href="cha-rmt-migrate.html">Migrate from SMT to RMT</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">RMT Guide</div><ol><li><a href="rmt-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="rmt-overview.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview</span></a></li><li><a href="cha-rmt-installation.html" class=" "><span class="title-number">2 </span><span class="title-name">RMT installation and configuration</span></a></li><li><a href="cha-rmt-migrate.html" class=" you-are-here"><span class="title-number">3 </span><span class="title-name">Migrate from SMT to RMT</span></a></li><li><a href="cha-rmt-mirroring.html" class=" "><span class="title-number">4 </span><span class="title-name">Mirroring repositories on the RMT server</span></a></li><li><a href="cha-rmt-client.html" class=" "><span class="title-number">5 </span><span class="title-name">Configuring clients to use RMT</span></a></li><li><a href="cha-rmt-tools.html" class=" "><span class="title-number">6 </span><span class="title-name">RMT tools and configuration files</span></a></li><li><a href="cha-rmt-backup.html" class=" "><span class="title-number">7 </span><span class="title-name">Backing up an RMT server</span></a></li><li><a href="cha-manage-certificates.html" class=" "><span class="title-number">8 </span><span class="title-name">Managing TLS/SSL certificates</span></a></li><li><a href="bk08apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-rmt-migrate" data-id-title="Migrate from SMT to RMT"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">Migrate from SMT to RMT</span></span> <a title="Permalink" class="permalink" href="cha-rmt-migrate.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This chapter describes the migration from SMT on SLES 11 or 12 to RMT
+    on SLES 15.
+  </p><section class="sect1" id="sec-rmt-migrate-notes" data-id-title="Important notes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.1 </span><span class="title-name">Important notes</span></span> <a title="Permalink" class="permalink" href="cha-rmt-migrate.html#sec-rmt-migrate-notes">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.10.5.3.2" data-id-title="Read this section carefully" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Read this section carefully</div><p>
+        Carefully read this section. It contains vital information about the
+        migration process.
+      </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.10.5.3.3.1"><span class="term">Use a new host</span></dt><dd><p>
+            We recommend that you install RMT on a newly-installed SLES 15
+            host. RMT is not a complete replacement for SMT. It has a
+            different workflow than SMT and only supports registering SUSE Linux Enterprise Server 12
+            systems and newer.
+          </p></dd><dt id="id-1.10.5.3.3.2"><span class="term">Repository metadata and settings</span></dt><dd><p>
+            The settings of staged repositories will <span class="emphasis"><em>not</em></span> be
+            exported from SMT. Repositories that have been marked to be
+            mirrored will be exported.
+          </p></dd><dt id="id-1.10.5.3.3.3"><span class="term">Custom repositories</span></dt><dd><p>
+            It is only possible to export repositories that are marked for
+            mirroring.
+          </p></dd><dt id="id-1.10.5.3.3.4"><span class="term">Expired subscriptions</span></dt><dd><p>
+            Products no longer available on the organization subscriptions will
+            not be available on RMT.
+          </p></dd><dt id="id-1.10.5.3.3.5"><span class="term">Client information</span></dt><dd><p>
+            Systems and their activated products will be exported. SMT client
+            jobs and patch status will not be exported from SMT.
+          </p></dd></dl></div><div class="table" id="sec-rmt-migrate-notes-features" data-id-title="Feature comparison"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 3.1: </span><span class="title-name">Feature comparison </span></span><a title="Permalink" class="permalink" href="cha-rmt-migrate.html#sec-rmt-migrate-notes-features">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Feature
+              </p>
+            </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                SMT
+              </p>
+            </th><th style="border-bottom: 1px solid ; ">
+              <p>
+                RMT
+              </p>
+            </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Available on SLES 11
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Available on SLES 12
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Available on SLES 15
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Synchronize products with SUSE Customer Center
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Mirror RPMs from repositories
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Selective mirroring (specifying products to mirror)
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Serve RPMs via HTTP
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Registration of SLE 15 systems
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Registration of SLE 12 systems
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Registration of SLE 11 systems
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Red Hat 6 and earlier support
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes <sup>1</sup>
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Red Hat 7+ support
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes <sup>1</sup>
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes <sup>1</sup>
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Support for migrating SLE 12 to 15
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes <sup>2</sup>
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Support for migrating SLE 15 SPx to 15 SPx+1
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes <sup>2</sup>
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Staging repositories
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no <sup>3</sup>
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Offline mirroring
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                NTLM Proxy support
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Custom repositories
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                YaST installation wizard
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                YaST management wizard
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Client management
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Files deduplication
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Data transfer from SMT to RMT
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                n/a
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Transfer registration data to SUSE Customer Center
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Reporting
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Custom TLS certificates for Web server
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Clean up data from repositories that are not used any longer
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Bash completion
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Available on
+                <a class="link" href="https://github.com/SUSE/rmt/blob/master/docs/installation.md#installation-on-opensuse-leap-15" target="_blank">openSUSE
+                Leap 15</a>
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes <sup>4</sup>
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Easy development setup +
+                <a class="link" href="https://github.com/SUSE/rmt/blob/master/docs/CONTRIBUTING.md" target="_blank">contribution
+                guide</a>
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                100% test
+                <a class="link" href="https://coveralls.io/github/SUSE/rmt?branch=master" target="_blank">coverage</a>
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                <a class="link" href="https://github.com/SUSE/rmt/blob/master/docs/PLUGINS.md" target="_blank">Plugin
+                functionality</a>
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Web server
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Apache2
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                Nginx
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Platform
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Perl
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                Ruby
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Clean up data from repositories that are no longer used
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                Bash completion
+              </p>
+            </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td style="border-bottom: 1px solid ; ">
+              <p>
+                yes
+              </p>
+            </td></tr><tr><td style="border-right: 1px solid ; ">
+              <p>
+                Option to deploy on Kubernetes
+              </p>
+            </td><td style="border-right: 1px solid ; ">
+              <p>
+                no
+              </p>
+            </td><td>
+              <p>
+                yes <sup>5</sup>
+              </p>
+            </td></tr></tbody></table></div></div><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+          Support via SUSE Liberty Linux, find more details in
+          <a class="link" href="https://www.suse.com/products/suse-liberty-linux/" target="_blank">https://www.suse.com/products/suse-liberty-linux/</a>.
+        </p></li><li class="listitem"><p>
+          SMT only partially supports migrating systems to SLE 15. SLE
+          15 is composed of multiple modules and extensions. Some modules are
+          not required, as they provide additional functionality. RMT fully
+          supports migrations into and within SLE 15, therefore it only adds
+          the minimum of required modules. SMT does not fully support these
+          migrations, and it enables all available modules on the system.
+        </p></li><li class="listitem"><p>
+          Functionality is offered by
+          <a class="link" href="https://documentation.suse.com/suma/" target="_blank">SUSE Manager</a>.
+        </p></li><li class="listitem"><p>
+          Only available with
+          <a class="link" href="https://www.suse.com/support/self-support/" target="_blank">self-support</a>.
+        </p></li><li class="listitem"><p>
+          Find more details in <a class="xref" href="cha-rmt-installation.html#sec-rmt-deploy-kubernetes" title="2.4. Deploying RMT on top of the Kubernetes cluster">Section 2.4, “Deploying RMT on top of the Kubernetes cluster”</a>.
+        </p></li></ol></div></section><section class="sect1" id="sec-rmt-migrate-smt-export" data-id-title="Exporting SMT data"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.2 </span><span class="title-name">Exporting SMT data</span></span> <a title="Permalink" class="permalink" href="cha-rmt-migrate.html#sec-rmt-migrate-smt-export">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure" id="id-1.10.5.4.2" data-id-title="Export SMT data"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 3.1: </span><span class="title-name">Export SMT data </span></span><a title="Permalink" class="permalink" href="cha-rmt-migrate.html#id-1.10.5.4.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Update your SMT server installation by running <code class="command">zypper
+          up</code>.
+        </p></li><li class="step"><p>
+          If you want to export your SSL certificates along with the rest of the
+          data, run <code class="command">smt-data-export</code>. Remember to keep your
+          certificates in a safe place.
+        </p><p>
+          If you do not want to export the SSL certificates from SMT, run
+          <code class="command">smt-data-export --no-ssl-export</code>.
+        </p></li><li class="step"><p>
+          The exported configuration is now saved to
+          <code class="filename">smt-data-export.<em class="replaceable">TIMESTAMP</em>.tar.gz</code>.
+          Copy the file to a location that can be accessed by the new RMT
+          server.
+        </p></li></ol></div></div></section><section class="sect1" id="sec-rmt-migrate-rmt-import" data-id-title="Importing SMT data to RMT"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.3 </span><span class="title-name">Importing SMT data to RMT</span></span> <a title="Permalink" class="permalink" href="cha-rmt-migrate.html#sec-rmt-migrate-rmt-import">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/rmt_migrate_from_smt.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          To make sure your RMT installation is up to date, run
+          <code class="command">zypper up</code>.
+        </p></li><li class="step"><p>
+          Copy the exported <code class="literal">.tar.gz</code> file to an empty
+          directory and unpack it. Then enter the new directory:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">mkdir <em class="replaceable">EMPTY_DIR</em></code>
+<code class="prompt user">&gt; </code><code class="command">cd <em class="replaceable">EMPTY_DIR</em></code>
+<code class="prompt user">&gt; </code><code class="command">tar xf <em class="replaceable">/PATH/TO/</em>smt-data-export.<em class="replaceable">TIMESTAMP</em>.tar.gz</code>
+<code class="prompt user">&gt; </code><code class="command">cd smt-data-export</code></pre></div></li><li class="step"><p>
+          If you chose to export the SSL certificates from SMT, copy the CA
+          private key and certificate to <code class="filename">/etc/rmt/ssl/</code>:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">cp ssl/cacert.key /etc/rmt/ssl/rmt-ca.key</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">cp ssl/cacert.pem /etc/rmt/ssl/rmt-ca.crt</code></pre></div></li><li class="step"><p>
+          Run the YaST RMT configuration module as described in
+          <a class="xref" href="cha-rmt-installation.html#sec-rmt-installation-yast-configuration" title="2.5. RMT configuration with YaST">Section 2.5, “RMT configuration with YaST”</a>. If
+          you imported the SMT CA certificate, add the domain of the SMT
+          server to the common names of the new SSL certificate.
+        </p></li><li class="step"><p>
+          Run the RMT synchronization to get the products and repositories
+          data from SUSE Customer Center.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">rmt-cli sync</code></pre></div></li><li class="step"><p>
+          Import the data from the SMT server.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">rmt-data-import -d ./</code></pre></div></li><li class="step"><p>
+          Optional: If the URL of the RMT server changed, change the URL
+          parameter of clients in <code class="filename">/etc/SUSEConnect</code> to point
+          to the new RMT server. Alternatively, change the DNS records to
+          re-assign the host name to the RMT server.
+        </p></li><li class="step"><p>
+          Optional: Move the mirrored repository data from SMT to RMT, and
+          adjust the ownership of the copied data.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">cp -r /var/www/htdocs/repo/* /usr/share/rmt/public/repo/</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">chown -R _rmt:nginx /usr/share/rmt/public/repo</code></pre></div><div id="id-1.10.5.5.2.8.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+            The path for storing custom repository data on the RMT server is
+            different from that of SMT. With RMT, it replicates the
+            directory structure of the source server's URL into a top level
+            directory. For example, if the URL of the custom repository is
+          </p><div class="verbatim-wrap"><pre class="screen">http://download.opensuse.org/debug/distribution/leap/15.4/repo/oss</pre></div><p>
+            its path on the RMT server will be
+          </p><div class="verbatim-wrap"><pre class="screen">/usr/share/rmt/public/repo/debug/distribution/leap/15.4/repo/oss</pre></div></div></li><li class="step"><p>
+          Custom repositories on the SMT server are disabled by default. If
+          you want to mirror them to the RMT, enable them before mirroring.
+        </p><ol type="a" class="substeps"><li class="step"><p>
+              Check for custom repositories by running:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">rmt-cli repos custom list</code></pre></div><p>
+              A table of all custom repositories will be shown. The first column
+              contains the <code class="literal">ID</code> of each repository and the
+              <code class="literal">Mirror?</code> column will show
+              <code class="literal">false</code>.
+            </p></li><li class="step"><p>
+              Enable each custom repository you want to mirror by running:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">rmt-cli repos custom enable <em class="replaceable">ID</em></code></pre></div></li></ol></li><li class="step"><p>
+          Update the packages in the repositories by starting the mirroring
+          process:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">rmt-cli mirror</code></pre></div></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-rmt-installation.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 2 </span>RMT installation and configuration</span></a> </div><div><a class="pagination-link next" href="cha-rmt-mirroring.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 4 </span>Mirroring repositories on the RMT server</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-rmt-migrate.html#sec-rmt-migrate-notes"><span class="title-number">3.1 </span><span class="title-name">Important notes</span></a></span></li><li><span class="sect1"><a href="cha-rmt-migrate.html#sec-rmt-migrate-smt-export"><span class="title-number">3.2 </span><span class="title-name">Exporting SMT data</span></a></span></li><li><span class="sect1"><a href="cha-rmt-migrate.html#sec-rmt-migrate-rmt-import"><span class="title-number">3.3 </span><span class="title-name">Importing SMT data to RMT</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

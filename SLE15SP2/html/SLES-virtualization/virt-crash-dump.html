@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Virtualization Guide | Creating crash dumps of a VM Guest</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Creating crash dumps of a VM Guest | SLES 15 SP2"/>
+<meta name="description" content="Whenever a VM crashes, it is useful to collect a core dump of the VM memory for debugging and analysis. For physical machines, Kexec and Kdump takes …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 20. Creating crash dumps of a VM Guest"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Creating crash dumps of a VM Guest",
+  
+    "description": "Creating crash dumps of a VM Guest",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-10T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-qemu-ga.html" title="Chapter 19. QEMU Guest Agent"/><link rel="next" href="part-virt-xen.html" title="Part IV. Managing Virtual Machines with Xen"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/virt-crash-dump.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-common.html">Hypervisor-Independent Features</a><span> / </span><a class="crumb" href="virt-crash-dump.html">Creating crash dumps of a VM Guest</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">5 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">6 </span><span class="title-name">Supported Hosts, Guests, and Features</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">7 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">8 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">9 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">10 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">11 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">13 </span><span class="title-name">Configuring Virtual Machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">15 </span><span class="title-name">Managing Virtual Machines with Vagrant</span></a></li></ol></li><li class="active"><a href="part-virt-common.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">16 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">17 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">18 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">19 </span><span class="title-name">QEMU Guest Agent</span></a></li><li><a href="virt-crash-dump.html" class=" you-are-here"><span class="title-number">20 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">21 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">23 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">24 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">26 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">27 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">28 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">29 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">30 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">31 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">32 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">33 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">34 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">35 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Toolstacks and Libvirt framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="virt-crash-dump" data-id-title="Creating crash dumps of a VM Guest"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">20 </span><span class="title-name">Creating crash dumps of a VM Guest</span></span> <a title="Permalink" class="permalink" href="virt-crash-dump.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/virt-crash-dump.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect1" id="virt-crash-dump-introduction" data-id-title="Introduction"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">20.1 </span><span class="title-name">Introduction</span></span> <a title="Permalink" class="permalink" href="virt-crash-dump.html#virt-crash-dump-introduction">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/virt-crash-dump.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Whenever a VM crashes, it is useful to collect a core dump of the VM memory
+   for debugging and analysis. For physical machines, Kexec and Kdump takes
+   care of collecting crash dumps. For virtual machines, it depends whether the
+   guest is fully virtualized (FV) or paravirtualized (PV).
+  </p></section><section class="sect1" id="virt-crash-dump-fv" data-id-title="Creating crash dumps for fully virtualized machines"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">20.2 </span><span class="title-name">Creating crash dumps for fully virtualized machines</span></span> <a title="Permalink" class="permalink" href="virt-crash-dump.html#virt-crash-dump-fv">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/virt-crash-dump.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To view crash dumps for FV machines, use the same procedures as for physical
+   machines—Kexec and Kdump.
+  </p></section><section class="sect1" id="virt-crash-dump-pv" data-id-title="Creating crash dumps for paravirtualized machines"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">20.3 </span><span class="title-name">Creating crash dumps for paravirtualized machines</span></span> <a title="Permalink" class="permalink" href="virt-crash-dump.html#virt-crash-dump-pv">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/virt-crash-dump.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Unlike with FVs, Kexec/Kdump does not work in paravirtualized machines.
+   Crash dumps of PV guests must be performed by the host tool stack. If using
+   the <code class="command">xl</code> tool stack for Xen domUs, the <code class="command">xl
+   dump-core</code> command will produce the dump. For <code class="systemitem">libvirt</code>-based
+   VM Guests, the <code class="command">virsh dump</code> command provides the same
+   functionality.
+  </p><p>
+   You can configure automatic collection of a core dump with the
+   <code class="option">on_crash</code> setting in the configuration of the VM Guest.
+   This setting tells the host tool stack what to do if the VM Guest
+   encounters a crash. The default in both <code class="command">xl</code> and <code class="systemitem">libvirt</code>
+   is <code class="option">destroy</code>. Useful options for automatically collecting a
+   core dump are <code class="option">coredump-destroy</code> and
+   <code class="option">coredump-restart</code>.
+  </p></section><section class="sect1" id="virt-crash-dump-more-info" data-id-title="Additional information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">20.4 </span><span class="title-name">Additional information</span></span> <a title="Permalink" class="permalink" href="virt-crash-dump.html#virt-crash-dump-more-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/virt-crash-dump.xml" title="Edit source document"> </a></div></div></div></div></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     The difference between fully virtualized and paravirtualized virtual
+     machines is described in
+     <a class="xref" href="chap-virtualization-introduction.html#sec-virtualization-introduction-fvpv" title="1.4. Virtualization Modes">Section 1.4, “Virtualization Modes”</a>.
+    </p></li><li class="listitem"><p>
+     Detailed information about Kexec/Kdump mechanism is included in
+     <span class="intraxref">Book “System Analysis and Tuning Guide”, Chapter 18 “Kexec and Kdump”</span>.
+    </p></li><li class="listitem"><p>
+     Refer to the xl.cfg manual page (<code class="command">man 5 xl.cfg</code>) for more
+     information on the <code class="command">xl</code> configuration syntax.
+    </p></li><li class="listitem"><p>
+     Refer to https://libvirt.org/formatdomain.html#events-configuration for
+     details about the <code class="systemitem">libvirt</code> XML settings.
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-qemu-ga.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 19 </span>QEMU Guest Agent</span></a> </div><div><a class="pagination-link next" href="part-virt-xen.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part IV </span>Managing Virtual Machines with Xen</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="virt-crash-dump.html#virt-crash-dump-introduction"><span class="title-number">20.1 </span><span class="title-name">Introduction</span></a></span></li><li><span class="sect1"><a href="virt-crash-dump.html#virt-crash-dump-fv"><span class="title-number">20.2 </span><span class="title-name">Creating crash dumps for fully virtualized machines</span></a></span></li><li><span class="sect1"><a href="virt-crash-dump.html#virt-crash-dump-pv"><span class="title-number">20.3 </span><span class="title-name">Creating crash dumps for paravirtualized machines</span></a></span></li><li><span class="sect1"><a href="virt-crash-dump.html#virt-crash-dump-more-info"><span class="title-number">20.4 </span><span class="title-name">Additional information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

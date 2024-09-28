@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Storage Administration Guide | Storage enclosure LED utilities for MD software RAIDs</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Storage enclosure LED utilities for MD software RAIDs …"/>
+<meta name="description" content="Fate #313626 Update Enclosure LED Utilities Storage enclosure LED Monitoring utility (ledmon) and LED Control (ledctl) utility are Linux user space a…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 12. Storage enclosure LED utilities for MD software RAIDs"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Storage enclosure LED utilities for MD software RAIDs",
+  
+    "description": "Fate #313626 Update Enclosure LED Utilities Storage enclosure LED Monitoring utility (ledmon) and LED Control (ledctl) utility are Linux user space a…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-raid-resize.html" title="Chapter 11. Resizing software RAID arrays with mdadm"/><link rel="next" href="cha-raidtroubleshooting.html" title="Chapter 13. Troubleshooting software RAIDs"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-software-raid.html">Software RAID</a><span> / </span><a class="crumb" href="cha-raid-leds.html">Storage enclosure LED utilities for MD software RAIDs</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li class="active"><a href="part-software-raid.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" you-are-here"><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li><a href="part-net-storage.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-raid-leds" data-id-title="Storage enclosure LED utilities for MD software RAIDs"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    
+    Storage enclosure LED Monitoring utility (<code class="command">ledmon</code>) and
+    LED Control (<code class="command">ledctl</code>) utility are Linux user space
+    applications that use a broad range of interfaces and protocols to control
+    storage enclosure LEDs. The primary usage is to visualize the status of
+    Linux MD software RAID devices created with the mdadm utility. The
+    <code class="systemitem">ledmon</code> daemon monitors the status
+    of the drive array and updates the status of the drive LEDs. The
+    <code class="command">ledctl</code> utility allows you to set LED patterns for
+    specified devices.
+   </p></div></div></div></div><p>
+  These LED utilities use the SGPIO (Serial General Purpose Input/Output)
+  specification (Small Form Factor (SFF) 8485) and the SCSI Enclosure Services
+  (SES) 2 protocol to control LEDs. They implement the International Blinking
+  Pattern Interpretation (IBPI) patterns of the SFF-8489 specification for
+  SGPIO. The IBPI defines how the SGPIO standards are interpreted as states for
+  drives and slots on a backplane and how the backplane should visualize the
+  states with LEDs.
+ </p><p>
+  Some storage enclosures do not adhere strictly to the SFF-8489 specification.
+  An enclosure processor might accept an IBPI pattern but not blink the LEDs
+  according to the SFF-8489 specification, or the processor might support only
+  a limited number of the IBPI patterns.
+ </p><p>
+  LED management (AHCI) and SAF-TE protocols are not supported by the
+  <code class="command">ledmon</code> and <code class="command">ledctl</code> utilities.
+ </p><p>
+  The <code class="systemitem">ledmon</code> and
+  <code class="command">ledctl</code> applications have been verified to work with Intel
+  storage controllers such as the Intel AHCI controller and Intel SAS
+  controller. They also support PCIe-SSD (solid-state drive) enclosure LEDs to
+  control the storage enclosure status (OK, Fail, Rebuilding) LEDs of PCIe-SSD
+  devices that are part of an MD software RAID volume. The applications might
+  also work with the IBPI-compliant storage controllers of other vendors
+  (especially SAS/SCSI controllers); however, other vendors’ controllers have
+  not been tested.
+ </p><p>
+  <code class="systemitem">ledmon</code> and <code class="command">ledctl</code>
+  are part of the <code class="systemitem">ledmon</code> package,
+  which is not installed by default. Run <code class="command">sudo zypper in
+  ledmon</code> to install it.
+ </p><section class="sect1" id="sec-raid-leds-ledmon" data-id-title="The storage enclosure LED monitor service"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.1 </span><span class="title-name">The storage enclosure LED monitor service</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#sec-raid-leds-ledmon">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <code class="systemitem">ledmon</code> application is a daemon
+   process that constantly monitors the state of MD software RAID devices or
+   the state of block devices in a storage enclosure or drive bay. Only a
+   single instance of the daemon should be running at a time. The
+   <code class="systemitem">ledmon</code> daemon is part of Intel
+   Enclosure LED Utilities.
+  </p><p>
+   The state is visualized on LEDs associated with each slot in a storage array
+   enclosure or a drive bay. The application monitors all software RAID devices
+   and visualizes their state. It does not provide a way to monitor only
+   selected software RAID volumes.
+  </p><p>
+   The <code class="systemitem">ledmon</code> daemon supports two types
+   of LED systems: A two-LED system (Activity LED and Status LED) and a
+   three-LED system (Activity LED, Locate LED, and Fail LED). This tool has the
+   highest priority when accessing the LEDs.
+  </p><p>
+   To start <code class="systemitem">ledmon</code>, enter
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ledmon [options]</pre></div><p>
+   where [options] is one or more of the following:
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Options for <code class="systemitem">ledmon</code> </span></span><a title="Permalink" class="permalink" href="cha-raid-leds.html#id-1.11.5.7.8.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.11.5.7.8.8.2"><span class="term"><code class="option">-c <em class="replaceable">PATH</em></code>
+    , </span><span class="term"><code class="option">--confg=<em class="replaceable">PATH</em></code>
+    </span></dt><dd><p>
+      The configuration is read from <code class="filename">~/.ledctl</code> or from
+      <code class="filename">/etc/ledcfg.conf</code> if existing. Use this option to
+      specify an alternative configuration file.
+     </p><p>
+      Currently this option has no effect, since support for configuration
+      files has not been implemented yet. See <code class="command">man 5
+      ledctl.conf</code> for details.
+     </p></dd><dt id="id-1.11.5.7.8.8.3"><span class="term">-l <em class="replaceable">PATH</em>
+    , </span><span class="term">--log=<em class="replaceable">PATH</em>
+    </span></dt><dd><p>
+      Sets a path to local log file. If this user-defined file is specified,
+      the global log file <code class="filename">/var/log/ledmon.log</code> is not used.
+     </p></dd><dt id="id-1.11.5.7.8.8.4"><span class="term"><code class="option">-t <em class="replaceable">SECONDS</em></code>
+    , </span><span class="term"><code class="option">--interval=<em class="replaceable">SECONDS</em></code>
+    </span></dt><dd><p>
+      Sets the time interval between scans of <code class="filename">sysfs</code>. The
+      value is given in seconds. The minimum is 5 seconds. The maximum is not
+      specified.
+     </p></dd><dt id="id-1.11.5.7.8.8.5"><span class="term"><code class="option">--quiet</code>, <code class="option">--error</code>,
+    <code class="option">--warning</code>, <code class="option">--info</code>,
+    <code class="option">--debug</code>, <code class="option">--all</code>
+    </span></dt><dd><p>
+      Specifies the verbosity level. The level options are specified in the
+      order of no information to the most information. Use the
+      <code class="option">--quiet</code> option for no logging. Use the
+      <code class="option">--all</code> option to log everything. If you specify more than
+      one verbose option, the last option in the command applies.
+     </p></dd><dt id="id-1.11.5.7.8.8.6"><span class="term"><code class="option">-h</code>
+    , </span><span class="term"><code class="option">--help</code>
+    </span></dt><dd><p>
+      Prints the command information to the console, then exits.
+     </p></dd><dt id="id-1.11.5.7.8.8.7"><span class="term"><code class="option">-v</code>
+    , </span><span class="term"><code class="option">--version</code>
+    </span></dt><dd><p>
+      Displays version of <code class="command">ledmon</code> and information about the
+      license, then exits.
+     </p></dd></dl></div><div id="id-1.11.5.7.8.9" data-id-title="Known issues" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Known issues</div><p>
+    The <code class="command">ledmon</code> daemon does not recognize the PFA (Predicted
+    Failure Analysis) state from the SFF-8489 specification. Thus, the PFA
+    pattern is not visualized.
+   </p></div></section><section class="sect1" id="sec-raid-leds-ledctl" data-id-title="The storage enclosure LED control application"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.2 </span><span class="title-name">The storage enclosure LED control application</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#sec-raid-leds-ledctl">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Enclosure LED Application (<code class="command">ledctl</code>) is a user space
+   application that controls LEDs associated with each slot in a storage
+   enclosure or a drive bay. The <code class="command">ledctl</code> application is a
+   part of Intel Enclosure LED Utilities.
+  </p><p>
+   When you issue the command, the LEDs of the specified devices are set to a
+   specified pattern and all other LEDs are turned off. This application needs
+   to be run with <code class="systemitem">root</code> privileges. Because the
+   <code class="systemitem">ledmon</code> application has the
+   highest priority when accessing LEDs, some patterns set by
+   <code class="command">ledctl</code> might have no effect if the
+   <code class="systemitem">ledmon</code> daemon is running (except for
+   the Locate pattern).
+  </p><p>
+   The <code class="command">ledctl</code> application supports two types of LED systems:
+   A two-LED system (Activity LED and Status LED) and a three-LED system
+   (Activity LED, Fail LED, and Locate LED).
+  </p><p>
+   To start <code class="command">ledctl</code>, enter
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> [options] <em class="replaceable">PATTERN_NAME</em>=list_of_devices</pre></div><p>
+   where [options] is one or more of the following:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.5.7.9.8.1"><span class="term"><code class="option">-c <em class="replaceable">PATH</em></code>
+    , </span><span class="term"><code class="option">--confg=<em class="replaceable">PATH</em></code>
+    </span></dt><dd><p>
+      Sets a path to local configuration file. If this option is specified, the
+      global configuration file and user configuration file have no effect.
+     </p></dd><dt id="id-1.11.5.7.9.8.2"><span class="term">-l <em class="replaceable">PATH</em>
+    , </span><span class="term">--log=<em class="replaceable">PATH</em>
+    </span></dt><dd><p>
+      Sets a path to local log file. If this user-defined file is specified,
+      the global log file <code class="filename">/var/log/ledmon.log</code> is not used.
+     </p></dd><dt id="id-1.11.5.7.9.8.3"><span class="term"><code class="option">--quiet</code>
+    </span></dt><dd><p>
+      Turns off all messages sent to <code class="filename">stdout</code> or
+      <code class="filename">stderr</code> out. The messages are still logged to local
+      file and the <code class="filename">syslog</code> facility.
+     </p></dd><dt id="id-1.11.5.7.9.8.4"><span class="term"><code class="option">-h</code>
+    , </span><span class="term"><code class="option">--help</code>
+    </span></dt><dd><p>
+      Prints the command information to the console, then exits.
+     </p></dd><dt id="id-1.11.5.7.9.8.5"><span class="term"><code class="option">-v</code>
+    , </span><span class="term"><code class="option">--version</code>
+    </span></dt><dd><p>
+      Displays version of <code class="command">ledctl</code> and information about the
+      license, then exits.
+     </p></dd></dl></div><section class="sect2" id="sec-raid-leds-ledctl-patterns" data-id-title="Pattern names"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.1 </span><span class="title-name">Pattern names</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#sec-raid-leds-ledctl-patterns">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">ledctl</code> application accepts the following names for
+    <span class="guimenu">pattern_name</span> argument, according to the SFF-8489
+    specification.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.5.7.9.9.3.1"><span class="term"><code class="literal">locate</code>
+     </span></dt><dd><p>
+       Turns on the Locate LED associated with the specified devices or empty
+       slots. This state is used to identify a slot or drive.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.2"><span class="term"><code class="literal">locate_off</code>
+     </span></dt><dd><p>
+       Turns off the Locate LED associated with the specified devices or empty
+       slots.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.3"><span class="term"><code class="literal">normal</code>
+     </span></dt><dd><p>
+       Turns off the Status LED, Failure LED, and Locate LED associated with
+       the specified devices.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.4"><span class="term"><code class="literal">off</code>
+     </span></dt><dd><p>
+       Turns off only the Status LED and Failure LED associated with the
+       specified devices.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.5"><span class="term"><code class="literal">ica</code>
+     , </span><span class="term"><code class="literal">degraded</code>
+     </span></dt><dd><p>
+       Visualizes the <code class="literal">In a Critical Array</code> pattern.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.6"><span class="term"><code class="literal">rebuild</code>
+     , </span><span class="term"><code class="literal">rebuild_p</code>
+     </span></dt><dd><p>
+       Visualizes the <code class="literal">Rebuild</code> pattern. This supports both of
+       the rebuild states for compatibility and legacy reasons.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.7"><span class="term"><code class="literal">ifa</code>
+     , </span><span class="term"><code class="literal">failed_array</code>
+     </span></dt><dd><p>
+       Visualizes the <code class="literal">In a Failed Array</code> pattern.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.8"><span class="term"><code class="literal">hotspare</code>
+     </span></dt><dd><p>
+       Visualizes the <code class="literal">Hotspare</code> pattern.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.9"><span class="term"><code class="literal">pfa</code>
+     </span></dt><dd><p>
+       Visualizes the <code class="literal">Predicted Failure Analysis</code> pattern.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.10"><span class="term"><code class="literal">failure</code>
+     , </span><span class="term"><code class="literal">disk_failed</code>
+     </span></dt><dd><p>
+       Visualizes the <code class="literal">Failure</code> pattern.
+      </p></dd><dt id="id-1.11.5.7.9.9.3.11"><span class="term">ses_abort</span></dt><dd><p>
+       SES-2 R/R ABORT
+      </p></dd><dt id="id-1.11.5.7.9.9.3.12"><span class="term"><code class="literal">ses_rebuild</code>
+     </span></dt><dd><p>
+       SES-2 REBUILD/REMAP
+      </p></dd><dt id="id-1.11.5.7.9.9.3.13"><span class="term"><code class="literal">ses_ifa</code>
+     </span></dt><dd><p>
+       SES-2 IN FAILED ARRAY
+      </p></dd><dt id="id-1.11.5.7.9.9.3.14"><span class="term"><code class="literal">ses_ica</code>
+     </span></dt><dd><p>
+       SES-2 IN CRITICAL ARRAY
+      </p></dd><dt id="id-1.11.5.7.9.9.3.15"><span class="term"><code class="literal">ses_cons_check</code>
+     </span></dt><dd><p>
+       SES-2 CONS CHECK
+      </p></dd><dt id="id-1.11.5.7.9.9.3.16"><span class="term"><code class="literal">ses_hotspare</code>
+     </span></dt><dd><p>
+       SES-2 HOTSPARE
+      </p></dd><dt id="id-1.11.5.7.9.9.3.17"><span class="term"><code class="literal">ses_rsvd_dev</code>
+     </span></dt><dd><p>
+       SES-2 RSVD DEVICE
+      </p></dd><dt id="id-1.11.5.7.9.9.3.18"><span class="term"><code class="literal">ses_ok</code>
+     </span></dt><dd><p>
+       SES-2 OK
+      </p></dd><dt id="id-1.11.5.7.9.9.3.19"><span class="term"><code class="literal">ses_ident</code>
+     </span></dt><dd><p>
+       SES-2 IDENT
+      </p></dd><dt id="id-1.11.5.7.9.9.3.20"><span class="term"><code class="literal">ses_rm</code>
+     </span></dt><dd><p>
+       SES-2 REMOVE
+      </p></dd><dt id="id-1.11.5.7.9.9.3.21"><span class="term"><code class="literal">ses_insert</code>
+     </span></dt><dd><p>
+       SES-2 INSERT
+      </p></dd><dt id="id-1.11.5.7.9.9.3.22"><span class="term"><code class="literal">ses_missing</code>
+     </span></dt><dd><p>
+       SES-2 MISSING
+      </p></dd><dt id="id-1.11.5.7.9.9.3.23"><span class="term"><code class="literal">ses_dnr</code>
+     </span></dt><dd><p>
+       SES-2 DO NOT REMOVE
+      </p></dd><dt id="id-1.11.5.7.9.9.3.24"><span class="term"><code class="literal">ses_active</code>
+     </span></dt><dd><p>
+       SES-2 ACTIVE
+      </p></dd><dt id="id-1.11.5.7.9.9.3.25"><span class="term"><code class="literal">ses_enable_bb</code>
+     </span></dt><dd><p>
+       SES-2 ENABLE BYP B
+      </p></dd><dt id="id-1.11.5.7.9.9.3.26"><span class="term"><code class="literal">ses_enable_ba</code>
+     </span></dt><dd><p>
+       SES-2 ENABLE BYP A
+      </p></dd><dt id="id-1.11.5.7.9.9.3.27"><span class="term"><code class="literal">ses_devoff</code>
+     </span></dt><dd><p>
+       SES-2 DEVICE OFF
+      </p></dd><dt id="id-1.11.5.7.9.9.3.28"><span class="term"><code class="literal">ses_fault</code>
+     </span></dt><dd><p>
+       SES-2 FAULT
+      </p></dd></dl></div><p>
+    When a non-SES-2 pattern is sent to a device in an enclosure, the pattern
+    is automatically translated to the SCSI Enclosure Services (SES) 2 pattern
+    as shown above.
+   </p><div class="table" id="id-1.11.5.7.9.9.5" data-id-title="Translation between non-SES-2 patterns and SES-2 patterns"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 12.1: </span><span class="title-name">Translation between non-SES-2 patterns and SES-2 patterns </span></span><a title="Permalink" class="permalink" href="cha-raid-leds.html#id-1.11.5.7.9.9.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Non-SES-2 Pattern
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         SES-2 Pattern
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         locate
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ident
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         locate_off
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ident
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         normal
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ok
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         off
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ok
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         ica
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ica
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         degraded
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ica
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         rebuild
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_rebuild
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         rebuild_p
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_rebuild
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         ifa
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ifa
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         failed_array
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_ifa
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         hotspare
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_hotspare
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         pfa
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_rsvd_dev
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         failure
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         ses_fault
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         disk_failed
+        </p>
+       </td><td>
+        <p>
+         ses_fault
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect2" id="sec-raid-leds-ledctl-devices" data-id-title="List of devices"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.2 </span><span class="title-name">List of devices</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#sec-raid-leds-ledctl-devices">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When you issue the <code class="command">ledctl</code> command, the LEDs of the
+    specified devices are set to the specified pattern and all other LEDs are
+    turned off. The list of devices can be provided in one of two formats:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      A list of devices separated by a comma and no spaces
+     </p></li><li class="listitem"><p>
+      A list in curly braces with devices separated by a space
+     </p></li></ul></div><p>
+    If you specify multiple patterns in the same command, the device list for
+    each pattern can use the same or different format. For examples that show
+    the two list formats, see
+    <a class="xref" href="cha-raid-leds.html#sec-raid-leds-ledctl-examples" title="12.2.3. Examples">Section 12.2.3, “Examples”</a>.
+   </p><p>
+    A device is a path to file in the <code class="filename">/dev</code> directory or in
+    the <code class="filename">/sys/block</code> directory. The path can identify a
+    block device, an MD software RAID device, or a container device. For a
+    software RAID device or a container device, the reported LED state is set
+    for all of the associated block devices.
+   </p><p>
+    The LEDs of devices listed in list_of_devices are set to the given pattern
+    pattern_name and all other LEDs are turned off.
+   </p></section><section class="sect2" id="sec-raid-leds-ledctl-examples" data-id-title="Examples"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.2.3 </span><span class="title-name">Examples</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#sec-raid-leds-ledctl-examples">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To locate a single block device:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ledctl locate=/dev/sda</pre></div><p>
+    To turn off the Locate LED for a single block device:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ledctl locate_off=/dev/sda</pre></div><p>
+    To locate disks of an MD software RAID device and to set a rebuild pattern
+    for two of its block devices at the same time:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ledctl locate=/dev/md127 rebuild={ /sys/block/sd[a-b] }</pre></div><p>
+    To turn off the Status LED and Failure LED for the specified devices:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ledctl off={ /dev/sda /dev/sdb }</pre></div><p>
+    To locate three block devices, run one of the following commands (both are
+    equivalent):
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ledctl locate=/dev/sda,/dev/sdb,/dev/sdc
+<code class="prompt user">&gt; </code><code class="command">sudo</code> ledctl locate={ /dev/sda /dev/sdb /dev/sdc }</pre></div></section></section><section class="sect1" id="sec-raid-leds-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.3 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-raid-leds.html#sec-raid-leds-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_raid-leds.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   See the following resources for details about the LED patterns and
+   monitoring tools:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <a class="link" href="https://github.com/intel/ledmon.git" target="_blank">LEDMON open
+     source project on GitHub.com</a>
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-raid-resize.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Resizing software RAID arrays with mdadm</span></a> </div><div><a class="pagination-link next" href="cha-raidtroubleshooting.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 13 </span>Troubleshooting software RAIDs</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-raid-leds.html#sec-raid-leds-ledmon"><span class="title-number">12.1 </span><span class="title-name">The storage enclosure LED monitor service</span></a></span></li><li><span class="sect1"><a href="cha-raid-leds.html#sec-raid-leds-ledctl"><span class="title-number">12.2 </span><span class="title-name">The storage enclosure LED control application</span></a></span></li><li><span class="sect1"><a href="cha-raid-leds.html#sec-raid-leds-info"><span class="title-number">12.3 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP5 | Administration Guide | Introduction to the boot process</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Introduction to the boot process | SLED 15 SP5"/>
+<meta name="description" content="Booting a Linux system involves different components and tasks. After a firmware and hardware initialization process, which depends on the machine's …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 16. Introduction to the boot process"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Introduction to the boot process",
+  
+    "description": "Booting a Linux system involves different components and tasks. After a firmware and hardware initialization process, which depends on the machine's …",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-17T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-boot.html" title="Part II. Booting a Linux system"/><link rel="next" href="cha-uefi.html" title="Chapter 17. UEFI (Unified Extensible Firmware Interface)"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-boot.html">Booting a Linux system</a><span> / </span><a class="crumb" href="cha-boot.html">Introduction to the boot process</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="preface-administration.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-administration.html" class="has-children "><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name"><code class="command">sudo</code> basics</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">3 </span><span class="title-name">Using YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST in text mode</span></a></li><li><a href="cha-yast-lang.html" class=" "><span class="title-number">5 </span><span class="title-name">Changing language and country settings with YaST</span></a></li><li><a href="cha-yast-userman.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing users with YaST</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">7 </span><span class="title-name">YaST online update</span></a></li><li><a href="cha-yast-software.html" class=" "><span class="title-number">8 </span><span class="title-name">Installing or removing software</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">9 </span><span class="title-name">Managing software with command line tools</span></a></li><li><a href="cha-snapper.html" class=" "><span class="title-number">10 </span><span class="title-name">System recovery and snapshot management with Snapper</span></a></li><li><a href="cha-klp.html" class=" "><span class="title-number">11 </span><span class="title-name">Live kernel patching with KLP</span></a></li><li><a href="cha-ulp.html" class=" "><span class="title-number">12 </span><span class="title-name">User space live patching</span></a></li><li><a href="cha-transactional-updates.html" class=" "><span class="title-number">13 </span><span class="title-name">Transactional updates</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">14 </span><span class="title-name">Remote graphical sessions with VNC</span></a></li><li><a href="cha-net-rsync.html" class=" "><span class="title-number">15 </span><span class="title-name">File copying with RSync</span></a></li></ol></li><li class="active"><a href="part-boot.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Booting a Linux system</span></a><ol><li><a href="cha-boot.html" class=" you-are-here"><span class="title-number">16 </span><span class="title-name">Introduction to the boot process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">17 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" "><span class="title-number">18 </span><span class="title-name">The boot loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">19 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li><a href="part-system.html" class="has-children "><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">20 </span><span class="title-name">32-bit and 64-bit applications in a 64-bit system environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">21 </span><span class="title-name"><code class="command">journalctl</code>: query the <code class="systemitem">systemd</code> journal</span></a></li><li><a href="cha-update-alternative.html" class=" "><span class="title-number">22 </span><span class="title-name"><code class="command">update-alternatives</code>: managing multiple versions of commands and files</span></a></li><li><a href="cha-network.html" class=" "><span class="title-number">23 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-print.html" class=" "><span class="title-number">24 </span><span class="title-name">Printer operation</span></a></li><li><a href="cha-gui-desktop.html" class=" "><span class="title-number">25 </span><span class="title-name">Graphical user interface</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">26 </span><span class="title-name">Accessing file systems with FUSE</span></a></li><li><a href="cha-tuning-multikernel.html" class=" "><span class="title-number">27 </span><span class="title-name">Installing multiple kernel versions</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing kernel modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">29 </span><span class="title-name">Dynamic kernel device management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">30 </span><span class="title-name">Special system features</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">31 </span><span class="title-name">Using NetworkManager</span></a></li></ol></li><li><a href="part-hardware.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Hardware configuration</span></a><ol><li><a href="sec-yast-hw-keym.html" class=" "><span class="title-number">32 </span><span class="title-name">Setting up your system keyboard layout</span></a></li><li><a href="sec-yast-hw-sound.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up sound cards</span></a></li><li><a href="sec-yast-hw-print.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a printer</span></a></li><li><a href="sec-yast-hw-scan.html" class=" "><span class="title-number">35 </span><span class="title-name">Setting up a scanner</span></a></li><li><a href="cha-power-mgmt.html" class=" "><span class="title-number">36 </span><span class="title-name">Power management</span></a></li><li><a href="cha-nvdimm.html" class=" "><span class="title-number">37 </span><span class="title-name">Persistent memory</span></a></li></ol></li><li><a href="part-services.html" class="has-children "><span class="title-number">V </span><span class="title-name">Services</span></a><ol><li><a href="cha-yast-serviceman.html" class=" "><span class="title-number">38 </span><span class="title-name">Service management with YaST</span></a></li><li><a href="cha-ntp.html" class=" "><span class="title-number">39 </span><span class="title-name">Time synchronization with NTP</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">40 </span><span class="title-name">Help and documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Gathering system information for support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">42 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An example network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-boot" data-id-title="Introduction to the boot process"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">16 </span><span class="title-name">Introduction to the boot process</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Booting a Linux system involves different components and tasks. After a
+    firmware and hardware initialization process, which depends on the
+    machine's architecture, the kernel is started by means of the boot loader
+    GRUB 2. After this point, the boot process is completely controlled by the
+    operating system and handled by <code class="systemitem">systemd</code>.  <code class="systemitem">systemd</code> provides a set of
+    <span class="quote">“<span class="quote">targets</span>”</span> that boot configurations for everyday usage,
+    maintenance or emergencies.
+   </p></div></div></div></div><section class="sect1" id="sec-boot-terminology" data-id-title="Terminology"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.1 </span><span class="title-name">Terminology</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-terminology">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This chapter uses terms that can be interpreted ambiguously. To
+   understand how they are used here, read the definitions below:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.2.3.3.1"><span class="term"><code class="systemitem">init</code></span></dt><dd><p>
+      Two different processes are commonly named <span class="quote">“<span class="quote">init</span>”</span>:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        The <code class="systemitem">initramfs</code> process mounting the root
+        file system
+       </p></li><li class="listitem"><p>
+        The operating system process that starts all other processes that is
+        executed from the real root file system
+       </p></li></ul></div><p>
+      In both cases, the <code class="systemitem">systemd</code> program is taking care of this task. It is
+      first executed from the <code class="systemitem">initramfs</code> to mount the
+      root file system. When that has succeeded, it is re-executed from the
+      root file system as the initial process. To avoid confusing these two
+      <code class="systemitem">systemd</code> processes, we refer to the first process as <span class="emphasis"><em>init on
+      initramfs</em></span> and to the second one as
+      <span class="emphasis"><em>systemd</em></span>.
+     </p></dd><dt id="id-1.3.4.2.3.3.2"><span class="term">
+     <code class="systemitem">initrd</code>/<code class="systemitem">initramfs</code>
+    </span></dt><dd><p>
+      An <code class="systemitem">initrd</code> (initial RAM disk) is an image file
+      containing a root file system image which is loaded by the kernel and
+      mounted from <code class="filename">/dev/ram</code> as the temporary root file
+      system. Mounting this file system requires a file system driver.
+     </p><p>
+      Beginning with kernel 2.6.13, the initrd has been replaced by the
+      <code class="systemitem">initramfs</code> (initial RAM file system), which does
+      not require a file system driver to be mounted. <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> exclusively
+      uses an <code class="systemitem">initramfs</code>. However, since the
+      <code class="systemitem">initramfs</code> is stored as
+      <code class="filename">/boot/initrd</code>, it is often called
+      <span class="quote">“<span class="quote">initrd</span>”</span>. In this chapter we exclusively use the name
+      <code class="systemitem">initramfs</code>.
+     </p></dd></dl></div></section><section class="sect1" id="sec-boot-proc" data-id-title="The Linux boot process"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">16.2 </span><span class="title-name">The Linux boot process</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-proc">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Linux boot process consists of several stages, each represented by a
+   different component:
+  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+     <a class="xref" href="cha-boot.html#sec-boot-proc-initialization" title="16.2.1. The initialization and boot loader phase">Section 16.2.1, “The initialization and boot loader phase”</a>
+    </p></li><li class="listitem"><p>
+     <a class="xref" href="cha-boot.html#sec-boot-proc-kernel" title="16.2.2. The kernel phase">Section 16.2.2, “The kernel phase”</a>
+    </p></li><li class="listitem"><p>
+     <a class="xref" href="cha-boot.html#sec-boot-initramfs" title="16.2.3. The init on initramfs phase">Section 16.2.3, “The init on initramfs phase”</a>
+    </p></li><li class="listitem"><p>
+     <a class="xref" href="cha-boot.html#sec-boot-systemd" title="16.2.4. The systemd phase">Section 16.2.4, “The systemd phase”</a>
+    </p></li></ol></div><section class="sect2" id="sec-boot-proc-initialization" data-id-title="The initialization and boot loader phase"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.2.1 </span><span class="title-name">The initialization and boot loader phase</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-proc-initialization">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    During the initialization phase the machine's hardware is set up and the
+    devices are prepared. This process differs significantly between hardware
+    architectures.
+   </p><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> uses the boot loader GRUB 2 on all architectures. Depending
+    on the architecture and firmware, starting the GRUB 2 boot loader can be a
+    multi-step process. The purpose of the boot loader is to load the kernel
+    and the initial, RAM-based file system (initramfs). For more information
+    about GRUB 2, refer to <a class="xref" href="cha-grub2.html" title="Chapter 18. The boot loader GRUB 2">Chapter 18, <em>The boot loader GRUB 2</em></a>.
+   </p><section class="sect3" id="sec-boot-proc-initialization-x86-aarch" data-id-title="Initialization and boot loader phase on AArch64 and AMD64/Intel 64"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">16.2.1.1 </span><span class="title-name">Initialization and boot loader phase on AArch64 and AMD64/Intel 64</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-proc-initialization-x86-aarch">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     After turning on the computer, the BIOS or the UEFI initializes the screen
+     and keyboard, and tests the main memory. Up to this stage, the machine
+     does not access any mass storage media. Subsequently, the information
+     about the current date, time, and the most important peripherals are
+     loaded from the CMOS values. When the boot media and its geometry are
+     recognized, the system control passes from the BIOS/UEFI to the boot
+     loader.
+    </p><p>
+     On a machine equipped with a traditional BIOS, only code from the first
+     physical 512-byte data sector (the Master Boot Record, MBR) of the boot
+     disk can be loaded. Only a minimal GRUB 2 fits into the MBR. Its sole
+     purpose is to load a GRUB 2 core image containing file system drivers from
+     the gap between the MBR and the first partition (MBR partition table) or
+     from the BIOS boot partition (GPT partition table). This image contains
+     file system drivers and therefore is able to access
+     <code class="filename">/boot</code> located on the root file
+     system. <code class="filename">/boot</code> contains additional modules for GRUB 2
+     core as well as the kernel and the initramfs image. When it has access to
+     this partition, GRUB 2 loads the kernel and the initramfs image into
+     memory and hands control over to the kernel.
+    </p><p>
+     When booting a BIOS system from an encrypted file system that includes an
+     encrypted <code class="filename">/boot</code> partition, you need to enter the
+     password for decryption twice. It is first needed by GRUB 2 to decrypt
+     <code class="filename">/boot</code> and then for <code class="systemitem">systemd</code> to mount the encrypted
+     volumes.
+    </p><p>
+     On machines with UEFI the boot process is much simpler than on machines
+     with a traditional BIOS. The firmware is able to read from a FAT formatted
+     system partition of disks with a GPT partition table. This EFI
+     system-partition (in the running system mounted as
+     <code class="filename">/boot/efi</code>) holds enough space to host a fully-fledged
+     GRUB 2 which is directly loaded and executed by the firmware.
+    </p><p>
+     If the BIOS/UEFI supports network booting, it is also possible to
+     configure a boot server that provides the boot loader. The system can then
+     be booted via PXE. The BIOS/UEFI acts as the boot loader. It gets the boot
+     image from the boot server and starts the system. This is completely
+     independent of local hard disks.
+    </p></section><section class="sect3" id="sec-boot-proc-initialization-zsystems" data-id-title="Initialization and boot loader phase on IBM Z"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">16.2.1.2 </span><span class="title-name">
+     Initialization and boot loader phase on IBM Z
+    </span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-proc-initialization-zsystems">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     On IBM Z the boot process must be initialized by a boot loader
+     called <code class="command">zipl</code> (z initial program load). Although
+     <code class="command">zipl</code> supports reading from various file systems, it
+     does not support the SLE default file system (Btrfs) or booting from
+     snapshots. <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> therefore uses a two-stage boot process that
+     ensures full Btrfs support at boot-time:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       <code class="command">zipl</code> boots from the partition
+       <code class="filename">/boot/zipl</code>, which can be formatted with the Ext2,
+       Ext3, Ext4, or XFS file system. This partition contains a minimal kernel
+       and an initramfs that are loaded into memory. The initramfs contains a
+       Btrfs driver (among others) and the boot loader GRUB 2. The kernel is
+       started with a parameter <code class="literal">initgrub</code>, which tells it to
+       start GRUB 2.
+      </p></li><li class="step"><p>
+       The kernel mounts the root file system, so <code class="filename">/boot</code>
+       becomes accessible. Now GRUB 2 is started from the initramfs. It reads
+       its configuration from <code class="filename">/boot/grub2/grub.cfg</code> and
+       loads the final kernel and initramfs from
+       <code class="filename">/boot</code>. The new kernel now gets loaded via Kexec.
+      </p></li></ol></div></div></section></section><section class="sect2" id="sec-boot-proc-kernel" data-id-title="The kernel phase"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.2.2 </span><span class="title-name">The kernel phase</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-proc-kernel">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When the boot loader has passed on system control, the boot process is the
+    same on all architectures. The boot loader loads both the kernel and an
+    initial RAM-based file system (<code class="systemitem">initramfs</code>) into
+    memory and the kernel takes over.
+   </p><p>
+    After the kernel has set up memory management and has detected the CPU type
+    and its features, it initializes the hardware and mounts the temporary root
+    file system from the memory that was loaded with the
+    <code class="systemitem">initramfs</code>.
+   </p><section class="sect3" id="sec-boot-initrd" data-id-title="The initramfs file"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">16.2.2.1 </span><span class="title-name">The <code class="systemitem">initramfs</code> file</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-initrd">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     <code class="systemitem">initramfs</code> (initial RAM file system) is a small
+     cpio archive that the kernel can load into a RAM disk. It is located at
+     <code class="filename">/boot/initrd</code>. It can be created with a tool called
+     <code class="command">dracut</code>—refer to <code class="command">man 8 dracut</code>
+     for details.
+    </p><p>
+     The <code class="systemitem">initramfs</code> provides a minimal Linux
+     environment that enables the execution of programs before the actual root
+     file system is mounted. This minimal Linux environment is loaded into
+     memory by BIOS or UEFI routines and does not have specific hardware
+     requirements other than sufficient memory. The
+     <code class="systemitem">initramfs</code> archive must always provide an
+     executable named <code class="systemitem">init</code> that executes the <code class="systemitem">systemd</code>
+     daemon on the root file system for the boot process to proceed.
+    </p><p>
+     Before the root file system can be mounted and the operating system can be
+     started, the kernel needs the corresponding drivers to access the device
+     on which the root file system is located. These drivers may include
+     special drivers for certain kinds of hard disks or even network drivers to
+     access a network file system. The needed modules for the root file system
+     are loaded by <code class="systemitem">init</code> on
+     <code class="systemitem">initramfs</code>. After the modules are loaded,
+     <code class="systemitem">udev</code> provides the
+     <code class="systemitem">initramfs</code> with the needed devices. Later in the
+     boot process, after changing the root file system, it is necessary to
+     regenerate the devices. This is done by the <code class="systemitem">systemd</code> unit
+     <code class="filename">systemd-udev-trigger.service</code>.
+    </p><section class="sect4" id="sec-boot-initrd-regenerate" data-id-title="Regenerating the initramfs"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">16.2.2.1.1 </span><span class="title-name">Regenerating the initramfs</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-initrd-regenerate">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Because the <code class="systemitem">initramfs</code> contains drivers, it needs
+      to be updated whenever a new version of one of its drivers is
+      available. This is done automatically when installing the package
+      containing the driver update. YaST or zypper will inform you about
+      this by showing the output of the command that generates the
+      <code class="systemitem">initramfs</code>. However, there are some occasions
+      when you need to regenerate an <code class="systemitem">initramfs</code>
+      manually:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="var-initrd-regenerate-drivers"><span class="term">Adding drivers because of hardware changes</span></dt><dd><p>
+         If you need to change hardware, for example, hard disks, and this
+         hardware requires different drivers to be in the kernel at boot time,
+         you must update the <code class="systemitem">initramfs</code> file.
+        </p><p>
+         Open or create
+         <code class="filename">/etc/dracut.conf.d/10-<em class="replaceable">DRIVER</em>.conf</code>
+         and add the following line (mind the leading blank space):
+        </p><div class="verbatim-wrap"><pre class="screen">force_drivers+=" <em class="replaceable">DRIVER1</em> "</pre></div><p>
+         Replace <em class="replaceable">DRIVER1</em> with the module name of the
+         driver. If you need to add more than one driver, list them
+         space-separated:
+        </p><div class="verbatim-wrap"><pre class="screen">force_drivers+=" <em class="replaceable">DRIVER1</em> <em class="replaceable">DRIVER2</em> "</pre></div><p>
+         Proceed with <a class="xref" href="cha-boot.html#pro-generate-initramfs" title="Generate an initramfs">Procedure 16.1, “Generate an initramfs”</a>.
+        </p></dd><dt id="var-initrd-regenerate-raidroot"><span class="term">Moving system directories to a RAID or LVM</span></dt><dd><p>
+         Whenever you move swap files, or system directories like
+         <code class="filename">/usr</code> in a running system to a RAID or logical
+         volume, you need to create an <code class="systemitem">initramfs</code> that
+         contains support for software RAID or LVM drivers.
+        </p><p>
+         To do so, create the respective entries in
+         <code class="filename">/etc/fstab</code> and mount the new entries (for example
+         with <code class="command">mount -a</code> and/or <code class="command">swapon -a</code>).
+        </p><p>
+         Proceed with <a class="xref" href="cha-boot.html#pro-generate-initramfs" title="Generate an initramfs">Procedure 16.1, “Generate an initramfs”</a>.
+        </p></dd><dt id="var-initrd-regenerate-lvmadd"><span class="term">Adding disks to an LVM group or Btrfs RAID containing the root
+        file system</span></dt><dd><p>
+         Whenever you add (or remove) a disk to a logical volume group
+         or a Btrfs RAID containing the root file system, you need to create an
+         <code class="systemitem">initramfs</code> that contains support for the
+         enlarged volume. Follow the instructions at <a class="xref" href="cha-boot.html#pro-generate-initramfs" title="Generate an initramfs">Procedure 16.1, “Generate an initramfs”</a>.
+        </p><p>
+         Proceed with <a class="xref" href="cha-boot.html#pro-generate-initramfs" title="Generate an initramfs">Procedure 16.1, “Generate an initramfs”</a>.
+        </p></dd><dt id="var-initrd-regenerate-kernelvars"><span class="term">Changing kernel variables</span></dt><dd><p>
+         If you change the values of kernel variables via the
+         <code class="command">sysctl</code> interface by editing related files
+         (<code class="filename">/etc/sysctl.conf</code> or
+         <code class="filename">/etc/sysctl.d/*.conf</code>), the change will be lost on
+         the next system reboot. Even if you load the values with <code class="command">sysctl
+         --system</code> at runtime, the changes are not saved into the
+         <code class="systemitem">initramfs</code> file. You need to update it by
+         proceeding as outlined in <a class="xref" href="cha-boot.html#pro-generate-initramfs" title="Generate an initramfs">Procedure 16.1, “Generate an initramfs”</a>.
+        </p></dd><dt id="id-1.3.4.2.4.5.4.5.3.5"><span class="term">Adding or removing swap devices, re-creating swap area</span></dt><dd><p>
+              Whenever you add or remove a swap device, or re-create a swap area
+              with a different UUID, update the initramfs as
+              outlined in <a class="xref" href="cha-boot.html#pro-generate-initramfs" title="Generate an initramfs">Procedure 16.1, “Generate an initramfs”</a>. You may also
+              need to update <code class="option">GRUB_CMDLINE_*</code> variables that
+              include the <code class="option">resume=</code> option in
+              <code class="filename">/etc/default/grub</code>, and then regenerate
+              <code class="filename">/boot/grub2/grub.cfg</code> as outlined in <a class="xref" href="cha-grub2.html#sec-grub2-cfg" title="18.2.1. The file /boot/grub2/grub.cfg">Section 18.2.1, “The file <code class="filename">/boot/grub2/grub.cfg</code>”</a>.
+            </p></dd></dl></div><div class="procedure" id="pro-generate-initramfs" data-id-title="Generate an initramfs"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 16.1: </span><span class="title-name">Generate an initramfs </span></span><a title="Permalink" class="permalink" href="cha-boot.html#pro-generate-initramfs">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><p>
+       Note that all commands in the following procedure need to be executed 
+       as the <code class="systemitem">root</code> user.
+      </p><ol class="procedure" type="1"><li class="step"><p>
+        Enter your <code class="filename">/boot</code> directory:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>cd /boot</pre></div></li><li class="step"><p>
+        Generate a new <code class="systemitem">initramfs</code> file with
+        <code class="command">dracut</code>, replacing 
+        <em class="replaceable">MY_INITRAMFS</em> with a file name of
+        your choice:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>dracut <em class="replaceable">MY_INITRAMFS</em></pre></div><p>
+        Alternatively, run <code class="command">dracut -f</code>
+        <em class="replaceable">FILENAME</em>
+        to replace an existing init file.
+       </p></li><li class="step"><p>
+        (Skip this step if you ran <code class="command">dracut -f</code> in the previous
+        step.) Create a symbolic link from the <code class="systemitem">initramfs</code> 
+        file you created in the previous step to <code class="systemitem">initrd</code>:
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code> ln -sf <em class="replaceable">MY_INITRAMFS</em> <code class="systemitem">initrd</code></pre></div></li><li class="step"><p>
+        On the IBM Z architecture, additionally run
+        <code class="command">grub2-install</code>.
+       </p></li></ol></div></div></section></section></section><section class="sect2" id="sec-boot-initramfs" data-id-title="The init on initramfs phase"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.2.3 </span><span class="title-name">The init on initramfs phase</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-initramfs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The temporary root file system mounted by the kernel from the
+    <code class="systemitem">initramfs</code> contains the executable <code class="systemitem">systemd</code> (which
+    is called <code class="systemitem">init</code> on
+    <code class="systemitem">initramfs</code> in the following, also see <a class="xref" href="cha-boot.html#sec-boot-terminology" title="16.1. Terminology">Section 16.1, “Terminology”</a>. This program performs all actions needed
+    to mount the proper root file system. It provides kernel functionality for
+    the needed file system and device drivers for mass storage controllers with
+    <code class="systemitem">udev</code>.
+   </p><p>
+    The main purpose of <code class="systemitem">init</code> on
+    <code class="systemitem">initramfs</code> is to prepare the mounting of and access
+    to the real root file system. Depending on your system configuration,
+    <code class="systemitem">init</code> on <code class="systemitem">initramfs</code> is
+    responsible for the following tasks.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.2.4.6.4.1"><span class="term">Loading kernel modules</span></dt><dd><p>
+       Depending on your hardware configuration, special drivers may be needed
+       to access the hardware components of your computer (the most important
+       component being your hard disk). To access the final root file system,
+       the kernel needs to load the proper file system drivers.
+      </p></dd><dt id="id-1.3.4.2.4.6.4.2"><span class="term">Providing block special files</span></dt><dd><p>
+       The kernel generates device events depending on loaded modules.
+       <code class="systemitem">udev</code> handles these events and
+       generates the required special block files on a RAM file system in
+       <code class="filename">/dev</code>. Without those special files, the file system
+       and other devices would not be accessible.
+      </p></dd><dt id="id-1.3.4.2.4.6.4.3"><span class="term">Managing RAID and LVM setups</span></dt><dd><p>
+       If you configured your system to hold the root file system under RAID or
+       LVM, <code class="systemitem">init</code> on <code class="systemitem">initramfs</code>
+       sets up LVM or RAID to enable access to the root file system later.
+      </p></dd><dt id="id-1.3.4.2.4.6.4.4"><span class="term">Managing the network configuration</span></dt><dd><p>
+       If you configured your system to use a network-mounted root file system
+       (mounted via NFS), <code class="systemitem">init</code> must make sure that the
+       proper network drivers are loaded and that they are set up to allow
+       access to the root file system.
+      </p><p>
+       If the file system resides on a network block device like iSCSI or SAN,
+       the connection to the storage server is also set up by
+       <code class="systemitem">init</code> on <code class="systemitem">initramfs</code>.
+       <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> supports booting from a secondary iSCSI target if the
+       primary target is not available. .
+      </p></dd></dl></div><div id="id-1.3.4.2.4.6.5" data-id-title="Handling of mount failures" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Handling of mount failures</div><p>
+     If the root file system fails to mount from within the boot environment,
+     it must be checked and repaired before the boot can continue. The file
+     system checker will be automatically started for Ext3 and Ext4 file
+     systems. The repair process is not automated for XFS and Btrfs file
+     systems, and the user is presented with information describing the
+     options available to repair the file system. When the file system has been
+     successfully repaired, exiting the boot environment will cause the system
+     to retry mounting the root file system. If successful, the boot will
+     continue normally.
+    </p></div><section class="sect3" id="sec-boot-linuxrc-initramfs" data-id-title="The init on initramfs phase in the installation process"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">16.2.3.1 </span><span class="title-name">The init on initramfs phase in the installation process</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-linuxrc-initramfs">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     When <code class="systemitem">init</code> on <code class="systemitem">initramfs</code>
+     is called during the initial boot as part of the installation process, its
+     tasks differ from those mentioned above. Note that the installation system
+     also does not start <code class="systemitem">systemd</code> from
+     <code class="systemitem">initramfs</code>—these tasks are performed by
+     <code class="command">linuxrc</code>.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.4.2.4.6.6.3.1"><span class="term">Finding the installation medium</span></dt><dd><p>
+        When starting the installation process, your machine loads an
+        installation kernel and a special <code class="systemitem">init</code>
+        containing the YaST installer. The YaST installer is running in a
+        RAM file system and needs to have information about the location of the
+        installation medium to access it for installing the operating system.
+       </p></dd><dt id="id-1.3.4.2.4.6.6.3.2"><span class="term">
+       Initiating hardware recognition and loading appropriate kernel modules
+      </span></dt><dd><p>
+        As mentioned in <a class="xref" href="cha-boot.html#sec-boot-initrd" title="16.2.2.1. The initramfs file">Section 16.2.2.1, “The <code class="systemitem">initramfs</code> file”</a>, the boot process
+        starts with a minimum set of drivers that can be used with most
+        hardware configurations. On AArch64, POWER, and AMD64/Intel 64 machines,
+        <code class="command">linuxrc</code> starts an initial hardware scanning process
+        that determines the set of drivers suitable for your hardware
+        configuration. On IBM Z, a list of drivers and their parameters
+        needs to be provided, for example via linuxrc or a parmfile.
+       </p><p>
+        These drivers are used to generate a custom
+        <code class="systemitem">initramfs</code> that is needed to boot the
+        system. If the modules are not needed for boot but for coldplug, the
+        modules can be loaded with <code class="systemitem">systemd</code>; for more information, see <a class="xref" href="cha-systemd.html#sec-boot-systemd-advanced-kernel-modules" title="19.6.4. Loading kernel modules">Section 19.6.4, “Loading kernel modules”</a>.
+       </p></dd><dt id="id-1.3.4.2.4.6.6.3.3"><span class="term">Loading the installation system</span></dt><dd><p>
+        When the hardware is properly recognized, the appropriate drivers are
+        loaded. The <code class="systemitem">udev</code> program
+        creates the special device files and <code class="command">linuxrc</code>
+        starts the installation system with the YaST installer.
+       </p></dd><dt id="id-1.3.4.2.4.6.6.3.4"><span class="term">Starting YaST</span></dt><dd><p>
+        Finally, <code class="command">linuxrc</code> starts YaST, which starts
+        the package installation and the system configuration.
+       </p></dd></dl></div></section></section><section class="sect2" id="sec-boot-systemd" data-id-title="The systemd phase"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">16.2.4 </span><span class="title-name">The systemd phase</span></span> <a title="Permalink" class="permalink" href="cha-boot.html#sec-boot-systemd">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/bootconcept.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After the <span class="quote">“<span class="quote">real</span>”</span> root file system has been found, it is
+    checked for errors and mounted. If this is successful, the
+    <code class="systemitem">initramfs</code> is cleaned and the <code class="systemitem">systemd</code> daemon on
+    the root file system is executed. <code class="systemitem">systemd</code> is Linux's system and service
+    manager. It is the parent process that is started as PID 1 and acts as an
+    init system which brings up and maintains user space services. See <a class="xref" href="cha-systemd.html" title="Chapter 19. The systemd daemon">Chapter 19, <em>The <code class="systemitem">systemd</code> daemon</em></a> for details.
+   </p></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-boot.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part II </span>Booting a Linux system</span></a> </div><div><a class="pagination-link next" href="cha-uefi.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 17 </span>UEFI (Unified Extensible Firmware Interface)</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-boot.html#sec-boot-terminology"><span class="title-number">16.1 </span><span class="title-name">Terminology</span></a></span></li><li><span class="sect1"><a href="cha-boot.html#sec-boot-proc"><span class="title-number">16.2 </span><span class="title-name">The Linux boot process</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

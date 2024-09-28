@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Virtualization Guide | Migration from LXC to libvirt-lxc</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Migration from LXC to libvirt-lxc | SLES 15 SP2"/>
+<meta name="description" content="Since SUSE Linux Enterprise Server 12, LXC is integrated into libvirt library. This decision has several advantages over using LXC as a separate solu…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 35. Migration from LXC to libvirt-lxc"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Migration from LXC to libvirt-lxc",
+  
+    "description": "Migration from LXC to libvirt-lxc",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-10T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-lxc.html" title="Chapter 34. Linux Containers"/><link rel="next" href="gloss-vt-glossary.html" title="Glossary"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-lxc.html">Managing Virtual Machines with LXC</a><span> / </span><a class="crumb" href="cha-lxc2libvirt.html">Migration from LXC to libvirt-lxc</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">5 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">6 </span><span class="title-name">Supported Hosts, Guests, and Features</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">7 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">8 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">9 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">10 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">11 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">13 </span><span class="title-name">Configuring Virtual Machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines with <code class="command">virsh</code></span></a></li><li><a href="cha-libvirt-manage-vagrant.html" class=" "><span class="title-number">15 </span><span class="title-name">Managing Virtual Machines with Vagrant</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">16 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">17 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">18 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">19 </span><span class="title-name">QEMU Guest Agent</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">20 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">21 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">23 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">24 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">26 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">27 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">28 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">29 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">30 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">31 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">32 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">33 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li class="active"><a href="part-virt-lxc.html" class="has-children you-are-here"><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">34 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" you-are-here"><span class="title-number">35 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Toolstacks and Libvirt framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-lxc2libvirt" data-id-title="Migration from LXC to libvirt-lxc"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">35 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></span> <a title="Permalink" class="permalink" href="cha-lxc2libvirt.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Since <span class="phrase">SUSE Linux Enterprise Server 12</span>, LXC is integrated into <code class="systemitem">libvirt</code> library. This decision has
+  several advantages over using LXC as a separate solution—such as a
+  unified approach with other virtualization solutions or independence on the
+  kernel used. This chapter describes steps needed to migrate an existing LXC
+  environment for use with the <code class="systemitem">libvirt</code> library.
+ </p><section class="sect1" id="lxc2libvirt-host" data-id-title="Host Migration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.1 </span><span class="title-name">Host Migration</span></span> <a title="Permalink" class="permalink" href="cha-lxc2libvirt.html#lxc2libvirt-host">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The migration itself has two phases. You first need to migrate the host,
+   then the LXC containers. After that, you can run the original containers
+   as VM Guests in the <code class="systemitem">libvirt</code> environment.
+  </p><div class="procedure" id="id-1.12.8.3.4.3" data-id-title="Host Migration"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 35.1: </span><span class="title-name">Host Migration </span></span><a title="Permalink" class="permalink" href="cha-lxc2libvirt.html#id-1.12.8.3.4.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Upgrade the host to <span class="phrase">SUSE Linux Enterprise Server 15</span> using the official DVD media.
+    </p></li><li class="step"><p>
+     After the upgrade, install the
+     <code class="systemitem">libvirt-daemon-lxc</code> and
+     <code class="systemitem">libvirt-daemon-config-network</code> packages.
+    </p></li><li class="step"><p>
+     Create a <code class="systemitem">libvirt</code> XML configuration
+     <code class="filename">lxc_container.xml</code> from the existing container
+     <code class="literal">lxc_container</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virt-lxc-convert /etc/lxc/lxc_container/config &gt; lxc_container.xml</pre></div></li><li class="step"><p>
+     Check if the network configuration on the host is the same as in the
+     container configuration file, and fix it if needed.
+    </p></li><li class="step"><p>
+     Check the <code class="filename">lxc_container.xml</code> file for any weird or
+     missing configuration. Note that some LXC configuration options
+     cannot be mapped to <code class="systemitem">libvirt</code> configuration. Although the conversion
+     should usually be fine, check <a class="xref" href="cha-lxc.html#lxc-diff" title="34.4. Differences between the libvirt LXC Driver and LXC">Section 34.4, “Differences between the libvirt LXC Driver and LXC”</a> for more
+     details.
+    </p></li><li class="step"><p>
+     Define the container in <code class="systemitem">libvirt</code> based on the created XML
+     definition:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh -c lxc:/// define lxc_container.xml</pre></div></li></ol></div></div></section><section class="sect1" id="lxc2libvirt-container" data-id-title="Container Migration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.2 </span><span class="title-name">Container Migration</span></span> <a title="Permalink" class="permalink" href="cha-lxc2libvirt.html#lxc2libvirt-container">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   After the host is migrated, the LXC container in <code class="systemitem">libvirt</code> will not
+   boot. It needs to be migrated to
+   <span class="phrase">SUSE Linux Enterprise Server 15</span>
+   as well to get everything working.
+  </p><div class="procedure" id="id-1.12.8.3.5.3" data-id-title="Container Migration"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 35.2: </span><span class="title-name">Container Migration </span></span><a title="Permalink" class="permalink" href="cha-lxc2libvirt.html#id-1.12.8.3.5.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     The <code class="filename">baseproduct</code> file is missing (and
+     <code class="command">zypper</code> keeps complaining about it). Create the
+     relevant symbolic link:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ROOTFS=/var/lib/lxc/lxc_container/rootfs
+<code class="prompt root"># </code>ln -s $ROOTFS/etc/products.d/SUSE_SLES.prod $ROOTFS/etc/products.d/baseproduct</pre></div></li><li class="step"><p>
+     Add the DVD repository. Note that you need to replace the DVD device
+     with the one attached to your container:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper --root $ROOTFS ar \
+cd:///?devices=/dev/dvd SLES15-0</pre></div></li><li class="step"><p>
+     Disable or remove previous repositories:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper --root $ROOTFS lr
+  | Alias                       | Name                         | Enabled | Refresh
+--+-----------------------------+------------------------------+---------+--------
+1 | SLES12                      | SLES12                       | Yes     | No
+2 | SUSE-[...]-Server-12-SP3 38 | SUSE-[...]-Server-12-SP3 138 | Yes     | No
+
+<code class="prompt root"># </code>zypper --root $ROOTFS rr 2</pre></div></li><li class="step"><p>
+     Disable or remove previous repositories:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper --root $ROOTFS lr
+  | Alias                       | Name                         | Enabled | Refresh
+--+-----------------------------+------------------------------+---------+--------
+1 | openSUSE 42.3 Main          | openSUSE 42.3 Main           | Yes     | No
+2 | openSUSE 42.3 Update        | openSUSE 42.3 Update         | Yes     | No
+
+<code class="prompt root"># </code>zypper --root $ROOTFS rr 2</pre></div></li><li class="step"><p>
+     Upgrade the container:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper --root $ROOTFS dup</pre></div></li><li class="step"><p>
+     Install the <span class="emphasis"><em>Minimal</em></span> pattern to make sure
+     everything required is installed:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>zypper --root $ROOTFS in -t pattern Minimal</pre></div></li></ol></div></div></section><section class="sect1" id="lxc2libvirt-start" data-id-title="Starting the Container"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">35.3 </span><span class="title-name">Starting the Container</span></span> <a title="Permalink" class="permalink" href="cha-lxc2libvirt.html#lxc2libvirt-start">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/lxc2libvirt.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   After the host and container migration is complete, the container can be
+   started:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh -c lxc:/// start lxc_container</pre></div><p>
+   If you need to get a console to view the logging messages produced by the
+   container, run:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh -c lxc:/// console lxc_container</pre></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-lxc.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 34 </span>Linux Containers</span></a> </div><div><a class="pagination-link next" href="gloss-vt-glossary.html"><span class="pagination-relation">Next</span><span class="pagination-label">Glossary</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-lxc2libvirt.html#lxc2libvirt-host"><span class="title-number">35.1 </span><span class="title-name">Host Migration</span></a></span></li><li><span class="sect1"><a href="cha-lxc2libvirt.html#lxc2libvirt-container"><span class="title-number">35.2 </span><span class="title-name">Container Migration</span></a></span></li><li><span class="sect1"><a href="cha-lxc2libvirt.html#lxc2libvirt-start"><span class="title-number">35.3 </span><span class="title-name">Starting the Container</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

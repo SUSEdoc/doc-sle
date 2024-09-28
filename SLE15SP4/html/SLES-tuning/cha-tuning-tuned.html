@@ -1,0 +1,1391 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP4 | System Analysis and Tuning Guide | Adaptive and dynamic tuning using TuneD</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Adaptive and dynamic tuning using TuneD | SLES 15 SP4"/>
+<meta name="description" content="TuneD is a daemon for Linux systems that monitors CPU and disk usage and adjusts specific settings to optimize system performance under certain workl…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 13. Adaptive and dynamic tuning using TuneD"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLES systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLES systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Adaptive and dynamic tuning using TuneD",
+  
+    "description": "TuneD is a daemon for Linux systems that monitors CPU and disk usage and adjusts specific settings to optimize system performance under certain workl…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-03-12T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-tuning-power.html" title="Chapter 12. Power management"/><link rel="next" href="part-tuning-kernel.html" title="Part V. Kernel tuning"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-resources.html">Resource management</a><span> / </span><a class="crumb" href="cha-tuning-tuned.html">Adaptive and dynamic tuning using TuneD</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General notes on system tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System monitoring utilities</span></a></li><li><a href="cha-tuning-syslog.html" class=" "><span class="title-number">3 </span><span class="title-name">System log files</span></a></li></ol></li><li><a href="part-tuning-kerneltrace.html" class="has-children "><span class="title-number">III </span><span class="title-name">Kernel monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—filtering and analyzing system data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-based performance monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—system-wide profiler</span></a></li><li><a href="cha-tuning-dynamic-debug.html" class=" "><span class="title-number">8 </span><span class="title-name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li class="active"><a href="part-tuning-resources.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Resource management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">9 </span><span class="title-name">General system resource management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">10 </span><span class="title-name">Kernel control groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">11 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">12 </span><span class="title-name">Power management</span></a></li><li><a href="cha-tuning-tuned.html" class=" you-are-here"><span class="title-number">13 </span><span class="title-name">Adaptive and dynamic tuning using TuneD</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning I/O performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the task scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">16 </span><span class="title-name">Tuning the memory management subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">17 </span><span class="title-name">Tuning the network</span></a></li><li><a href="cha-tuning-sapconf.html" class=" "><span class="title-number">18 </span><span class="title-name">Tuning SUSE Linux Enterprise for SAP</span></a></li></ol></li><li><a href="part-tuning-dumps.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Handling system dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">19 </span><span class="title-name">Tracing tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">20 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">21 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to debug application crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">22 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk07apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-tuned" data-id-title="Adaptive and dynamic tuning using TuneD"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">13 </span><span class="title-name">Adaptive and dynamic tuning using TuneD</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+        TuneD is a daemon for Linux systems that monitors CPU and disk usage and adjusts
+        specific settings to optimize system performance under certain workloads. Other system
+        settings, such as those configured via <code class="command">sysctl</code>, are applied when the
+        service starts, and remain static unless manually reloaded. TuneD offers predefined
+        tuning profiles tailored for common use cases such as servers and virtual machines, as well
+        as the ability to create custom profiles. TuneD leverages several tuning plug-ins that
+        interact with underlying Linux subsystems to tune the CPU, disk I/O, networking, virtual
+        memory, power management, and other components.
+      </p></div></div></div></div><section class="sect1" id="sec-tuning-tuned-introduction" data-id-title="Introduction to TuneD"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.1 </span><span class="title-name">Introduction to TuneD</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-introduction">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The TuneD application monitors and adjusts system settings on certain SUSE Linux Enterprise Server workloads
+      based on usage of different system resources, such as the CPU and the disk. The primary goal
+      of TuneD is to deliver energy efficiency, optimized performance and efficient resource
+      utilization without requiring manual configuration of low-level system settings, which can be
+      complex and error-prone.
+    </p><p>
+      System administrators can apply predefined or customized <span class="emphasis"><em>TuneD
+      profiles</em></span> based on the current usage scenario or workload on the system. These
+      profiles contain settings for certain system components such as the CPU, disk I/O schedulers,
+      virtual memory, and power management. The system components are managed by
+      <span class="emphasis"><em>plug-ins</em></span>, which tune the system based on the activated profile settings.
+    </p></section><section class="sect1" id="sec-tuning-tuned-components" data-id-title="Components of TuneD"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.2 </span><span class="title-name">Components of TuneD</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-components">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The TuneD application consists of the following key components:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.9.6.6.4.3.1"><span class="term"><code class="systemitem">tuned</code> daemon</span></dt><dd><p>
+            The core daemon process that runs in the background, monitoring system usage and
+            applying tuning settings. It handles profile switching and coordination of the other
+            components. The following items are associated with the daemon:
+          </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                The <code class="command">tuned</code> command that you can use after enabling TuneD
+                using <code class="command">systemctl</code>. By default, when invoked from the terminal
+                manually, <code class="command">tuned</code> runs as a normal process. However, you can use
+                the <code class="option">--daemon</code> option to run it as a background process.
+              </p></li><li class="listitem"><p>
+                A <code class="systemitem">tuned</code> systemd service that manages the daemon process, such as starting the
+                daemon at boot time, stopping or restarting it, and ensuring it runs with the
+                necessary permissions and environment.
+              </p></li></ul></div><p>
+            For more information, read the man page for <code class="systemitem">tuned</code>.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">man tuned</code></pre></div></dd><dt id="id-1.9.6.6.4.3.2"><span class="term">tuned-adm</span></dt><dd><p>
+            A command-line utility to manage or administer the <code class="systemitem">tuned</code> daemon. To understand the
+            basics of managing the <code class="systemitem">tuned</code> daemon using <code class="command">tuned-adm</code>, see
+            <a class="xref" href="cha-tuning-tuned.html#sec-tuning-use-tuned-adm" title="13.4.2.1. Using tuned-adm">Section 13.4.2.1, “Using <code class="command">tuned-adm</code>”</a>.
+          </p></dd><dt id="id-1.9.6.6.4.3.3"><span class="term">Profiles</span></dt><dd><p>
+            A <span class="emphasis"><em>TuneD profile</em></span> is a collection of settings for system
+            components that you can apply to tune the system. System administrators can either use
+            the supported profiles that are installed at <code class="filename">/usr/lib/tuned/</code> as
+            part of the <span class="package">tuned</span> package, or apply customized profiles by creating
+            them at <code class="filename">/etc/tuned/</code>. If the filenames for a custom and a supported
+            profile matches, the custom profile takes precedence when applied. For more
+            information, see <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-profiles" title="13.4. TuneD profiles">Section 13.4, “TuneD profiles”</a>.
+          </p></dd><dt id="id-1.9.6.6.4.3.4"><span class="term">Plug-ins</span></dt><dd><p>
+            A <span class="emphasis"><em>TuneD plug-in</em></span> is an implementation of tuning logic for
+            different subsystems. A plug-in is invoked when a profile contains a setting that is
+            relevant to the subsystem it controls. The plug-in tunes the subsystem based on the
+            value of the relevant setting. A few key and most frequently used plug-ins manage
+            subsystems, such as the CPU, disk, network, virtual machines, video and audio. In
+            addition, there are optional monitoring plug-ins that monitor certain subsystems and
+            pass on relevant information to the daemon for dynamic tuning. For more information,
+            see <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-plugins" title="13.6. TuneD plug-ins">Section 13.6, “TuneD plug-ins”</a>.
+          </p></dd><dt id="id-1.9.6.6.4.3.5"><span class="term">Extension scripts</span></dt><dd><p>
+            System administrators can extend the ecosystem of TuneD profiles and plug-ins
+            using custom scripts that can be executed before or after a profile is applied. To use
+            an extension script, specify the path and the type of the script in the profile
+            configuration. Such extensibility allows the implementation of custom tuning logic and
+            offers more control over the entire process of applying profiles. For more information,
+            see <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-profile-hooks" title="13.4.2.2. Using profile hooks">Section 13.4.2.2, “Using profile hooks”</a>.
+          </p></dd></dl></div></section><section class="sect1" id="sec-tuning-tuned-management" data-id-title="Managing TuneD"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.3 </span><span class="title-name">Managing TuneD</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-management">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      This section covers the essential tasks for managing the <code class="systemitem">tuned</code> service lifecycle on SUSE Linux Enterprise Server.
+      It guides you through installing the <span class="package">tuned</span> package from official
+      repositories, enabling and disabling the associated systemd service for automatic startup,
+      and running the <code class="systemitem">tuned</code> daemon either as a background process managed by systemd or as a
+      normal foreground process. Proper management of the <code class="systemitem">tuned</code> service ensures that the dynamic
+      tuning capabilities are available when required and can be controlled effectively, allowing
+      you to optimize system performance and resource utilization based on your needs.
+    </p><section class="sect2" id="sec-tuning-tuned-installation" data-id-title="Installing TuneD"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.3.1 </span><span class="title-name">Installing TuneD</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-installation">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The recommended way to install a supported version of TuneD is to install the
+        <span class="package">tuned</span> package using the <code class="command">zypper</code> package manager.
+      </p><div id="id-1.9.6.6.5.3.3" data-id-title="tuned is available only for SUSE Linux Enterprise Server" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <span class="package">tuned</span> is available only for SUSE Linux Enterprise Server</div><p>
+          The <span class="package">tuned</span> package is available only in the official SUSE Linux Enterprise Server
+          repositories. There is no equivalent package available in the official SUSE Linux Enterprise Desktop
+          repositories.
+        </p></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            To install the <code class="systemitem">tuned</code> daemon, command-line utilities, profiles and plug-ins, run the
+            following command:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">zypper install -y tuned</code></pre></div></li><li class="step"><p>
+            Verify the installation by running the following commands:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">tuned --help</code></pre></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">tuned-adm --help</code></pre></div></li><li class="step"><p><span class="step-optional">(Optional)</span> 
+            To know more, read the <span class="emphasis"><em>man pages</em></span> for <code class="literal">tuned</code>,
+            <code class="literal">tuned-adm</code>, <code class="literal">tuned-profiles</code> and
+            <code class="literal">tuned.conf</code>.
+          </p></li></ol></div></div></section><section class="sect2" id="sec-tuning-tuned-enable" data-id-title="Enabling tuned"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.3.2 </span><span class="title-name">Enabling <code class="systemitem">tuned</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-enable">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To enable <code class="systemitem">tuned</code>, perform the following procedure:
+      </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Check the status of the <code class="systemitem">tuned</code> service:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl status tuned</code></pre></div><p>
+            By default, the status of the service is <span class="emphasis"><em>disabled</em></span>.
+          </p></li><li class="step"><p>
+            To enable a systemd service for future boots so that the <code class="systemitem">tuned</code> daemon starts
+            automatically at the boot time, run the following command:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl enable tuned</code></pre></div><p>
+            However, this command does not start the <code class="systemitem">tuned</code> process. If you check the status of
+            the systemd service now, it should be <span class="emphasis"><em>enabled</em></span> and
+            <span class="emphasis"><em>inactive</em></span>.
+          </p></li></ol></div></div></section><section class="sect2" id="sec-tuning-tuned-start" data-id-title="Starting tuned"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.3.3 </span><span class="title-name">Starting <code class="systemitem">tuned</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-start">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        After enabling the associated systemd service for <code class="systemitem">tuned</code>, for the current session you can
+        start <code class="systemitem">tuned</code> either as a background daemon or as a normal process connected to the TTY.
+      </p><p>
+        Alternatively, you can enable the associated systemd service and start the daemon
+        simultaneously.
+      </p><div class="procedure"><div class="procedure-contents"><ul class="procedure"><li class="step"><p>
+            Depending on how you want to start <code class="systemitem">tuned</code> across sessions, you have the following
+            options:
+          </p><ul class="stepalternatives">
+            <li class="step"><p>
+                To start <code class="systemitem">tuned</code> only for the current session, perform one of the following steps:
+              </p><ol type="a" class="substeps"><li class="step"><p>
+                    Start <code class="systemitem">tuned</code> as a background process and let systemd manage the states of the
+                    daemon:
+                  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl start tuned</code></pre></div><div id="id-1.9.6.6.5.5.4.1.2.1.2.1.3" data-id-title="Profile run by tuned" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Profile run by <code class="systemitem">tuned</code></div><p>
+                      Once activated, <code class="systemitem">tuned</code> starts tuning the system based on the default profile
+                      that is appropriate for the system, or the currently active profile. To
+                      change it, use the <code class="command">tuned-adm</code> command. For more
+                      information, see <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-profiles" title="13.4. TuneD profiles">Section 13.4, “TuneD profiles”</a> and
+                      <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-plugins" title="13.6. TuneD plug-ins">Section 13.6, “TuneD plug-ins”</a>.
+                    </p></div></li><li class="step"><p>
+                    Start <code class="systemitem">tuned</code> as a normal process connected to the TTY only for the current
+                    session:
+                  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned</code></pre></div><div id="id-1.9.6.6.5.5.4.1.2.1.2.2.3" data-id-title="Running the tuned command" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Running the <code class="command">tuned</code> command</div><p>
+                      You can use this command to activate a profile, or even run it as a daemon.
+                      For more information, run the <code class="command">tuned --help</code> command.
+                    </p></div></li></ol></li>
+            <li class="step"><p>
+                To enable a systemd service for future boots and simultaneously start the <code class="systemitem">tuned</code>
+                daemon in the current session, run the following command:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl enable --now tuned</code></pre></div></li>
+          </ul></li></ul></div></div></section><section class="sect2" id="sec-tuning-tuned-disable" data-id-title="Disabling tuned"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.3.4 </span><span class="title-name">Disabling <code class="systemitem">tuned</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-disable">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        As a best practice, perform the following steps to disable <code class="systemitem">tuned</code>:
+      </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+            Check the status of the <code class="systemitem">tuned</code> systemd service:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl status tuned</code></pre></div></li><li class="step"><p>
+            Turn off or disable all tuning settings applied earlier:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm off</code></pre></div></li><li class="step"><p>
+            If the status of the <code class="systemitem">tuned</code> daemon is <span class="emphasis"><em>active</em></span>, stop the daemon:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl stop tuned</code></pre></div></li><li class="step"><p>
+            To stop the <code class="systemitem">tuned</code> daemon from being automatically activated during the next boot, you
+            have two options:
+          </p><ul class="stepalternatives">
+            <li class="step"><p>
+                Disable only the associated systemd service:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl disable tuned</code></pre></div></li>
+            <li class="step"><p>
+                Simultaneously disable the <code class="systemitem">tuned</code> systemd service and stop the <code class="systemitem">tuned</code> daemon
+                immediately:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl disable --now tuned</code></pre></div></li>
+          </ul></li></ol></div></div></section></section><section class="sect1" id="sec-tuning-tuned-profiles" data-id-title="TuneD profiles"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.4 </span><span class="title-name">TuneD profiles</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-profiles">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      TuneD optimizes SUSE Linux Enterprise Server systems using predefined profiles with settings tailored for
+      different use cases. These profiles adjust several system settings, including CPU governor
+      policies, disk I/O scheduling, network parameters, and kernel parameters, to enhance
+      performance, energy efficiency, or other system characteristics. Each profile is designed for
+      specific scenarios, such as high throughput, low latency, power saving, or virtualized
+      environments. System administrators can switch between profiles using the
+      <code class="command">tuned-adm</code> command and customize or combine profiles to meet unique
+      requirements. This section covers the basics of managing, creating and customizing TuneD
+      profiles.
+    </p><section class="sect2" id="sec-tuning-supported-tuned-profiles" data-id-title="Supported TuneD profiles"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.4.1 </span><span class="title-name">Supported TuneD profiles</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-supported-tuned-profiles">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        SUSE Linux Enterprise Server supports the following profiles:
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.9.6.6.6.3.3.1"><span class="term">balanced</span></dt><dd><p>
+              The <code class="literal">balanced</code> profile provides a general-purpose optimization of
+              the system, offering a good compromise between performance and energy consumption. It
+              dynamically adjusts CPU frequency and power states, and balances I/O and network
+              performance with power saving, making it suitable for most desktop and server
+              environments.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.2"><span class="term">cpu-partitioning</span></dt><dd><p>
+              The <code class="literal">cpu-partitioning</code> profile is designed for systems where CPU
+              resources need to be partitioned for specific tasks or applications. It configures
+              CPU isolation and affinity settings and adjusts scheduler parameters to ensure
+              predictable performance and reduce interference between processes. The configuration
+              variables for this profile are defined in
+              <code class="filename">/etc/tuned/cpu-partitioning-variables.conf</code>.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.3"><span class="term">desktop</span></dt><dd><p>
+              The <code class="literal">desktop</code> profile optimizes the system for desktop environments,
+              enhancing performance for graphical interfaces and desktop applications. It optimizes
+              CPU and I/O performance, settings for low-latency audio and video playback, and
+              reduces power-saving measures to ensure a smooth and responsive user experience.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.4"><span class="term">latency-performance</span></dt><dd><p>
+              The <code class="literal">latency-performance</code> profile prioritizes low latency and
+              deterministic performance over power savings. It sets the CPU governor to performance
+              mode, adjusts kernel parameters to reduce latency, and disables power-saving features
+              that could introduce delays, making it suitable for real-time applications and
+              high-performance computing.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.5"><span class="term">mssql</span></dt><dd><p>
+              The <code class="literal">mssql</code> profile optimizes the system for running Microsoft SQL
+              Server by tuning CPU and memory settings, optimizing disk I/O for database access
+              patterns, and enhancing network settings for improved database connectivity.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.6"><span class="term">network-latency</span></dt><dd><p>
+              The <code class="literal">network-latency</code> profile optimizes the network performance for
+              applications requiring low latency, such as financial trading platforms and real-time
+              communication systems. It configures network settings to reduce latency, sets the CPU
+              governor to performance mode, and adjusts kernel parameters to prioritize network
+              traffic.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.7"><span class="term">network-throughput</span></dt><dd><p>
+              The <code class="literal">network-throughput</code> profile enhances the system for sustained
+              high data transfer rates, particularly on older CPUs or high-speed networks. It tunes
+              network stack parameters for maximum throughput and optimizes CPU settings to handle
+              high network loads.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.8"><span class="term">powersave</span></dt><dd><p>
+              Optimizes the system for energy efficiency, possibly at the cost of performance.
+              While using this configuration as a stand-alone or merged profile, carefully analyze
+              the deployment use case and ensure that it saves more power than the
+              <code class="literal">balanced</code> profile.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.9"><span class="term">throughput-performance</span></dt><dd><p>
+              The <code class="literal">throughput-performance</code> profile maximizes overall system
+              performance for general-purpose servers handling diverse tasks. It sets the CPU
+              governor to performance mode, tunes I/O and network settings for high throughput, and
+              adjusts kernel parameters to enhance system performance.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.10"><span class="term">virtual-guest</span></dt><dd><p>
+              The <code class="literal">virtual-guest</code> profile optimizes performance and efficiency for
+              virtual machines running as guests. It tunes CPU and memory settings for virtualized
+              environments and adjusts disk and network settings to ensure optimal resource
+              utilization and VM performance.
+            </p></dd><dt id="id-1.9.6.6.6.3.3.11"><span class="term">virtual-host</span></dt><dd><p>
+              The <code class="literal">virtual-host</code> profile enhances systems running KVM guests by
+              optimizing resource allocation and performance. It configures CPU and memory settings
+              for hosting multiple virtual machines, tunes I/O and network settings, and enhances
+              kernel parameters to support virtualization.
+            </p></dd></dl></div><p>
+        For information on the TuneD profile configuration files, see the following sections:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-supported-profile-configuration" title="13.5.2. Supported profile configuration">Section 13.5.2, “Supported profile configuration”</a>
+          </p></li><li class="listitem"><p>
+            <a class="xref" href="cha-tuning-tuned.html#sec-tuning-custom-tuned-profile-configuration" title="13.5.3. Custom profile configuration">Section 13.5.3, “Custom profile configuration”</a>
+          </p></li></ul></div></section><section class="sect2" id="sec--tuning-manage-tuned-profiles" data-id-title="Managing TuneD profiles"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.4.2 </span><span class="title-name">Managing TuneD profiles</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec--tuning-manage-tuned-profiles">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        If you just want to activate a profile, pass the profile name to the
+        <code class="command">tuned</code> command:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned --profile <em class="replaceable">PROFILE_NAME</em></code></pre></div><p>
+        However, the best practice for managing the lifecycle of TuneD profiles is to use the
+        <code class="command">tuned-adm</code> command-line tool.
+      </p><section class="sect3" id="sec-tuning-use-tuned-adm" data-id-title="Using tuned-adm"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">13.4.2.1 </span><span class="title-name">Using <code class="command">tuned-adm</code></span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-use-tuned-adm">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          You can use the <code class="command">tuned-adm</code> command to perform the following tasks:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+              List all available profiles.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm list</code></pre></div></li><li class="listitem"><p>
+              List active profile.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm active</code></pre></div></li><li class="listitem"><p>
+              Display information about the current profile.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm profile_info</code></pre></div></li><li class="listitem"><p>
+              Display information about a specified profile.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm profile_info <em class="replaceable">PROFILE_NAME</em></code></pre></div></li><li class="listitem"><p>
+              Recommend a profile based on the current system usage.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm recommend</code></pre></div><p>
+              By default, TuneD in SUSE Linux Enterprise Server recommends a profile based on the configuration
+              mentioned in <code class="filename">/usr/lib/tuned/recommend.d/50-tuned.conf</code>. You can
+              also define custom recommendation rules by creating the file
+              <code class="filename">/etc/tuned/recommend.conf</code>, which takes precedence over the
+              default rules.
+            </p></li><li class="listitem"><p>
+              Display the current profile selection mode.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm profile_mode</code></pre></div></li><li class="listitem"><p>
+              Select a profile automatically, and switch to the recommended profile.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm auto_profile</code></pre></div></li><li class="listitem"><p>
+              Manually switch to a specified profile.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm profile <em class="replaceable">PROFILE_NAME</em></code></pre></div></li><li class="listitem"><p>
+              Verify that a profile has been successfully applied, and the system state matches the
+              profile's configurations.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm verify</code></pre></div></li><li class="listitem"><p>
+              Turn off all tunings.
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm off</code></pre></div></li></ul></div><p>
+          For more information on <code class="command">tuned-adm</code>, see its help information or man
+          page.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm --help</code></pre></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">man tuned-adm</code></pre></div></section><section class="sect3" id="sec-tuning-tuned-profile-hooks" data-id-title="Using profile hooks"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">13.4.2.2 </span><span class="title-name">Using profile hooks</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-profile-hooks">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          <span class="emphasis"><em>Profile hooks</em></span> are specific scripts that are executed at different
+          stages of a profile's lifecycle. They allow for more granular control and customization
+          of what happens when a profile is applied. Profile hooks are generally placed in the
+          profile directory under
+          <code class="filename">/etc/tuned/<em class="replaceable">PROFILE_NAME</em>/</code> for custom
+          profiles, and
+          <code class="filename">/usr/lib/tuned/<em class="replaceable">PROFILE_NAME</em>/</code> for the
+          default or supported profiles.
+        </p><p>
+          Profile hooks can be used to execute custom commands or scripts before or after certain
+          events, such as:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+              Starting a profile
+            </p></li><li class="listitem"><p>
+              Stopping a profile
+            </p></li><li class="listitem"><p>
+              Verifying a profile
+            </p></li><li class="listitem"><p>
+              Fully rolling back a profile
+            </p></li></ul></div><div class="complex-example"><div class="example" id="id-1.9.6.6.6.4.6.5" data-id-title="Creating and applying a profile hook"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.1: </span><span class="title-name">Creating and applying a profile hook </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.6.4.6.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+            For example, in a custom profile that mixes the <code class="literal">balanced</code> and
+            <code class="literal">powersave</code> profiles, we can include a profile hook that displays
+            certain relevant information before applying the profile.
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Create a script named <code class="filename">start.sh</code> in the custom profile directory
+                <code class="filename">/etc/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>/</code>
+                with the following content:
+              </p><div class="example" id="id-1.9.6.6.6.4.6.5.3.1.2" data-id-title="Custom hook script to handle specific tasks before applying the custom profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.2: </span><span class="title-name">Custom hook script to handle specific tasks before applying the custom profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.6.4.6.5.3.1.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#!/bin/bash
+
+# Example task: Log the current CPU governor and energy performance bias
+echo "Current CPU governor: $(cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor)" &gt;&gt;
+/var/log/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>.log
+echo "Current energy performance bias: $(cat /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_bias)" &gt;&gt; /var/log/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>.log
+
+# Example task: Check for specific conditions before applying settings
+if [ ! -d "/sys/devices/system/cpu/cpufreq/policy0" ]; then
+    echo "CPU frequency scaling not available, aborting profile application." &gt;&gt; /var/log/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>.log
+    exit 1
+fi
+
+# Example task: Notify about the upcoming profile application
+echo "Preparing to apply custom profile settings." &gt;&gt; /var/log/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>.log</pre></div></div></div></li><li class="step"><p>
+                Ensure the script is executable:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">chmod +x /etc/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>/start.sh</code></pre></div></li><li class="step"><p>
+                Include the path to the custom script in
+                <code class="filename">/etc/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>/tuned.conf</code>
+                by using the <code class="literal">[script]</code> section:
+              </p><div class="example" id="id-1.9.6.6.6.4.6.5.3.3.2" data-id-title="TuneD profile with custom script path"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.3: </span><span class="title-name">TuneD profile with custom script path </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.6.4.6.5.3.3.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[main]
+include=balanced
+
+[cpu]
+governor=powersave
+energy_perf_bias=powersave
+
+[disk]
+# Inherit settings from balanced profile
+
+[sysctl]
+vm.swappiness=10
+
+[script]
+script=/etc/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>/start.sh</pre></div></div></div></li><li class="step"><p>
+                Apply the custom profile to test the custom script:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm profile <em class="replaceable">CUSTOM_PROFILE_NAME</em></code></pre></div></li></ol></div></div></div></div></div></section></section></section><section class="sect1" id="sec-tuning-tuned-configuration" data-id-title="TuneD configuration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.5 </span><span class="title-name">TuneD configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-configuration">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Configuration files form the foundation of TuneD and its profiles. In SUSE Linux Enterprise Server, the
+      <code class="filename">/etc/tuned/</code> file is the main configuration file for the <code class="systemitem">tuned</code> daemon.
+      This file contains global settings that affect the overall behavior of TuneD.
+    </p><p>
+      Also, each TuneD profile has its <code class="filename">tuned.conf</code> configuration file that
+      defines the specific tuning parameters and plug-in settings for a particular profile. The
+      profile-specific configuration files are divided into sections, each corresponding to a
+      specific TuneD plug-in or a group of related settings. System administrators can specify
+      system tuning parameters across different subsystems, such as CPU, disk and network. For more
+      information on TuneD plug-ins, see <a class="xref" href="cha-tuning-tuned.html#sec-tuning-tuned-plugins" title="13.6. TuneD plug-ins">Section 13.6, “TuneD plug-ins”</a>.
+    </p><section class="sect2" id="sec-tuning-global-tuned-configuration" data-id-title="Global TuneD configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.5.1 </span><span class="title-name">Global TuneD configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-global-tuned-configuration">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        When <code class="systemitem">tuned</code> starts running (as a daemon, by default), the settings in the
+        <code class="filename">/etc/tuned/tuned-main.conf</code> global configuration file are applied on
+        the system. This action prepares the system to apply additional profile-specific tuning in
+        the subsequent stages.
+      </p><p>
+        The default <code class="filename">/etc/tuned/tuned-main.conf</code> file contains the following
+        global settings:
+      </p><div class="example" id="id-1.9.6.6.7.4.4" data-id-title="Default global TuneD configuration"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.4: </span><span class="title-name">Default global TuneD configuration </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.7.4.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">daemon = 1 <span class="callout" id="tuned-main-conf-daemon">1</span>
+
+dynamic_tuning = 1 <span class="callout" id="tuned-main-conf-dynamic-tuning">2</span>
+
+sleep_interval = 1 <span class="callout" id="tuned-main-conf-sleep-interval">3</span>
+
+update_interval = 10 <span class="callout" id="tuned-main-conf-update-interval">4</span>
+
+recommend_command = 1 <span class="callout" id="tuned-main-conf-recommend-command">5</span>
+
+reapply_sysctl = 1 <span class="callout" id="tuned-main-conf-reapply-sysctl">6</span>
+
+default_instance_priority = 0 <span class="callout" id="tuned-main-conf-default-instance-priority">7</span>
+
+udev_buffer_size = 1MB <span class="callout" id="tuned-main-conf-udev-buffer-size">8</span>
+
+log_file_count = 2 <span class="callout" id="tuned-main-conf-log-file-count">9</span>
+
+log_file_max_size = 1MB <span class="callout" id="tuned-main-conf-log-file-max-size">10</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-daemon"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Specifies whether to use the <code class="systemitem">tuned</code> daemon. When set to <code class="literal">1</code>, the
+            daemon is used, enabling features such as D-Bus integration, settings rollback, hotplug
+            support, and dynamic tuning. Disabling the daemon by setting it to <code class="literal">0</code>
+            is <span class="emphasis"><em>not recommended</em></span>, as it limits TuneD's functionality to
+            static tuning only.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-dynamic-tuning"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Enables or disables dynamic tuning of devices. When set to <code class="literal">1</code>,
+            TuneD dynamically adjusts settings based on system activity. When disabled by
+            setting it to <code class="literal">0</code>, only static tuning is applied. Since dynamic tuning
+            relies on the daemon to function, setting <code class="literal">dynamic_tuning=1</code> becomes
+            irrelevant when the daemon is disabled by setting it to <code class="literal">daemon=0</code>.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-sleep-interval"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Defines the interval in seconds that the <code class="systemitem">tuned</code> daemon sleeps before checking for
+            events. A higher value reduces overhead but increases response time to changes.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-update-interval"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Sets the interval in seconds for updating dynamic tunings. This value must be a
+            multiple of <code class="literal">sleep_interval</code>.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-recommend-command"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Controls the availability of the <code class="command">tuned-adm recommend</code> command. When
+            enabled by setting it to <code class="literal">1</code>, <code class="systemitem">tuned</code> parses the custom recommendation
+            figuration at <code class="filename">/etc/tuned/recommend.conf</code> or the default
+            recommendation configuration
+            <code class="filename">/usr/lib/tuned/recommend.d/50-tuned.conf</code> and provides profile
+            recommendations. When disabled by setting it to <code class="literal">0</code>, the daemon
+            returns a single hard-coded profile, typically <code class="literal">balanced</code>.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-reapply-sysctl"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Determines whether system sysctl settings from files such as
+            <code class="filename">/etc/sysctl.conf</code> and <code class="filename">/etc/sysctl.d</code> should be
+            reapplied after TuneD sysctl settings are applied. When enabled by setting to 1,
+            system sysctl settings override TuneD sysctl settings.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-default-instance-priority"><span class="callout">7</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Specifies the default priority assigned to the TuneD instances. Higher values
+            indicate a higher priority.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-udev-buffer-size"><span class="callout">8</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Defines the buffer size for udev events. This setting helps manage the amount of data
+            processed from udev.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-log-file-count"><span class="callout">9</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Sets the number of log files to keep in the directory
+            <code class="filename">/var/log/tuned/</code>. This helps in log rotation, where older logs are
+            archived and new logs are created.
+          </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#tuned-main-conf-log-file-max-size"><span class="callout">10</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+            Specifies the maximum size of each log file before it is rotated. This prevents log
+            files from growing indefinitely. For example, when the default log file
+            <code class="filename">/var/log/tuned/tuned.log</code> reaches the size set by this parameter, a
+            new file is started.
+          </p></td></tr></table></div><div id="id-1.9.6.6.7.4.6" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning</div><p>
+          Modify the values of the global settings in <code class="filename">/etc/tuned/</code> only when
+          you are sure of its effects on the behavior of TuneD.
+        </p></div><p>
+        For a detailed overview of the main TuneD configuration file, read its man page:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">man 5 tuned-main.conf</code></pre></div></section><section class="sect2" id="sec-tuning-tuned-supported-profile-configuration" data-id-title="Supported profile configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.5.2 </span><span class="title-name">Supported profile configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-supported-profile-configuration">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Every supported TuneD profile has its own directory under
+        <code class="filename">/usr/lib/tuned/</code>, and each such profile directory contains the
+        <code class="filename">/usr/lib/tuned/<em class="replaceable">PROFILE_NAME</em>/tuned.conf</code>
+        configuration file. The configuration file contains a default set of plug-ins, parameters
+        and options that are appropriate for the profile.
+      </p><section class="sect3" id="sec-tuning-tuned-profile-general-syntax" data-id-title="General syntax of TuneD profiles"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">13.5.2.1 </span><span class="title-name">General syntax of TuneD profiles</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-profile-general-syntax">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          The general syntax for a profile configuration file is as follows:
+        </p><div class="verbatim-wrap"><pre class="screen">[main]
+summary=<em class="replaceable">SUMMARY_TEXT_STRING</em>
+include=<em class="replaceable">ANOTHER_PROFILE_NAME_AS_BASE</em>
+
+[<em class="replaceable">PLUG-IN</em>]
+<em class="replaceable">PARAMETER</em>=<em class="replaceable">OPTION</em>
+<em class="replaceable">PARAMETER</em>=<em class="replaceable">OPTION</em>
+...
+
+[<em class="replaceable">PLUG-IN</em>]
+# <em class="replaceable">COMMENT_STRING</em>
+<em class="replaceable">PARAMETER</em>=<em class="replaceable">OPTION</em>
+
+...</pre></div><p>
+          For an overview of the TuneD configuration files, read its man page:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">man 5 tuned.conf</code></pre></div></section></section><section class="sect2" id="sec-tuning-custom-tuned-profile-configuration" data-id-title="Custom profile configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.5.3 </span><span class="title-name">Custom profile configuration</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-custom-tuned-profile-configuration">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Also, you can define <span class="strong"><strong>custom</strong></span> profiles. For each custom
+        profile, create a <em class="replaceable">PROFILE_NAME</em> directory in
+        <code class="filename">/etc/tuned/</code>, and place its configuration file within its own
+        directory. For example, the configuration file for a custom profile can be at the path
+        <code class="filename">/etc/tuned/<em class="replaceable">PROFILE_NAME</em>/tuned.conf</code>.
+        However, if there is a match between <em class="replaceable">PROFILE_NAME</em> in the default
+        path <code class="filename">/usr/lib/tuned/<em class="replaceable">PROFILE_NAME</em></code> path and
+        the custom path <code class="filename">/etc/tuned/<em class="replaceable">PROFILE_NAME</em></code>,
+        the custom profile configuration is prioritized and applied. As a best practice for
+        customizing a supported profile, copy it from <code class="filename">/usr/lib/tuned/</code> to
+        <code class="filename">/etc/tuned/</code> and then modify it. This preserves the original profile
+        and separates custom configurations.
+      </p><div id="id-1.9.6.6.7.6.3" data-id-title="Path to TuneD profile configuration files" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Path to TuneD profile configuration files</div><p>
+          Although <span class="emphasis"><em>not recommended</em></span>, you can specify paths in the
+          <code class="filename">/etc/tuned/</code> other than the standard paths for supported and custom
+          profiles:
+        </p><div class="verbatim-wrap"><pre class="screen">profile_dirs=/etc/tuned/,/usr/lib/tuned/,<em class="replaceable">/PATH/TO/CUSTOM/DIRECTORY/</em></pre></div><p>
+          The directories are searched for profiles according to the order of their listing. In the
+          above example, <code class="filename">/etc/tuned/</code> is searched first, followed by
+          <code class="filename">/usr/lib/tuned/</code> and
+          <em class="replaceable">/PATH/TO/CUSTOM/DIRECTORY/</em>.
+        </p></div><div id="id-1.9.6.6.7.6.4" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning</div><p>
+          SUSE does not support any profile that is not part of the supported profiles supplied
+          with the <span class="package">tuned</span> from official SUSE Linux Enterprise Server repositories. Create and apply a
+          custom profile on a production system only if you are sure of its effect.
+        </p></div><section class="sect3" id="sec-tuning-tuned-custom-merge-profile" data-id-title="Creating a custom profile by merging configurations"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">13.5.3.1 </span><span class="title-name">Creating a custom profile by merging configurations</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-custom-merge-profile">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          As a best practice, always merge two or more profiles by manually creating a custom
+          profile configuration. This approach makes you aware of the exact mix of parameters and
+          plug-ins in your custom merged profile. It is a more involved process compared to
+          applying two or more profiles simultaneously without checking the result of the merge
+          that gets generated on-the-fly.
+        </p><p>
+          As an example, consider a simple merge of the <code class="literal">balanced</code> and
+          <code class="literal">powersave</code> profiles.
+        </p><div class="example" id="id-1.9.6.6.7.6.5.4" data-id-title="Merging balanced and powersave TuneD profiles"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.5: </span><span class="title-name">Merging <code class="literal">balanced</code> and <code class="literal">powersave</code> TuneD profiles </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.7.6.5.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Create the path for the custom profile:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">mkdir /etc/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em></code></pre></div></li><li class="step"><p>
+                Create a profile configuration file in the following directory:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">vi /etc/tuned/<em class="replaceable">CUSTOM_PROFILE_NAME</em>/tuned.conf</code></pre></div></li><li class="step"><p>
+                Add the following configuration to the file:
+              </p><div class="example" id="id-1.9.6.6.7.6.5.4.2.3.2" data-id-title="Merged configuration for balanced and powersave TuneD profiles"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.6: </span><span class="title-name">Merged configuration for <code class="literal">balanced</code> and <code class="literal">powersave</code> TuneD profiles </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.7.6.5.4.2.3.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[main]
+include=balanced <span class="callout" id="include-balanced">1</span>
+
+[cpu] <span class="callout" id="cpu-settings-override">2</span>
+governor=powersave
+energy_perf_bias=powersave
+
+[disk] <span class="callout" id="inherit-disk-balanced">3</span>
+# Inherit settings from balanced profile
+
+[sysctl]
+vm.swappiness=10 <span class="callout" id="reduce-vm-swappiness">4</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#include-balanced"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                    Include the <code class="literal">balanced</code> profile as a base, which is suitable
+                    for general purpose use.
+                  </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#cpu-settings-override"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                    Overrides CPU parameters such as <code class="literal">governor</code> and
+                    <code class="literal">energy-perf-bias</code> to <code class="literal">powersave</code>.
+                  </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#inherit-disk-balanced"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                    Inherit disk settings from the <code class="literal">balanced</code> profile.
+                  </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#reduce-vm-swappiness"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                    Add a sysctl parameter to reduce swappiness, which can be beneficial for both
+                    performance and power consumption in certain scenarios.
+                  </p></td></tr></table></div></li><li class="step"><p>
+                Save the configuration file and exit the text editor.
+              </p></li><li class="step"><p>
+                Apply the new custom profile after merging certain parameters from
+                <code class="literal">balanced</code> and <code class="literal">powersave</code> profiles.
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">tuned-adm profile <em class="replaceable">CUSTOM_PROFILE_NAME</em></code></pre></div></li></ol></div></div></div></div></section></section></section><section class="sect1" id="sec-tuning-tuned-plugins" data-id-title="TuneD plug-ins"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.6 </span><span class="title-name">TuneD plug-ins</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-plugins">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      TuneD plug-ins are modular components that extend the functionality of the TuneD
+      system daemon. These plug-ins allow system administrators to create custom optimization
+      profiles tailored to specific workloads or hardware configurations. By leveraging several
+      system metrics and user-defined parameters, TuneD plug-ins can dynamically adjust kernel
+      settings, CPU frequencies, disk I/O schedulers, and other low-level system parameters to
+      achieve optimal performance and energy efficiency. While the core <span class="package">tuned</span>
+      package includes several preconfigured profiles, you can extend it through custom plug-ins
+      for fine-grained control over the system.
+    </p><p>
+      The general syntax for including plug-ins in the TuneD profile configuration files is as
+      follows:
+    </p><div class="verbatim-wrap"><pre class="screen">...
+[<em class="replaceable">PLUGIN-NAME</em>]
+<em class="replaceable">PARAMETER_1</em>=<em class="replaceable">VALUE_1</em>
+<em class="replaceable">PARAMETER_2</em>=<em class="replaceable">VALUE_2</em>
+...</pre></div><p>
+      The supported TuneD profiles for SUSE Linux Enterprise Server have multiple plug-ins and their parameters
+      included within them. To see a list of all such plug-ins, run the following command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">grep -r '\[.*\]' /usr/lib/tuned/*/tuned.conf | sort -u</code></pre></div><section class="sect2" id="sec-tuning-tuned-supported-plugins" data-id-title="Supported TuneD plug-ins"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">13.6.1 </span><span class="title-name">Supported TuneD plug-ins</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-supported-plugins">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        On SUSE Linux Enterprise Server, the following TuneD plug-ins are supported:
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.9.6.6.8.7.3.1"><span class="term">main</span></dt><dd><p>
+              <code class="literal">main</code> is not a plug-in, but a special section in the TuneD
+              profile configuration files that provides overall settings and metadata for the
+              profile. The most commonly used parameters for the <code class="literal">[main]</code> section
+              are as follows:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">summary</em>: A summary of the key functionality of the
+                  profile.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">include</em>: Provision to include other profiles as a parent,
+                  so that its configuration can be inherited as a base. In case of conflict, the
+                  configuration of the child profile takes precedence over the configuration of the
+                  included profile.
+                </p><div id="id-1.9.6.6.8.7.3.1.2.2.2.2" data-id-title="Impact of updated TuneD profile" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Impact of updated TuneD profile</div><p>
+                    When the configuration for a parent profile is updated, the child profiles that
+                    inherit the parent profile also get impacted.
+                  </p></div></li></ul></div></dd><dt id="id-1.9.6.6.8.7.3.2"><span class="term">modules</span></dt><dd><p>
+              The <code class="literal">modules</code> plug-in manages kernel modules within the profiles. It
+              can load or unload specific modules when a profile is activated, allowing
+              administrators to optimize system behavior for different workloads by controlling
+              which kernel modules are active. When this plug-in is used, TuneD writes
+              information about the kernel modules in the
+              <code class="filename">/etc/modprobe.d/tuned.conf</code> file.
+            </p><p>
+              If you need to add a kernel module parameter that should be handled by <code class="systemitem">tuned</code>,
+              include it in the profile configuration using the following syntax:
+            </p><div class="verbatim-wrap"><pre class="screen">[modules]
+<em class="replaceable">MODULE_NAME</em>=<em class="replaceable">MODULE_PARAMETERS</em><span class="callout" id="module-parameters">1</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#module-parameters"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  You can mention multiple module parameters separated by comma.
+                </p></td></tr></table></div><p>
+              If you want the module to be reloaded automatically, use the <code class="literal">+r</code>
+              option:
+            </p><div class="verbatim-wrap"><pre class="screen">[modules]
+<em class="replaceable">MODULE_NAME</em>=+r,<em class="replaceable">MODULE_PARAMETERS</em></pre></div><p>
+              For example:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.2.2.8" data-id-title="Automatic reload of kernel modules by TuneD"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.7: </span><span class="title-name">Automatic reload of kernel modules by TuneD </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.2.2.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[modules]
+cpufreq_conservative=+r,down_threshold=20,up_threshold=80,sampling_rate=20000 <span class="callout" id="cpu-conservative-r">1</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#cpu-conservative-r"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <em class="parameter">cpufreq_conservative</em> is a kernel module that adjusts
+                      the CPU clock speed based on the system load. It is more conservative in its
+                      frequency scaling compared to other governors like
+                      <code class="literal">ondemand</code>.
+                    </p></li><li class="listitem"><p>
+                      The <code class="literal">=+r</code> syntax indicates that the module should be loaded
+                      if it is not already, and TuneD keeps track of how many profiles are
+                      using this module. When a module with <code class="literal">+r</code> is loaded,
+                      TuneD increments the reference count for this module. If the profile is
+                      later deactivated, the reference count is decremented. The module is unloaded
+                      only when the reference count reaches zero, which implies that no other
+                      active profile is using it.
+                    </p></li><li class="listitem"><p>
+                      The parameters mean the following:
+                    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                          <em class="parameter">down_threshold=20</em> indicate that when the CPU usage
+                          drops below 20%, the governor lowers the CPU frequency to conserve power.
+                        </p></li><li class="listitem"><p>
+                          <em class="parameter">up_threshold=80</em> indicate that when the CPU usage
+                          exceeds 80%, the governor raises the CPU frequency to improve
+                          performance.
+                        </p></li><li class="listitem"><p>
+                          <em class="parameter">sampling_rate=20000</em> indicate that the governor
+                          samples the CPU usage every 20,000 microseconds (or 20 milliseconds).
+                        </p></li></ul></div></li></ul></div></td></tr></table></div><p>
+              For more information on kernel modules, refer to <span class="intraxref">Book “Administration Guide”, Chapter 28 “Managing kernel modules”</span>.
+              Additionally, you can check the parameters of the installed modules on your system by
+              looking at
+              <code class="filename">/sys/module/<em class="replaceable">MODULE_NAME</em>/parameters/</code>.
+            </p></dd><dt id="id-1.9.6.6.8.7.3.3"><span class="term">cpu</span></dt><dd><p>
+              The <code class="literal">cpu</code> plug-in manages and optimizes CPU-related settings to
+              enhance performance, power savings, or a balance between the two. This plug-in allows
+              fine-grained control over how the CPU operates, including setting the frequency
+              governor, energy performance bias, and other parameters that directly influence the
+              CPU's behavior and performance characteristics.
+            </p><p>
+              Certain commonly used parameters for the <code class="literal">cpu</code> plug-in are as
+              follows:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">priority</em>: Sets the priority of CPU tuning operations.
+                  Higher values give the tuning operation a higher priority.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">governor</em>: Sets the CPU frequency scaling governor. Common
+                  options for this parameter include the following:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">performance</code>: Forces the CPU to run at the maximum
+                      frequency, providing the best performance at the cost of higher power
+                      consumption.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">ondemand</code>: Dynamically adjusts the CPU frequency based on
+                      system load, providing a balance between performance and power saving.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">conservative</code>: Similar to the <code class="literal">ondemand</code>
+                      governor, but increases or decreases the CPU frequency more gradually. It is
+                      suitable for systems where power saving is important but performance should
+                      still be maintained.
+                    </p></li></ul></div></li><li class="listitem"><p>
+                  <em class="parameter">energy_perf_bias</em>: Hints to the CPU how to balance between
+                  power consumption and performance. Common options for this parameter include the
+                  following:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">performance</code>: Bias towards maximum performance, possibly
+                      increasing power consumption.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">powersave</code>: Bias towards power saving, possibly reducing
+                      performance.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">power</code>: A more aggressive power-saving setting compared to
+                      <code class="literal">powersave</code>, but potentially less demanding compared to
+                      <code class="literal">performance</code>.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">normal</code>: A balanced setting between performance and power
+                      saving.
+                    </p></li></ul></div></li><li class="listitem"><p>
+                  <em class="parameter">force_latency</em>: Controls the forced latency setting for the
+                  CPU. Lower values mean the system aggressively applies power-saving measures,
+                  possibly at the cost of increased latency. Higher values reduce the
+                  aggressiveness of power-saving measures, possibly improving responsiveness.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">min_perf_pct</em>: Specifies the minimum performance level as a
+                  percentage of the CPU's maximum performance. For example, a value of 100 means
+                  the CPU always runs at its maximum performance level. Lower values allow the CPU
+                  to run at lower performance levels when full performance is not needed, which can
+                  save power.
+                </p></li></ul></div><p>
+              For example, a profile created for CPU-intensive workload, such as high-performance
+              computing, can configure the plug-in for maximum CPU usage:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.3.2.5" data-id-title="TuneD plug-in configuration for CPU-intensive workload"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.8: </span><span class="title-name">TuneD plug-in configuration for CPU-intensive workload </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.3.2.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[cpu]
+priority=1
+governor=performance
+energy_perf_bias=performance
+force_latency=10
+min_perf_pct=100</pre></div></div></div><p>
+              For more information on CPU performance scaling, refer to
+              <a class="link" href="https://www.kernel.org/doc/Documentation/admin-guide/pm/cpufreq.rst" target="_blank">https://www.kernel.org/doc/Documentation/admin-guide/pm/cpufreq.rst</a>.
+            </p></dd><dt id="id-1.9.6.6.8.7.3.4"><span class="term">audio</span></dt><dd><p>
+              The <code class="literal">audio</code> plug-in tunes the system to optimize audio performance.
+              This can involve adjusting CPU scheduling policies, setting CPU affinity, and
+              configuring other system parameters to minimize audio latency, ensure smooth audio
+              playback, and record real-time audio activities. For example:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.4.2.2" data-id-title="TuneD plug-in configuration for optimal audio performance"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.9: </span><span class="title-name">TuneD plug-in configuration for optimal audio performance </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.4.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[audio]
+timeout=10 <span class="callout" id="audio-plugin-timeout-parameter">1</span>
+reset_controller=False <span class="callout" id="audio-plugin-reset-controller-parameter">2</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#audio-plugin-timeout-parameter"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The <em class="parameter">timeout</em> parameter specifies the time period (in
+                  seconds) for which the system should remain in the optimized state after the last
+                  audio activity is detected. This is intended to prevent the system from
+                  frequently switching back and forth between optimized and non-optimized states,
+                  which can cause instability or glitches in audio performance.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#audio-plugin-reset-controller-parameter"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The <em class="parameter">reset_controller</em> parameter manages the behavior of the
+                  audio module's power-saving controller. It allows you to enable or disable the
+                  resetting of the controller, which can influence how the system handles power
+                  management for audio devices. The parameter interacts with a system file located
+                  at
+                  <code class="filename">/sys/module/<em class="replaceable">AUDIO_MODULE_NAME</em>/parameters/power_save_controller</code>
+                  (for example, <code class="filename">snd_hda_intel</code>). By default, it is set to
+                  <code class="literal">False</code>.
+                </p></td></tr></table></div></dd><dt id="id-1.9.6.6.8.7.3.5"><span class="term">video</span></dt><dd><p>
+              The <code class="literal">video</code> plug-in provides options for tuning power-saving
+              settings for certain graphics cards, particularly AMD Radeon cards. For example:
+            </p><div class="verbatim-wrap"><pre class="screen">[video]
+radeon_powersave=dpm-balanced</pre></div><p>
+              Common parameters used with this plug-in are as follows:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">radeon_powersave</em>: This parameter controls the power-saving
+                  mode of AMD Radeon graphics cards. It determines how the GPU handles power
+                  management, impacting performance and energy consumption. Configuration options
+                  used with this parameter include the following:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">default</code>: The default power-saving profile, which is the
+                      default setting provided by the graphics driver.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">auto</code>: Automatically adjusts power-saving settings based on
+                      current system usage.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">low</code>: A low-power profile that reduces performance to save
+                      energy.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">mid</code>: A medium-power profile that balances performance and
+                      power savings.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">high</code>: A high-power profile that maximizes performance at
+                      the cost of higher power consumption.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">dynpm</code>: Dynamic Power Management (DPM)—a mode that
+                      allows for dynamic adjustments based on the workload.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">dpm-battery</code>: A DPM profile optimized for battery usage.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">dpm-balanced</code>: A DPM profile that balances performance and
+                      power efficiency.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">dpm-performance</code>: A DPM profile optimized for maximum
+                      performance.
+                    </p></li></ul></div></li></ul></div></dd><dt id="id-1.9.6.6.8.7.3.6"><span class="term">disk</span></dt><dd><p>
+              The <code class="literal">disk</code> plug-in tunes and optimizes the performance and power
+              consumption of disk drives.
+            </p><p>
+              Common parameters and their possible values are as follows:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">devices</em>: Specifies on which disk devices the tuning
+                  parameters should be applied. By default, all devices are included. You can
+                  specify devices separated by comma.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">dynamic</em>: Boolean values that enable or disable dynamic
+                  tuning based on disk load. By default, it is set to <code class="literal">True</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">elevator</em>: Configures the I/O scheduler (elevator) for the
+                  disk. Depending on the system's available schedulers, the possible options
+                  include <code class="literal">noop</code>, <code class="literal">deadline</code> or
+                  <code class="literal">cfq</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">apm</em>: An integer (1–254) that sets the Advanced Power
+                  Management (APM) level of the disk. Higher values typically mean better
+                  performance, but higher power consumption.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">spindown</em>: The integer value for the
+                  <em class="parameter">spindown</em> parameter is a special encoding used by the
+                  <span class="package">hdparm</span> utility to set the spin-down timeout for a disk. For an
+                  explanation of the acceptable spin-down values, read about the
+                  <code class="option">-S</code> option in the man page of <span class="package">hdparm</span>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">readahead</em>: An integer that sets the readahead value for
+                  the disk in kilobytes. You can change this to sectors by adding the appropriate
+                  suffix. For example, <code class="literal">readahead = 8192 s</code>. Ensure there is at
+                  least one space between the number and the suffix.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">readahead_multiply</em>: A float value that indicates the
+                  factor by which the value of the <em class="parameter">readahead</em> parameter is
+                  multiplied.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">scheduler_quantum</em>: An integer that sets the number of I/O
+                  requests the scheduler handles simultaneously. Setting a higher quantum can
+                  improve throughput for sequential I/O operations by allowing more requests to be
+                  processed before switching. Conversely, a lower quantum can improve
+                  responsiveness for random I/O operations by reducing latency.
+                </p></li></ul></div><p>
+              As an example, consider the following <code class="literal">disk</code> plug-in configuration
+              in a TuneD profile:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.6.2.5" data-id-title="disk plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.10: </span><span class="title-name"><code class="literal">disk</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.6.2.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[disk]
+# Comma separated list of devices, all devices if commented out.
+devices=sda,sdb
+
+dynamic=True
+elevator=deadline
+apm=128
+spindown=60
+
+# Readahead adjusted to sectors by specifying relevant suffix.
+# There must be at least one space between the number and suffix.
+readahead=8192 s
+
+readahead_multiply=1.5
+scheduler_quantum=64</pre></div></div></div></dd><dt id="id-1.9.6.6.8.7.3.7"><span class="term">scsi_host</span></dt><dd><p>
+              The <code class="literal">scsi_host</code> plug-in is used to manage power-saving settings for
+              SCSI (Small Computer System Interface) host adapters on Linux systems. Commonly used
+              parameters for this plug-in include the following:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">alpm</em>: The Aggressive Link Power Management (ALPM) setting
+                  controls the power management policy for Serial ATA (SATA) links. It can take
+                  different values to balance between power savings and performance. The possible
+                  options for this parameter include the following:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">min_power</code>: This setting is more aggressive in terms of
+                      power savings. It puts the system into a lower power state when the SATA
+                      links are idle, which can save more power but may increase latency when
+                      accessing the disks.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">medium_power</code>: This setting provides a balance between
+                      power savings and performance. It aims to reduce power consumption without
+                      impacting system performance too much.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">max_performance</code>: This setting keeps SCSI hosts and devices
+                      in their highest power state. It prioritizes speed and responsiveness over
+                      energy efficiency, disabling power-saving features to minimize latency and
+                      maximize throughput.
+                    </p></li></ul></div><p>
+                  For example, consider the following configuration that is appropriate for
+                  battery-powered devices, low-usage servers, and systems with long idle periods:
+                </p><div class="verbatim-wrap"><pre class="screen">[scsi_host]
+alpm=min_power</pre></div><div id="id-1.9.6.6.8.7.3.7.2.2.1.5" data-id-title="Read/write of link power management policy by TuneD" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Read/write of link power management policy by TuneD</div><p>
+                    The possible values are typically read from or written to the
+                    <code class="filename">/sys/class/scsi_host/<em class="replaceable">SCSI_HOST_NAME</em>/link_power_management_policy</code>
+                    file. The exact values may depend on what the kernel and the hardware support.
+                  </p></div></li></ul></div></dd><dt id="id-1.9.6.6.8.7.3.8"><span class="term">variables</span></dt><dd><p>
+              The <code class="literal">variables</code> plug-in allows for the definition of variables that
+              you can use across different TuneD profiles. This is particularly useful for
+              setting parameters that may change based on the system environment or user
+              preferences. By centralizing variable definitions, you can simplify profile
+              management and enhance the flexibility of your tuning configurations.
+            </p><p>
+              Within the <code class="literal">[variables]</code> section of your profile configuration, you
+              can specify variables using the following methods:
+            </p><div class="verbatim-wrap"><pre class="screen">[variables]
+
+include=<em class="replaceable">PATH/TO/VARIABLE/CONFIGURATION/FILE</em> <span class="callout" id="variable-include">1</span>
+
+<em class="replaceable">VAR_NAME</em>=<em class="replaceable">value</em> <span class="callout" id="variable-value">2</span>
+
+<em class="replaceable">VAR_ANOTHER</em>=${<em class="replaceable">VAR_NAME_suffix</em>} <span class="callout" id="variable-variable">3</span>
+
+<em class="replaceable">VAR_DYNAMIC</em>=$(uname -r) <span class="callout" id="variable-command">4</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#variable-include"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Include a configuration file that already contains variable definitions for a
+                  certain context. For example, you can include the
+                  <code class="filename">/etc/tuned/cpu-partitioning-variables.conf</code> file to make
+                  variables such as <code class="literal">isolated_cores</code> and its values available for
+                  the ongoing profile configuration.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#variable-value"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Define a variable directly by assigning a value.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#variable-variable"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Define a variable using another variable.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#variable-command"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Define a variable using a command output.
+                </p></td></tr></table></div><p>
+              For example, consider the following configuration for variables and its subsequent
+              use in configuring other plug-ins for a profile configuration:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.8.2.6" data-id-title="Using dynamic variables for plug-in configurations in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.11: </span><span class="title-name">Using dynamic variables for plug-in configurations in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.8.2.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[variables]
+
+include=/etc/tuned/cpu-partitioning-variables.conf
+
+SWAPPINESS_VALUE=10
+NETWORK_INTERFACE=$(ip -o -4 route show to default | awk '{print $5}')
+
+[sysctl]
+vm.swappiness=${SWAPPINESS_VALUE}
+
+[net]
+interface=${NETWORK_INTERFACE}
+disable_offload=yes</pre></div></div></div><p>
+              For more technically involved variable definitions, inspect the
+              <code class="literal">[variables]</code> plug-in configurations available in the supported
+              profile configuration files. To get a list of such profile configuration paths where
+              the <code class="literal">[variables]</code> plug-in is included, run the following command:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">grep -r '\[.*\]' /usr/lib/tuned/*/tuned.conf | sort -u | grep variables
+</code></pre></div></dd><dt id="id-1.9.6.6.8.7.3.9"><span class="term">sysctl</span></dt><dd><p>
+              The <code class="literal">sysctl</code> plug-in offers a powerful way to customize several
+              kernel parameters at runtime. This allows system administrators to optimize system
+              performance, enhance security, and adjust network behavior without directly editing
+              system files or running manual sysctl commands.
+            </p><p>
+              The <code class="literal">sysctl</code> plug-in accepts a wide range of parameters. Certain
+              common categories include:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  Kernel parameters (<em class="parameter">kernel.*</em>)
+                </p></li><li class="listitem"><p>
+                  Virtual Memory parameters (<em class="parameter">vm.*</em>)
+                </p></li><li class="listitem"><p>
+                  Network parameters (<em class="parameter">net.*</em>)
+                </p></li><li class="listitem"><p>
+                  File system parameters (<em class="parameter">fs.*</em>)
+                </p></li></ul></div><p>
+              where <code class="literal">*</code> is the wild card expression denoting permissible
+              parameters for that category. When applying these parameters, TuneD might use
+              the <code class="command">sysctl</code> under the hood. For example:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sysctl -q -w
+<em class="replaceable">CATEGORY.PARAMETER=VALUE</em></code></pre></div><p>
+              Common parameters and their possible values for the <code class="literal">sysctl</code> plug-in
+              are summarized below:
+            </p><div id="id-1.9.6.6.8.7.3.9.2.7" data-id-title="Understand the impact before modifying sysctl parameters" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Understand the impact before modifying <code class="literal">sysctl</code> parameters</div><p>
+                Modifying these parameters can considerably impact system behavior. It is crucial
+                to understand their implications before making changes. Consult the official kernel
+                documentation for detailed descriptions.
+              </p></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">kernel.hung_task_timeout_secs</em>: Time in seconds before a
+                  task is considered hung (default: <code class="literal">120</code>).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">kernel.numa_balancing</em>: Enable (<code class="literal">1</code>) or
+                  disable (<code class="literal">0</code>) automatic NUMA balancing.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">kernel.nmi_watchdog</em>: Enable (<code class="literal">1</code>) or
+                  disable (<code class="literal">0</code>) the NMI watchdog.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">kernel.timer_migration</em>: Enable (<code class="literal">1</code>) or
+                  disable (<code class="literal">0</code>) timer migration.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">kernel.sched_autogroup_enabled</em>: Enable
+                  (<code class="literal">1</code>) or disable (<code class="literal">0</code>) scheduler autogrouping.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">kernel.sched_min_granularity_ns</em>: Minimum preemption
+                  granularity (in nanoseconds) for CPU-bound tasks.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">kernel.sched_migration_cost_ns</em>: The time (in nanoseconds)
+                  the scheduler considers a migrated process <span class="quote">“<span class="quote">cache hot</span>”</span>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">vm.stat_interval</em>: Interval between updates of virtual
+                  machine statistics (default: <code class="literal">1</code>).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">vm.dirty_ratio</em>: The percentage of system memory that can
+                  be filled with dirty pages before the processes must write them to disk.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">vm.dirty_background_ratio</em>: The percentage of system memory
+                  that can be filled with dirty pages before the background writeback process
+                  starts writing them to disk.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">vm.swappiness</em>: The tendency of the kernel to swap out idle
+                  processes. A swappiness of <code class="literal">0</code> instructs the kernel to keep the
+                  processes in the main memory for as long as possible.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">vm.max_map_count</em>: Maximum number of memory map areas a
+                  process may have.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">net.core.busy_read</em>: Number of busy loops for
+                  <code class="literal">recvmsg</code> (default: <code class="literal">50</code>).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">net.core.busy_poll</em>: Number of busy loops for
+                  <code class="literal">poll</code> (default: <code class="literal">50</code>).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">net.ipv4.tcp_fastopen</em>: Enable (<code class="literal">1</code>) or
+                  disable (<code class="literal">0</code>) TCP Fast Open.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">net.ipv4.tcp_rmem</em>: TCP read buffer size (minimum, default
+                  and maximum values separated by space).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">net.ipv4.tcp_wmem</em>: TCP write buffer size (minimum, default
+                  and maximum values separated by space).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">net.ipv4.udp_mem</em>: UDP buffer size (minimum, default and
+                  maximum values separated by space).
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">fs.aio-max-nr</em>: Maximum number of allowed concurrent
+                  asynchronous I/O requests.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">fs.file-max</em>: Maximum number of file handles that the Linux
+                  kernel allocates.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">fs.inotify.max_user_instances</em>: Maximum number of
+                  <code class="literal">inotify</code> instances per user.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">fs.inotify.max_user_watches</em>: Maximum number of
+                  <code class="literal">inotify</code> watches per user.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">fs.nr_open</em>: Maximum number of file descriptors a process
+                  can have.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">fs.suid_dumpable</em>: Controls whether core dumps are produced
+                  for set-user-ID or set-group-ID programs.
+                </p></li></ul></div><p>
+              As an example, consider the following configuration for the <code class="literal">sysctl</code>
+              plug-in:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.9.2.10" data-id-title="Sample configuration for the sysctl plug-in in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.12: </span><span class="title-name">Sample configuration for the <code class="literal">sysctl</code> plug-in in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.9.2.10">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[sysctl]
+
+# Kernel Parameters
+kernel.hung_task_timeout_secs = 600
+kernel.nmi_watchdog = 0
+kernel.timer_migration = 1
+kernel.sched_autogroup_enabled = 1
+kernel.sched_min_granularity_ns = 10000000
+kernel.sched_migration_cost_ns = 5000000
+kernel.sched_latency_ns = 60000000
+kernel.sched_wakeup_granularity_ns = 2000000
+kernel.numa_balancing = 0
+
+# Virtual Machine Parameters
+vm.stat_interval = 10
+vm.dirty_ratio = 10
+vm.dirty_background_ratio = 3
+vm.swappiness = 10
+vm.max_map_count = 800000
+
+# Network Parameters
+net.core.busy_read = 50
+net.core.busy_poll = 50
+net.ipv4.tcp_fastopen = 3
+net.ipv4.tcp_rmem = "4096 87380 16777216"
+net.ipv4.tcp_wmem = "4096 16384 16777216"
+net.ipv4.udp_mem = "3145728 4194304 16777216"
+
+# Filesystem Parameters
+fs.aio-max-nr = 1048576
+fs.file-max = 2097152
+fs.inotify.max_user_instances = 1024
+fs.inotify.max_user_watches = 524288
+fs.nr_open = 1048576
+fs.suid_dumpable = 1</pre></div></div></div><div id="id-1.9.6.6.8.7.3.9.2.11" data-id-title="Best practices for changing sysctl settings" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Best practices for changing <code class="literal">sysctl</code> settings</div><p>
+                Optimal sysctl settings can vary greatly depending on the specific use case,
+                hardware and workload of your system. It is recommended to test changes thoroughly
+                and monitor system performance after applying new sysctl configurations.
+              </p></div></dd><dt id="id-1.9.6.6.8.7.3.10"><span class="term">sysfs</span></dt><dd><p>
+              The <code class="literal">sysfs</code> plug-in accepts any valid file path under the system
+              file system, or the <code class="filename">/sys/</code> directory. The plug-in checks whether
+              a file path is valid and can read and write the values in the files that are part of
+              the configuration. For example, consider the following configuration of the
+              <code class="literal">sysfs</code> plug-in:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.10.2.2" data-id-title="sysfs plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.13: </span><span class="title-name"><code class="literal">sysfs</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.10.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[sysfs]
+/sys/bus/workqueue/devices/writeback/cpumask = 2,6 <span class="callout" id="non-isolated-cpu-mask-value">1</span>
+/sys/devices/virtual/workqueue/cpumask = 3-5 <span class="callout" id="non-isolated-cpu-mask-range">2</span>
+/sys/devices/system/machinecheck/machinecheck*/ignore_ce = 1 <span class="callout" id="ignore-ce">3</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#non-isolated-cpu-mask-value"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Single CPUs separated by comma. Only those CPUs that are not isolated using the
+                  <em class="parameter">isolcpus</em> kernel boot parameter are allowed. To check the
+                  CPUs that are already isolated, run the <code class="command">grep isolcpus
+                  /proc/cmdline</code> command. To check the total number of CPUs in your
+                  system, run the <code class="command">lscpu | grep "^CPU(s):"</code> command.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#non-isolated-cpu-mask-range"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Range of CPUs. Only those CPUs that are not isolated using the
+                  <em class="parameter">isolcpus</em> kernel boot parameter are allowed. To check the
+                  CPUs that are already isolated, run the command <code class="command">grep isolcpus
+                  /proc/cmdline</code>. To check the total number of CPUs in your system, run
+                  the <code class="command">lscpu | grep "^CPU(s):"</code> command.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#ignore-ce"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Corrected Errors (CEs) are hardware errors that the system has detected and
+                  corrected automatically. The <code class="literal">ignore_ce</code> attribute is a sysfs
+                  setting that controls whether the system must report these corrected errors. When
+                  <code class="literal">ignore_ce</code> is set to <code class="literal">1</code>, the system ignores
+                  corrected errors, meaning they are not logged or reported to the operating
+                  system's error handling mechanisms. When <code class="literal">ignore_ce</code> is set to
+                  <code class="literal">0</code> (the default value), corrected errors are reported and
+                  logged by the system, allowing administrators to monitor them.
+                </p></td></tr></table></div></dd><dt id="id-1.9.6.6.8.7.3.11"><span class="term">systemd</span></dt><dd><p>
+              The <code class="literal">systemd</code> plug-in focuses on configuring the parameters of
+              <code class="systemitem">systemd</code>, which is the system and service manager for SUSE Linux Enterprise Server. For example, consider
+              the plug-in configuration for CPU affinity of <code class="systemitem">systemd</code> processes:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.11.2.2" data-id-title="systemd plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.14: </span><span class="title-name"><code class="literal">systemd</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.11.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[systemd]
+cpu_affinity=0,1,2 <span class="callout" id="systemd-plugin-cpu-affinity">1</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#systemd-plugin-cpu-affinity"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                    Binds the systemd services to multiple specified CPU cores. By default, it is
+                    <code class="literal">None</code>. In this example, the services are configured to run on
+                    CPU cores <code class="literal">0</code>, <code class="literal">1</code>, and <code class="literal">2</code>.
+                    Alternate ways of passing the values include passing a range of CPU cores, such
+                    as <code class="literal">0-2</code>. However, you <span class="emphasis"><em>cannot</em></span> pass on the
+                    CPU cores as values which you have declared as
+                    <em class="parameter">isolated_cores</em> in the file
+                    <code class="filename">/etc/tuned/cpu-partitioning-variables.conf</code>. Configuring
+                    the <em class="parameter">cpu_affinity</em> parameter in the plug-in is equivalent
+                    to configuring the <em class="parameter">CPUAffinity</em> in the <code class="systemitem">systemd</code>
+                    configuration file <code class="filename">/etc/systemd/system.conf</code>.
+                  </p></td></tr></table></div></div></div></dd><dt id="id-1.9.6.6.8.7.3.12"><span class="term">script</span></dt><dd><p>
+              The <code class="literal">script</code> plug-in allows users to execute custom scripts that
+              TuneD runs at different stages. System administrators can use it to automate
+              several system configurations and optimizations by specifying paths to such scripts.
+              Common parameters and their possible values include the following:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">priority</em>: An integer value that sets the priority level
+                  for the script. TuneD executes scripts based on their priority, with lower
+                  numbers indicating higher priority. So, a priority of <code class="literal">5</code> means
+                  this script has a low priority compared to scripts with a priority number lower
+                  than <code class="literal">5</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">script</em>: This specifies the path to the script that
+                  TuneD executes. You can either provide the absolute path to the script as
+                  its value, or use the <code class="varname">PROFILE_DIR</code> variable to pass the
+                  relative path to the script.
+                </p></li></ul></div><p>
+              For example, consider the following use of a relative script path:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.12.2.4" data-id-title="Using variables for including a relative script path in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.15: </span><span class="title-name">Using variables for including a relative script path in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.12.2.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[script]
+priority=5
+script=${i:PROFILE_DIR}/script.sh</pre></div></div></div><div id="id-1.9.6.6.8.7.3.12.2.5" data-id-title="Resource for definition of variables" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Resource for definition of variables</div><p>
+                For a list of useful variables, inspect the constants defined in the source file
+                <a class="link" href="https://github.com/redhat-performance/tuned/blob/v2.10.0/tuned/consts.py" target="_blank">https://github.com/redhat-performance/tuned/blob/v2.10.0/tuned/consts.py</a>.
+              </p></div></dd><dt id="id-1.9.6.6.8.7.3.13"><span class="term">scheduler</span></dt><dd><p>
+              The <code class="literal">scheduler</code> plug-in is used to manage the isolation of CPU cores
+              and the selection of processes for management based on adding to an approved list or
+              a blocklist. This plug-in is primarily concerned with isolating specific CPU cores
+              and managing which processes should or should not be managed by the scheduler.
+              Commonly used parameters and their possible values include the following:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">isolated_cores</em>: Isolates specific CPU cores from the
+                  general scheduler. Processes can be pinned to these isolated cores to ensure they
+                  run without interference from other system processes. To pass values to this
+                  parameter, use comma-separated integers representing the cores, or the bitmask of
+                  the integers in the hexadecimal format. For example,
+                  <code class="literal">isolated_cores=0,1</code> can also be represented by
+                  <code class="literal">0x3</code> in a more compact manner.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">ps_whitelist</em>: A list of allowed process names that the
+                  scheduler plug-in is empowered to manage. Only processes matching this pattern
+                  are considered for scheduling adjustments. Pass regular expressions of process
+                  names as values to this parameter. For example, <code class="literal">.*</code> matches all
+                  processes, and <code class="literal">^bash$</code> matches only the <code class="literal">bash</code>
+                  process.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">ps_blacklist</em>: A list of process names that the plug-in
+                  excludes from management. Processes matching this pattern are not adjusted by the
+                  plug-in. Pass regular expressions of process names as values to this parameter.
+                  For example, <code class="literal">.*</code> matches all processes, and
+                  <code class="literal">^idle$</code> matches only the <code class="literal">idle</code> process.
+                </p></li></ul></div><p>
+              For example, consider the following configuration for the
+              <code class="literal">scheduler</code> plug-in:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.13.2.4" data-id-title="scheduler plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.16: </span><span class="title-name"><code class="literal">scheduler</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.13.2.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">isolated_cores=0x3
+ps_whitelist=.*
+ps_blacklist=^idle$;.*pmd.*;.*PMD.*;^DPDK;.*qemu-kvm.*</pre></div></div></div></dd><dt id="id-1.9.6.6.8.7.3.14"><span class="term">bootloader</span></dt><dd><p>
+              The <code class="literal">bootloader</code> plug-in is used to apply performance profiles that
+              require changes to the boot parameters of the system. These changes are made in the
+              boot loader configuration file (typically GRUB 2 configuration) and are applied when
+              the system boots up. This plug-in is particularly useful for optimizing system
+              performance by setting specific kernel parameters, such as those controlling CPU
+              isolation or power management, as well as other boot-time settings that can affect
+              the overall system behavior and performance.
+            </p><p>
+              Common parameters and their values are summarized below:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">grub2_cfg_file</em>: Specifies the GRUB 2 configuration file to
+                  modify. If not provided, the plug-in uses the default GRUB2 configuration files
+                  located in the system.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">initrd_dst_img</em>: Sets the destination path for the initrd
+                  image. If specified, the initrd image is copied to this location. The path must
+                  be absolute, and if it is not provided, the default boot directory is used.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">initrd_add_img</em>: Adds the path to an initrd image in the
+                  GRUB 2 configuration, so that custom initrd images can be used during the boot
+                  process.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">initrd_add_dir</em>: Adds a directory to be included in the
+                  initrd image. This parameter specifies the path to a directory whose contents are
+                  packaged into an initrd image and included in the boot configuration. This is
+                  useful for adding custom modules or scripts to the initrd.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">initrd_remove_dir</em>: A boolean option to specify whether to
+                  remove the directory specified in <em class="parameter">initrd_add_dir</em> after it
+                  has been packaged into the initrd image. If set to <code class="literal">True</code>, the
+                  source directory is deleted after the initrd image is created.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">cmdline</em>: Specifies additional kernel command-line
+                  parameters to be added to the GRUB 2 configuration. This allows the addition of
+                  custom kernel parameters that can optimize system performance or behavior based
+                  on the specific needs of the workload.
+                </p></li></ul></div><p>
+              As an example, consider the following configuration for the
+              <code class="literal">bootloader</code> plug-in:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.14.2.5" data-id-title="bootloader plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.17: </span><span class="title-name"><code class="literal">bootloader</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.14.2.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[bootloader]
+cmdline="isolcpus=1-3 nohz_full=1-3 intel_pstate=disable"
+initrd_add_img="/path/to/custom-initrd.img"
+initrd_add_dir="/path/to/custom-initrd-dir"
+initrd_remove_dir=True
+initrd_dst_img="/boot/initrd-custom.img"
+grub2_cfg_file="/etc/grub2.cfg"</pre></div></div></div></dd><dt id="id-1.9.6.6.8.7.3.15"><span class="term">net</span></dt><dd><p>
+              The <code class="literal">net</code> plug-in is used to configure several parameters for
+              optimizing network performance. Common parameters and their values used with this
+              plug-in are summarized below:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">devices</em>: Specifies a comma-separated list of the network
+                  device names. For example, <code class="literal">devices=eth0,eth1</code>. By default, the
+                  settings are applied on all network devices.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">dynamic</em>: Boolean values
+                  (<code class="literal">true</code>/<code class="literal">false</code>) that enable or disable dynamic
+                  tuning based on network load.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">wake_on_lan</em>: Configure Wake-on-LAN (WoL) settings using
+                  any combination of the following characters:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">p</code>: Wake on PHY activity.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">u</code>: Wake on unicast messages.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">m</code>: Wake on multicast messages.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">b</code>: Wake on broadcast messages.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">a</code>: Wake on ARP.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">g</code>: Wake on MagicPacket<sup>TM</sup>.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">s</code>: Enable SecureOn<sup>TM</sup> for
+                      MagicPacket<sup>TM</sup>.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">d</code>: Disable WoL.
+                    </p></li></ul></div></li><li class="listitem"><p>
+                  <em class="parameter">nf_conntrack_hashsize</em>: Integer value setting the size of
+                  the connection-tracking hash table.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">features</em>: A dictionary of network device feature names and
+                  their desired states. For example, <code class="literal">tx-checksum: off, sg: on</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">coalesce</em>: A dictionary of packet coalescing parameters.
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">adaptive-rx</code> and <code class="literal">adaptive-tx</code> have the
+                      possible values <code class="literal">on</code> or <code class="literal">off</code>.
+                    </p></li><li class="listitem"><p>
+                      The following ones have integer values: <code class="literal">rx-usecs</code>,
+                      <code class="literal">rx-frames</code>, <code class="literal">rx-usecs-irq</code>,
+                      <code class="literal">rx-frames-irq</code>, <code class="literal">tx-usecs</code>,
+                      <code class="literal">tx-frames</code>, <code class="literal">tx-usecs-irq</code>,
+                      <code class="literal">tx-frames-irq</code>, <code class="literal">stats-block-usecs</code>,
+                      <code class="literal">pkt-rate-low</code>, <code class="literal">rx-usecs-low</code>,
+                      <code class="literal">rx-frames-low</code>, <code class="literal">tx-usecs-low</code>,
+                      <code class="literal">tx-frames-low</code>, <code class="literal">pkt-rate-high</code>,
+                      <code class="literal">rx-usecs-high</code>, <code class="literal">rx-frames-high</code>,
+                      <code class="literal">tx-usecs-high</code>, <code class="literal">tx-frames-high</code>,
+                      <code class="literal">sample-interval</code>
+                    </p></li></ul></div></li><li class="listitem"><p>
+                  <em class="parameter">pause</em>: A dictionary of pause frame parameters. The
+                  following pause frame parameters have <code class="literal">on</code> or
+                  <code class="literal">off</code> values: <code class="literal">autoneg</code>, <code class="literal">rx</code>
+                  and <code class="literal">tx</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">ring</em>: A dictionary of ring buffer sizes. Each of the
+                  following ring buffer size parameter has integer values: <code class="literal">rx</code>,
+                  <code class="literal">rx-mini</code>, <code class="literal">rx-jumbo</code> and
+                  <code class="literal">tx</code>.
+                </p></li></ul></div><p>
+              As an example of configuring network device parameters, consider the following:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.15.2.4" data-id-title="net plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.18: </span><span class="title-name"><code class="literal">net</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.15.2.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[net]
+devices=eth0,eth1
+dynamic=true
+wake_on_lan=g
+nf_conntrack_hashsize=16384
+features=tx-checksum:off, sg:on
+coalesce=adaptive-rx:on, rx-usecs:50, rx-frames:32
+pause=autoneg:on, rx:on, tx:off
+ring=rx:2048, tx:1024</pre></div></div></div></dd><dt id="id-1.9.6.6.8.7.3.16"><span class="term">vm</span></dt><dd><p>
+              The <code class="literal">vm</code> plug-in optimizes memory management in virtualized
+              environments. It provides mechanisms for tuning memory-related parameters,
+              specifically focusing on the management of Transparent Hugepages (THP). Commonly used
+              parameters and their values for this plug-in include the following:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">transparent_hugepage</em> or
+                  <em class="parameter">transparent_hugepages</em>: Often used interchangeably, these
+                  parameters are aliases for each other and perform the function of controlling the
+                  behavior of Transparent Hugepages. The common properties and values associated
+                  with this parameter are as follows:
+                </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                      <code class="literal">enabled</code>: Controls the overall enabling of transparent
+                      hugepages. Possible values are <code class="literal">always</code>,
+                      <code class="literal">madvise</code> and <code class="literal">never</code>.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">defrag</code>: Determines when, if defragmentation should occur.
+                      Possible values are <code class="literal">always</code>, <code class="literal">defer</code>,
+                      <code class="literal">madvise</code>, <code class="literal">defer+madvise</code> and
+                      <code class="literal">never</code>.
+                    </p></li><li class="listitem"><p>
+                      <code class="literal">khugepaged</code>: Configures settings related to the khugepaged
+                      daemon, including options such as <code class="literal">scan_sleep_millisecs</code> and
+                      <code class="literal">alloc_sleep_millisecs</code>.
+                    </p></li></ul></div></li></ul></div><p>
+              For example, consider the following configuration of the <code class="literal">vm</code>
+              plug-in in a TuneD profile:
+            </p><div class="example" id="id-1.9.6.6.8.7.3.16.2.4" data-id-title="vm plug-in configuration in a TuneD profile"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 13.19: </span><span class="title-name"><code class="literal">vm</code> plug-in configuration in a TuneD profile </span></span><a title="Permalink" class="permalink" href="cha-tuning-tuned.html#id-1.9.6.6.8.7.3.16.2.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">[vm]
+transparent_hugepages.enabled=always
+transparent_hugepage.defrag=always
+transparent_hugepages.khugepaged.scan_sleep_millisecs=10000</pre></div></div></div></dd><dt id="id-1.9.6.6.8.7.3.17"><span class="term">eeepc_she</span></dt><dd><p>
+              The <code class="literal">eeepc_she</code> plug-in enhances power management on ASUS EeePC
+              netbooks, specifically those equipped with the Super Hybrid Engine (SHE) technology.
+              It optimizes system performance by dynamically adjusting CPU frequencies and power
+              states to achieve a balance between energy efficiency and processing power. The
+              commonly used parameters and their values are as follows:
+            </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                  <em class="parameter">load_threshold_normal</em>: Threshold for load to switch to
+                  normal mode. Default value is <code class="literal">0.6</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">load_threshold_powersave</em>: Threshold for load to switch to
+                  powersave mode. Default value is <code class="literal">0.4</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">she_powersave</em>: Value to set SHE to power saving mode.
+                  Default value is <code class="literal">2</code>.
+                </p></li><li class="listitem"><p>
+                  <em class="parameter">she_normal</em>: Value to set SHE to normal mode. Default value
+                  is <code class="literal">1</code>.
+                </p></li></ul></div></dd></dl></div></section></section><section class="sect1" id="sec-tuning-tuned-more" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">13.7 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tuned.html#sec-tuning-tuned-more">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tuned.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      For more information, refer to the following resources:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          The official Web site of the TuneD project:
+          <a class="link" href="https://tuned-project.org/" target="_blank">https://tuned-project.org/</a>
+        </p></li><li class="listitem"><p>
+          Source code repository on GitHub:
+          <a class="link" href="https://github.com/redhat-performance/tuned" target="_blank">https://github.com/redhat-performance/tuned</a>. You may
+          find the following resources to be particularly helpful:
+        </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+              Configuration files for several profiles are available at
+              <a class="link" href="https://github.com/redhat-performance/tuned/tree/v2.10.0/profiles" target="_blank">https://github.com/redhat-performance/tuned/tree/v2.10.0/profiles</a>.
+              These configuration examples can provide a good starting point for creating a custom
+              profile that is not available as part of the <span class="package">tuned</span> package for
+              SUSE Linux Enterprise Server.
+            </p></li><li class="listitem"><p>
+              If you are interested in implementing the plug-ins that monitor and dynamically tune
+              the system based on values provided in the profiles, the source code is available at
+              <a class="link" href="https://github.com/redhat-performance/tuned/tree/v2.10.0/tuned/plugins" target="_blank">https://github.com/redhat-performance/tuned/tree/v2.10.0/tuned/plugins</a>.
+            </p></li></ul></div></li></ul></div><div id="id-1.9.6.6.9.4" data-id-title="Refer to appropriate version of TuneD source code" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Refer to appropriate version of TuneD source code</div><p>
+        Check for the version of <code class="systemitem">tuned</code> in your SUSE Linux Enterprise Server system by running the <code class="command">tuned
+        --version</code> command. On the GitHub repository, select the corresponding branch or
+        tag for inspecting the source code of the specific <code class="systemitem">tuned</code> version installed on your
+        system.
+      </p></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-tuning-power.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 12 </span>Power management</span></a> </div><div><a class="pagination-link next" href="part-tuning-kernel.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part V </span>Kernel tuning</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-introduction"><span class="title-number">13.1 </span><span class="title-name">Introduction to TuneD</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-components"><span class="title-number">13.2 </span><span class="title-name">Components of TuneD</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-management"><span class="title-number">13.3 </span><span class="title-name">Managing TuneD</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-profiles"><span class="title-number">13.4 </span><span class="title-name">TuneD profiles</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-configuration"><span class="title-number">13.5 </span><span class="title-name">TuneD configuration</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-plugins"><span class="title-number">13.6 </span><span class="title-name">TuneD plug-ins</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tuned.html#sec-tuning-tuned-more"><span class="title-number">13.7 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

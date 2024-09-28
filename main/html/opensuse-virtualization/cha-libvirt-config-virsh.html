@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Configuring virtual machines with virsh | Virtualization Guide | openSUSE Leap 15.6</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="Configuring virtual machines with virsh | openSUSE Lea…" />
+<meta name="description" content="You can use virsh to configure virtual machines (VM) on the command line as an alternative to using the Virtual Machine Manager. With virsh, you can control th…" />
+<meta name="product-name" content="openSUSE Leap" />
+<meta name="product-number" content="15.6" />
+<meta name="book-title" content="Virtualization Guide" />
+<meta name="chapter-title" content="Chapter 14. Configuring virtual machines with virsh" />
+<meta name="tracker-url" content="https://bugzilla.opensuse.org/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="fs@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="openSUSE Distribution" />
+<meta name="tracker-bsc-version" content="Leap 15.4" />
+<meta property="og:title" content="Configuring virtual machines with virsh | openSUSE Lea…" />
+<meta property="og:description" content="You can use virsh to configure virtual machines (VM) on the command line as an alternative to using the Virtual Machine Manager. With virsh, you can control th…" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Configuring virtual machines with virsh | openSUSE Lea…" />
+<meta name="twitter:description" content="You can use virsh to configure virtual machines (VM) on the command line as an alternative to using the Virtual Machine Manager. With virsh, you can control th…" />
+<link rel="home" href="index.html" title="openSUSE Leap Documentation" /><link rel="up" href="part-virt-libvirt.html" title="Part II. Managing virtual machines with libvirt" /><link rel="prev" href="cha-libvirt-config-gui.html" title="Chapter 13. Configuring virtual machines with Virtual Machine Manager" /><link rel="next" href="sec-libvirt-admin-migrate.html" title="Chapter 15. Migrating VM Guests" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="Virtualization Guide"><span class="book-icon">Virtualization Guide</span></a><span> › </span><a class="crumb" href="part-virt-libvirt.html">Managing virtual machines with libvirt</a><span> › </span><a class="crumb" href="cha-libvirt-config-virsh.html">Configuring virtual machines with virsh</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Virtualization Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="cha-kvm.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="part-virt-intro.html"><span class="number">I </span><span class="name">Introduction</span></a><ol><li class="inactive"><a href="chap-virtualization-introduction.html"><span class="number">1 </span><span class="name">Virtualization technology</span></a></li><li class="inactive"><a href="cha-virtualization-scenarios.html"><span class="number">2 </span><span class="name">Virtualization scenarios</span></a></li><li class="inactive"><a href="cha-xen-basics.html"><span class="number">3 </span><span class="name">Introduction to Xen virtualization</span></a></li><li class="inactive"><a href="cha-kvm-intro.html"><span class="number">4 </span><span class="name">Introduction to KVM virtualization</span></a></li><li class="inactive"><a href="cha-tools-intro.html"><span class="number">5 </span><span class="name">Virtualization tools</span></a></li><li class="inactive"><a href="cha-vt-installation.html"><span class="number">6 </span><span class="name">Installation of virtualization components</span></a></li></ol></li><li class="inactive"><a href="part-virt-libvirt.html"><span class="number">II </span><span class="name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li class="inactive"><a href="cha-libvirt-overview.html"><span class="number">7 </span><span class="name"><code class="systemitem">libvirt</code> daemons</span></a></li><li class="inactive"><a href="cha-libvirt-host.html"><span class="number">8 </span><span class="name">Preparing the VM Host Server</span></a></li><li class="inactive"><a href="cha-kvm-inst.html"><span class="number">9 </span><span class="name">Guest installation</span></a></li><li class="inactive"><a href="cha-libvirt-managing.html"><span class="number">10 </span><span class="name">Basic VM Guest management</span></a></li><li class="inactive"><a href="cha-libvirt-connect.html"><span class="number">11 </span><span class="name">Connecting and authorizing</span></a></li><li class="inactive"><a href="cha-libvirt-storage.html"><span class="number">12 </span><span class="name">Advanced storage topics</span></a></li><li class="inactive"><a href="cha-libvirt-config-gui.html"><span class="number">13 </span><span class="name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li class="inactive"><a href="cha-libvirt-config-virsh.html"><span class="number">14 </span><span class="name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li class="inactive"><a href="sec-libvirt-admin-migrate.html"><span class="number">15 </span><span class="name">Migrating VM Guests</span></a></li><li class="inactive"><a href="xen2kvm-migration.html"><span class="number">16 </span><span class="name">Xen to KVM migration guide</span></a></li></ol></li><li class="inactive"><a href="part-virt-common.html"><span class="number">III </span><span class="name">Hypervisor-independent features</span></a><ol><li class="inactive"><a href="cha-cachemodes.html"><span class="number">17 </span><span class="name">Disk cache modes</span></a></li><li class="inactive"><a href="sec-kvm-managing-clock.html"><span class="number">18 </span><span class="name">VM Guest clock settings</span></a></li><li class="inactive"><a href="chap-guestfs.html"><span class="number">19 </span><span class="name">libguestfs</span></a></li><li class="inactive"><a href="cha-qemu-ga.html"><span class="number">20 </span><span class="name">QEMU guest agent</span></a></li><li class="inactive"><a href="tpm.html"><span class="number">21 </span><span class="name">Software TPM emulator</span></a></li><li class="inactive"><a href="virt-crash-dump.html"><span class="number">22 </span><span class="name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li class="inactive"><a href="part-virt-xen.html"><span class="number">IV </span><span class="name">Managing virtual machines with Xen</span></a><ol><li class="inactive"><a href="cha-xen-vhost.html"><span class="number">23 </span><span class="name">Setting up a virtual machine host</span></a></li><li class="inactive"><a href="cha-xen-network.html"><span class="number">24 </span><span class="name">Virtual networking</span></a></li><li class="inactive"><a href="cha-xen-manage.html"><span class="number">25 </span><span class="name">Managing a virtualization environment</span></a></li><li class="inactive"><a href="cha-xen-vbd.html"><span class="number">26 </span><span class="name">Block devices in Xen</span></a></li><li class="inactive"><a href="cha-xen-config.html"><span class="number">27 </span><span class="name">Virtualization: configuration options and settings</span></a></li><li class="inactive"><a href="cha-xen-admin.html"><span class="number">28 </span><span class="name">Administrative tasks</span></a></li><li class="inactive"><a href="cha-xen-xenstore.html"><span class="number">29 </span><span class="name">XenStore: configuration database shared between domains</span></a></li><li class="inactive"><a href="cha-xen-ha.html"><span class="number">30 </span><span class="name">Xen as a high-availability virtualization host</span></a></li><li class="inactive"><a href="pv-to-fv.html"><span class="number">31 </span><span class="name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li class="inactive"><a href="part-virt-qemu.html"><span class="number">V </span><span class="name">Managing virtual machines with QEMU</span></a><ol><li class="inactive"><a href="cha-qemu-overview.html"><span class="number">32 </span><span class="name">QEMU overview</span></a></li><li class="inactive"><a href="cha-qemu-host.html"><span class="number">33 </span><span class="name">Setting up a KVM VM Host Server</span></a></li><li class="inactive"><a href="cha-qemu-guest-inst.html"><span class="number">34 </span><span class="name">Guest installation</span></a></li><li class="inactive"><a href="cha-qemu-running.html"><span class="number">35 </span><span class="name">Running virtual machines with qemu-system-ARCH</span></a></li><li class="inactive"><a href="cha-qemu-monitor.html"><span class="number">36 </span><span class="name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li class="inactive"><a href="part-virt-troubleshoot.html"><span class="number">VI </span><span class="name">Troubleshooting</span></a><ol><li class="inactive"><a href="cha-virt-help.html"><span class="number">37 </span><span class="name">Integrated help and package documentation</span></a></li><li class="inactive"><a href="cha-virt-logs.html"><span class="number">38 </span><span class="name">Gathering system information and logs</span></a></li></ol></li><li class="inactive"><a href="gloss-vt-glossary.html"><span class="number"> </span><span class="name">Glossary</span></a></li><li class="inactive"><a href="app-gpu-passthru.html"><span class="number">A </span><span class="name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li class="inactive"><a href="bk06apb.html"><span class="number">B </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Chapter 13. Configuring virtual machines with Virtual Machine Manager" href="cha-libvirt-config-gui.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 15. Migrating VM Guests" href="sec-libvirt-admin-migrate.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="Virtualization Guide"><span class="book-icon">Virtualization Guide</span></a><span> › </span><a class="crumb" href="part-virt-libvirt.html">Managing virtual machines with libvirt</a><span> › </span><a class="crumb" href="cha-libvirt-config-virsh.html">Configuring virtual machines with virsh</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Chapter 13. Configuring virtual machines with Virtual Machine Manager" href="cha-libvirt-config-gui.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 15. Migrating VM Guests" href="sec-libvirt-admin-migrate.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-libvirt-config-virsh"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">openSUSE Leap</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15.6</span></span></span></div><div><h2 class="title"><span class="number">14 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring virtual machines with <code class="command">virsh</code></span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>cha-libvirt-config-virsh</li></ul></div></div><div><div class="abstract"><div class="abstract-title-wrap"><h6 class="abstract-title">Abstract<a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#id-1.8.4.9.2.1">#</a></h6></div><p>
+        You can use <code class="command">virsh</code> to configure virtual machines (VM) on the command
+        line as an alternative to using the Virtual Machine Manager. With <code class="command">virsh</code>, you can
+        control the state of a VM, edit the configuration of a VM or even
+        migrate a VM to another host. The following sections describe how to
+        manage VMs by using <code class="command">virsh</code>.
+      </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-editing-virsh"><span class="number">14.1 </span><span class="name">Editing the VM configuration</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-machinetype-virsh"><span class="number">14.2 </span><span class="name">Changing the machine type</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-hypervisor-features-virsh"><span class="number">14.3 </span><span class="name">Configuring hypervisor features</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#libvirt-cpu-virsh"><span class="number">14.4 </span><span class="name">Configuring CPU</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-boot-menu-virsh"><span class="number">14.5 </span><span class="name">Changing boot options</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-memory-virsh"><span class="number">14.6 </span><span class="name">Configuring memory allocation</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-pci-virsh"><span class="number">14.7 </span><span class="name">Adding a PCI device</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-usb-virsh"><span class="number">14.8 </span><span class="name">Adding a USB device</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-io"><span class="number">14.9 </span><span class="name">Adding SR-IOV devices</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#libvirt-config-listing-host-devs"><span class="number">14.10 </span><span class="name">Listing attached devices</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#libvirt-config-storage-virsh"><span class="number">14.11 </span><span class="name">Configuring storage devices</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-controllers-virsh"><span class="number">14.12 </span><span class="name">Configuring controller devices</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#libvirt-video-virsh"><span class="number">14.13 </span><span class="name">Configuring video devices</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#virsh-network-devices"><span class="number">14.14 </span><span class="name">Configuring network devices</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-direct"><span class="number">14.15 </span><span class="name">Using macvtap to share VM Host Server network interfaces</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#sec-libvirt-config-disable-virtio-mellon"><span class="number">14.16 </span><span class="name">Disabling a memory balloon device</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#virsh-video-dual-head"><span class="number">14.17 </span><span class="name">Configuring multiple monitors (dual head)</span></a></span></dt><dt><span class="sect1"><a href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto"><span class="number">14.18 </span><span class="name">Crypto adapter pass-through to KVM guests on IBM Z</span></a></span></dt></dl></div></div><div class="sect1 " id="sec-libvirt-config-editing-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Editing the VM configuration</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-editing-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-editing-virsh</li></ul></div></div></div></div><p>
+      The configuration of a VM is stored in an XML file in
+      <code class="filename">/etc/libvirt/qemu/</code> and looks like this:
+    </p><div class="example" id="id-1.8.4.9.3.3"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 14.1: </span><span class="name">Example XML configuration file </span><a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#id-1.8.4.9.3.3">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">&lt;domain type='kvm'&gt;
+  &lt;name&gt;sles15&lt;/name&gt;
+  &lt;uuid&gt;ab953e2f-9d16-4955-bb43-1178230ee625&lt;/uuid&gt;
+  &lt;memory unit='KiB'&gt;2097152&lt;/memory&gt;
+  &lt;currentMemory unit='KiB'&gt;2097152&lt;/currentMemory&gt;
+  &lt;vcpu placement='static'&gt;2&lt;/vcpu&gt;
+  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-q35-2.0'&gt;hvm&lt;/type&gt;
+  &lt;/os&gt;
+  &lt;features&gt;...&lt;/features&gt;
+  &lt;cpu mode='custom' match='exact' check='partial'&gt;
+    &lt;model fallback='allow'&gt;Skylake-Client-IBRS&lt;/model&gt;
+  &lt;/cpu&gt;
+  &lt;clock&gt;...&lt;/clock&gt;
+  &lt;on_poweroff&gt;destroy&lt;/on_poweroff&gt;
+  &lt;on_reboot&gt;restart&lt;/on_reboot&gt;
+  &lt;on_crash&gt;destroy&lt;/on_crash&gt;
+  &lt;pm&gt;
+    &lt;suspend-to-mem enabled='no'/&gt;
+    &lt;suspend-to-disk enabled='no'/&gt;
+  &lt;/pm&gt;
+  &lt;devices&gt;
+    &lt;emulator&gt;/usr/bin/qemu-system-x86_64&lt;/emulator&gt;
+    &lt;disk type='file' device='disk'&gt;...&lt;/disk&gt;
+  &lt;/devices&gt;
+  ...
+&lt;/domain&gt;</pre></div></div></div><p>
+      To edit the configuration of a VM Guest, check if it is offline:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh list --inactive</code></pre></div><p>
+      If your VM Guest is in this list, you can safely edit its configuration:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit <em class="replaceable ">NAME_OF_VM_GUEST</em></code></pre></div><p>
+      Before saving the changes, <code class="command">virsh</code> validates your input against a RelaxNG
+      schema.
+    </p></div><div class="sect1 " id="sec-libvirt-config-machinetype-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing the machine type</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-machinetype-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-machinetype-virsh</li></ul></div></div></div></div><p>
+      When installing with the <code class="command">virt-install</code> tool, the
+      machine type for a VM Guest is <span class="emphasis"><em>pc-q35</em></span> by default.
+      The machine type is stored in the VM Guest's configuration file in the
+      <code class="sgmltag-element">type</code> element:
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;type arch='x86_64' machine='pc-q35-2.3'&gt;hvm&lt;/type&gt;</pre></div><p>
+      As an example, the following procedure shows how to change this value to
+      the machine type <code class="literal">q35</code>. The value <code class="literal">q35</code>
+      is an Intel* chipset and includes
+      <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-pcie" title="PCIe">PCIe</a>, supports up to 12 USB ports, and
+      has support for <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-sata" title="SATA">SATA</a> and
+      <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-iommu" title="IOMMU">IOMMU</a>.
+      
+    </p><div class="procedure " id="id-1.8.4.9.4.5"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 14.1: </span><span class="name">Changing machine type </span><a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#id-1.8.4.9.4.5">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          Check whether your VM Guest is inactive:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh list --inactive</code>
+Id    Name                           State
+----------------------------------------------------
+-     sles15                         shut off</pre></div></li><li class="step "><p>
+          Edit the configuration for this VM Guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+          Replace the value of the <code class="sgmltag-attribute">machine</code>
+          attribute with <code class="sgmltag-attvalue">pc-q35-2.0</code> :
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;type arch='x86_64' machine='pc-q35-2.0'&gt;hvm&lt;/type&gt;</pre></div></li><li class="step "><p>
+          Restart the VM Guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh start sles15</code></pre></div></li><li class="step "><p>
+          Check if the machine type has changed. Log in to the VM Guest and
+          run the following command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">dmidecode | grep Product</code>
+Product Name: Standard PC (Q35 + ICH9, 2009)</pre></div></li></ol></div></div><div id="id-1.8.4.9.4.6" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Machine type update recommendations</h6><p>
+        Whenever the QEMU version on the host system is upgraded, for example,
+        when upgrading the VM Host Server to a new service pack, upgrade the machine
+        type of the VM Guests to the latest available version. To check, use
+        the command <code class="command">qemu-system-x86_64 -M help</code> on the
+        VM Host Server.
+      </p><p>
+        The default machine type <code class="literal">pc-i440fx</code>, for example, is
+        regularly updated. If your VM Guest still runs with a machine type of
+        <code class="literal">pc-i440fx-1.<em class="replaceable ">X</em></code>, we
+        strongly recommend an update to
+        <code class="literal">pc-i440fx-2.<em class="replaceable ">X</em></code>. This
+        allows taking advantage of the most recent updates and corrections in
+        machine definitions, and ensures better future compatibility.
+      </p></div></div><div class="sect1 " id="sec-libvirt-hypervisor-features-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring hypervisor features</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-hypervisor-features-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-hypervisor-features-virsh</li></ul></div></div></div></div><p>
+      <code class="command">libvirt</code> automatically enables a default set of
+      hypervisor features that are sufficient in most circumstances, but also
+      allows enabling and disabling features as needed. As an example, Xen does
+      not support enabling PCI pass-through by default. It must be enabled with
+      the <code class="literal">passthrough</code> setting. Hypervisor features can be
+      configured with <code class="command">virsh</code>. Look for the <code class="sgmltag-element">&lt;features&gt;</code> element
+      in the VM Guest's configuration file and adjust its features as
+      required. Continuing with the Xen pass-through example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh edit sle15sp1
+ &lt;features&gt;
+    &lt;xen&gt;
+      &lt;passthrough/&gt;
+    &lt;/xen&gt;
+ &lt;/features&gt;</pre></div><p>
+      Save your changes and restart the VM Guest.
+    </p><p>
+      See the <em class="citetitle ">Hypervisor features</em> section of the libvirt
+      <em class="citetitle ">Domain XML format</em> manual at
+      <a class="link" href="https://libvirt.org/formatdomain.html#elementsFeatures" target="_blank">https://libvirt.org/formatdomain.html#elementsFeatures</a>
+      for more information.
+    </p></div><div class="sect1 " id="libvirt-cpu-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring CPU</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-cpu-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-cpu-virsh</li></ul></div></div></div></div><p>
+      Many aspects of the virtual CPUs presented to VM Guests are configurable
+      with <code class="command">virsh</code>. The number of current and maximum CPUs allocated to a
+      VM Guest can be changed, as well as the model of the CPU and its feature
+      set. The following subsections describe how to change the common CPU
+      settings of a VM Guest.
+    </p><div class="sect2 " id="sec-libvirt-cpu-num-virsh"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring the number of CPUs</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-cpu-num-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-cpu-num-virsh</li></ul></div></div></div></div><p>
+        The number of allocated CPUs is stored in the VM Guest's XML
+        configuration file in <code class="filename">/etc/libvirt/qemu/</code> in the
+        <code class="sgmltag-attribute">vcpu</code> element:
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;vcpu placement='static'&gt;1&lt;/vcpu&gt;</pre></div><p>
+        In this example, the VM Guest has only one allocated CPU. The
+        following procedure shows how to change the number of allocated CPUs
+        for the VM Guest:
+      </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Check whether your VM Guest is inactive:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh list --inactive</code>
+Id    Name                           State
+----------------------------------------------------
+-     sles15                         shut off</pre></div></li><li class="step "><p>
+            Edit the configuration for an existing VM Guest:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+            Change the number of allocated CPUs:
+          </p><div class="verbatim-wrap"><pre class="screen">&lt;vcpu placement='static'&gt;2&lt;/vcpu&gt;</pre></div></li><li class="step "><p>
+            Restart the VM Guest:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh start sles15</code></pre></div></li><li class="step "><p>
+            Check if the number of CPUs in the VM has changed.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh vcpuinfo sled15</code>
+VCPU:           0
+CPU:            N/A
+State:          N/A
+CPU time        N/A
+CPU Affinity:   yy
+
+VCPU:           1
+CPU:            N/A
+State:          N/A
+CPU time        N/A
+CPU Affinity:   yy</pre></div></li></ol></div></div><p>
+        You can also change the number of CPUs while the VM Guest is running.
+        CPUs can be hotplugged until the maximum number configured at VM Guest
+        start is reached. Likewise, they can be hot-unplugged until the lower
+        limit of 1 is reached. The following example shows changing the
+        active CPU count from 2 to a predefined maximum of 4.
+      </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Check the current live vcpu count:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh vcpucount sles15 | grep live</code>
+maximum      live           4
+current      live           2</pre></div></li><li class="step "><p>
+            Change the current, or active, number of CPUs to 4:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh setvcpus sles15 --count 4 --live</code></pre></div></li><li class="step "><p>
+            Check that the current live vcpu count is now 4:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh vcpucount sles15 | grep live</code>
+maximum      live           4
+current      live           4</pre></div></li></ol></div></div><div id="id-1.8.4.9.6.3.8" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: Exceeding 255 CPUs</h6><p>
+          With KVM, it is possible to define a VM Guest with more than 255
+          CPUs. However, additional configuration is necessary to start and run
+          the VM Guest. The <code class="literal">ioapic</code> feature needs to be
+          tuned and an IOMMU device needs to be added to the VM Guest. Below
+          is an example configuration for 288 CPUs.
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;domain&gt;
+ &lt;vcpu placement='static'&gt;288&lt;/vcpu&gt;
+ &lt;features&gt;
+  &lt;ioapic driver='qemu'/&gt;
+ &lt;/features&gt;
+ &lt;devices&gt;
+  &lt;iommu model='intel'&gt;
+   &lt;driver intremap='on' eim='on'/&gt;
+  &lt;/iommu&gt;
+ &lt;/devices&gt;
+&lt;/domain&gt;</pre></div></div></div><div class="sect2 " id="sec-libvirt-cpu-model-virsh"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring the CPU model</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-cpu-model-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-cpu-model-virsh</li></ul></div></div></div></div><p>
+        The CPU model exposed to a VM Guest can often influence the workload
+        running within it. The default CPU model is derived from a CPU mode
+        known as <code class="literal">host-model</code>.
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;cpu mode='host-model'/&gt;</pre></div><p>
+        When starting a VM Guest with the CPU mode <code class="literal">host-model</code>,
+        <code class="systemitem">libvirt</code> copies its model of the host CPU into the VM Guest
+        definition. The host CPU model and features copied to the VM Guest
+        definition can be observed in the output of the <code class="command">virsh
+        capabilities</code>.
+      </p><p>
+        Another interesting CPU mode is <code class="literal">host-passthrough</code>.
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;cpu mode='host-passthrough'/&gt;</pre></div><p>
+        When starting a VM Guest with the CPU mode
+        <code class="literal">host-passthrough</code>, it is presented with a CPU that is
+        exactly the same as the VM Host Server CPU. This can be useful when the
+        VM Guest workload requires CPU features not available in <code class="systemitem">libvirt</code>'s
+        simplified <code class="literal">host-model</code> CPU. The
+        <code class="literal">host-passthrough</code> CPU mode comes with the
+        disadvantage of reduced migration flexibility. A VM Guest with
+        <code class="literal">host-passthrough</code> CPU mode can only be migrated to a
+        VM Host Server with identical hardware.
+      </p><p>
+        When using the <code class="literal">host-passthrough</code> CPU mode, it is
+        still possible to disable undesirable features. The following
+        configuration presents the VM Guest with a CPU that is exactly the
+        same as the host CPU but with the <code class="literal">vmx</code> feature
+        disabled.
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;cpu mode='host-passthrough'&gt;
+  &lt;feature policy='disable' name='vmx'/&gt;
+  &lt;/cpu&gt;</pre></div><p>
+        The <code class="literal">custom</code> CPU mode is another common mode used to
+        define a normalized CPU that can be migrated throughout dissimilar
+        hosts in a cluster. For example, in a cluster with hosts containing
+        Nehalem, IvyBridge and SandyBridge CPUs, the VM Guest can be
+        configured with a <code class="literal">custom</code> CPU mode that contains a
+        Nehalem CPU model.
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;cpu mode='custom' match='exact'&gt;
+  &lt;model fallback='allow'&gt;Nehalem&lt;/model&gt;
+  &lt;feature policy='require' name='vme'/&gt;
+  &lt;feature policy='require' name='ds'/&gt;
+  &lt;feature policy='require' name='acpi'/&gt;
+  &lt;feature policy='require' name='ss'/&gt;
+  &lt;feature policy='require' name='ht'/&gt;
+  &lt;feature policy='require' name='tm'/&gt;
+  &lt;feature policy='require' name='pbe'/&gt;
+  &lt;feature policy='require' name='dtes64'/&gt;
+  &lt;feature policy='require' name='monitor'/&gt;
+  &lt;feature policy='require' name='ds_cpl'/&gt;
+  &lt;feature policy='require' name='vmx'/&gt;
+  &lt;feature policy='require' name='est'/&gt;
+  &lt;feature policy='require' name='tm2'/&gt;
+  &lt;feature policy='require' name='xtpr'/&gt;
+  &lt;feature policy='require' name='pdcm'/&gt;
+  &lt;feature policy='require' name='dca'/&gt;
+  &lt;feature policy='require' name='rdtscp'/&gt;
+  &lt;feature policy='require' name='invtsc'/&gt;
+  &lt;/cpu&gt;</pre></div><p>
+        For more information on <code class="systemitem">libvirt</code>'s CPU model and topology options, see
+        the <em class="citetitle ">CPU model and topology</em> documentation at
+        <a class="link" href="https://libvirt.org/formatdomain.html#cpu-model-and-topology" target="_blank">https://libvirt.org/formatdomain.html#cpu-model-and-topology</a>.
+      </p></div></div><div class="sect1 " id="sec-libvirt-config-boot-menu-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing boot options</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-boot-menu-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-boot-menu-virsh</li></ul></div></div></div></div><p>
+      The boot menu of the VM Guest can be found in the <code class="sgmltag-element">os</code> element
+      and looks similar to this example:
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;os&gt;
+  &lt;type&gt;hvm&lt;/type&gt;
+  &lt;loader&gt;readonly='yes' secure='no' type='rom'/&gt;/usr/lib/xen/boot/hvmloader&lt;/loader&gt;
+  &lt;nvram template='/usr/share/OVMF/OVMF_VARS.fd'/&gt;/var/lib/libvirt/nvram/guest_VARS.fd&lt;/nvram&gt;
+  &lt;boot dev='hd'/&gt;
+  &lt;boot dev='cdrom'/&gt;
+  &lt;bootmenu enable='yes' timeout='3000'/&gt;
+  &lt;smbios mode='sysinfo'/&gt;
+  &lt;bios useserial='yes' rebootTimeout='0'/&gt;
+  &lt;/os&gt;</pre></div><p>
+      In this example, two devices are available,
+      <code class="sgmltag-attvalue">hd</code> and <code class="sgmltag-attvalue">cdrom</code> .
+      The configuration also reflects the actual boot order, so the
+      <code class="sgmltag-attvalue">hd</code> comes before the
+      <code class="sgmltag-attvalue">cdrom</code> .
+    </p><div class="sect2 " id="sec-libvirt-config-bootorder-virsh"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.5.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing boot order</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-bootorder-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-bootorder-virsh</li></ul></div></div></div></div><p>
+        The VM Guest's boot order is represented through the order of devices
+        in the XML configuration file. As the devices are interchangeable, it
+        is possible to change the boot order of the VM Guest.
+      </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Open the VM Guest's XML configuration.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+            Change the sequence of the bootable devices.
+          </p><div class="verbatim-wrap"><pre class="screen">...
+&lt;boot dev='cdrom'/&gt;
+&lt;boot dev='hd'/&gt;
+...</pre></div></li><li class="step "><p>
+            Check if the boot order was changed successfully by looking at the
+            boot menu in the BIOS of the VM Guest.
+          </p></li></ol></div></div></div><div class="sect2 " id="sec-libvirt-config-directkernel-virsh"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.5.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using direct kernel boot</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-directkernel-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-directkernel-virsh</li></ul></div></div></div></div><p>
+        Direct Kernel Boot allows you to boot from a kernel and initrd stored
+        on the host. Set the path to both files in the <code class="sgmltag-element">kernel</code> and
+        <code class="sgmltag-element">initrd</code> elements:
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;os&gt;
+    ...
+  &lt;kernel&gt;/root/f8-i386-vmlinuz&lt;/kernel&gt;
+  &lt;initrd&gt;/root/f8-i386-initrd&lt;/initrd&gt;
+    ...
+&lt;os&gt;</pre></div><p>
+        To enable Direct Kernel Boot:
+      </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Open the VM Guest's XML configuration:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+            Inside the <code class="sgmltag-element">os</code> element, add a <code class="sgmltag-element">kernel</code> element
+            and the path to the kernel file on the host:
+          </p><div class="verbatim-wrap"><pre class="screen">...
+&lt;kernel&gt;/root/f8-i386-vmlinuz&lt;/kernel&gt;
+...</pre></div></li><li class="step "><p>
+            Add an <code class="sgmltag-element">initrd</code> element and the path to the initrd file on
+            the host:
+          </p><div class="verbatim-wrap"><pre class="screen">...
+&lt;initrd&gt;/root/f8-i386-initrd&lt;/initrd&gt;
+...</pre></div></li><li class="step "><p>
+            Start your VM to boot from the new kernel:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh start sles15</code></pre></div></li></ol></div></div></div></div><div class="sect1 " id="sec-libvirt-config-memory-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring memory allocation</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-memory-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-memory-virsh</li></ul></div></div></div></div><p>
+      The amount of memory allocated for the VM Guest can also be configured
+      with <code class="command">virsh</code>. It is stored in the <code class="sgmltag-element">memory</code> element and defines
+      the maximum allocation of memory for the VM Guest at boot time. The
+      optional <code class="sgmltag-element">currentMemory</code> element defines the actual memory
+      allocated to the VM Guest. <code class="sgmltag-element">currentMemory</code> can be less than
+      <code class="sgmltag-element">memory</code>, allowing for increasing (or
+      <span class="emphasis"><em>ballooning</em></span>) the memory while the VM Guest is
+      running. If <code class="sgmltag-element">currentMemory</code> is omitted, it defaults to the same
+      value as the <code class="sgmltag-element">memory</code> element.
+    </p><p>
+      You can adjust memory settings by editing the VM Guest configuration,
+      but be aware that changes do not take place until the next boot. The
+      following steps demonstrate changing a VM Guest to boot with 4G of
+      memory, but allow later expansion to 8G:
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          Open the VM Guest's XML configuration:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+          Search for the <code class="sgmltag-element">memory</code> element and set to 8G:
+        </p><div class="verbatim-wrap"><pre class="screen">...
+&lt;memory unit='KiB'&gt;8388608&lt;/memory&gt;
+...</pre></div></li><li class="step "><p>
+          If the <code class="sgmltag-element">currentMemory</code> element does not exist, add it below
+          the <code class="sgmltag-element">memory</code> element, or change its value to 4G:
+        </p><div class="verbatim-wrap"><pre class="screen">[...]
+&lt;memory unit='KiB'&gt;8388608&lt;/memory&gt;
+&lt;currentMemory unit='KiB'&gt;4194304&lt;/currentMemory&gt;
+[...]</pre></div></li></ol></div></div><p>
+      Changing the memory allocation while the VM Guest is running can be done
+      with the <code class="command">setmem</code> subcommand. The following example
+      shows increasing the memory allocation to 8G:
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          Check VM Guest existing memory settings:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh dominfo sles15 | grep memory</code>
+Max memory:     8388608 KiB
+Used memory:    4194608 KiB</pre></div></li><li class="step "><p>
+          Change the used memory to 8G:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh setmem sles15 8388608</code></pre></div></li><li class="step "><p>
+          Check the updated memory settings:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh dominfo sles15 | grep memory</code>
+Max memory:     8388608 KiB
+Used memory:    8388608 KiB</pre></div></li></ol></div></div><div id="id-1.8.4.9.8.7" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: Large memory VM Guests</h6><p>
+        VM Guests with memory requirements of 4 TB or more must either
+        use the <code class="literal">host-passthrough</code> CPU mode, or explicitly
+        specify the virtual CPU address size when using
+        <code class="literal">host-model</code> or <code class="literal">custom</code> CPU modes.
+        The default virtual CPU address size may not be sufficient for memory
+        configurations of 4 TB or more. The following example shows how to
+        use the VM Host Server's physical CPU address size when using the
+        <code class="literal">host-model</code> CPU mode.
+      </p><div class="verbatim-wrap"><pre class="screen">[...]
+&lt;cpu mode='host-model' check='partial'&gt;
+&lt;maxphysaddr mode='passthrough'&gt;
+&lt;/cpu&gt;
+[...]</pre></div><p>
+        For more information on specifying virtual CPU address size, see the
+        <code class="literal">maxphysaddr</code> option in the <em class="citetitle ">CPU model and
+        topology</em> documentation at
+        <a class="link" href="https://libvirt.org/formatdomain.html#cpu-model-and-topology" target="_blank">https://libvirt.org/formatdomain.html#cpu-model-and-topology</a>.
+      </p></div></div><div class="sect1 " id="sec-libvirt-config-pci-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding a PCI device</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-pci-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-pci-virsh</li></ul></div></div></div></div><p>
+      To assign a PCI device to VM Guest with <code class="command">virsh</code>, follow these steps:
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          Identify the host PCI device to assign to the VM Guest. In the
+          following example, we are assigning a DEC network card to the guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">lspci -nn</code>
+[...]
+<span class="bold"><strong>03:07.0</strong></span> Ethernet controller [0200]: Digital Equipment Corporation DECchip \
+21140 [FasterNet] [1011:0009] (rev 22)
+[...]</pre></div><p>
+          Write down the device ID, <code class="literal">03:07.0</code> in this example.
+        </p></li><li class="step "><p>
+          Gather detailed information about the device using <code class="command">virsh
+          nodedev-dumpxml <em class="replaceable ">ID</em></code>. To get the
+          <em class="replaceable ">ID</em>, replace the colon and the period in
+          the device ID (<code class="literal">03:07.0</code>) with underscores. Prefix
+          the result with <span class="quote">“<span class="quote ">pci_0000_</span>”</span>:
+          <code class="literal">pci_0000_03_07_0</code>.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh nodedev-dumpxml pci_0000_03_07_0</code>
+&lt;device&gt;
+  &lt;name&gt;pci_0000_03_07_0&lt;/name&gt;
+  &lt;path&gt;/sys/devices/pci0000:00/0000:00:14.4/0000:03:07.0&lt;/path&gt;
+  &lt;parent&gt;pci_0000_00_14_4&lt;/parent&gt;
+  &lt;driver&gt;
+    &lt;name&gt;tulip&lt;/name&gt;
+  &lt;/driver&gt;
+  &lt;capability type='pci'&gt;
+    <span class="bold"><strong>&lt;domain&gt;0&lt;/domain&gt;
+    &lt;bus&gt;3&lt;/bus&gt;
+    &lt;slot&gt;7&lt;/slot&gt;
+    &lt;function&gt;0&lt;/function&gt;</strong></span>
+    &lt;product id='0x0009'&gt;DECchip 21140 [FasterNet]&lt;/product&gt;
+    &lt;vendor id='0x1011'&gt;Digital Equipment Corporation&lt;/vendor&gt;
+    &lt;numa node='0'/&gt;
+  &lt;/capability&gt;
+&lt;/device&gt;</pre></div><p>
+          Write down the values for domain, bus and function (see the previous
+          XML code printed in bold).
+        </p></li><li class="step "><p>
+          Detach the device from the host system before attaching it to the
+          VM Guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh nodedev-detach pci_0000_03_07_0</code>
+  Device pci_0000_03_07_0 detached</pre></div><div id="id-1.8.4.9.9.3.3.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Multi-function PCI devices</h6><p>
+            When using a multi-function PCI device that does not support FLR
+            (function level reset) or PM (power management) reset, you need to
+            detach all its functions from the VM Host Server. The whole device must
+            be reset for security reasons. <code class="systemitem">libvirt</code>
+            refuses to assign the device if one of its functions is still in
+            use by the VM Host Server or another VM Guest.
+          </p></div></li><li class="step "><p>
+          Convert the domain, bus, slot, and function value from decimal to
+          hexadecimal. In our example, domain = 0, bus = 3, slot = 7, and
+          function = 0. Ensure that the values are inserted in the right order:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">printf "&lt;address domain='0x%x' bus='0x%x' slot='0x%x' function='0x%x'/&gt;\n" 0 3 7 0</code></pre></div><p>
+          This results in:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;address domain='0x0' bus='0x3' slot='0x7' function='0x0'/&gt;</pre></div></li><li class="step "><p>
+          Run <code class="command">virsh edit</code> on your domain, and add the
+          following device entry in the <code class="literal">&lt;devices&gt;</code>
+          section using the result from the previous step:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;hostdev mode='subsystem' type='pci' managed='yes'&gt;
+  &lt;source&gt;
+    &lt;address domain='0x0' bus='0x03' slot='0x07' function='0x0'/&gt;
+  &lt;/source&gt;
+&lt;/hostdev&gt;</pre></div><div id="tip-libvirt-config-pci-virsh-managed" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: <code class="literal">managed</code> compared to <code class="literal">unmanaged</code></h6><p>
+            <code class="systemitem">libvirt</code> recognizes two modes for handling
+            PCI devices: they can be <code class="literal">managed</code> or
+            <code class="literal">unmanaged</code>. In the managed case,
+            <code class="systemitem">libvirt</code> handles all details of unbinding
+            the device from the existing driver if needed, resetting the
+            device, binding it to <code class="systemitem">vfio-pci</code> before
+            starting the domain, etc. When the domain is terminated or the
+            device is removed from the domain, <code class="systemitem">libvirt</code>
+            unbinds from <code class="systemitem">vfio-pci</code> and rebinds to the
+            original driver when using a managed device. If the device is
+            unmanaged, the user must ensure that all these management aspects
+            of the device are done before assigning it to a domain, and after
+            the device is no longer used by the domain.
+          </p></div><p>
+          In the example above, the <code class="literal">managed='yes'</code> option
+          means that the device is managed. To switch the device mode to
+          unmanaged, set <code class="literal">managed='no'</code> in the listing above.
+          If you do so, you need to take care of the related driver with the
+          <code class="command">virsh nodedev-detach</code> and <code class="command">virsh
+          nodedev-reattach</code> commands. Before starting the VM Guest,
+          you need to detach the device from the host by running <code class="command">virsh
+          nodedev-detach pci_0000_03_07_0</code>. In case the VM Guest is
+          not running, you can make the device available for the host by
+          running <code class="command">virsh nodedev-reattach pci_0000_03_07_0</code>.
+        </p></li><li class="step "><p>
+          Shut down the VM Guest and disable SELinux if it is running on the
+          host.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">setsebool -P virt_use_sysfs 1</code></pre></div></li><li class="step "><p>
+          Start your VM Guest to make the assigned PCI device available:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh start sles15</code></pre></div></li></ol></div></div><div id="id-1.8.4.9.9.4" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: SLES11 SP4 KVM guests</h6><p>
+        On a newer QEMU machine type (pc-i440fx-2.0 or higher) with SLES 11
+        SP4 KVM guests, the <code class="systemitem">acpiphp</code>
+        module is not loaded by default in the guest. This module must be
+        loaded to enable hotplugging of disk and network devices. To load the
+        module manually, use the command <code class="command">modprobe acpiphp</code>.
+        It is also possible to autoload the module by adding <code class="literal">install
+        acpiphp /bin/true</code> to the
+        <code class="filename">/etc/modprobe.conf.local</code> file.
+      </p></div><div id="id-1.8.4.9.9.5" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: KVM guests using QEMU Q35 machine type</h6><p>
+        KVM guests using the QEMU Q35 machine type have a PCI topology that
+        includes a <code class="literal">pcie-root</code> controller and seven
+        <code class="literal">pcie-root-port</code> controllers. The
+        <code class="literal">pcie-root</code> controller does not support hotplugging.
+        Each <code class="literal">pcie-root-port</code> controller supports hotplugging
+        a single PCIe device. PCI controllers cannot be hotplugged, so plan
+        accordingly and add more <code class="literal">pcie-root-port</code>s to hotplug
+        more than seven PCIe devices. A <code class="literal">pcie-to-pci-bridge</code>
+        controller can be added to support hotplugging legacy PCI devices. See
+        <a class="link" href="https://libvirt.org/pci-hotplug.html" target="_blank">https://libvirt.org/pci-hotplug.html</a> for more
+        information about PCI topology between QEMU machine types.
+      </p></div><div class="sect2 " id="tip-libvirt-config-zpci"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.7.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">PCI Pass-Through for IBM Z</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#tip-libvirt-config-zpci">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>tip-libvirt-config-zpci</li></ul></div></div></div></div><p>
+        To support IBM Z, QEMU extended PCI representation by allowing the user to
+        configure extra attributes. Two more
+        attributes—<code class="option">uid</code> and
+        <code class="option">fid</code>—were added to the
+        <code class="literal">&lt;zpci/&gt;</code> <code class="systemitem">libvirt</code> specification.
+        <code class="option">uid</code> represents user-defined identifier, while
+        <code class="option">fid</code> represents PCI function identifier. These
+        attributes are optional and if you do not specify them, they are
+        automatically generated with non-conflicting values.
+      </p><p>
+        To include zPCI attribute in your domain specification, use the
+        following example definition:
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;controller type='pci' index='0' model='pci-root'/&gt;
+&lt;controller type='pci' index='1' model='pci-bridge'&gt;
+  &lt;model name='pci-bridge'/&gt;
+  &lt;target chassisNr='1'/&gt;
+  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0'&gt;
+    &lt;zpci uid='0x0001' fid='0x00000000'/&gt;
+  &lt;/address&gt;
+&lt;/controller&gt;
+&lt;interface type='bridge'&gt;
+  &lt;source bridge='virbr0'/&gt;
+  &lt;model type='virtio'/&gt;
+  &lt;address type='pci' domain='0x0000' bus='0x01' slot='0x01' function='0x0'&gt;
+    &lt;zpci uid='0x0007' fid='0x00000003'/&gt;
+  &lt;/address&gt;
+&lt;/interface&gt;</pre></div></div></div><div class="sect1 " id="sec-libvirt-config-usb-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.8 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding a USB device</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-usb-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-usb-virsh</li></ul></div></div></div></div><p>
+      To assign a USB device to VM Guest using <code class="command">virsh</code>, follow these steps:
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          Identify the host USB device to assign to the VM Guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">lsusb</code>
+[...]
+Bus 001 Device 003: ID <span class="bold"><strong>0557:2221</strong></span> ATEN International Co., Ltd Winbond Hermon
+[...]</pre></div><p>
+          Write down the vendor and product IDs. In our example, the vendor ID
+          is <code class="literal">0557</code> and the product ID is
+          <code class="literal">2221</code>.
+        </p></li><li class="step "><p>
+          Run <code class="command">virsh edit</code> on your domain, and add the
+          following device entry in the <code class="literal">&lt;devices&gt;</code>
+          section using the values from the previous step:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;hostdev mode='subsystem' type='usb'&gt;
+  &lt;source startupPolicy='optional'&gt;
+   <span class="bold"><strong>&lt;vendor id='0557'/&gt;
+   &lt;product id='2221'/&gt;</strong></span>
+  &lt;/source&gt;
+&lt;/hostdev&gt;</pre></div><div id="id-1.8.4.9.10.3.2.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Vendor/product or device's address</h6><p>
+            Instead of defining the host device with
+            <code class="sgmltag-emptytag">&lt;vendor/&gt;</code> and
+            <code class="sgmltag-emptytag">&lt;product/&gt;</code> IDs, you can use the
+            <code class="sgmltag-emptytag">&lt;address/&gt;</code> element as described for host
+            PCI devices in <a class="xref" href="cha-libvirt-config-virsh.html#sec-libvirt-config-pci-virsh" title="14.7. Adding a PCI device">Section 14.7, “Adding a PCI device”</a>.
+          </p></div></li><li class="step "><p>
+          Shut down the VM Guest and disable SELinux if it is running on the
+          host:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">setsebool -P virt_use_sysfs 1</code></pre></div></li><li class="step "><p>
+          Start your VM Guest to make the assigned PCI device available:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh start sles15</code></pre></div></li></ol></div></div></div><div class="sect1 " id="sec-libvirt-config-io"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.9 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding SR-IOV devices</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-io</li></ul></div></div></div></div><p>
+      Single Root I/O Virtualization (<a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>) capable
+      <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-pcie" title="PCIe">PCIe</a> devices can replicate their
+      resources, so they appear as multiple devices. Each of these
+      <span class="quote">“<span class="quote ">pseudo-devices</span>”</span> can be assigned to a VM Guest.
+    </p><p>
+      <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> is an industry specification that was
+      created by the Peripheral Component Interconnect Special Interest Group
+      (PCI-SIG) consortium. It introduces physical functions (PF) and virtual
+      functions (VF). PFs are full <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-pcie" title="PCIe">PCIe</a>
+      functions used to manage and configure the device. PFs also can move
+      data. VFs lack the configuration and management part—they only can move
+      data and a reduced set of configuration functions. As VFs do not have all
+      <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-pcie" title="PCIe">PCIe</a> functions, the host operating
+      system or the <a class="xref" href="gloss-vt-glossary.html#gloss-vt-hypervisor" title="Hypervisor">Hypervisor</a> must support
+      <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> to access and initialize VFs.
+      The theoretical maximum for VFs is 256 per device (consequently the
+      maximum for a dual-port Ethernet card would be 512). In practice, this
+      maximum is much lower, since each VF consumes resources.
+    </p><div class="sect2 " id="sec-libvirt-config-io-requirements"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.9.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Requirements</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io-requirements">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-io-requirements</li></ul></div></div></div></div><p>
+        The following requirements must be met to use
+        <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>:
+      </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            An <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>-capable network card (as of
+            <span class="productname"></span>
+            <span class="productnumber"></span>,
+            only network cards support <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>)
+          </p></li><li class="listitem "><p>
+            An AMD64/Intel 64 host supporting hardware virtualization (AMD-V or
+            Intel VT-x)
+          </p></li><li class="listitem "><p>
+            A chipset that supports device assignment (AMD-Vi or Intel
+            <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-vtd" title="VT-d">VT-d</a>)
+          </p></li><li class="listitem "><p>
+            <code class="systemitem">libvirt</code> 0.9.10 or better
+          </p></li><li class="listitem "><p>
+            <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> drivers must be loaded and configured
+            on the host system
+          </p></li><li class="listitem "><p>
+            A host configuration that meets the requirements listed at
+            <a class="xref" href="chap-virtualization-introduction.html#ann-vt-io-require" title="Important: Requirements for VFIO and SR-IOV">Important: Requirements for VFIO and SR-IOV</a>
+          </p></li><li class="listitem "><p>
+            A list of the PCI addresses of the VFs assigned to VM Guests
+          </p></li></ul></div><div id="id-1.8.4.9.11.4.4" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Checking if a device is SR-IOV-capable</h6><p>
+          The information whether a device is SR-IOV-capable can be obtained
+          from its PCI descriptor by running <code class="command">lspci</code>. A device
+          that supports <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> reports a capability
+          similar to the following:
+        </p><div class="verbatim-wrap"><pre class="screen">Capabilities: [160 v1] Single Root I/O Virtualization (<a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>)</pre></div></div><div id="id-1.8.4.9.11.4.5" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Adding an SR-IOV device at VM Guest creation</h6><p>
+          Before adding an SR-IOV device to a VM Guest when initially setting
+          it up, the VM Host Server already needs to be configured as described in
+          <a class="xref" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io-config" title="14.9.2. Loading and configuring the SR-IOV host drivers">Section 14.9.2, “Loading and configuring the SR-IOV host drivers”</a>.
+        </p></div></div><div class="sect2 " id="sec-libvirt-config-io-config"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.9.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Loading and configuring the SR-IOV host drivers</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io-config">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-io-config</li></ul></div></div></div></div><p>
+        To access and initialize VFs, an SR-IOV-capable driver needs to be
+        loaded on the host system.
+      </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Before loading the driver, make sure the card is properly detected
+            by running <code class="command">lspci</code>. The following example shows
+            the <code class="command">lspci</code> output for the dual-port Intel 82576NS
+            network card:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">/sbin/lspci | grep 82576</code>
+01:00.0 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+01:00.1 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+04:00.0 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+04:00.1 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)</pre></div><p>
+            In case the card is not detected, the hardware virtualization
+            support in the BIOS/EFI may not have been enabled. To check if
+            hardware virtualization support is enabled, look at the settings in
+            the host's BIOS.
+          </p></li><li class="step "><p>
+            Check whether the <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> driver is already
+            loaded by running <code class="command">lsmod</code>. In the following
+            example, a check for the igb driver (for the Intel 82576NS network
+            card) returns a result. That means the driver is already loaded. If
+            the command returns nothing, the driver is not loaded.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">/sbin/lsmod | egrep "^igb "</code>
+igb                   185649  0</pre></div></li><li class="step "><p>
+            Skip the following step if the driver is already loaded. If the
+            <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> driver is not yet loaded, the
+            non-<a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> driver needs to be removed first,
+            before loading the new driver. Use <code class="command">rmmod</code> to
+            unload a driver. The following example unloads the
+            non-<a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> driver for the Intel 82576NS
+            network card:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">/sbin/rmmod igbvf</code></pre></div></li><li class="step "><p>
+            Load the <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> driver subsequently using
+            the <code class="command">modprobe</code> command—the VF parameter
+            (<code class="literal">max_vfs</code>) is mandatory:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">/sbin/modprobe igb max_vfs=8</code></pre></div></li></ol></div></div><p>
+        As an alternative, you can also load the driver via SYSFS:
+      </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Find the PCI ID of the physical NIC by listing Ethernet devices:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">lspci | grep Eth</code>
+06:00.0 Ethernet controller: Emulex Corporation OneConnect NIC (Skyhawk) (rev 10)
+06:00.1 Ethernet controller: Emulex Corporation OneConnect NIC (Skyhawk) (rev 10)</pre></div></li><li class="step "><p>
+            To enable VFs, echo the number of desired VFs to load to the
+            <code class="literal">sriov_numvfs</code> parameter:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">echo 1 &gt; /sys/bus/pci/devices/0000:06:00.1/sriov_numvfs</code></pre></div></li><li class="step "><p>
+            Verify that the VF NIC was loaded:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">lspci | grep Eth</code>
+06:00.0 Ethernet controller: Emulex Corporation OneConnect NIC (Skyhawk) (rev 10)
+06:00.1 Ethernet controller: Emulex Corporation OneConnect NIC (Skyhawk) (rev 10)
+06:08.0 Ethernet controller: Emulex Corporation OneConnect NIC (Skyhawk) (rev 10)</pre></div></li><li class="step "><p>
+            Obtain the maximum number of VFs available:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">lspci -vvv -s 06:00.1 | grep 'Initial VFs'</code>
+                       Initial VFs: 32, Total VFs: 32, Number of VFs: 0,
+Function Dependency Link: 01</pre></div></li><li class="step "><p>
+            Create a <code class="filename">/etc/systemd/system/before.service</code>
+            file which loads VF via SYSFS on boot:
+          </p><div class="verbatim-wrap"><pre class="screen">[Unit]
+Before=
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/bash -c "echo 1 &gt; /sys/bus/pci/devices/0000:06:00.1/sriov_numvfs"
+# beware, executable is run directly, not through a shell, check the man pages
+# systemd.service and systemd.unit for full syntax
+[Install]
+# target in which to start the service
+WantedBy=multi-user.target
+#WantedBy=graphical.target</pre></div></li><li class="step "><p>
+            Before starting the VM, it is required to create another service
+            file (<code class="filename">after-local.service</code>) pointing to the
+            <code class="filename">/etc/init.d/after.local</code> script that detaches
+            the NIC. Otherwise the VM would fail to start:
+          </p><div class="verbatim-wrap"><pre class="screen">[Unit]
+Description=/etc/init.d/after.local Compatibility
+After=libvirtd.service
+Requires=libvirtd.service
+[Service]
+Type=oneshot
+ExecStart=/etc/init.d/after.local
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target</pre></div></li><li class="step "><p>
+            Copy it to <code class="filename">/etc/systemd/system</code>.
+          </p><div class="verbatim-wrap"><pre class="screen">#! /bin/sh
+# ...
+virsh nodedev-detach pci_0000_06_08_0</pre></div><p>
+            Save it as <code class="filename">/etc/init.d/after.local</code>.
+          </p></li><li class="step "><p>
+            Reboot the machine and check if the SR-IOV driver is loaded by
+            re-running the <code class="command">lspci</code> command from the first step
+            of this procedure. If the SR-IOV driver was loaded successfully you
+            should see additional lines for the VFs:
+          </p><div class="verbatim-wrap"><pre class="screen">01:00.0 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+01:00.1 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+01:10.0 Ethernet controller: Intel Corporation 82576 Virtual Function (rev 01)
+01:10.1 Ethernet controller: Intel Corporation 82576 Virtual Function (rev 01)
+01:10.2 Ethernet controller: Intel Corporation 82576 Virtual Function (rev 01)
+[...]
+04:00.0 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+04:00.1 Ethernet controller: Intel Corporation 82576NS Gigabit Network Connection (rev 01)
+04:10.0 Ethernet controller: Intel Corporation 82576 Virtual Function (rev 01)
+04:10.1 Ethernet controller: Intel Corporation 82576 Virtual Function (rev 01)
+04:10.2 Ethernet controller: Intel Corporation 82576 Virtual Function (rev 01)
+[...]</pre></div></li></ol></div></div></div><div class="sect2 " id="sec-libvirt-config-io-attach"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.9.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Adding a VF network device to a VM Guest</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io-attach">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-io-attach</li></ul></div></div></div></div><p>
+        When the <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> hardware is properly set up on
+        the VM Host Server, you can add VFs to VM Guests. To do so, you need to
+        collect specific data first.
+      </p><div class="procedure " id="id-1.8.4.9.11.6.3"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 14.2: </span><span class="name">Adding a VF network device to an existing VM Guest </span><a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#id-1.8.4.9.11.6.3">#</a></h6></div><div class="procedure-contents"><p>
+          The following procedure uses example data. Replace it with
+          appropriate data from your setup.
+        </p><ol class="procedure" type="1"><li class="step "><p>
+            Use the <code class="command">virsh nodedev-list</code> command to get the
+            PCI address of the VF you want to assign and its corresponding PF.
+            Numerical values from the <code class="command">lspci</code> output shown in
+            <a class="xref" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io-config" title="14.9.2. Loading and configuring the SR-IOV host drivers">Section 14.9.2, “Loading and configuring the SR-IOV host drivers”</a>, for example,
+            <code class="literal">01:00.0</code> or <code class="literal">04:00.1</code>, are
+            transformed by adding the prefix <code class="literal">pci_0000_</code> and
+            by replacing colons and dots with underscores. So a PCI ID listed
+            as <code class="literal">04:00.0</code> by <code class="command">lspci</code> is listed
+            as <code class="literal">pci_0000_04_00_0</code> by virsh. The following
+            example lists the PCI IDs for the second port of the Intel 82576NS
+            network card:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh nodedev-list | grep 0000_04_</code>
+<span class="bold"><strong>pci_0000_04_00_0</strong></span>
+<span class="bold"><strong>pci_0000_04_00_1</strong></span>
+pci_0000_04_10_0
+pci_0000_04_10_1
+pci_0000_04_10_2
+pci_0000_04_10_3
+pci_0000_04_10_4
+pci_0000_04_10_5
+pci_0000_04_10_6
+pci_0000_04_10_7
+pci_0000_04_11_0
+pci_0000_04_11_1
+pci_0000_04_11_2
+pci_0000_04_11_3
+pci_0000_04_11_4
+pci_0000_04_11_5</pre></div><p>
+            The first two entries represent the
+            <span class="bold"><strong>PFs</strong></span>, whereas the other entries
+            represent the VFs.
+          </p></li><li class="step "><p>
+            Run the following <code class="command">virsh nodedev-dumpxml</code> command
+            on the PCI ID of the VF you want to add:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh nodedev-dumpxml pci_0000_04_10_0</code>
+&lt;device&gt;
+  &lt;name&gt;pci_0000_04_10_0&lt;/name&gt;
+  &lt;parent&gt;pci_0000_00_02_0&lt;/parent&gt;
+  &lt;capability type='pci'&gt;
+    <span class="bold"><strong>&lt;domain&gt;0&lt;/domain&gt;
+    &lt;bus&gt;4&lt;/bus&gt;
+    &lt;slot&gt;16&lt;/slot&gt;
+    &lt;function&gt;0&lt;/function&gt;</strong></span>
+    &lt;product id='0x10ca'&gt;82576 Virtual Function&lt;/product&gt;
+    &lt;vendor id='0x8086'&gt;Intel Corporation&lt;/vendor&gt;
+    &lt;capability type='phys_function'&gt;
+      &lt;address domain='0x0000' bus='0x04' slot='0x00' function='0x0'/&gt;
+    &lt;/capability&gt;
+  &lt;/capability&gt;
+&lt;/device&gt;</pre></div><p>
+            The following data is needed for the next step:
+          </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+                <code class="literal">&lt;domain&gt;0&lt;/domain&gt;</code>
+              </p></li><li class="listitem "><p>
+                <code class="literal">&lt;bus&gt;4&lt;/bus&gt;</code>
+              </p></li><li class="listitem "><p>
+                <code class="literal">&lt;slot&gt;16&lt;/slot&gt;</code>
+              </p></li><li class="listitem "><p>
+                <code class="literal">&lt;function&gt;0&lt;/function&gt;</code>
+              </p></li></ul></div></li><li class="step "><p>
+            Create a temporary XML file, for example,
+            <code class="filename">/tmp/vf-interface.xml</code>, containing the data
+            necessary to add a VF network device to an existing VM Guest. The
+            minimal content of the file needs to look like the following:
+          </p><div class="verbatim-wrap"><pre class="screen">&lt;interface type='hostdev'&gt;<span id="sriov-iface"></span><span class="callout">1</span>
+ &lt;source&gt;
+  &lt;address type='pci' domain='0' bus='11' slot='16' function='0'2/&gt;<span id="sriov-data"></span><span class="callout">2</span>
+ &lt;/source&gt;
+&lt;/interface&gt;</pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#sriov-iface"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+                VFs do not get a fixed MAC address; it changes every time the
+                host reboots. When adding network devices the
+                <span class="quote">“<span class="quote ">traditional</span>”</span> way with
+                <code class="sgmltag-attribute">hostdev</code>, it would require to
+                reconfigure the VM Guest's network device after each reboot of
+                the host, because of the MAC address change. To avoid this kind
+                of problem, <code class="systemitem">libvirt</code> introduced the
+                <code class="sgmltag-attvalue">hostdev</code> value, which sets up
+                network-specific data <span class="emphasis"><em>before</em></span> assigning the
+                device.
+              </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#sriov-data"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+                Specify the data you acquired in the previous step here.
+              </p></td></tr></table></div></li><li class="step "><p>
+            In case a device is already attached to the host, it cannot be
+            attached to a VM Guest. To make it available for guests, detach it
+            from the host first:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh nodedev-detach pci_0000_04_10_0</code></pre></div></li><li class="step "><p>
+            Add the VF interface to an existing VM Guest:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh attach-device <em class="replaceable ">GUEST</em> /tmp/vf-interface.xml --<em class="replaceable ">OPTION</em></code></pre></div><p>
+            <em class="replaceable ">GUEST</em> needs to be replaced by the domain
+            name, ID or UUID of the VM Guest.
+            --<em class="replaceable ">OPTION</em> can be one of the following:
+          </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.8.4.9.11.6.3.7.4.1"><span class="term "><code class="option">--persistent</code></span></dt><dd><p>
+                  This option always adds the device to the domain's persistent
+                  XML. If the domain is running, the device is hotplugged.
+                </p></dd><dt id="id-1.8.4.9.11.6.3.7.4.2"><span class="term "><code class="option">--config</code></span></dt><dd><p>
+                  This option affects the persistent XML only, even if the
+                  domain is running. The device appears in the VM Guest on
+                  next boot.
+                </p></dd><dt id="id-1.8.4.9.11.6.3.7.4.3"><span class="term "><code class="option">--live</code></span></dt><dd><p>
+                  This option affects a running domain only. If the domain is
+                  inactive, the operation fails. The device is not persisted in
+                  the XML and becomes available in the VM Guest on next boot.
+                </p></dd><dt id="id-1.8.4.9.11.6.3.7.4.4"><span class="term "><code class="option">--current</code></span></dt><dd><p>
+                  This option affects the current state of the domain. If the
+                  domain is inactive, the device is added to the persistent XML
+                  and becomes available on next boot. If the domain is active,
+                  the device is hotplugged but not added to the persistent XML.
+                </p></dd></dl></div></li><li class="step "><p>
+            To detach a VF interface, use the <code class="command">virsh
+            detach-device</code> command, which also takes the options
+            listed above.
+          </p></li></ol></div></div></div><div class="sect2 " id="libvirt-config-io-pool"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.9.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Dynamic allocation of VFs from a pool</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-config-io-pool">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-config-io-pool</li></ul></div></div></div></div><p>
+        If you define the PCI address of a VF into a VM Guest's configuration
+        statically as described in
+        <a class="xref" href="cha-libvirt-config-virsh.html#sec-libvirt-config-io-attach" title="14.9.3. Adding a VF network device to a VM Guest">Section 14.9.3, “Adding a VF network device to a VM Guest”</a>, it is hard to migrate
+        such guest to another host. The host must have identical hardware in
+        the same location on the PCI bus, or the VM Guest configuration must
+        be modified before each start.
+      </p><p>
+        Another approach is to create a <code class="systemitem">libvirt</code> network with a device pool
+        that contains all the VFs of an <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> device.
+        The VM Guest then references this network, and each time it is
+        started, a single VF is dynamically allocated to it. When the VM Guest
+        is stopped, the VF is returned to the pool, available for another
+        guest.
+      </p><div class="sect3 " id="libvirt-config-io-pool-host"><div class="titlepage"><div><div><h4 class="title"><span class="number">14.9.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Defining network with pool of VFs on VM Host Server</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-config-io-pool-host">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-config-io-pool-host</li></ul></div></div></div></div><p>
+          The following example of network definition creates a pool of all VFs
+          for the <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> device with its physical
+          function (PF) at the network interface <code class="literal">eth0</code> on the
+          host:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;network&gt;
+  &lt;name&gt;passthrough&lt;/name&gt;
+    &lt;forward mode='hostdev' managed='yes'&gt;
+      &lt;pf dev='eth0'/&gt;
+    &lt;/forward&gt;
+  &lt;/network&gt;</pre></div><p>
+          To use this network on the host, save the above code to a file, for
+          example <code class="filename">/tmp/passthrough.xml</code>, and execute the
+          following commands. Remember to replace <code class="literal">eth0</code> with
+          the real network interface name of your <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>
+          device's PF:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh net-define /tmp/passthrough.xml</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh net-autostart passthrough</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh net-start passthrough</code></pre></div></div><div class="sect3 " id="libvirt-config-io-pool-guest"><div class="titlepage"><div><div><h4 class="title"><span class="number">14.9.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring VM Guests to use VF from the pool</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-config-io-pool-guest">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h4><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-config-io-pool-guest</li></ul></div></div></div></div><p>
+          The following example of VM Guest device interface definition uses a
+          VF of the <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a> device from the pool created
+          in <a class="xref" href="cha-libvirt-config-virsh.html#libvirt-config-io-pool-host" title="14.9.4.1. Defining network with pool of VFs on VM Host Server">Section 14.9.4.1, “Defining network with pool of VFs on VM Host Server”</a>. <code class="systemitem">libvirt</code>
+          automatically derives the list of all VFs associated with that PF the
+          first time the guest is started.
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;interface type='network'&gt;
+  &lt;source network='passthrough'&gt;
+&lt;/interface&gt;</pre></div><p>
+          After the first VM Guest starts that uses the network with the pool
+          of VFs, verify the list of associated VFs. Do so by running
+          <code class="command">virsh net-dumpxml passthrough</code> on the host.
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;network connections='1'&gt;
+  &lt;name&gt;passthrough&lt;/name&gt;
+  &lt;uuid&gt;a6a26429-d483-d4ed-3465-4436ac786437&lt;/uuid&gt;
+  &lt;forward mode='hostdev' managed='yes'&gt;
+    &lt;pf dev='eth0'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x10' function='0x1'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x10' function='0x3'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x10' function='0x5'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x10' function='0x7'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x11' function='0x1'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x11' function='0x3'/&gt;
+    &lt;address type='pci' domain='0x0000' bus='0x02' slot='0x11' function='0x5'/&gt;
+  &lt;/forward&gt;
+  &lt;/network&gt;</pre></div></div></div></div><div class="sect1 " id="libvirt-config-listing-host-devs"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.10 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Listing attached devices</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-config-listing-host-devs">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-config-listing-host-devs</li></ul></div></div></div></div><p>
+      Although there is no mechanism in <code class="command">virsh</code> to list all VM Host Server's devices
+      that have already been attached to its VM Guests, you can list all
+      devices attached to a specific VM Guest by running the following
+      command:
+    </p><div class="verbatim-wrap"><pre class="screen">virsh dumpxml <em class="replaceable ">VMGUEST_NAME</em> | xpath -e /domain/devices/hostdev</pre></div><p>
+      For example:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh dumpxml sles12 | -e xpath /domain/devices/hostdev
+Found 2 nodes:
+-- NODE --
+&lt;hostdev mode="subsystem" type="pci" managed="yes"&gt;
+  &lt;driver name="xen" /&gt;
+  &lt;source&gt;
+    &lt;address domain="0x0000" bus="0x0a" slot="0x10" function="0x1" /&gt;
+  &lt;/source&gt;
+  &lt;address type="pci" domain="0x0000" bus="0x00" slot="0x0a" function="0x0" /&gt;
+  &lt;/hostdev&gt;
+-- NODE --
+&lt;hostdev mode="subsystem" type="pci" managed="yes"&gt;
+  &lt;driver name="xen" /&gt;
+  &lt;source&gt;
+    &lt;address domain="0x0000" bus="0x0a" slot="0x10" function="0x2" /&gt;
+  &lt;/source&gt;
+  &lt;address type="pci" domain="0x0000" bus="0x00" slot="0x0b" function="0x0" /&gt;
+&lt;/hostdev&gt;</pre></div><div id="libvirt-config-listing-host-devs-sriov" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Listing SR-IOV devices attached via <code class="literal">&lt;interface type='hostdev'&gt;</code></h6><p>
+        For SR-IOV devices that are attached to the VM Host Server via
+        <code class="literal">&lt;interface type='hostdev'&gt;</code>, you need to use a
+        different XPath query:
+      </p><div class="verbatim-wrap"><pre class="screen">virsh dumpxml <em class="replaceable ">VMGUEST_NAME</em> | xpath -e /domain/devices/interface/@type</pre></div></div></div><div class="sect1 " id="libvirt-config-storage-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.11 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring storage devices</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-config-storage-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-config-storage-virsh</li></ul></div></div></div></div><p>
+      Storage devices are defined within the <code class="sgmltag-element">disk</code> element. The usual
+      <code class="sgmltag-element">disk</code> element supports several attributes. The following two
+      attributes are the most important:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          The <code class="sgmltag-attribute">type</code> attribute describes the source
+          of the virtual disk device. Valid values are
+          <code class="sgmltag-attvalue">file</code> , <code class="sgmltag-attvalue">block</code>
+          , <code class="sgmltag-attvalue">dir</code> ,
+          <code class="sgmltag-attvalue">network</code> , or
+          <code class="sgmltag-attvalue">volume</code> .
+        </p></li><li class="listitem "><p>
+          The <code class="sgmltag-attribute">device</code> attribute shows how the
+          disk is exposed to the VM Guest OS. As an example, possible values
+          can include <code class="sgmltag-attvalue">floppy</code> ,
+          <code class="sgmltag-attvalue">disk</code> , <code class="sgmltag-attvalue">cdrom</code>
+          , and others.
+        </p></li></ul></div><p>
+      The following child elements are the most important:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          <code class="sgmltag-element">driver</code> contains the driver and the bus. These are used by
+          the VM Guest to work with the new disk device.
+        </p></li><li class="listitem "><p>
+          The <code class="sgmltag-element">target</code> element contains the device name under which
+          the new disk is shown in the VM Guest. It also contains the optional
+          bus attribute, which defines the type of bus on which the new disk
+          should operate.
+        </p></li></ul></div><p>
+      The following procedure shows how to add storage devices to the
+      VM Guest:
+    </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          Edit the configuration for an existing VM Guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+          Add a <code class="sgmltag-element">disk</code> element inside the <code class="sgmltag-element">devices</code> element
+          together with the attributes <code class="sgmltag-attvalue">type</code> and
+          <code class="sgmltag-attvalue">device</code>:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;disk type='file' device='disk'&gt;</pre></div></li><li class="step "><p>
+          Specify a <code class="sgmltag-element">driver</code> element and use the default values:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;driver name='qemu' type='qcow2'/&gt;</pre></div></li><li class="step "><p>
+          Create a disk image as a source for the new virtual disk device:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">qemu-img create -f qcow2 /var/lib/libvirt/images/sles15.qcow2 32G</code></pre></div></li><li class="step "><p>
+          Add the path for the disk source:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;source file='/var/lib/libvirt/images/sles15.qcow2'/&gt;</pre></div></li><li class="step "><p>
+          Define the target device name in the VM Guest and the bus on which
+          the disk should work:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;target dev='vda' bus='virtio'/&gt;</pre></div></li><li class="step "><p>
+          Restart your VM:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh start sles15</code></pre></div></li></ol></div></div><p>
+      Your new storage device should be available in the VM Guest OS.
+    </p></div><div class="sect1 " id="sec-libvirt-config-controllers-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.12 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring controller devices</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-controllers-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-controllers-virsh</li></ul></div></div></div></div><p>
+      <code class="command">libvirt</code> manages controllers automatically
+      based on the type of virtual devices used by the VM Guest. If the
+      VM Guest contains PCI and SCSI devices, PCI and SCSI controllers are
+      created and managed automatically. <code class="command">libvirt</code> also models
+      controllers that are hypervisor-specific, for example, a
+      <code class="literal">virtio-serial</code> controller for KVM VM Guests or a
+      <code class="literal">xenbus</code> controller for Xen VM Guests. Although the
+      default controllers and their configuration are generally fine, there may
+      be use cases where controllers or their attributes need to be adjusted
+      manually. For example, a virtio-serial controller may need more ports, or
+      a xenbus controller may need more memory or more virtual interrupts.
+    </p><p>
+      The xenbus controller is unique in that it serves as the controller for
+      all Xen paravirtual devices. If a VM Guest has many disk and/or network
+      devices, the controller may need more memory. Xen's
+      <code class="literal">max_grant_frames</code> attribute sets how many grant frames,
+      or blocks of shared memory, are allocated to the
+      <code class="literal">xenbus</code> controller for each VM Guest.
+    </p><p>
+      The default of 32 is enough in most circumstances, but a VM Guest with
+      multiple I/O devices and an I/O-intensive workload may experience
+      performance issues because of grant frame exhaustion. The
+      <code class="command">xen-diag</code> can check the current and maximum
+      <code class="literal">max_grant_frames</code> values for dom0 and your VM Guests.
+      The VM Guests must be running:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh list
+ Id   Name             State
+--------------------------------
+ 0    Domain-0         running
+ 3    sle15sp1         running
+
+ <code class="prompt user">&gt; </code><code class="command">sudo</code> xen-diag gnttab_query_size 0
+domid=0: nr_frames=1, max_nr_frames=256
+
+<code class="prompt user">&gt; </code><code class="command">sudo</code> xen-diag gnttab_query_size 3
+domid=3: nr_frames=3, max_nr_frames=32</pre></div><p>
+      The <code class="literal">sle15sp1</code> guest is using only three frames out of
+      32. If you are seeing performance issues, and log entries that point to
+      insufficient frames, increase the value with <code class="command">virsh</code>. Look for the
+      <code class="literal">&lt;controller type='xenbus'&gt;</code> line in the guest's
+      configuration file and add the <code class="literal">maxGrantFrames</code> control
+      element:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh edit sle15sp1
+ &lt;controller type='xenbus' index='0' maxGrantFrames='40'/&gt;</pre></div><p>
+      Save your changes and restart the guest. Now it should show your change:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xen-diag gnttab_query_size 3
+domid=3: nr_frames=3, max_nr_frames=40</pre></div><p>
+      Similar to maxGrantFrames, the xenbus controller also supports
+      <code class="option">maxEventChannels</code>. Event channels are like paravirtual
+      interrupts, and in conjunction with grant frames, form a data transfer
+      mechanism for paravirtual drivers. They are also used for inter-processor
+      interrupts. VM Guests with a large number of vCPUs and/or many
+      paravirtual devices may need to increase the maximum default value of
+      1023. maxEventChannels can be changed similarly to maxGrantFrames:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh edit sle15sp1
+ &lt;controller type='xenbus' index='0' maxGrantFrames='128' maxEventChannels='2047'/&gt;</pre></div><p>
+      See the <em class="citetitle ">Controllers</em> section of the libvirt
+      <em class="citetitle ">Domain XML format</em> manual at
+      <a class="link" href="https://libvirt.org/formatdomain.html#elementsControllers" target="_blank">https://libvirt.org/formatdomain.html#elementsControllers</a>
+      for more information.
+    </p></div><div class="sect1 " id="libvirt-video-virsh"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.13 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring video devices</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-video-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-video-virsh</li></ul></div></div></div></div><p>
+      When using the Virtual Machine Manager, only the Video device model can
+      be defined. The amount of allocated VRAM or 2D/3D acceleration can only
+      be changed in the XML configuration.
+    </p><div class="sect2 " id="libvirt-video-vram-virsh"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.13.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing the amount of allocated VRAM</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-video-vram-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-video-vram-virsh</li></ul></div></div></div></div><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Edit the configuration for an existing VM Guest:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+            Change the size of the allocated VRAM:
+          </p><div class="verbatim-wrap"><pre class="screen">&lt;video&gt;
+&lt;model type='vga' vram='65535' heads='1'&gt;
+...
+&lt;/model&gt;
+&lt;/video&gt;</pre></div></li><li class="step "><p>
+            Check if the amount of VRAM in the VM has changed by looking at the
+            amount in the Virtual Machine Manager.
+          </p></li></ol></div></div></div><div class="sect2 " id="libvirt-video-accel-virsh"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.13.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Changing the state of 2D/3D acceleration</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#libvirt-video-accel-virsh">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>libvirt-video-accel-virsh</li></ul></div></div></div></div><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Edit the configuration for an existing VM Guest:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">virsh edit sles15</code></pre></div></li><li class="step "><p>
+            To enable/disable 2D/3D acceleration, change the value of
+            <code class="literal">accel3d</code> and <code class="literal">accel2d</code>
+            accordingly:
+          </p><div class="verbatim-wrap"><pre class="screen">&lt;video&gt;
+ &lt;model&gt;
+  &lt;acceleration accel3d='yes' accel2d='no'&gt;
+ &lt;/model&gt;
+&lt;/video&gt;</pre></div></li></ol></div></div><div id="id-1.8.4.9.15.4.3" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg" /><h6>Tip: Enabling 2D/3D acceleration</h6><p>
+          Only <code class="literal">virtio</code> and <code class="literal">vbox</code> video
+          devices are capable of 2D/3D acceleration. You cannot enable it on
+          other video devices.
+        </p></div></div></div><div class="sect1 " id="virsh-network-devices"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.14 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring network devices</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-network-devices">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-network-devices</li></ul></div></div></div></div><p>
+      This section describes how to configure specific aspects of virtual
+      network devices by using <code class="command">virsh</code>.
+    </p><p>
+      Find more details about <code class="systemitem">libvirt</code> network interface specification in
+      <a class="link" href="https://libvirt.org/formatdomain.html#elementsDriverBackendOptions" target="_blank">https://libvirt.org/formatdomain.html#elementsDriverBackendOptions</a>.
+    </p><div class="sect2 " id="virsh-multiqueue"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.14.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Scaling network performance with multiqueue virtio-net</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-multiqueue">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-multiqueue</li></ul></div></div></div></div><p>
+        The multiqueue virtio-net feature scales the network performance by
+        allowing the VM Guest's virtual CPUs to transfer packets in parallel.
+        Refer to <a class="xref" href="cha-qemu-host.html#kvm-qemu-multiqueue" title="33.3.3. Scaling network performance with multiqueue virtio-net">Section 33.3.3, “Scaling network performance with multiqueue virtio-net”</a> for more general
+        information.
+      </p><p>
+        To enable multiqueue virtio-net for a specific VM Guest, edit its XML
+        configuration as described in
+        <a class="xref" href="cha-libvirt-config-virsh.html#sec-libvirt-config-editing-virsh" title="14.1. Editing the VM configuration">Section 14.1, “Editing the VM configuration”</a> and modify its
+        network interface as follows:
+      </p><div class="verbatim-wrap"><pre class="screen">&lt;interface type='network'&gt;
+ [...]
+ &lt;model type='virtio'/&gt;
+ &lt;driver name='vhost' queues='<em class="replaceable ">NUMBER_OF_QUEUES</em>'/&gt;
+&lt;/interface&gt;</pre></div></div></div><div class="sect1 " id="sec-libvirt-config-direct"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.15 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Using macvtap to share VM Host Server network interfaces</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-direct">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-direct</li></ul></div></div></div></div><p>
+      Macvtap provides direct attachment of a VM Guest virtual interface to a
+      host network interface. The macvtap-based interface extends the VM Host Server
+      network interface and has its own MAC address on the same Ethernet
+      segment. Typically, this is used to make both the VM Guest and the
+      VM Host Server show up directly on the switch that the VM Host Server is connected
+      to.
+    </p><div id="id-1.8.4.9.17.3" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Macvtap cannot be used with a Linux bridge</h6><p>
+        Macvtap cannot be used with network interfaces already connected to a
+        Linux bridge. Before attempting to create the macvtap interface, remove
+        the interface from the bridge.
+      </p></div><div id="id-1.8.4.9.17.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: VM Guest to VM Host Server communication with macvtap</h6><p>
+        When using macvtap, a VM Guest can communicate with other VM Guests,
+        and with other external hosts on the network. But it cannot communicate
+        with the VM Host Server on which the VM Guest runs. This is the defined
+        behavior of macvtap, because of the way the VM Host Server's physical
+        Ethernet is attached to the macvtap bridge. Traffic from the VM Guest
+        into that bridge that is forwarded to the physical interface cannot be
+        bounced back up to the VM Host Server's IP stack. Similarly, traffic from the
+        VM Host Server's IP stack that is sent to the physical interface cannot be
+        bounced back up to the macvtap bridge for forwarding to the VM Guest.
+      </p></div><p>
+      Virtual network interfaces based on macvtap are supported by libvirt by
+      specifying an interface type of <code class="literal">direct</code>. For example:
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;interface type='direct'&gt;
+   &lt;mac address='aa:bb:cc:dd:ee:ff'/&gt;
+   &lt;source dev='eth0' mode='bridge'/&gt;
+   &lt;model type='virtio'/&gt;
+   &lt;/interface&gt;</pre></div><p>
+      The operation mode of the macvtap device can be controlled with the
+      <code class="literal">mode</code> attribute. The following list shows its possible
+      values and a description for each:
+    </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+          <code class="literal">vepa</code>: all VM Guest packets are sent to an
+          external bridge. Packets whose destination is a VM Guest on the same
+          VM Host Server as where the packet originates from are sent back to the
+          VM Host Server by the VEPA capable bridge (today's bridges are typically
+          not VEPA capable).
+        </p></li><li class="listitem "><p>
+          <code class="literal">bridge</code>: packets whose destination is on the same
+          VM Host Server as where they originate from are directly delivered to the
+          target macvtap device. Both origin and destination devices need to be
+          in <code class="literal">bridge</code> mode for direct delivery. If either
+          of them is in <code class="literal">vepa</code> mode, a VEPA capable bridge is
+          required.
+        </p></li><li class="listitem "><p>
+          <code class="literal">private</code>: all packets are sent to the external
+          bridge and delivered to a target VM Guest on the same VM Host Server if
+          they are sent through an external router or gateway and that device
+          sends them back to the VM Host Server. This procedure is followed if either
+          the source or destination device is in private mode.
+        </p></li><li class="listitem "><p>
+          <code class="literal">passthrough</code>: a special mode that gives more power
+          to the network interface. All packets are forwarded to the interface,
+          allowing virtio VM Guests to change the MAC address or set
+          promiscuous mode to bridge the interface or create VLAN interfaces on
+          top of it. A network interface is not shareable in
+          <code class="literal">passthrough</code> mode. Assigning an interface to a
+          VM Guest disconnects it from the VM Host Server. For this reason SR-IOV
+          virtual functions are often assigned to the VM Guest in
+          <code class="literal">passthrough</code> mode.
+        </p></li></ul></div></div><div class="sect1 " id="sec-libvirt-config-disable-virtio-mellon"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.16 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Disabling a memory balloon device</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#sec-libvirt-config-disable-virtio-mellon">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>sec-libvirt-config-disable-virtio-mellon</li></ul></div></div></div></div><p>
+      Memory Balloon has become a default option for KVM. The device is added to
+      the VM Guest explicitly, so you do not need to add this element in the
+      VM Guest's XML configuration. To disable Memory Balloon in the VM Guest
+      for any reason, set <code class="literal">model='none'</code> as shown below:
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;devices&gt;
+   &lt;memballoon model='none'/&gt;
+&lt;/device&gt;</pre></div></div><div class="sect1 " id="virsh-video-dual-head"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.17 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring multiple monitors (dual head)</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-video-dual-head">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-video-dual-head</li></ul></div></div></div></div><p>
+      <code class="systemitem">libvirt</code> supports a dual head configuration to display the video output
+      of the VM Guest on multiple monitors.
+    </p><div id="id-1.8.4.9.19.3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg" /><h6>Important: No support for Xen</h6><p>
+        The Xen hypervisor does not support dual head configuration.
+      </p></div><div class="procedure " id="id-1.8.4.9.19.4"><div class="procedure-title-wrap"><h6 class="procedure-title"><span class="number">Procedure 14.3: </span><span class="name">Configuring dual head </span><a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#id-1.8.4.9.19.4">#</a></h6></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+          While the virtual machine is running, verify that the
+          <span class="package ">xf86-video-qxl</span> package is installed in the
+          VM Guest:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>rpm -q xf86-video-qxl</pre></div></li><li class="step "><p>
+          Shut down the VM Guest and start editing its configuration XML as
+          described in <a class="xref" href="cha-libvirt-config-virsh.html#sec-libvirt-config-editing-virsh" title="14.1. Editing the VM configuration">Section 14.1, “Editing the VM configuration”</a>.
+        </p></li><li class="step "><p>
+          Verify that the model of the virtual graphics card is
+          <span class="quote">“<span class="quote ">qxl</span>”</span>:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;video&gt;
+ &lt;model type='qxl' ... /&gt;</pre></div></li><li class="step "><p>
+          Increase the <code class="option">heads</code> parameter in the graphics card
+          model specification from the default <code class="literal">1</code> to
+          <code class="literal">2</code>, for example:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;video&gt;
+ &lt;model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='2' primary='yes'/&gt;
+ &lt;alias name='video0'/&gt;
+ &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x0'/&gt;
+&lt;/video&gt;</pre></div></li><li class="step "><p>
+          Configure the virtual machine to use the Spice display instead of
+          VNC:
+        </p><div class="verbatim-wrap"><pre class="screen">&lt;graphics type='spice' port='5916' autoport='yes' listen='0.0.0.0'&gt;
+ &lt;listen type='address' address='0.0.0.0'/&gt;
+&lt;/graphics&gt;</pre></div></li><li class="step "><p>
+          Start the virtual machine and connect to its display with
+          <code class="command">virt-viewer</code>, for example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virt-viewer --connect qemu+ssh://<em class="replaceable ">USER@VM_HOST</em>/system</pre></div></li><li class="step "><p>
+          From the list of VMs, select the one whose configuration you have
+          modified and confirm with <span class="guimenu ">Connect</span>.
+        </p></li><li class="step "><p>
+          After the graphical subsystem (Xorg) loads in the VM Guest, select
+          <span class="guimenu ">View</span> › <span class="guimenu ">Displays</span> › <span class="guimenu ">Display
+          2</span> to open a new window with the second
+          monitor's output.
+        </p></li></ol></div></div></div><div class="sect1 " id="virsh-kvm-zseries-crypto"><div class="titlepage"><div><div><h2 class="title"><span class="number">14.18 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Crypto adapter pass-through to KVM guests on IBM Z</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-kvm-zseries-crypto</li></ul></div></div></div></div><div class="sect2 " id="virsh-kvm-zseries-crypto-intro"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.18.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Introduction</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto-intro">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-kvm-zseries-crypto-intro</li></ul></div></div></div></div><p>
+        IBM Z machines include cryptographic hardware with useful functions
+        such as random number generation, digital signature generation, or
+        encryption. KVM allows dedicating these crypto adapters to guests as
+        pass-through devices. The means that the hypervisor cannot observe
+        communications between the guest and the device.
+      </p></div><div class="sect2 " id="virsh-kvm-zseries-crypto-cover"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.18.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">What is covered</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto-cover">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-kvm-zseries-crypto-cover</li></ul></div></div></div></div><p>
+        This section describes how to dedicate a crypto adapter and domains on
+        an IBM Z host to a KVM guest. The procedure includes the
+        following basic steps:
+      </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            Mask the crypto adapter and domains from the default driver on the
+            host.
+          </p></li><li class="listitem "><p>
+            Load the <code class="literal">vfio-ap</code> driver.
+          </p></li><li class="listitem "><p>
+            Assign the crypto adapter and domains to the
+            <code class="literal">vfio-ap</code> driver.
+          </p></li><li class="listitem "><p>
+            Configure the guest to use the crypto adapter.
+          </p></li></ul></div></div><div class="sect2 " id="virsh-kvm-zseries-crypto-reqs"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.18.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Requirements</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto-reqs">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-kvm-zseries-crypto-reqs</li></ul></div></div></div></div><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            You need to have the QEMU / <code class="systemitem">libvirt</code> virtualization environment
+            correctly installed and functional.
+          </p></li><li class="listitem "><p>
+            The <code class="literal">vfio_ap</code> and <code class="literal">vfio_mdev</code>
+            modules for the running kernel need to be available on the host
+            operating system.
+          </p></li></ul></div></div><div class="sect2 " id="virsh-kvm-zseries-crypto-proc"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.18.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Dedicate a crypto adapter to a KVM host</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto-proc">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-kvm-zseries-crypto-proc</li></ul></div></div></div></div><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+            Verify that the <code class="literal">vfio_ap</code> and
+            <code class="literal">vfio_mdev</code> kernel modules are loaded on the host:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>lsmod | grep vfio_</pre></div><p>
+            If any of them is not listed, load it manually, for example:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> modprobe vfio_mdev</pre></div></li><li class="step "><p>
+            Create a new MDEV device on the host and verify that it was added:
+          </p><div class="verbatim-wrap"><pre class="screen">uuid=$(uuidgen)
+$ echo ${uuid} | sudo tee /sys/devices/vfio_ap/matrix/mdev_supported_types/vfio_ap-passthrough/create
+dmesg | tail
+[...]
+[272197.818811] iommu: Adding device 24f952b3-03d1-4df2-9967-0d5f7d63d5f2 to group 0
+[272197.818815] vfio_mdev 24f952b3-03d1-4df2-9967-0d5f7d63d5f2: MDEV: group_id = 0</pre></div></li><li class="step "><p>
+            Identify the device on the host's logical partition that you intend
+            to dedicate to a KVM guest:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ls -l /sys/bus/ap/devices/
+[...]
+lrwxrwxrwx 1 root root 0 Nov 23 03:29 00.0016 -&gt; ../../../devices/ap/card00/00.0016/
+lrwxrwxrwx 1 root root 0 Nov 23 03:29 card00 -&gt; ../../../devices/ap/card00/</pre></div><p>
+            In this example, it is card <code class="literal">0</code> queue
+            <code class="literal">16</code>. To match the Hardware Management Console
+            (HMC) configuration, you need to convert from <code class="literal">16</code>
+            hexadecimal to <code class="literal">22</code> decimal.
+          </p></li><li class="step "><p>
+            Mask the adapter from the <code class="literal">zcrypt</code> use:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>lszcrypt
+CARD.DOMAIN TYPE MODE STATUS REQUEST_CNT
+-------------------------------------------------
+00 CEX5C CCA-Coproc online 5
+00.0016 CEX5C CCA-Coproc online 5</pre></div><p>
+            Mask the adapter:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /sys/bus/ap/apmask
+0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+echo -0x0 | sudo tee /sys/bus/ap/apmask
+0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</pre></div><p>
+            Mask the domain:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /sys/bus/ap/aqmask
+0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+echo -0x0 | sudo tee /sys/bus/ap/aqmask
+0xfffffdffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</pre></div></li><li class="step "><p>
+            Assign adapter 0 and domain 16 (22 decimal) to
+            <code class="literal">vfio-ap</code>:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> echo +0x0 &gt; /sys/devices/vfio_ap/matrix/${uuid}/assign_adapter
+<code class="prompt user">&gt; </code>echo +0x16 | sudo tee /sys/devices/vfio_ap/matrix/${uuid}/assign_domain
+<code class="prompt user">&gt; </code>echo +0x16 | sudo tee /sys/devices/vfio_ap/matrix/${uuid}/assign_control_domain</pre></div></li><li class="step "><p>
+            Verify the matrix that you have configured:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /sys/devices/vfio_ap/matrix/${uuid}/matrix
+00.0016</pre></div></li><li class="step "><p>
+            Either create a new VM (refer to <a class="xref" href="cha-kvm-inst.html" title="Chapter 9. Guest installation">Chapter 9, <em>Guest installation</em></a>)
+            and wait until it is initialized, or use an existing VM. In both
+            cases, make sure the VM is shut down.
+          </p></li><li class="step "><p>
+            Change its configuration to use the MDEV device:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh edit <em class="replaceable ">VM_NAME</em>
+[...]
+&lt;hostdev mode='subsystem' type='mdev' model='vfio-ap'&gt;
+ &lt;source&gt;
+  &lt;address uuid='24f952b3-03d1-4df2-9967-0d5f7d63d5f2'/&gt;
+ &lt;/source&gt;
+&lt;/hostdev&gt;
+[...]</pre></div></li><li class="step "><p>
+            Restart the VM:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh reboot <em class="replaceable ">VM_NAME</em></pre></div></li><li class="step "><p>
+            Log in to the guest and verify that the adapter is present:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>lszcrypt
+CARD.DOMAIN TYPE MODE STATUS REQUEST_CNT
+-------------------------------------------------
+00 CEX5C CCA-Coproc online 1
+00.0016 CEX5C CCA-Coproc online 1</pre></div></li></ol></div></div></div><div class="sect2 " id="virsh-kvm-zseries-crypto-moreinfo"><div class="titlepage"><div><div><h3 class="title"><span class="number">14.18.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Further reading</span> <a title="Permalink" class="permalink" href="cha-libvirt-config-virsh.html#virsh-kvm-zseries-crypto-moreinfo">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_configuration_virsh.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>libvirt_configuration_virsh.xml</li><li><span class="ds-label">ID: </span>virsh-kvm-zseries-crypto-moreinfo</li></ul></div></div></div></div><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+            The installation of virtualization components is detailed in
+            <a class="xref" href="cha-vt-installation.html" title="Chapter 6. Installation of virtualization components">Chapter 6, <em>Installation of virtualization components</em></a>.
+          </p></li><li class="listitem "><p>
+            The <code class="literal">vfio_ap</code> architecture is detailed in
+            <a class="link" href="https://www.kernel.org/doc/Documentation/s390/vfio-ap.txt" target="_blank">https://www.kernel.org/doc/Documentation/s390/vfio-ap.txt</a>.
+          </p></li><li class="listitem "><p>
+            A general outline together with a detailed procedure is described
+            in
+            <a class="link" href="https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1787405" target="_blank">https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1787405</a>.
+          </p></li><li class="listitem "><p>
+            The architecture of VFIO Mediated devices (MDEVs) is detailed in
+            <a class="link" href="https://www.kernel.org/doc/html/latest/driver-api/vfio-mediated-device.html" target="_blank">https://www.kernel.org/doc/html/latest/driver-api/vfio-mediated-device.html</a>.
+          </p></li></ul></div></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="sec-libvirt-admin-migrate.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 15 </span>Migrating VM Guests</span></a><a class="nav-link" href="cha-libvirt-config-gui.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Chapter 13 </span>Configuring virtual machines with Virtual Machine Manager</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Security Guide | SUSE Linux Enterprise Micro 5.1</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="Security Guide | SLE Micro 5.1" />
+<meta name="description" content="This guide gives a brief overview of SELinux implementation on SLE Micro." />
+<meta name="product-name" content="SUSE Linux Enterprise Micro" />
+<meta name="product-number" content="5.1" />
+<meta name="book-title" content="Security Guide" />
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="jsindelarova@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Micro 5.1" />
+<meta property="og:title" content="Security Guide | SLE Micro 5.1" />
+<meta property="og:description" content="This guide gives a brief overview of SELinux implementation on SLE Micro." />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Security Guide | SLE Micro 5.1" />
+<meta name="twitter:description" content="This guide gives a brief overview of SELinux implementation on SLE Micro." />
+
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft single offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs inactive"><a class="single-crumb" href="#article-selinux" accesskey="c"><span class="single-contents-icon"></span>Security Guide</a><div class="bubble-corner active-contents"></div></div><div class="clearme"></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs inactive"><a class="single-crumb" href="#article-selinux" accesskey="c"><span class="single-contents-icon"></span>Show Contents: Security Guide</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="clearme"></div></div><div class="clearme"></div></div><div class="active-contents bubble"><div class="bubble-container"><div id="_bubble-toc"><ol><li class="inactive"><a href="#sec-introduction-selinux"><span class="number">1 </span><span class="name">Introduction to SELinux</span></a></li><li class="inactive"><a href="#sec-getting-selinux"><span class="number">2 </span><span class="name">Getting SELinux</span></a></li><li class="inactive"><a href="#sec-switching-modes"><span class="number">3 </span><span class="name">SELinux modes</span></a></li><li class="inactive"><a href="#sec-policy-overview"><span class="number">4 </span><span class="name">SELinux policy overview</span></a></li><li class="inactive"><a href="#sec-security-context"><span class="number">5 </span><span class="name">SELinux security context</span></a></li><li class="inactive"><a href="#sec-managing-modes"><span class="number">6 </span><span class="name">Tools for managing SELinux</span></a></li><li class="inactive"><a href="#id-1.6.4.9"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_toc-bubble-wrap"></div><div id="_content" class="draft "><div class="documentation"><div xml:lang="en" class="article " id="article-selinux" lang="en"><div class="titlepage"><div><h6 class="version-info"><span class="productname "><span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">5.1</span></span></span></h6><div><h1 class="title">Security Guide <a title="Permalink" class="permalink" href="#article-selinux">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h1></div><div class="abstract "><div class="abstract-title-wrap"><h6 class="abstract-title">Abstract<a title="Permalink" class="permalink" href="#id-1.6.4.2.11">#</a></h6></div><p>
+    This guide gives a brief overview of SELinux implementation on SLE Micro.
+   </p></div><div class="date"><span class="imprint-label">Publication Date: </span>
+    September 11, 2024
+
+   </div></div></div><div class="line"><div class="toc"><dl><dt><span class="section"><a href="#sec-introduction-selinux"><span class="number">1 </span><span class="name">Introduction to SELinux</span></a></span></dt><dt><span class="section"><a href="#sec-getting-selinux"><span class="number">2 </span><span class="name">Getting SELinux</span></a></span></dt><dt><span class="section"><a href="#sec-switching-modes"><span class="number">3 </span><span class="name">SELinux modes</span></a></span></dt><dt><span class="section"><a href="#sec-policy-overview"><span class="number">4 </span><span class="name">SELinux policy overview</span></a></span></dt><dt><span class="section"><a href="#sec-security-context"><span class="number">5 </span><span class="name">SELinux security context</span></a></span></dt><dt><span class="section"><a href="#sec-managing-modes"><span class="number">6 </span><span class="name">Tools for managing SELinux</span></a></span></dt><dt><span class="appendix"><a href="#id-1.6.4.9"><span class="number">A </span><span class="name">GNU licenses</span></a></span></dt><dd><dl><dt><span class="sect1"><a href="#id-1.6.4.9.4"><span class="number">A.1 </span><span class="name">GNU Free Documentation License</span></a></span></dt></dl></dd></dl></div></div><div class="sect1" id="sec-introduction-selinux"><div class="titlepage"><div><div><h2 class="title"><span class="number">1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Introduction to SELinux</span> <a title="Permalink" class="permalink" href="#sec-introduction-selinux">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>art_admin_slemicro_selinux.xml</li><li><span class="ds-label">ID: </span>sec-introduction-selinux</li></ul></div></div></div></div><p>
+   SELinux was developed as an additional Linux security solution that uses the
+   security framework in the Linux kernel. The purpose was to allow for a more
+   granular security policy that goes beyond the standard Discretionary Access
+   Controls (DAC), the traditional file permissions of owner/group/world, and
+   read/write/execute.
+  </p><p>
+   SELinux uses labels attached to objects (for example, files and network
+   sockets) and uses them for access decisions.
+  </p><p>
+   SELinux default action is to deny any access. SELinux allows only actions
+   that were specifically allowed in the SELinux policy. Another feature of
+   SELinux that increases security is that SELinux allows strict confinement of
+   processes up to the point where the processes cannot access files of other
+   processes on the same system.
+  </p><p>
+   SELinux was designed to enhance existing security solutions, not to replace
+   them. For example, discretionary access control (DAC) is still applied even
+   if the system is using SELinux. If DAC denies access first, SELinux is then
+   not used as the access was already blocked by another mechanism.
+  </p></div><div class="sect1" id="sec-getting-selinux"><div class="titlepage"><div><div><h2 class="title"><span class="number">2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Getting SELinux</span> <a title="Permalink" class="permalink" href="#sec-getting-selinux">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>art_admin_slemicro_selinux.xml</li><li><span class="ds-label">ID: </span>sec-getting-selinux</li></ul></div></div></div></div><p>
+   SELinux is installed by default when installing SLE Micro by YaST or is part
+   of the pre-built images. In systems installed manually by YaST, SELinux is
+   in the <code class="literal">disabled</code> mode by default, and the file system is
+   not labeled. If you deployed your system using the pre-built images, the
+   SELinux mode is <code class="literal">permissive</code>, and the file system is
+   labeled.
+  </p><p>
+   To set the SELinux mode to <code class="literal">enforcing</code> and configure your
+   system properly for using SELinux, run the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update setup-selinux</pre></div><p>
+   Reboot your system after the command completes. The command installs the
+   SELinux policy if it is not installed, sets the <code class="literal">enforcing</code>
+   SELinux mode and rebuilds <code class="literal">initrd</code>.
+  </p></div><div class="sect1" id="sec-switching-modes"><div class="titlepage"><div><div><h2 class="title"><span class="number">3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">SELinux modes</span> <a title="Permalink" class="permalink" href="#sec-switching-modes">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>art_admin_slemicro_selinux.xml</li><li><span class="ds-label">ID: </span>sec-switching-modes</li></ul></div></div></div></div><p>
+   SELinux can run in one of three modes: <code class="literal">disabled</code>,
+   <code class="literal">permissive</code>, or <code class="literal">enforcing</code>.
+  </p><p>
+   Using the <code class="literal">disabled</code> mode means that no rules from the
+   SELinux policy are applied and your system is not protected. Therefore, the
+   <code class="literal">disabled</code> mode is not recommended.
+  </p><p>
+   In the <code class="literal">permissive</code> mode, SELinux is active, the security
+   policy is loaded, the file system is labeled and access denial entries are
+   logged. However, the policy is not enforced and thus no access is actually
+   denied.
+  </p><p>
+   In the <code class="literal">enforced</code> mode, the security policy is applied.
+   Each access that is not explicitly allowed by the policy is denied.
+  </p><p>
+   You can switch between the <code class="literal">enforcing</code> and
+   <code class="literal">permissive</code> modes by using the
+   <code class="command">setenforce</code> command. Alternatively, you can switch between
+   all SELinux modes by editing the <code class="filename">/etc/selinux/config</code>
+   configuration file. Changes performed by the <code class="command">setenforce</code>
+   command are valid only until the next reboot. For persistent changes of the
+   SELinux mode, edit the <code class="filename">/etc/selinux/config</code>
+   configuration file.
+  </p><p>
+   The <code class="command">setenforce</code> command has the following syntax:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>setenforce <em class="replaceable ">MODE_ID</em></pre></div><p>
+   where <em class="replaceable ">MODE_ID</em> is <em class="replaceable ">0</em> for
+   the <code class="literal">permissive</code> mode or <em class="replaceable ">1</em> for
+   the <code class="literal">enforced</code> mode.
+  </p><p>
+   To verify the mode, run the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>getenforce</pre></div><p>
+   The command should return <code class="literal">permissive</code> or
+   <code class="literal">enforced</code>, depending on the provided
+   <em class="replaceable ">MODE_ID</em>.
+  </p><p>
+   To change the SELinux mode permanently, in the file
+   <code class="filename">/etc/selinux/config</code> change the value of
+   <code class="literal">SELINUX</code> to <code class="literal">disabled</code>, or
+   <code class="literal">permissive</code>, or <code class="literal">enforced</code> as follows:
+  </p><div class="verbatim-wrap"><pre class="screen">SELINUX=disabled</pre></div><p>
+   The changes in the file are applied after next reboot.
+  </p><div id="id-1.6.4.5.16" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Relabeling your system after switching from the <code class="literal">disabled</code> mode</h6><p>
+    If you disable SELinux on your system and then enable it later, make sure
+    that you relabel your system. When SELinux is disabled and you perform
+    changes to your file system, the changes are not reflected in the context
+    anymore (for example, new files do not have any context), therefore you
+    need to relabel your system by using the <code class="command">restorecon</code>
+    command, using the <code class="literal">autorelabel</code> boot parameter, or by
+    creating a file that will trigger relabeling on the next boot. To create
+    the file, run the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>touch /etc/selinux/.autorelabel</pre></div><p>
+    After reboot, the file <code class="filename">/etc/selinux/.autorelabel</code> is
+    replaced with another flag file:
+    <code class="filename">/etc/selinux/.relabelled</code> to prevent relabeling on
+    subsequent reboots.
+   </p></div></div><div class="sect1" id="sec-policy-overview"><div class="titlepage"><div><div><h2 class="title"><span class="number">4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">SELinux policy overview</span> <a title="Permalink" class="permalink" href="#sec-policy-overview">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>art_admin_slemicro_selinux.xml</li><li><span class="ds-label">ID: </span>sec-policy-overview</li></ul></div></div></div></div><p>
+   The policy is the key component in SELinux. Your SELinux policy defines
+   rules that specify which objects can access which files, directories, ports,
+   and processes on a system. To do this, a security context is defined for all
+   of these.
+  </p><p>
+   An SELinux policy contains a huge number of rules. To make it more
+   manageable, policies are often split into modules. This allows administrator
+   to switch protection on or off for different parts of the system.
+  </p><p>
+   When compiling the policy for your system, you will have a choice to either
+   work with a modular policy, or a monolithic policy, where one huge policy is
+   used to protect everything on your system. It is strongly recommended to use
+   a modular policy and not a monolithic policy. Modular policies are much
+   easier to manage.
+  </p><p>
+   SLE Micro is shipped with the <code class="literal">targeted</code> SELinux policy.
+  </p></div><div class="sect1" id="sec-security-context"><div class="titlepage"><div><div><h2 class="title"><span class="number">5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">SELinux security context</span> <a title="Permalink" class="permalink" href="#sec-security-context">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>art_admin_slemicro_selinux.xml</li><li><span class="ds-label">ID: </span>sec-security-context</li></ul></div></div></div></div><p>
+   The security context is a set of information assigned to a file or a
+   process. It consists of SELinux user, role, type, level and category. This
+   information is used to make access control decisions.
+  </p><div class="variablelist "><div class="variablelist-title-wrap"><h6 class="variablelist-title"><span class="name">SELinux context fields </span><a title="Permalink" class="permalink" href="#id-1.6.4.7.3">#</a></h6></div><dl class="variablelist"><dt id="id-1.6.4.7.3.2"><span class="term ">SELinux user</span></dt><dd><p>
+      is an identity defined in the policy that is authorized for a specific
+      set of roles and for a specific <span class="emphasis"><em>level</em></span> range. Each
+      Linux user is mapped to an SELinux user. SELinux does not use the list of
+      user accounts maintained by Linux in <code class="filename">/etc/passwd</code>,
+      but uses its own database and mapping. By convention, the identity name
+      is suffixed with <code class="literal">_u</code>, for example:
+      <code class="literal">user_u</code>.
+     </p></dd><dt id="id-1.6.4.7.3.3"><span class="term ">role</span></dt><dd><p>
+      defines a set of permissions a user can be granted. A role defines which
+      <span class="emphasis"><em>types</em></span> a user assigned to this role can access. By
+      convention, the role name is suffixed with <code class="literal">_r</code>, for
+      example: <code class="literal">system_r</code>.
+     </p></dd><dt id="id-1.6.4.7.3.4"><span class="term ">type</span></dt><dd><p>
+      conveys information on how particular files and processes can interact. A
+      process is assigned files with a concrete SELinux type, and it cannot
+      access files outside of this type. By convention, the type name is
+      suffixed with <code class="literal">_t</code>, for example:
+      <code class="literal">var_t</code>.
+     </p></dd><dt id="id-1.6.4.7.3.5"><span class="term ">level</span></dt><dd><p>
+      is an optional attribute that specifies the range of levels of clearance
+      in the multilevel security.
+     </p></dd><dt id="id-1.6.4.7.3.6"><span class="term ">category</span></dt><dd><p>
+      is an optional attribute that allows you to add categories to processes,
+      files and users. A user can then access files that have the same
+      category.
+     </p></dd></dl></div></div><div class="sect1" id="sec-managing-modes"><div class="titlepage"><div><div><h2 class="title"><span class="number">6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Tools for managing SELinux</span> <a title="Permalink" class="permalink" href="#sec-managing-modes">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/art_admin_slemicro_selinux.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>art_admin_slemicro_selinux.xml</li><li><span class="ds-label">ID: </span>sec-managing-modes</li></ul></div></div></div></div><p>
+   In the default deployment of SLE Micro, regardless of the deployment method,
+   some of the commands for managing SELinux are not installed. To install the
+   commands described further, run the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update pkg install policycoreutils-python-utils</pre></div><p>
+   After successful installation and rebooting your system, you will be able to
+   use the commands to manage your system.
+  </p><div class="variablelist "><div class="variablelist-title-wrap"><h6 class="variablelist-title"><span class="name">SELinux commands </span><a title="Permalink" class="permalink" href="#id-1.6.4.8.5">#</a></h6></div><dl class="variablelist"><dt id="id-1.6.4.8.5.2"><span class="term "><code class="command">chcon</code></span></dt><dd><p>
+      changes the security context of provided files to the context provided to
+      the command
+     </p></dd><dt id="id-1.6.4.8.5.3"><span class="term "><code class="command">getenforce</code></span></dt><dd><p>
+      displays the current SELinux mode
+     </p></dd><dt id="id-1.6.4.8.5.4"><span class="term "><code class="command">fixfiles</code></span></dt><dd><p>
+      enables you to check for issues with a mismatched security context and
+      then fix them
+     </p></dd><dt id="id-1.6.4.8.5.5"><span class="term "><code class="command">ls -Z <em class="replaceable ">PATH</em></code></span></dt><dd><p>
+      shows security context of all files/directories in the specified
+      <em class="replaceable ">PATH</em>, for example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ls -Z /
+system_u:object_r:bin_t:s0 bin
+system_u:object_r:boot_t:s0 boot
+system_u:object_r:device_t:s0 dev
+system_u:object_r:etc_t:s0  etc
+system_u:object_r:home_root_t:s0 home
+system_u:object_r:lib_t:s0 lib
+system_u:object_r:lib_t:s0 lib64
+system_u:object_r:mnt_t:s0 mnt
+system_u:object_r:usr_t:s0 opt
+system_u:object_r:proc_t:s0 proc
+system_u:object_r:default_t:s0 root
+system_u:object_r:var_run_t:s0 run
+system_u:object_r:bin_t:s0 sbin
+system_u:object_r:var_t:s0 srv
+system_u:object_r:sysfs_t:s0 sys
+system_u:object_r:tmp_t:s0 tmp
+system_u:object_r:usr_t:s0 usr
+system_u:object_r:var_t:s0 var</pre></div></dd><dt id="id-1.6.4.8.5.6"><span class="term "><code class="command">restorecon</code></span></dt><dd><p>
+      restores a file context to the default value (as stored in the SELinux
+      policy)
+     </p></dd><dt id="id-1.6.4.8.5.7"><span class="term "><code class="command">semanage</code></span></dt><dd><p>
+      enables you to adjust context and configure certain elements of SELinux
+      policy. The command provides several subcommands, for details use:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>semanage --help</pre></div></dd><dt id="id-1.6.4.8.5.8"><span class="term "><code class="command">setenforce</code></span></dt><dd><p>
+      enables you to temporarily set a SELinux mode to
+      <code class="literal">permissive</code> or <code class="literal">enforcing</code>
+     </p></dd><dt id="id-1.6.4.8.5.9"><span class="term "><code class="command">sestatus</code></span></dt><dd><p>
+      displays the current status of SELinux, for example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>sestatus
+
+SELinux status:               enabled
+SElinuxfs mount:              /sys/fs/selinux
+SELinux root directory:       /etc/selinux
+Loaded policy name:           targeted
+Current mode:                 enforcing
+Mode from config file:        enforcing
+Policy MLS status:            enabled
+Policy deny_unknown status:   allowed
+Memory protection checking:   requested (insecure)
+Max kernel policy version:    31</pre></div></dd></dl></div><div id="id-1.6.4.8.6" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: The <code class="literal">Z</code> option available to other commands</h6><p>
+    You can also use the <code class="literal">Z</code> option with other commands, for
+    example: <code class="command">cp, ps</code>, and <code class="command">id</code>.
+   </p></div></div><div class="legal-section"><div class="appendix " id="id-1.6.4.9"><div class="titlepage"><div><div><h2 class="title"><span class="number">A </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">GNU licenses</span> <a title="Permalink" class="permalink" href="#id-1.6.4.9">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_legal.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>common_legal.xml</li><li><span class="ds-label">ID: </span><span class="ds-message">no ID found</span></li></ul></div></div></div></div><div class="line"></div><p>
+  This appendix contains the GNU Free Documentation License version 1.2.
+ </p><div class="sect1 " id="id-1.6.4.9.4"><div class="titlepage"><div><div><h2 class="title legal"><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">GNU Free Documentation License</span> <a title="Permalink" class="permalink" href="#id-1.6.4.9.4">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>common_license_gfdl1.2.xml</li><li><span class="ds-label">ID: </span><span class="ds-message">no ID found</span></li></ul></div></div></div></div><p>
+  Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc. 51 Franklin St,
+  Fifth Floor, Boston, MA 02110-1301 USA. Everyone is permitted to copy and
+  distribute verbatim copies of this license document, but changing it is not
+  allowed.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.4"><span class="name">
+    0. PREAMBLE
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.4">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  The purpose of this License is to make a manual, textbook, or other
+  functional and useful document "free" in the sense of freedom: to assure
+  everyone the effective freedom to copy and redistribute it, with or without
+  modifying it, either commercially or non-commercially. Secondarily, this
+  License preserves for the author and publisher a way to get credit for their
+  work, while not being considered responsible for modifications made by
+  others.
+ </p><p>
+  This License is a kind of "copyleft", which means that derivative works of
+  the document must themselves be free in the same sense. It complements the
+  GNU General Public License, which is a copyleft license designed for free
+  software.
+ </p><p>
+  We have designed this License to use it for manuals for free software,
+  because free software needs free documentation: a free program should come
+  with manuals providing the same freedoms that the software does. But this
+  License is not limited to software manuals; it can be used for any textual
+  work, regardless of subject matter or whether it is published as a printed
+  book. We recommend this License principally for works whose purpose is
+  instruction or reference.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.8"><span class="name">
+    1. APPLICABILITY AND DEFINITIONS
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.8">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  This License applies to any manual or other work, in any medium, that
+  contains a notice placed by the copyright holder saying it can be distributed
+  under the terms of this License. Such a notice grants a world-wide,
+  royalty-free license, unlimited in duration, to use that work under the
+  conditions stated herein. The "Document", below, refers to any such manual or
+  work. Any member of the public is a licensee, and is addressed as "you". You
+  accept the license if you copy, modify or distribute the work in a way
+  requiring permission under copyright law.
+ </p><p>
+  A "Modified Version" of the Document means any work containing the Document
+  or a portion of it, either copied verbatim, or with modifications and/or
+  translated into another language.
+ </p><p>
+  A "Secondary Section" is a named appendix or a front-matter section of the
+  Document that deals exclusively with the relationship of the publishers or
+  authors of the Document to the Document's overall subject (or to related
+  matters) and contains nothing that could fall directly within that overall
+  subject. (Thus, if the Document is in part a textbook of mathematics, a
+  Secondary Section may not explain any mathematics.) The relationship could be
+  a matter of historical connection with the subject or with related matters,
+  or of legal, commercial, philosophical, ethical or political position
+  regarding them.
+ </p><p>
+  The "Invariant Sections" are certain Secondary Sections whose titles are
+  designated, as being those of Invariant Sections, in the notice that says
+  that the Document is released under this License. If a section does not fit
+  the above definition of Secondary then it is not allowed to be designated as
+  Invariant. The Document may contain zero Invariant Sections. If the Document
+  does not identify any Invariant Sections then there are none.
+ </p><p>
+  The "Cover Texts" are certain short passages of text that are listed, as
+  Front-Cover Texts or Back-Cover Texts, in the notice that says that the
+  Document is released under this License. A Front-Cover Text may be at most 5
+  words, and a Back-Cover Text may be at most 25 words.
+ </p><p>
+  A "Transparent" copy of the Document means a machine-readable copy,
+  represented in a format whose specification is available to the general
+  public, that is suitable for revising the document straightforwardly with
+  generic text editors or (for images composed of pixels) generic paint
+  programs or (for drawings) some widely available drawing editor, and that is
+  suitable for input to text formatters or for automatic translation to a
+  variety of formats suitable for input to text formatters. A copy made in an
+  otherwise Transparent file format whose markup, or absence of markup, has
+  been arranged to thwart or discourage subsequent modification by readers is
+  not Transparent. An image format is not Transparent if used for any
+  substantial amount of text. A copy that is not "Transparent" is called
+  "Opaque".
+ </p><p>
+  Examples of suitable formats for Transparent copies include plain ASCII
+  without markup, Texinfo input format, LaTeX input format, SGML or XML using a
+  publicly available DTD, and standard-conforming simple HTML, PostScript or
+  PDF designed for human modification. Examples of transparent image formats
+  include PNG, XCF and JPG. Opaque formats include proprietary formats that can
+  be read and edited only by proprietary word processors, SGML or XML for which
+  the DTD and/or processing tools are not generally available, and the
+  machine-generated HTML, PostScript or PDF produced by some word processors
+  for output purposes only.
+ </p><p>
+  The "Title Page" means, for a printed book, the title page itself, plus such
+  following pages as are needed to hold, legibly, the material this License
+  requires to appear in the title page. For works in formats which do not have
+  any title page as such, "Title Page" means the text near the most prominent
+  appearance of the work's title, preceding the beginning of the body of the
+  text.
+ </p><p>
+  A section "Entitled XYZ" means a named subunit of the Document whose title
+  either is precisely XYZ or contains XYZ in parentheses following text that
+  translates XYZ in another language. (Here XYZ stands for a specific section
+  name mentioned below, such as "Acknowledgements", "Dedications",
+  "Endorsements", or "History".) To "Preserve the Title" of such a section when
+  you modify the Document means that it remains a section "Entitled XYZ"
+  according to this definition.
+ </p><p>
+  The Document may include Warranty Disclaimers next to the notice which states
+  that this License applies to the Document. These Warranty Disclaimers are
+  considered to be included by reference in this License, but only as regards
+  disclaiming warranties: any other implication that these Warranty Disclaimers
+  may have is void and has no effect on the meaning of this License.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.19"><span class="name">
+    2. VERBATIM COPYING
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.19">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  You may copy and distribute the Document in any medium, either commercially
+  or non-commercially, provided that this License, the copyright notices, and
+  the license notice saying this License applies to the Document are reproduced
+  in all copies, and that you add no other conditions whatsoever to those of
+  this License. You may not use technical measures to obstruct or control the
+  reading or further copying of the copies you make or distribute. However, you
+  may accept compensation in exchange for copies. If you distribute a large
+  enough number of copies you must also follow the conditions in section 3.
+ </p><p>
+  You may also lend copies, under the same conditions stated above, and you may
+  publicly display copies.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.22"><span class="name">
+    3. COPYING IN QUANTITY
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.22">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  If you publish printed copies (or copies in media that commonly have printed
+  covers) of the Document, numbering more than 100, and the Document's license
+  notice requires Cover Texts, you must enclose the copies in covers that
+  carry, clearly and legibly, all these Cover Texts: Front-Cover Texts on the
+  front cover, and Back-Cover Texts on the back cover. Both covers must also
+  clearly and legibly identify you as the publisher of these copies. The front
+  cover must present the full title with all words of the title equally
+  prominent and visible. You may add other material on the covers in addition.
+  Copying with changes limited to the covers, as long as they preserve the
+  title of the Document and satisfy these conditions, can be treated as
+  verbatim copying in other respects.
+ </p><p>
+  If the required texts for either cover are too voluminous to fit legibly, you
+  should put the first ones listed (as many as fit reasonably) on the actual
+  cover, and continue the rest onto adjacent pages.
+ </p><p>
+  If you publish or distribute Opaque copies of the Document numbering more
+  than 100, you must either include a machine-readable Transparent copy along
+  with each Opaque copy, or state in or with each Opaque copy a
+  computer-network location from which the general network-using public has
+  access to download using public-standard network protocols a complete
+  Transparent copy of the Document, free of added material. If you use the
+  latter option, you must take reasonably prudent steps, when you begin
+  distribution of Opaque copies in quantity, to ensure that this Transparent
+  copy will remain thus accessible at the stated location until at least one
+  year after the last time you distribute an Opaque copy (directly or through
+  your agents or retailers) of that edition to the public.
+ </p><p>
+  It is requested, but not required, that you contact the authors of the
+  Document well before redistributing any large number of copies, to give them
+  a chance to provide you with an updated version of the Document.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.27"><span class="name">
+    4. MODIFICATIONS
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.27">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  You may copy and distribute a Modified Version of the Document under the
+  conditions of sections 2 and 3 above, provided that you release the Modified
+  Version under precisely this License, with the Modified Version filling the
+  role of the Document, thus licensing distribution and modification of the
+  Modified Version to whoever possesses a copy of it. In addition, you must do
+  these things in the Modified Version:
+ </p><div class="orderedlist "><ol class="orderedlist" type="A"><li class="listitem "><p>
+    Use in the Title Page (and on the covers, if any) a title distinct from
+    that of the Document, and from those of previous versions (which should, if
+    there were any, be listed in the History section of the Document). You may
+    use the same title as a previous version if the original publisher of that
+    version gives permission.
+   </p></li><li class="listitem "><p>
+    List on the Title Page, as authors, one or more persons or entities
+    responsible for authorship of the modifications in the Modified Version,
+    together with at least five of the principal authors of the Document (all
+    of its principal authors, if it has fewer than five), unless they release
+    you from this requirement.
+   </p></li><li class="listitem "><p>
+    State on the Title page the name of the publisher of the Modified Version,
+    as the publisher.
+   </p></li><li class="listitem "><p>
+    Preserve all the copyright notices of the Document.
+   </p></li><li class="listitem "><p>
+    Add an appropriate copyright notice for your modifications adjacent to the
+    other copyright notices.
+   </p></li><li class="listitem "><p>
+    Include, immediately after the copyright notices, a license notice giving
+    the public permission to use the Modified Version under the terms of this
+    License, in the form shown in the Addendum below.
+   </p></li><li class="listitem "><p>
+    Preserve in that license notice the full lists of Invariant Sections and
+    required Cover Texts given in the Document's license notice.
+   </p></li><li class="listitem "><p>
+    Include an unaltered copy of this License.
+   </p></li><li class="listitem "><p>
+    Preserve the section Entitled "History", Preserve its Title, and add to it
+    an item stating at least the title, year, new authors, and publisher of the
+    Modified Version as given on the Title Page. If there is no section
+    Entitled "History" in the Document, create one stating the title, year,
+    authors, and publisher of the Document as given on its Title Page, then add
+    an item describing the Modified Version as stated in the previous sentence.
+   </p></li><li class="listitem "><p>
+    Preserve the network location, if any, given in the Document for public
+    access to a Transparent copy of the Document, and likewise the network
+    locations given in the Document for previous versions it was based on.
+    These may be placed in the "History" section. You may omit a network
+    location for a work that was published at least four years before the
+    Document itself, or if the original publisher of the version it refers to
+    gives permission.
+   </p></li><li class="listitem "><p>
+    For any section Entitled "Acknowledgements" or "Dedications", Preserve the
+    Title of the section, and preserve in the section all the substance and
+    tone of each of the contributor acknowledgements and/or dedications given
+    therein.
+   </p></li><li class="listitem "><p>
+    Preserve all the Invariant Sections of the Document, unaltered in their
+    text and in their titles. Section numbers or the equivalent are not
+    considered part of the section titles.
+   </p></li><li class="listitem "><p>
+    Delete any section Entitled "Endorsements". Such a section may not be
+    included in the Modified Version.
+   </p></li><li class="listitem "><p>
+    Do not retitle any existing section to be Entitled "Endorsements" or to
+    conflict in title with any Invariant Section.
+   </p></li><li class="listitem "><p>
+    Preserve any Warranty Disclaimers.
+   </p></li></ol></div><p>
+  If the Modified Version includes new front-matter sections or appendices that
+  qualify as Secondary Sections and contain no material copied from the
+  Document, you may at your option designate some or all of these sections as
+  invariant. To do this, add their titles to the list of Invariant Sections in
+  the Modified Version's license notice. These titles must be distinct from any
+  other section titles.
+ </p><p>
+  You may add a section Entitled "Endorsements", provided it contains nothing
+  but endorsements of your Modified Version by various parties--for example,
+  statements of peer review or that the text has been approved by an
+  organization as the authoritative definition of a standard.
+ </p><p>
+  You may add a passage of up to five words as a Front-Cover Text, and a
+  passage of up to 25 words as a Back-Cover Text, to the end of the list of
+  Cover Texts in the Modified Version. Only one passage of Front-Cover Text and
+  one of Back-Cover Text may be added by (or through arrangements made by) any
+  one entity. If the Document already includes a cover text for the same cover,
+  previously added by you or by arrangement made by the same entity you are
+  acting on behalf of, you may not add another; but you may replace the old
+  one, on explicit permission from the previous publisher that added the old
+  one.
+ </p><p>
+  The author(s) and publisher(s) of the Document do not by this License give
+  permission to use their names for publicity for or to assert or imply
+  endorsement of any Modified Version.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.34"><span class="name">
+    5. COMBINING DOCUMENTS
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.34">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  You may combine the Document with other documents released under this
+  License, under the terms defined in section 4 above for modified versions,
+  provided that you include in the combination all of the Invariant Sections of
+  all of the original documents, unmodified, and list them all as Invariant
+  Sections of your combined work in its license notice, and that you preserve
+  all their Warranty Disclaimers.
+ </p><p>
+  The combined work need only contain one copy of this License, and multiple
+  identical Invariant Sections may be replaced with a single copy. If there are
+  multiple Invariant Sections with the same name but different contents, make
+  the title of each such section unique by adding at the end of it, in
+  parentheses, the name of the original author or publisher of that section if
+  known, or else a unique number. Make the same adjustment to the section
+  titles in the list of Invariant Sections in the license notice of the
+  combined work.
+ </p><p>
+  In the combination, you must combine any sections Entitled "History" in the
+  various original documents, forming one section Entitled "History"; likewise
+  combine any sections Entitled "Acknowledgements", and any sections Entitled
+  "Dedications". You must delete all sections Entitled "Endorsements".
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.38"><span class="name">
+    6. COLLECTIONS OF DOCUMENTS
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.38">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  You may make a collection consisting of the Document and other documents
+  released under this License, and replace the individual copies of this
+  License in the various documents with a single copy that is included in the
+  collection, provided that you follow the rules of this License for verbatim
+  copying of each of the documents in all other respects.
+ </p><p>
+  You may extract a single document from such a collection, and distribute it
+  individually under this License, provided you insert a copy of this License
+  into the extracted document, and follow this License in all other respects
+  regarding verbatim copying of that document.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.41"><span class="name">
+    7. AGGREGATION WITH INDEPENDENT WORKS
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.41">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  A compilation of the Document or its derivatives with other separate and
+  independent documents or works, in or on a volume of a storage or
+  distribution medium, is called an "aggregate" if the copyright resulting from
+  the compilation is not used to limit the legal rights of the compilation's
+  users beyond what the individual works permit. When the Document is included
+  in an aggregate, this License does not apply to the other works in the
+  aggregate which are not themselves derivative works of the Document.
+ </p><p>
+  If the Cover Text requirement of section 3 is applicable to these copies of
+  the Document, then if the Document is less than one half of the entire
+  aggregate, the Document's Cover Texts may be placed on covers that bracket
+  the Document within the aggregate, or the electronic equivalent of covers if
+  the Document is in electronic form. Otherwise they must appear on printed
+  covers that bracket the whole aggregate.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.44"><span class="name">
+    8. TRANSLATION
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.44">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  Translation is considered a kind of modification, so you may distribute
+  translations of the Document under the terms of section 4. Replacing
+  Invariant Sections with translations requires special permission from their
+  copyright holders, but you may include translations of some or all Invariant
+  Sections in addition to the original versions of these Invariant Sections.
+  You may include a translation of this License, and all the license notices in
+  the Document, and any Warranty Disclaimers, provided that you also include
+  the original English version of this License and the original versions of
+  those notices and disclaimers. In case of a disagreement between the
+  translation and the original version of this License or a notice or
+  disclaimer, the original version will prevail.
+ </p><p>
+  If a section in the Document is Entitled "Acknowledgements", "Dedications",
+  or "History", the requirement (section 4) to Preserve its Title (section 1)
+  will typically require changing the actual title.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.47"><span class="name">
+    9. TERMINATION
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.47">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  You may not copy, modify, sublicense, or distribute the Document except as
+  expressly provided for under this License. Any other attempt to copy, modify,
+  sublicense or distribute the Document is void, and will automatically
+  terminate your rights under this License. However, parties who have received
+  copies, or rights, from you under this License will not have their licenses
+  terminated so long as such parties remain in full compliance.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.49"><span class="name">
+    10. FUTURE REVISIONS OF THIS LICENSE
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.49">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><p>
+  The Free Software Foundation may publish new, revised versions of the GNU
+  Free Documentation License from time to time. Such new versions will be
+  similar in spirit to the present version, but may differ in detail to address
+  new problems or concerns. See
+  <a class="link" href="https://www.gnu.org/copyleft/" target="_blank">https://www.gnu.org/copyleft/</a>.
+ </p><p>
+  Each version of the License is given a distinguishing version number. If the
+  Document specifies that a particular numbered version of this License "or any
+  later version" applies to it, you have the option of following the terms and
+  conditions either of that specified version or of any later version that has
+  been published (not as a draft) by the Free Software Foundation. If the
+  Document does not specify a version number of this License, you may choose
+  any version ever published (not as a draft) by the Free Software Foundation.
+ </p><div xmlns:dm="urn:x-suse:ns:docmanager" class="sect4 bridgehead"><h5 class="title legal" id="id-1.6.4.9.4.52"><span class="name">
+    ADDENDUM: How to use this License for your documents
+  </span><a title="Permalink" class="permalink" href="#id-1.6.4.9.4.52">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_license_gfdl1.2.xml" title="Edit the source file for this section">Edit source</a></h5></div><div class="verbatim-wrap"><pre class="screen">Copyright (c) YEAR YOUR NAME.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled “GNU
+Free Documentation License”.</pre></div><p>
+  If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
+  replace the “with...Texts.” line with this:
+ </p><div class="verbatim-wrap"><pre class="screen">with the Invariant Sections being LIST THEIR TITLES, with the
+Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.</pre></div><p>
+  If you have Invariant Sections without Cover Texts, or some other combination
+  of the three, merge those two alternatives to suit the situation.
+ </p><p>
+  If your document contains nontrivial examples of program code, we recommend
+  releasing these examples in parallel under your choice of free software
+  license, such as the GNU General Public License, to permit their use in free
+  software.
+ </p></div></div></div></div></div><div class="page-bottom"><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

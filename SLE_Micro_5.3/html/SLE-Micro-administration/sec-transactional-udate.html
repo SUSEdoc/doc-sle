@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLE Micro 5.3 | Administration Guide | Administration using transactional updates</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Administration using transactional updates | SLE Micro…"/>
+<meta name="description" content="This chapter describes the usage of the transactional-update command."/>
+<meta name="product-name" content="SUSE Linux Enterprise Micro"/>
+<meta name="product-number" content="5.3"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 3. Administration using transactional updates"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="jsindelarova@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Micro 5.3"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration of SLE Micro"/>
+<meta property="og:description" content="Networking, transactional-updates and performance"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration of SLE Micro"/>
+<meta name="twitter:description" content="Networking, transactional-updates and performance"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Product &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Administration using transactional updates",
+  
+    "description": "This chapter describes the usage of the transactional-update command.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2022-10-03T00:00+02:00",
+      
+    "datePublished": "2022-10-03T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-snapshots.html" title="Chapter 2. Snapshots"/><link rel="next" href="cha-ulp.html" title="Chapter 4. User space live patching"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-common.html">Common tasks</a><span> / </span><a class="crumb" href="sec-transactional-udate.html">Administration using transactional updates</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="preface-administration-slemicro.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li class="active"><a href="part-common.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-read-only-filesystem.html" class=" "><span class="title-number">1 </span><span class="title-name">Read-only file system</span></a></li><li><a href="cha-snapshots.html" class=" "><span class="title-number">2 </span><span class="title-name">Snapshots</span></a></li><li><a href="sec-transactional-udate.html" class=" you-are-here"><span class="title-number">3 </span><span class="title-name">Administration using transactional updates</span></a></li><li><a href="cha-ulp.html" class=" "><span class="title-number">4 </span><span class="title-name">User space live patching</span></a></li></ol></li><li><a href="part-networking-slemicro.html" class="has-children "><span class="title-number">II </span><span class="title-name">Networking</span></a><ol><li><a href="cha-network.html" class=" "><span class="title-number">5 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-nm-vs-wicked.html" class=" "><span class="title-number">6 </span><span class="title-name">NetworkManager and <code class="command">wicked</code></span></a></li><li><a href="cha-nm-configuration.html" class=" "><span class="title-number">7 </span><span class="title-name">NetworkManager configuration and usage</span></a></li></ol></li><li><a href="part-slemicro-monitoring.html" class="has-children "><span class="title-number">III </span><span class="title-name">Monitoring and debugging</span></a><ol><li><a href="cha-health-checker.html" class=" "><span class="title-number">8 </span><span class="title-name">Health checker</span></a></li><li><a href="cha-admin-toolbox.html" class=" "><span class="title-number">9 </span><span class="title-name"><code class="literal">toolbox</code> for SLE Micro debugging</span></a></li><li><a href="cha-performance-monitoring.html" class=" "><span class="title-number">10 </span><span class="title-name">Monitoring performance</span></a></li></ol></li><li><a href="part-slemicro-troubleshooting.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adm-support-slemicro.html" class=" "><span class="title-number">11 </span><span class="title-name">Gathering system information for support</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="sec-transactional-udate" data-id-title="Administration using transactional updates"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">5.3</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">Administration using transactional updates</span></span> <a title="Permalink" class="permalink" href="sec-transactional-udate.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>This chapter describes the usage of the
+      <code class="command">transactional-update</code> command.</p></div></div></div></div><div id="id-1.8.3.4.3" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning</div><p>
+      In case you do not reboot your machine before performing further changes,
+      the <code class="command">transactional-update</code> command will create a new
+      snapshot from the current root file system. This means that you will end
+      up with several parallel snapshots, each including that particular change
+      but not changes from the other invocations of the command. After reboot,
+      the most recently created snapshot will be used as your new root file
+      system, and it will not include changes done in the previous snapshots.
+    </p></div><section class="sect1" id="sec-command-list" data-id-title="transactional-update usage"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.1 </span><span class="title-name"><code class="command">transactional-update</code> usage</span></span> <a title="Permalink" class="permalink" href="sec-transactional-udate.html#sec-command-list">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The <code class="command">transactional-update</code> command enables the atomic
+      installation or removal of updates; updates are applied only if all of
+      them can be successfully installed.
+      <code class="command">transactional-update</code> creates a snapshot of your system
+      and uses it to update the system. Later you can restore this snapshot. All
+      changes become active only after reboot.
+    </p><p>
+      The <code class="command">transactional-update</code> command syntax is as follows:
+    </p><div class="verbatim-wrap"><pre class="screen">transactional-update <code class="option">[option]</code> <em class="replaceable">[general_command]</em> <em class="replaceable">[package_command]</em> <em class="replaceable">standalone_command</em></pre></div><div id="id-1.8.3.4.4.5" data-id-title="Running transactional-update without arguments" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Running <code class="command">transactional-update</code>
+      without arguments</div><p>
+        If you do not specify any command or option while running the
+        <code class="command">transactional-update</code> command, the system updates
+        itself.
+      </p></div><p>
+      Possible command parameters are described further.
+    </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name"><code class="command">transactional-update</code> options </span></span><a title="Permalink" class="permalink" href="sec-transactional-udate.html#id-1.8.3.4.4.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.8.3.4.4.7.2"><span class="term"><code class="literal">--interactive, -i</code></span></dt><dd><p>
+            Can be used along with a package command to turn on interactive
+            mode.
+          </p></dd><dt id="id-1.8.3.4.4.7.3"><span class="term"><code class="literal">--non-interactive, -n</code></span></dt><dd><p>
+            Can be used along with a package command to turn on non-interactive
+            mode.
+          </p></dd><dt id="id-1.8.3.4.4.7.4"><span class="term"><code class="literal">--continue [<em class="replaceable">number</em>], -c</code></span></dt><dd><p>
+            The <code class="command">--continue</code> option is for making multiple
+            changes to an existing snapshot without rebooting.
+          </p><p>
+            The default <code class="command">transactional-update</code> behavior is to
+            create a new snapshot from the current root file system. If you
+            forget something, such as installing a new package, you have to
+            reboot to apply your previous changes, run
+            <code class="command">transactional-update</code> again to install the
+            forgotten package, and reboot again. You cannot run the
+            <code class="command">transactional-update</code> command multiple times
+            without rebooting to add more changes to the snapshot, because this
+            will create separate independent snapshots that do not include
+            changes from the previous snapshots.
+          </p><p>
+            Use the <code class="command">--continue</code> option to make as many
+            changes as you want without rebooting. A separate snapshot is made
+            each time, and each snapshot contains all the changes you made in
+            the previous snapshots, plus your new changes. Repeat this process
+            as many times as you want, and when the final snapshot includes
+            everything you want, reboot the system, and your final snapshot
+            becomes the new root file system.
+          </p><p>
+            Another useful feature of the <code class="command">--continue</code> option
+            is that you may select any existing snapshot as the base for your new
+            snapshot. The following example demonstrates running
+            <code class="command">transactional-update</code> to install a new package in
+            a snapshot based on snapshot 13, and then running it again to
+            install another package:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update pkg install <em class="replaceable">package_1</em></code></pre></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update --continue 13 pkg install <em class="replaceable">package_2</em></code></pre></div></dd><dt id="id-1.8.3.4.4.7.5"><span class="term"><code class="literal">--no-selfupdate</code></span></dt><dd><p>
+            Disables self-updating of <code class="command">transactional-update</code>.
+          </p></dd><dt id="id-1.8.3.4.4.7.6"><span class="term"><code class="literal">--drop-if-no-change, -d</code></span></dt><dd><p>
+            Discards the snapshot created by
+            <code class="command">transactional-update</code> if there were no changes to
+            the root file system. If there are some changes to the
+            <code class="filename">/etc</code> directory, those changes are
+            merged back to the current file system.
+          </p></dd><dt id="id-1.8.3.4.4.7.7"><span class="term"><code class="literal">--quiet</code></span></dt><dd><p>
+            The <code class="command">transactional-update</code> command will not output
+            to <code class="literal">stdout</code>.
+          </p></dd><dt id="id-1.8.3.4.4.7.8"><span class="term"><code class="literal">--help, -h</code></span></dt><dd><p>
+            Prints help for the <code class="command">transactional-update</code>
+            command.
+          </p></dd><dt id="id-1.8.3.4.4.7.9"><span class="term"><code class="literal">--version</code></span></dt><dd><p>
+            Displays the version of the <code class="command">transactional-update</code>
+            command.
+          </p></dd></dl></div><p>
+      The general commands are the following:
+    </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">General commands </span></span><a title="Permalink" class="permalink" href="sec-transactional-udate.html#id-1.8.3.4.4.9">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.8.3.4.4.9.2"><span class="term"><code class="literal">cleanup-snapshots</code></span></dt><dd><p>
+            The command marks all unused snapshots that are intended to be
+            removed.
+          </p></dd><dt id="id-1.8.3.4.4.9.3"><span class="term"><code class="literal">cleanup-overlays</code></span></dt><dd><p>
+            The command removes all unused overlay layers of
+            <code class="filename">/etc</code>.
+          </p></dd><dt id="id-1.8.3.4.4.9.4"><span class="term"><code class="literal">cleanup</code></span></dt><dd><p>
+            The command combines the <code class="literal">cleanup-snapshots</code> and
+            <code class="literal">cleanup-overlays</code> commands. For more
+            details, refer to <a class="xref" href="sec-transactional-udate.html#sec-cleanup-algorithm" title="3.2. Snapshots cleanup">Section 3.2, “Snapshots cleanup”</a>.
+          </p></dd><dt id="id-1.8.3.4.4.9.5"><span class="term"><code class="literal">grub.cfg</code></span></dt><dd><p>
+            Use this command to rebuild the GRUB boot loader configuration
+            file.
+          </p></dd><dt id="id-1.8.3.4.4.9.6"><span class="term"><code class="literal">bootloader</code></span></dt><dd><p>
+            The command reinstalls the boot loader.
+          </p></dd><dt id="id-1.8.3.4.4.9.7"><span class="term"><code class="literal">initrd</code></span></dt><dd><p>
+            Use the command to rebuild <code class="literal">initrd</code>.
+          </p></dd><dt id="id-1.8.3.4.4.9.8"><span class="term"><code class="literal">kdump</code></span></dt><dd><p>
+            If you perform changes to your hardware or storage, you may
+            need to rebuild the kdump initrd.
+          </p></dd><dt id="id-1.8.3.4.4.9.9"><span class="term"><code class="literal">shell</code></span></dt><dd><p>
+            Opens a read-write shell in the new snapshot before exiting. The
+            command is typically used for debugging purposes.
+          </p></dd><dt id="id-1.8.3.4.4.9.10"><span class="term"><code class="literal">reboot</code></span></dt><dd><p>
+            The system reboots after the transactional-update is complete.
+          </p></dd><dt id="id-1.8.3.4.4.9.11"><span class="term"><code class="literal">run </code><em class="replaceable">&lt;command&gt;</em></span></dt><dd><p>
+            Runs the provided command in a new snapshot.
+          </p></dd><dt id="id-1.8.3.4.4.9.12"><span class="term"><code class="literal">setup-selinux</code></span></dt><dd><p>
+            Installs and enables the targeted SELinux policy.
+          </p></dd></dl></div><p>
+      The package commands are the following:
+    </p><div id="id-1.8.3.4.4.11" data-id-title="Installing packages outside of the official SLE Micro repositories" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Installing packages outside of the official <span class="productname"><span class="phrase">SLE Micro</span></span> repositories</div><p>
+        The installation of packages from repositories other than
+        the official ones (for example, the SUSE Linux Enterprise Server repositories) is
+        <span class="bold"><strong>not</strong></span> supported and not
+        recommended. To use the tools available for SUSE Linux Enterprise Server, run the
+        <code class="literal">toolbox</code> container and install the tools inside
+        the container. For details about the <code class="literal">toolbox</code>
+        container, refer to <a class="xref" href="cha-admin-toolbox.html" title="Chapter 9. toolbox for SLE Micro debugging">Chapter 9, <em><code class="literal">toolbox</code> for SLE Micro debugging</em></a>.
+      </p></div><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Package commands </span></span><a title="Permalink" class="permalink" href="sec-transactional-udate.html#id-1.8.3.4.4.12">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.8.3.4.4.12.2"><span class="term"><code class="literal">dup</code></span></dt><dd><p>
+            Performs an upgrade of your system. The default option for this
+            command is <code class="literal">--non-interactive</code>.
+          </p></dd><dt id="id-1.8.3.4.4.12.3"><span class="term"><code class="literal">migration</code></span></dt><dd><p>
+            The command migrates your system to a selected target. Typically, it
+            is used to upgrade your system if it has been registered via SUSE Customer Center.
+          </p></dd><dt id="id-1.8.3.4.4.12.4"><span class="term"><code class="literal">patch</code></span></dt><dd><p>
+            Checks for available patches and installs them. The default option
+            for this command is <code class="literal">--non-interactive</code>.
+          </p></dd><dt id="id-1.8.3.4.4.12.5"><span class="term"><code class="literal">pkg install</code></span></dt><dd><p>
+            Installs individual packages from the available channels using the
+            <code class="command">zypper install</code> command. This command can also be
+            used to install Program Temporary Fix (PTF) RPM files. The default
+            option for this command is <code class="literal">--interactive</code>.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update pkg install <em class="replaceable">package_name</em></code></pre></div><p>
+            or
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update pkg install <em class="replaceable">rpm1 rpm2</em></code></pre></div></dd><dt id="id-1.8.3.4.4.12.6"><span class="term"><code class="literal">pkg remove</code></span></dt><dd><p>
+            Removes individual packages from the active snapshot using the
+            <code class="command">zypper remove</code> command. This command can also be
+            used to remove PTF RPM files. The default option for this command
+            is <code class="literal">--interactive</code>.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update pkg remove <em class="replaceable">package_name</em></code></pre></div></dd><dt id="id-1.8.3.4.4.12.7"><span class="term"><code class="literal">pkg update</code></span></dt><dd><p>
+            Updates individual packages from the active snapshot using the
+            <code class="command">zypper update</code> command. Only packages that are
+            part of the snapshot of the base file system can be updated. The
+            default option for this command is
+            <code class="literal">--interactive</code>.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update pkg update <em class="replaceable">package_name</em></code></pre></div></dd><dt id="id-1.8.3.4.4.12.8"><span class="term"><code class="literal">register</code></span></dt><dd><p>
+            The <code class="literal">register</code> command enables you to
+            register/deregister your system. For a complete usage
+            description, refer to <a class="xref" href="sec-transactional-udate.html#sec-register-command" title="3.1.1. The register command">Section 3.1.1, “The <code class="literal">register</code> command”</a>.
+          </p></dd><dt id="id-1.8.3.4.4.12.9"><span class="term"><code class="literal">up</code></span></dt><dd><p>
+            Updates installed packages to newer versions. The default option
+            for this command is <code class="literal">--non-interactive</code>.
+          </p></dd></dl></div><p>
+      The standalone commands are the following:
+    </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Standalone commands </span></span><a title="Permalink" class="permalink" href="sec-transactional-udate.html#id-1.8.3.4.4.14">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.8.3.4.4.14.2"><span class="term"><code class="literal">rollback</code> <em class="replaceable">&lt;snapshot number&gt;</em></span></dt><dd><p>
+            This sets the default subvolume. The current system is set as the
+            new default root file system. If you specify a number, that
+            snapshot is used as the default root file system. On a read-only
+            file system, it does not create any additional snapshots.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update rollback <em class="replaceable">snapshot_number</em></code></pre></div></dd><dt id="id-1.8.3.4.4.14.3"><span class="term"><code class="literal">rollback last</code></span></dt><dd><p>
+            This command sets the last known to be working snapshot as the
+            default.
+          </p></dd></dl></div><section class="sect2" id="sec-register-command" data-id-title="The register command"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.1.1 </span><span class="title-name">The <code class="literal">register</code> command</span></span> <a title="Permalink" class="permalink" href="sec-transactional-udate.html#sec-register-command">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The <code class="literal">register</code> command enables you to handle all tasks
+        regarding registration and subscription management. You can supply the
+        following options:
+      </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.3.4.4.15.3.1"><span class="term"><code class="literal">--list-extensions</code></span></dt><dd><p>
+              With this option, the command will list available extensions for
+              your system. You can use the output to find a product identifier
+              for product activation.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.2"><span class="term"><code class="literal">-p, --product</code></span></dt><dd><p>
+              Use this option to specify a product for activation. The product
+              identifier has the following format:
+              <span class="emphasis"><em>&lt;name&gt;/&lt;version&gt;/&lt;architecture&gt;</em></span>,
+              for example,
+              <code class="literal">sle-module-live-patching/15.3/x86_64</code>. The
+              appropriate command will then be the following:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update register -p sle-module-live-patching/15.3/x86_64</pre></div></dd><dt id="id-1.8.3.4.4.15.3.3"><span class="term"><code class="literal">-r, --regcode</code></span></dt><dd><p>
+              Register your system with the provided registration code. The
+              command will register the subscription and enable software
+              repositories.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.4"><span class="term"><code class="literal">-d, --de-register</code></span></dt><dd><p>
+              The option deregisters the system, or when used along with the
+              <code class="literal">-p</code> option, deregisters an extension.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.5"><span class="term"><code class="literal">-e, --email</code></span></dt><dd><p>
+              Specify an email address that will be used in SUSE Customer Center for
+              registration.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.6"><span class="term"><code class="literal">--url</code></span></dt><dd><p>
+              Specify the URL of your registration server. The URL is stored in
+              the configuration and will be used in subsequent command
+              invocations. For example:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update register --url https://scc.suse.com</pre></div></dd><dt id="id-1.8.3.4.4.15.3.7"><span class="term"><code class="literal">-s, --status</code></span></dt><dd><p>
+              Displays the current registration status in JSON format.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.8"><span class="term"><code class="literal">--write-config</code></span></dt><dd><p>
+              Writes the provided options value to the
+              <code class="filename">/etc/SUSEConnect</code> configuration file.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.9"><span class="term"><code class="literal">--cleanup</code></span></dt><dd><p>
+              Removes old system credentials.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.10"><span class="term"><code class="literal">--version</code></span></dt><dd><p>
+              Prints the version.
+            </p></dd><dt id="id-1.8.3.4.4.15.3.11"><span class="term"><code class="literal">--help</code></span></dt><dd><p>
+              Displays the usage of the command.
+            </p></dd></dl></div></section></section><section class="sect1" id="sec-cleanup-algorithm" data-id-title="Snapshots cleanup"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.2 </span><span class="title-name">Snapshots cleanup</span></span> <a title="Permalink" class="permalink" href="sec-transactional-udate.html#sec-cleanup-algorithm">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      If you run the command <code class="command">transactional-update cleanup</code>,
+      all old snapshots without a cleanup algorithm will have one set. All
+      important snapshots are also marked. The command also removes all
+      unreferenced (and thus unused) <code class="filename">/etc</code> overlay
+      directories in <code class="filename">/var/lib/overlay</code>.
+    </p><p>
+      The snapshots with the set <code class="literal">number</code> cleanup algorithm
+      will be deleted according to the rules configured in
+      <code class="filename">/etc/snapper/configs/root</code> by the following
+      parameters:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.3.4.5.4.1"><span class="term">NUMBER_MIN_AGE</span></dt><dd><p>
+            Defines the minimum age of a snapshot (in seconds) that can be
+            automatically removed.
+          </p></dd><dt id="id-1.8.3.4.5.4.2"><span class="term">NUMBER_LIMIT/NUMBER_LIMIT_IMPORTANT</span></dt><dd><p>
+            Defines the maximum count of stored snapshots. The cleaning
+            algorithms delete snapshots above the specified maximum value,
+            without taking into account the snapshot and file system space. The
+            algorithms also delete snapshots above the minimum value until the
+            limits for the snapshot and file system are reached.
+          </p></dd></dl></div><p>
+      The snapshot cleanup is also regularly performed by <code class="systemitem">systemd</code>.
+    </p></section><section class="sect1" id="sec-rollback-procedure" data-id-title="System rollback"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.3 </span><span class="title-name">System rollback</span></span> <a title="Permalink" class="permalink" href="sec-transactional-udate.html#sec-rollback-procedure">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      GRUB 2 enables booting from btrfs snapshots and thus allows you to use
+      any older functional snapshot in case the new snapshot does not work
+      correctly.
+    </p><p>
+      When booting a snapshot, the parts of the file system included in the
+      snapshot are mounted read-only; all other file systems and parts that are
+      excluded from snapshots are mounted read-write and can be modified.
+    </p><div id="id-1.8.3.4.6.4" data-id-title="Rolling back to a specific installation state" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Rolling back to a specific installation state</div><p>
+        An initial bootable snapshot is created at the end of the initial
+        system installation. You can go back to that state at any time by
+        booting this snapshot. The snapshot can be identified by the
+        description <code class="literal">after installation</code>.
+      </p></div><p>
+      There are two methods to perform a system rollback.
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          From a running system, you can set the default snapshot, see more in
+          <a class="xref" href="sec-transactional-udate.html#proc-running-snapshot" title="Rollback from a running system">Procedure 3.1, “Rollback from a running system”</a>.
+        </p></li><li class="listitem"><p>
+          Especially in cases where the current snapshot is broken, you can
+          boot into the new snapshot and set it to default. For details, refer
+          to <a class="xref" href="sec-transactional-udate.html#proc-boot-snapshot" title="Rollback to a working snapshot">Procedure 3.2, “Rollback to a working snapshot”</a>.
+        </p></li></ul></div><p>
+      If your current snapshot is functional, you can use the following
+      procedure for a system rollback.
+    </p><div class="procedure" id="proc-running-snapshot" data-id-title="Rollback from a running system"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 3.1: </span><span class="title-name">Rollback from a running system </span></span><a title="Permalink" class="permalink" href="sec-transactional-udate.html#proc-running-snapshot">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Choose the snapshot that should be set as default, run:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>snapper list</pre></div><p>
+          to get a list of available snapshots. Note the number of the snapshot
+          to be set as default.
+        </p></li><li class="step"><p>
+          Set the snapshot as default by running:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update rollback <em class="replaceable">snapshot_number</em></pre></div><p>
+          If you omit the <em class="replaceable">snapshot number</em>, the
+          current snapshot will be set as default.
+        </p></li><li class="step"><p>
+          Reboot your system to boot into the new default snapshot.
+        </p></li></ol></div></div><p>
+      The following procedure is used in case the current snapshot is broken
+      and you are not able to boot into it.
+    </p><div class="procedure" id="proc-boot-snapshot" data-id-title="Rollback to a working snapshot"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 3.2: </span><span class="title-name">Rollback to a working snapshot </span></span><a title="Permalink" class="permalink" href="sec-transactional-udate.html#proc-boot-snapshot">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Reboot your system and select <code class="literal">Start bootloader from a
+          read-only snapshot</code>.
+        </p></li><li class="step"><p>
+          Choose a snapshot to boot. The snapshots are sorted according to the
+          date of creation, with the latest one at the top.
+        </p></li><li class="step"><p>
+          Log in to your system and check whether everything works as expected.
+          The data written to directories excluded from the snapshots will stay
+          untouched.
+        </p></li><li class="step"><p>
+          If the snapshot you booted into is not suitable for the rollback,
+          reboot your system and choose another one.
+        </p><p>
+          If the snapshot works as expected, you can perform the rollback by
+          running the following command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">transactional-update rollback</code></pre></div><p>
+          And reboot afterwards.
+        </p></li></ol></div></div></section><section class="sect1" id="sec-automatic-updates" data-id-title="Managing automatic transactional updates"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.4 </span><span class="title-name">Managing automatic transactional updates</span></span> <a title="Permalink" class="permalink" href="sec-transactional-udate.html#sec-automatic-updates">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_transactional_updates.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Automatic updates are controlled by <code class="command">systemd.timer</code>
+      that runs once per day. This applies all updates and informs
+      <code class="command">rebootmgrd</code> that the machine should be rebooted. You
+      may adjust the time when the update runs, see systemd.timer(5)
+      documentation.
+    </p><p>
+      You can disable automatic transactional updates with this command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">systemctl --now disable transactional-update.timer</code></pre></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-snapshots.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 2 </span>Snapshots</span></a> </div><div><a class="pagination-link next" href="cha-ulp.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 4 </span>User space live patching</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="section"><a href="sec-transactional-udate.html#sec-command-list"><span class="title-number">3.1 </span><span class="title-name"><code class="command">transactional-update</code> usage</span></a></span></li><li><span class="section"><a href="sec-transactional-udate.html#sec-cleanup-algorithm"><span class="title-number">3.2 </span><span class="title-name">Snapshots cleanup</span></a></span></li><li><span class="section"><a href="sec-transactional-udate.html#sec-rollback-procedure"><span class="title-number">3.3 </span><span class="title-name">System rollback</span></a></span></li><li><span class="section"><a href="sec-transactional-udate.html#sec-automatic-updates"><span class="title-number">3.4 </span><span class="title-name">Managing automatic transactional updates</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

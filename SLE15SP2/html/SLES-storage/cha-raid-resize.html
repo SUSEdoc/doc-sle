@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Storage Administration Guide | Resizing Software RAID Arrays with mdadm</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Resizing Software RAID Arrays with mdadm | SLES 15 SP2"/>
+<meta name="description" content="This section describes how to increase or reduce the size of a software RAID 1, 4, 5, or 6 device with the Multiple Device Administration (mdadm(8)) …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 11. Resizing Software RAID Arrays with mdadm"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Resizing Software RAID Arrays with mdadm",
+  
+    "description": "This section describes how to increase or reduce the size of a software RAID 1, 4, 5, or 6 device with the Multiple Device Administration (mdadm(8)) …",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-raid-degraded.html" title="Chapter 10. Creating a Degraded RAID Array"/><link rel="next" href="cha-raid-leds.html" title="Chapter 12. Storage Enclosure LED Utilities for MD Software RAIDs"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-software-raid.html">Software RAID</a><span> / </span><a class="crumb" href="cha-raid-resize.html">Resizing Software RAID Arrays with mdadm</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File Systems and Mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of File Systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing File Systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier Caching for Block Device Operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical Volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM Configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM Volume Snapshots</span></a></li></ol></li><li class="active"><a href="part-software-raid.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID Configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring Software RAID for the Root Partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating Software RAID 10 Devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a Degraded RAID Array</span></a></li><li><a href="cha-raid-resize.html" class=" you-are-here"><span class="title-number">11 </span><span class="title-name">Resizing Software RAID Arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage Enclosure LED Utilities for MD Software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Toubleshooting software RAIDs</span></a></li></ol></li><li><a href="part-net-storage.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Network Storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass Storage over IP Networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel Storage over Ethernet Networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing Multipath I/O for Devices</span></a></li><li><a href="cha-nfs4-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Managing Access Control Lists over NFSv4</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-raid-resize" data-id-title="Resizing Software RAID Arrays with mdadm"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">11 </span><span class="title-name">Resizing Software RAID Arrays with mdadm</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This section describes how to increase or reduce the size of a software
+    RAID 1, 4, 5, or 6 device with the Multiple Device Administration
+    (<code class="command">mdadm(8)</code>) tool.
+   </p></div></div></div></div><p>
+  Resizing an existing software RAID device involves increasing or decreasing
+  the space contributed by each component partition. The file system that
+  resides on the RAID must also be able to be resized to take advantage of the
+  changes in available space on the device. In <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, file system
+  resizing utilities are available for file systems Btrfs, Ext2, Ext3, Ext4, and
+  XFS (increase size only). Refer to <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing File Systems">Chapter 2, <em>Resizing File Systems</em></a> for more
+  information.
+ </p><p>
+  The <code class="command">mdadm</code> tool supports resizing only for software RAID
+  levels 1, 4, 5, and 6. These RAID levels provide disk fault tolerance so that
+  one component partition can be removed at a time for resizing. In principle,
+  it is possible to perform a hot resize for RAID partitions, but you must take
+  extra care for your data when doing so.
+ </p><div id="id-1.11.5.6.5" data-id-title="Back Up your Data Before Resizing" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Back Up your Data Before Resizing</div><p>
+   Resizing any partition or file system involves some risks that can
+   potentially result in losing data. To avoid data loss, ensure that you back
+   up your data before you begin any resizing task.
+  </p></div><p>
+  Resizing the RAID involves the following tasks. The order in which these
+  tasks are performed depends on whether you are increasing or decreasing its
+  size.
+ </p><div class="table" id="id-1.11.5.6.7" data-id-title="Tasks Involved in Resizing a RAID"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 11.1: </span><span class="title-name">Tasks Involved in Resizing a RAID </span></span><a title="Permalink" class="permalink" href="cha-raid-resize.html#id-1.11.5.6.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/><col class="4"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       Tasks
+      </p>
+     </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       Description
+      </p>
+     </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       Order If Increasing Size
+      </p>
+     </th><th style="border-bottom: 1px solid ; ">
+      <p>
+       Order If Decreasing Size
+      </p>
+     </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       Resize each of the component partitions.
+      </p>
+      
+     </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       Increase or decrease the active size of each component partition. You
+       remove only one component partition at a time, modify its size, then
+       return it to the RAID.
+      </p>
+     </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       1
+      </p>
+     </td><td style="border-bottom: 1px solid ; ">
+      <p>
+       2
+      </p>
+     </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       Resize the software RAID itself.
+      </p>
+     </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       The RAID does not automatically know about the increases or decreases
+       you make to the underlying component partitions. You must inform it
+       about the new size.
+      </p>
+     </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       2
+      </p>
+     </td><td style="border-bottom: 1px solid ; ">
+      <p>
+       3
+      </p>
+     </td></tr><tr><td style="border-right: 1px solid ; ">
+      <p>
+       Resize the file system.
+      </p>
+     </td><td style="border-right: 1px solid ; ">
+      <p>
+       You must resize the file system that resides on the RAID. This is
+       possible only for file systems that provide tools for resizing.
+      </p>
+     </td><td style="border-right: 1px solid ; ">
+      <p>
+       3
+      </p>
+     </td><td>
+      <p>
+       1
+      </p>
+     </td></tr></tbody></table></div></div><p>
+  The procedures in the following sections use the device names shown in the
+  following table. Ensure that you modify the names to use the names of your
+  own devices.
+ </p><div class="table" id="id-1.11.5.6.9" data-id-title="Scenario for Increasing the Size of Component Partitions"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 11.2: </span><span class="title-name">Scenario for Increasing the Size of Component Partitions </span></span><a title="Permalink" class="permalink" href="cha-raid-resize.html#id-1.11.5.6.9">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+      <p>
+       RAID Device
+      </p>
+     </th><th style="border-bottom: 1px solid ; ">
+      <p>
+       Component Partitions
+      </p>
+     </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+      <p>
+       <code class="filename">/dev/md0</code>
+      </p>
+     </td><td>
+      <p>
+       <code class="filename">/dev/sda1</code>
+      </p>
+      <p>
+       <code class="filename">/dev/sdb1</code>
+      </p>
+      <p>
+       <code class="filename">/dev/sdc1</code>
+      </p>
+     </td></tr></tbody></table></div></div><section class="sect1" id="sec-raid-resize-incr" data-id-title="Increasing the Size of a Software RAID"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.1 </span><span class="title-name">Increasing the Size of a Software RAID</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-incr">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Increasing the size of a software RAID involves the following tasks in the
+   given order: increase the size of all partitions the RAID consists of,
+   increase the size of the RAID itself and, finally, increase the size of the
+   file system.
+  </p><div id="id-1.11.5.6.10.3" data-id-title="Potential Data Loss" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Potential Data Loss</div><p>
+    If a RAID does not have disk fault tolerance, or it is simply not
+    consistent, data loss results if you remove any of its partitions. Be very
+    careful when removing partitions, and ensure that you have a backup of your
+    data available.
+   </p></div><section class="sect2" id="sec-raid-resize-incr-partitions" data-id-title="Increasing the Size of Component Partitions"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.1 </span><span class="title-name">Increasing the Size of Component Partitions</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-incr-partitions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Apply the procedure in this section to increase the size of a RAID 1, 4, 5,
+    or 6. For each component partition in the RAID, remove the partition from
+    the RAID, modify its size, return it to the RAID, then wait until the RAID
+    stabilizes to continue. While a partition is removed, the RAID operates in
+    degraded mode and has no or reduced disk fault tolerance. Even for RAIDs
+    that can tolerate multiple concurrent disk failures, do not remove more
+    than one component partition at a time. To increase the size of the
+    component partitions for the RAID, proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      Ensure that the RAID array is consistent and synchronized by entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /proc/mdstat</pre></div><p>
+      If your RAID array is still synchronizing according to the output of this
+      command, you must wait until synchronization is complete before
+      continuing.
+     </p></li><li class="step"><p>
+      Remove one of the component partitions from the RAID array. For example,
+      to remove <code class="filename">/dev/sda1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm /dev/md0 --fail /dev/sda1 --remove /dev/sda1</pre></div><p>
+      To succeed, both the fail and remove actions must be specified.
+     </p></li><li class="step"><p>
+      Increase the size of the partition that you removed in the previous step
+      by doing one of the following:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        Increase the size of the partition, using a disk partitioner such as
+        the YaST Partitioner or the command line tool parted. This option is
+        the usual choice.
+       </p></li><li class="listitem"><p>
+        Replace the disk on which the partition resides with a higher-capacity
+        device. This option is possible only if no other file systems on the
+        original disk are accessed by the system. When the replacement device
+        is added back into the RAID, it takes much longer to synchronize the
+        data because all of the data that was on the original device must be
+        rebuilt.
+       </p></li></ul></div></li><li class="step"><p>
+      Re-add the partition to the RAID array. For example, to add
+      <code class="filename">/dev/sda1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -a /dev/md0 /dev/sda1</pre></div><p>
+      Wait until the RAID is synchronized and consistent before continuing with
+      the next partition.
+     </p></li><li class="step"><p>
+      Repeat these steps for each of the remaining component devices in the
+      array. Ensure that you modify the commands for the correct component
+      partition.
+     </p></li><li class="step"><p>
+      If you get a message that tells you that the kernel could not re-read the
+      partition table for the RAID, you must reboot the computer after all
+      partitions have been resized to force an update of the partition table.
+     </p></li><li class="step"><p>
+      Continue with
+      <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-raid" title="11.1.2. Increasing the Size of the RAID Array">Section 11.1.2, “Increasing the Size of the RAID Array”</a>.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-raid-resize-incr-raid" data-id-title="Increasing the Size of the RAID Array"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.2 </span><span class="title-name">Increasing the Size of the RAID Array</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-incr-raid">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After you have resized each of the component partitions in the RAID (see
+    <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-partitions" title="11.1.1. Increasing the Size of Component Partitions">Section 11.1.1, “Increasing the Size of Component Partitions”</a>),
+    the RAID array configuration continues to use the original array size until
+    you force it to be aware of the newly available space. You can specify a
+    size for the RAID or use the maximum available space.
+   </p><p>
+    The procedure in this section uses the device name
+    <code class="filename">/dev/md0</code> for the RAID device. Ensure that you modify
+    the name to use the name of your own device.
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      Ensure that the RAID array is consistent and synchronized by entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /proc/mdstat</pre></div><p>
+      If your RAID array is still synchronizing according to the output of this
+      command, you must wait until synchronization is complete before
+      continuing.
+     </p></li><li class="step"><p>
+      Check the size of the array and the device size known to the array by
+      entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/md0 | grep -e "Array Size" -e "Dev Size"</pre></div></li><li class="step"><p>
+      Do one of the following:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        Increase the size of the array to the maximum available size by
+        entering
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --grow /dev/md0 -z max</pre></div></li><li class="listitem"><p>
+        Increase the size of the array to the maximum available size by
+        entering
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --grow /dev/md0 -z max --assume-clean</pre></div><p>
+        The array uses any space that has been added to the devices, but this
+        space will not be synchronized. This is recommended for RAID 1
+        because the synchronization is not needed. It can be useful for other
+        RAID levels if the space that was added to the member devices was
+        pre-zeroed.
+       </p></li><li class="listitem"><p>
+        Increase the size of the array to a specified value by entering
+       </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --grow /dev/md0 -z <em class="replaceable">SIZE</em></pre></div><p>
+        Replace <em class="replaceable">SIZE</em> with an integer value in
+        kilobytes (a kilobyte is 1024 bytes) for the desired size.
+       </p></li></ul></div></li><li class="step"><p>
+      Recheck the size of your array and the device size known to the array by
+      entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/md0 | grep -e "Array Size" -e "Dev Size"</pre></div></li><li class="step"><p>
+      Do one of the following:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        If your array was successfully resized, continue with
+        <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-fs" title="11.1.3. Increasing the Size of the File System">Section 11.1.3, “Increasing the Size of the File System”</a>.
+       </p></li><li class="listitem"><p>
+        If your array was not resized as you expected, you must reboot, then
+        try this procedure again.
+       </p></li></ul></div></li></ol></div></div></section><section class="sect2" id="sec-raid-resize-incr-fs" data-id-title="Increasing the Size of the File System"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.3 </span><span class="title-name">Increasing the Size of the File System</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-incr-fs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After you increase the size of the array (see
+    <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-raid" title="11.1.2. Increasing the Size of the RAID Array">Section 11.1.2, “Increasing the Size of the RAID Array”</a>),
+    you are ready to resize the file system.
+   </p><p>
+    You can increase the size of the file system to the maximum space available
+    or specify an exact size. When specifying an exact size for the file
+    system, ensure that the new size satisfies the following conditions:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The new size must be greater than the size of the existing data;
+      otherwise, data loss occurs.
+     </p></li><li class="listitem"><p>
+      The new size must be equal to or less than the current RAID size because
+      the file system size cannot extend beyond the space available.
+     </p></li></ul></div><p>
+    Refer to <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing File Systems">Chapter 2, <em>Resizing File Systems</em></a> for detailed instructions.
+   </p></section></section><section class="sect1" id="sec-raid-resize-decr" data-id-title="Decreasing the Size of a Software RAID"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.2 </span><span class="title-name">Decreasing the Size of a Software RAID</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-decr">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Decreasing the Size of a Software RAID involves the following tasks in the
+   given order: decrease the size of the file system, decrease the size of all
+   partitions the RAID consists of, and finally decrease the size of the RAID
+   itself.
+  </p><div id="id-1.11.5.6.11.3" data-id-title="Potential Data Loss" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Potential Data Loss</div><p>
+    If a RAID does not have disk fault tolerance, or it is simply not
+    consistent, data loss results if you remove any of its partitions. Be very
+    careful when removing partitions, and ensure that you have a backup of your
+    data available.
+   </p></div><div id="id-1.11.5.6.11.4" data-id-title="XFS" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: XFS</div><p>
+    Decreasing the size of a file system formatted with XFS is not possible,
+    since such a feature is not supported by XFS. As a consequence, the size of
+    a RAID that uses the XFS file system cannot be decreased.
+   </p></div><section class="sect2" id="sec-raid-resize-decr-fs" data-id-title="Decreasing the Size of the File System"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.2.1 </span><span class="title-name">Decreasing the Size of the File System</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-decr-fs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When decreasing the size of the file system on a RAID device, ensure that
+    the new size satisfies the following conditions:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The new size must be greater than the size of the existing data;
+      otherwise, data loss occurs.
+     </p></li><li class="listitem"><p>
+      The new size must be equal to or less than the current RAID size because
+      the file system size cannot extend beyond the space available.
+     </p></li></ul></div><p>
+    Refer to <a class="xref" href="cha-resize-fs.html" title="Chapter 2. Resizing File Systems">Chapter 2, <em>Resizing File Systems</em></a> for detailed instructions.
+   </p></section><section class="sect2" id="sec-raid-resize-decr-raid" data-id-title="Decreasing the Size of the RAID Array"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.2.2 </span><span class="title-name">Decreasing the Size of the RAID Array</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-decr-raid">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After you have resized the file system (see
+    <a class="xref" href="cha-raid-resize.html#sec-raid-resize-decr-fs" title="11.2.1. Decreasing the Size of the File System">Section 11.2.1, “Decreasing the Size of the File System”</a>), the
+    RAID array configuration continues to use the original array size until you
+    force it to reduce the available space. Use the <code class="command">mdadm
+    --grow</code> mode to force the RAID to use a smaller segment size. To
+    do this, you must use the -z option to specify the amount of space in
+    kilobytes to use from each device in the RAID. This size must be a multiple
+    of the chunk size, and it must leave about 128 KB of space for the RAID
+    superblock to be written to the device.
+   </p><p>
+    The procedure in this section uses the device name
+    <code class="filename">/dev/md0</code> for the RAID device. Ensure that you modify
+    commands to use the name of your own device.
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      Check the size of the array and the device size known to the array by
+      entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/md0 | grep -e "Array Size" -e "Dev Size"</pre></div></li><li class="step"><p>
+      Decrease the array’s device size to a specified value by entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --grow /dev/md0 -z <em class="replaceable">SIZE</em></pre></div><p>
+      Replace <em class="replaceable">SIZE</em> with an integer value in
+      kilobytes for the desired size. (A kilobyte is 1024 bytes.)
+     </p><p>
+      For example, the following command sets the segment size for each RAID
+      device to about 40 GB where the chunk size is 64 KB. It includes 128 KB
+      for the RAID superblock.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm --grow /dev/md2 -z 41943168</pre></div></li><li class="step"><p>
+      Recheck the size of your array and the device size known to the array by
+      entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -D /dev/md0 | grep -e "Array Size" -e "Device Size"</pre></div></li><li class="step"><p>
+      Do one of the following:
+     </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        If your array was successfully resized, continue with
+        <a class="xref" href="cha-raid-resize.html#sec-raid-resize-decr-partitions" title="11.2.3. Decreasing the Size of Component Partitions">Section 11.2.3, “Decreasing the Size of Component Partitions”</a>.
+       </p></li><li class="listitem"><p>
+        If your array was not resized as you expected, you must reboot, then
+        try this procedure again.
+       </p></li></ul></div></li></ol></div></div></section><section class="sect2" id="sec-raid-resize-decr-partitions" data-id-title="Decreasing the Size of Component Partitions"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.2.3 </span><span class="title-name">Decreasing the Size of Component Partitions</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-decr-partitions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After you decrease the segment size that is used on each device in the RAID
+    (see
+    <a class="xref" href="cha-raid-resize.html#sec-raid-resize-decr-raid" title="11.2.2. Decreasing the Size of the RAID Array">Section 11.2.2, “Decreasing the Size of the RAID Array”</a>),
+    the remaining space in each component partition is not used by the RAID.
+    You can leave partitions at their current size to allow for the RAID to
+    grow at a future time, or you can reclaim this now unused space.
+   </p><p>
+    To reclaim the space, you decrease the component partitions one at a time.
+    For each component partition, you remove it from the RAID, reduce its
+    partition size, return the partition to the RAID, then wait until the RAID
+    stabilizes. To allow for metadata, you should specify a slightly larger
+    size than the size you specified for the RAID in
+    <a class="xref" href="cha-raid-resize.html#sec-raid-resize-decr-raid" title="11.2.2. Decreasing the Size of the RAID Array">Section 11.2.2, “Decreasing the Size of the RAID Array”</a>.
+   </p><p>
+    While a partition is removed, the RAID operates in degraded mode and has no
+    or reduced disk fault tolerance. Even for RAIDs that can tolerate multiple
+    concurrent disk failures, you should never remove more than one component
+    partition at a time. To decrease the size of the component partitions for
+    the RAID, proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a terminal.
+     </p></li><li class="step"><p>
+      Ensure that the RAID array is consistent and synchronized by entering
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>cat /proc/mdstat</pre></div><p>
+      If your RAID array is still synchronizing according to the output of this
+      command, you must wait until synchronization is complete before
+      continuing.
+     </p></li><li class="step"><p>
+      Remove one of the component partitions from the RAID array. For example,
+      to remove <code class="filename">/dev/sda1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm /dev/md0 --fail /dev/sda1 --remove /dev/sda1</pre></div><p>
+      To succeed, both the fail and remove actions must be specified.
+     </p></li><li class="step"><p>
+      Decrease the size of the partition that you removed in the previous step
+      to a size that is slightly larger than the size you set for the segment
+      size. The size should be a multiple of the chunk size and allow 128 KB
+      for the RAID superblock. Use a disk partitioner such as the YaST
+      partitioner or the command line tool parted to decrease the size of the
+      partition.
+     </p></li><li class="step"><p>
+      Re-add the partition to the RAID array. For example, to add
+      <code class="filename">/dev/sda1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -a /dev/md0 /dev/sda1</pre></div><p>
+      Wait until the RAID is synchronized and consistent before continuing with
+      the next partition.
+     </p></li><li class="step"><p>
+      Repeat these steps for each of the remaining component devices in the
+      array. Ensure that you modify the commands for the correct component
+      partition.
+     </p></li><li class="step"><p>
+      If you get a message that tells you that the kernel could not re-read the
+      partition table for the RAID, you must reboot the computer after resizing
+      all of its component partitions.
+     </p></li><li class="step"><p>
+      (Optional) Expand the size of the RAID and file system to use the maximum
+      amount of space in the now smaller component partitions and increase the
+      size of the file system afterward. Refer to
+      <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-raid" title="11.1.2. Increasing the Size of the RAID Array">Section 11.1.2, “Increasing the Size of the RAID Array”</a> for instructions.
+     </p></li></ol></div></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-raid-degraded.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 10 </span>Creating a Degraded RAID Array</span></a> </div><div><a class="pagination-link next" href="cha-raid-leds.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 12 </span>Storage Enclosure LED Utilities for MD Software RAIDs</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-raid-resize.html#sec-raid-resize-incr"><span class="title-number">11.1 </span><span class="title-name">Increasing the Size of a Software RAID</span></a></span></li><li><span class="sect1"><a href="cha-raid-resize.html#sec-raid-resize-decr"><span class="title-number">11.2 </span><span class="title-name">Decreasing the Size of a Software RAID</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

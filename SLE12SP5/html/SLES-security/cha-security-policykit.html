@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Security and Hardening Guide | Authorization with Polkit</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Authorization with Polkit | SLES 12 SP5"/>
+<meta name="description" content="Polkit (formerly known as PolicyKit) is an application framework that acts as a negotiator between the unprivileged user session and the privileged s…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 10. Authorization with Polkit"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security Guide"/>
+<meta property="og:description" content="Implement system security for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security Guide"/>
+<meta name="twitter:description" content="Implement system security for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Authorization with Polkit",
+  
+    "description": "Polkit (formerly known as PolicyKit) is an application framework that acts as a negotiator between the unprivileged user session and the privileged s…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-security-yast-security.html" title="Chapter 9. Configuring Security Settings with YaST"/><link rel="next" href="cha-security-acls.html" title="Chapter 11. Access Control Lists in Linux"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-local-security.html">Local Security</a><span> / </span><a class="crumb" href="cha-security-policykit.html">Authorization with Polkit</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and Confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting Up Authentication Servers and Clients Using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP—A Directory Service</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network Authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></a></li></ol></li><li class="active"><a href="part-local-security.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Local Security</span></a><ol><li><a href="cha-spectre.html" class=" "><span class="title-number">8 </span><span class="title-name">Spectre/Meltdown Checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Configuring Security Settings with YaST</span></a></li><li><a href="cha-security-policykit.html" class=" you-are-here"><span class="title-number">10 </span><span class="title-name">Authorization with Polkit</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">11 </span><span class="title-name">Access Control Lists in Linux</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting Partitions and Files</span></a></li><li><a href="cha-certstore.html" class=" "><span class="title-number">13 </span><span class="title-name">Certificate Store</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">14 </span><span class="title-name">Intrusion Detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network Security</span></a><ol><li><a href="cha-ssh.html" class=" "><span class="title-number">15 </span><span class="title-name">SSH: Secure Network Operations</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">16 </span><span class="title-name">Masquerading and Firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring a VPN Server</span></a></li><li><a href="cha-security-yast-ca.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing X.509 Certification</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">19 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">20 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">21 </span><span class="title-name">Getting Started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">22 </span><span class="title-name">Immunizing Programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">23 </span><span class="title-name">Profile Components and Syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">24 </span><span class="title-name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">25 </span><span class="title-name">Building and Managing Profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">26 </span><span class="title-name">Building Profiles from the Command Line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">27 </span><span class="title-name">Profiling Your Web Applications Using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">28 </span><span class="title-name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">29 </span><span class="title-name">Managing Profiled Applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">30 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">31 </span><span class="title-name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li><a href="bk05pt05.html" class="has-children "><span class="title-number">V </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">32 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">33 </span><span class="title-name">Understanding Linux Audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting Up the Linux Audit Framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">35 </span><span class="title-name">Introducing an Audit Rule Set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">36 </span><span class="title-name">Useful Resources</span></a></li></ol></li><li><a href="app-pcidss.html" class=" "><span class="title-number">A </span><span class="title-name">Achieving PCI DSS Compliance</span></a></li><li><a href="bk05apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-policykit" data-id-title="Authorization with Polkit"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">10 </span><span class="title-name">Authorization with Polkit</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Polkit (formerly known as PolicyKit) is an application framework that
+    acts as a negotiator between the unprivileged user session and the
+    privileged system context. Whenever a process from the user session
+    tries to carry out an action in the system context, Polkit is queried.
+    Based on its configuration—specified in a so-called
+    <span class="quote">“<span class="quote">policy</span>”</span>—the answer could be <span class="quote">“<span class="quote">yes</span>”</span>,
+    <span class="quote">“<span class="quote">no</span>”</span>, or <span class="quote">“<span class="quote">needs authentication</span>”</span>. Unlike
+    classical privilege authorization programs such as sudo, Polkit does
+    not grant <code class="systemitem">root</code> permissions to an entire session, but only to
+    the action in question.
+   </p></div></div></div></div><section class="sect1" id="sec-security-policykit-oview" data-id-title="Conceptual Overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.1 </span><span class="title-name">Conceptual Overview</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-oview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+
+   Polkit works by limiting specific actions by users, by group, or by
+   name. It then defines how those users are allowed to perform this
+   action.
+  </p><section class="sect2" id="sec-security-policykit-agents" data-id-title="Available Authentication Agents"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.1 </span><span class="title-name">Available Authentication Agents</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-agents">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When a user starts a session (using the graphical environment or on the
+    console), each session consists of the
+    <span class="emphasis"><em>authority</em></span> and an <span class="emphasis"><em>authentication
+    agent</em></span>. The authority is implemented as a service on the
+    system message bus, whereas the authentication agent is used to
+    authenticate the current user, which started the session. The current
+    user needs to prove their authenticity, for example, using a passphrase.
+   </p><p>
+    Each desktop environment has its own authentication agent. Usually it is
+    started automatically, whatever environment you choose.
+   </p></section><section class="sect2" id="sec-security-policykit-structure" data-id-title="Structure of Polkit"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.2 </span><span class="title-name">Structure of Polkit</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-structure">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Polkit's configuration depends on <span class="emphasis"><em>actions</em></span> and
+    <span class="emphasis"><em>authorization rules</em></span>:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.3.5.3.1"><span class="term">Actions (file extension <code class="filename">*.policy</code>)</span></dt><dd><p>
+       Written as XML files and located in
+       <code class="filename">/usr/share/polkit-1/actions</code>. Each file defines
+       one or more actions, and each action contains descriptions and
+       default permissions. Although a system administrator can write their
+       own rules, Polkit's files must not be edited.
+      </p></dd><dt id="id-1.7.5.4.3.5.3.2"><span class="term">Authorization Rules (file extension <code class="filename">*.rules</code>)</span></dt><dd><p>
+       Written as JavaScript files and located in two places:
+       <code class="filename">/usr/share/polkit-1/rules.d </code> is used for third
+       party packages and <code class="filename">/etc/polkit-1/rules.d</code> for
+       local configurations. Each rule file refers to the action specified
+       in the action file. A rule determines what restrictions are allowed
+       to a subset of users. For example, a rule file could overrule a
+       restrictive permission and allow some users to allow it.
+      </p></dd></dl></div></section><section class="sect2" id="sec-security-policykit-oview-commands" data-id-title="Available Commands"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.3 </span><span class="title-name">Available Commands</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-oview-commands">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Polkit contains several commands for specific tasks (see also the
+    specific man page for further details):
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.3.6.3.1"><span class="term"><code class="command">pkaction</code>
+     </span></dt><dd><p>
+       Get details about a defined action. See
+       <a class="xref" href="cha-security-policykit.html#sec-security-security-policykit-query" title="10.3. Querying Privileges">Section 10.3, “Querying Privileges”</a> for more
+       information.
+      </p></dd><dt id="id-1.7.5.4.3.6.3.2"><span class="term"><code class="command">pkcheck</code>
+     </span></dt><dd><p>
+       Checks whether a process is authorized, specified by either
+       <code class="option">--process</code> or <code class="option">--system-bus-name</code>.
+      </p></dd><dt id="id-1.7.5.4.3.6.3.3"><span class="term"><code class="command">pkexec</code>
+     </span></dt><dd><p>
+       Allows an authorized user to execute the specific program as another
+       user.
+      </p></dd><dt id="id-1.7.5.4.3.6.3.4"><span class="term"><code class="command">pkttyagent</code>
+     </span></dt><dd><p>
+       Starts a textual authentication agent. This agent is used if a
+       desktop environment does not have its own authentication agent.
+      </p></dd></dl></div></section><section class="sect2" id="sec-security-policykit-oview-authorizations" data-id-title="Available Policies and Supported Applications"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.4 </span><span class="title-name">Available Policies and Supported Applications</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-oview-authorizations">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    At the moment, not all applications requiring privileges use
+    Polkit. Find the most important policies available on
+    <span class="productname"><span class="phrase">SUSE® Linux Enterprise Server</span></span> below, sorted into the categories where they are
+    used.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.3.7.3.1"><span class="term">PulseAudio</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Set scheduling priorities for the PulseAudio daemon</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.2"><span class="term">CUPS</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Add, remove, edit, enable or disable printers</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.3"><span class="term">GNOME</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Modify system and mandatory values with GConf</td></tr><tr><td>Change the system time</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.4"><span class="term">libvirt</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Manage and monitor local virtualized systems</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.5"><span class="term">NetworkManager</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Apply and modify connections (only with the Workstation Extension for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>)</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.6"><span class="term">Polkit</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Read and change privileges for other users</td></tr><tr><td>Modify defaults</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.7"><span class="term">PackageKit</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Update and remove packages</td></tr><tr><td>Change and refresh repositories</td></tr><tr><td>Install local files</td></tr><tr><td>Rollback</td></tr><tr><td>Import repository keys</td></tr><tr><td>Accepting EULAs</td></tr><tr><td>Setting the network proxy</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.8"><span class="term">System</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Wake on LAN</td></tr><tr><td>Mount or unmount fixed, hotpluggable and encrypted
+       devices</td></tr><tr><td>Eject and decrypt removable media</td></tr><tr><td>Enable or disable WLAN</td></tr><tr><td>Enable or disable Bluetooth</td></tr><tr><td>Device access</td></tr><tr><td>Stop, suspend, hibernate and restart the system</td></tr><tr><td>Undock a docking station</td></tr><tr><td>Change power-management settings</td></tr></table></dd><dt id="id-1.7.5.4.3.7.3.9"><span class="term">YaST</span></dt><dd><table style="border: 0; " class="simplelist"><tr><td>Register product</td></tr><tr><td>Change the system time and language</td></tr></table></dd></dl></div></section></section><section class="sect1" id="sec-security-policykit-types" data-id-title="Authorization Types"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.2 </span><span class="title-name">Authorization Types</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-types">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Every time a Polkit-enabled process carries out a privileged operation,
+   Polkit is asked whether this process is entitled to do so. Polkit
+   answers according to the policy defined for this process. The answers can
+   be <code class="literal">yes</code>, <code class="literal">no</code>, or
+   <code class="literal">authentication needed</code>. By default, a policy contains
+   <code class="literal">implicit</code> privileges, which automatically apply to all
+   users. It is also possible to specify <code class="literal">explicit</code>
+   privileges which apply to a specific user.
+  </p><section class="sect2" id="sec-security-policykit-policies-implicit" data-id-title="Implicit Privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.1 </span><span class="title-name">Implicit Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-policies-implicit">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Implicit privileges can be defined for any active and inactive sessions.
+    An active session is the one in which you are currently working. It
+    becomes inactive when you switch to another console for example. When
+    setting implicit privileges to <span class="quote">“<span class="quote">no</span>”</span>, no user is authorized,
+    whereas <span class="quote">“<span class="quote">yes</span>”</span> authorizes all users. However, usually
+    it is useful to demand authentication.
+   </p><p>
+    A user can either authorize by authenticating as <code class="systemitem">root</code> or by
+    authenticating as self. Both authentication methods exist in four
+    variants:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.4.3.4.1"><span class="term">Authentication</span></dt><dd><p>
+       The user always needs to authenticate.
+      </p></dd><dt id="id-1.7.5.4.4.3.4.2"><span class="term">One Shot Authentication</span></dt><dd><p>
+       The authentication is bound to the instance of the program currently
+       running. After the program is restarted, the user is required to
+       authenticate again.
+      </p></dd><dt id="id-1.7.5.4.4.3.4.3"><span class="term">Keep Session Authentication</span></dt><dd><p>
+       The authentication dialog offers a check button <span class="guimenu">Remember
+       authorization for this session</span>. If checked, the
+       authentication is valid until the user logs out.
+      </p></dd><dt id="id-1.7.5.4.4.3.4.4"><span class="term">Keep Indefinitely Authentication</span></dt><dd><p>
+       The authentication dialog offers a check button <span class="guimenu">Remember
+       authorization</span>. If checked, the user needs to authenticate
+       only once.
+      </p></dd></dl></div></section><section class="sect2" id="sec-security-policykit-policies-explicit" data-id-title="Explicit Privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.2 </span><span class="title-name">Explicit Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-policies-explicit">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Explicit privileges can be granted to specific users. They can either be
+    granted without limitations, or, when using constraints, limited to an
+    active session and/or a local console.
+   </p><p>
+    It is not only possible to grant privileges to a user, a user can also
+    be blocked. Blocked users cannot carry out an action
+    requiring authorization, even though the default implicit policy allows
+    authorization by authentication.
+   </p></section><section class="sect2" id="sec-security-policykit-policies-default" data-id-title="Default Privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.3 </span><span class="title-name">Default Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-policies-default">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Each application supporting Polkit comes with a default set of implicit
+    policies defined by the application's developers. Those policies are the
+    so-called <span class="quote">“<span class="quote">upstream defaults</span>”</span>. The privileges defined by
+    the upstream defaults are not necessarily the ones that are activated by
+    default on SUSE systems. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> comes with a predefined
+    set of privileges that override the upstream defaults:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.4.5.3.1"><span class="term"><code class="filename">/etc/polkit-default-privs.standard</code>
+     </span></dt><dd><p>
+       Defines privileges suitable for most desktop
+       systems
+      </p></dd><dt id="id-1.7.5.4.4.5.3.2"><span class="term"><code class="filename">/etc/polkit-default-privs.restrictive</code>
+     </span></dt><dd><p>
+       Designed for machines administrated centrally<span class="phrase">. It
+       is active by default.</span>
+      </p></dd></dl></div><p>
+    To switch between the two sets of default privileges, adjust the value
+    of <code class="varname">POLKIT_DEFAULT_PRIVS</code> to either
+    <code class="literal">restrictive</code> or <code class="literal">standard</code> in
+    <code class="filename">/etc/sysconfig/security</code>. Then run the command
+    <code class="command">set_polkit_default_privs</code> as <code class="systemitem">root</code>.
+   </p><p>
+    Do not modify the two files in the list above. To define your
+    own custom set of privileges, use
+    <code class="filename">/etc/polkit-default-privs.local</code>. For details, refer
+    to
+    <a class="xref" href="cha-security-policykit.html#sec-security-policykit-change-modify-config-implicit" title="10.4.3. Modifying Configuration Files for Implicit Privileges">Section 10.4.3, “Modifying Configuration Files for Implicit Privileges”</a>.
+   </p></section></section><section class="sect1" id="sec-security-security-policykit-query" data-id-title="Querying Privileges"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.3 </span><span class="title-name">Querying Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-security-policykit-query">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To query privileges use the command <code class="command">pkaction</code> included
+   in Polkit.
+  </p><p>
+   Polkit comes with command line tools for changing privileges and
+   executing commands as another user (see
+   <a class="xref" href="cha-security-policykit.html#sec-security-policykit-oview-commands" title="10.1.3. Available Commands">Section 10.1.3, “Available Commands”</a> for a short
+   overview). Each existing policy has a speaking, unique name with which it
+   can be identified. List all available policies with the command
+   <code class="command">pkaction</code>. See <code class="command">man pkaction</code> for more
+   information.
+  </p><p>
+   If you want to display the needed authorization for a given policy (for
+   example, <code class="literal">org.freedesktop.login1.reboot</code>) use
+   <code class="command">pkaction</code> as follows:
+  </p><div class="verbatim-wrap"><pre class="screen">pkaction -v --action-id=org.freedesktop.login1.reboot
+org.freedesktop.login1.reboot:
+  description:       Reboot the system
+  message:           Authentication is required to allow rebooting the system
+  vendor:            The systemd Project
+  vendor_url:        http://www.freedesktop.org/wiki/Software/systemd
+  icon:
+  implicit any:      auth_admin_keep
+  implicit inactive: auth_admin_keep
+  implicit active:   yes</pre></div><p>
+   The keyword <code class="literal">auth_admin_keep</code> means that users need to
+   enter a passphrase.
+  </p><div id="id-1.7.5.4.5.7" data-id-title="Restrictions of pkaction on SUSE Linux Enterprise Server" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Restrictions of <code class="command">pkaction</code> on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></div><p>
+    <code class="command">pkaction</code> always operates on the upstream defaults.
+    Therefore it cannot be used to list or restore the defaults shipped with
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. To do so, refer to
+    <a class="xref" href="cha-security-policykit.html#sec-security-policykit-change-defaults" title="10.5. Restoring the Default Privileges">Section 10.5, “Restoring the Default Privileges”</a>.
+   </p></div></section><section class="sect1" id="sec-security-policykit-change-modify-config" data-id-title="Modifying Configuration Files"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.4 </span><span class="title-name">Modifying Configuration Files</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-change-modify-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Adjusting privileges by modifying configuration files is useful when you
+   want to deploy the same set of policies to different machines, for
+   example to the computers of a specific team. It is possible to change
+   implicit and explicit privileges by modifying configuration files.
+  </p><section class="sect2" id="sec-security-policykit-change-modify-config-actions" data-id-title="Adding Action Rules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.1 </span><span class="title-name">Adding Action Rules</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-change-modify-config-actions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The available actions depend on what additional packages you have
+    installed on your system. For a quick overview, use
+    <code class="command">pkaction</code> to list all defined rules.
+   </p><p>
+    To get an idea, the following example describes how the command
+    <code class="command">gparted</code> (<span class="quote">“<span class="quote">GNOME Partition Editor</span>”</span>)
+    is integrated into Polkit.
+   </p><p>
+    The file
+    <code class="filename">/usr/share/polkit-1/actions/org.opensuse.policykit.gparted.policy</code>
+    contains the following content:
+   </p><div class="verbatim-wrap"><pre class="screen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd"&gt;
+&lt;policyconfig&gt; <span class="callout" id="co-polkit-actions-policyconfig">1</span>
+
+  &lt;action id="org-opensuse-policykit-gparted"&gt; <span class="callout" id="co-polkit-actions-action">2</span>
+    &lt;message&gt;Authentication is required to run the GParted Partition Editor&lt;/message&gt;
+    &lt;icon_name&gt;gparted&lt;/icon_name&gt;
+    &lt;defaults&gt; <span class="callout" id="co-polkit-actions-defaults">3</span>
+      &lt;allow_any&gt;auth_admin&lt;/allow_any&gt;
+      &lt;allow_inactive&gt;auth_admin&lt;/allow_inactive&gt;
+     &lt; allow_active&gt;auth_admin&lt;/allow_active&gt;
+    &lt;/defaults&gt;
+    &lt;annotate <span class="callout" id="co-polkit-actions-annotate">4</span>
+      key="org.freedesktop.policykit.exec.path"&gt;/usr/sbin/gparted&lt;/annotate&gt;
+    &lt;annotate <a class="xref" href="cha-security-policykit.html#co-polkit-actions-annotate"><span class="callout">4</span></a>
+      key="org.freedesktop.policykit.exec.allow_gui"&gt;true&lt;/annotate&gt;
+  &lt;/action&gt;
+
+&lt;/policyconfig&gt;</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-policyconfig"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Root element of the policy file.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-action"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Contains one single action.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-defaults"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The <code class="literal">defaults</code> element contains several permissions
+      used in remote sessions like SSH, VNC (element
+      <code class="literal">allow_inactive</code>), when logged directly into the
+      machine on a TTY or X display (element
+      <code class="literal">allow_active</code>), or for both (element
+      <code class="literal">allow_any</code>). The value <code class="literal">auth_admin</code>
+      indicates authentication is required as an administrative user.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-annotate"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The <code class="literal">annotate</code> element contains specific information
+      regarding how Polkit performs an action. In this case, it contains
+      the path to the executable and states whether a GUI is allowed to open
+      a X display.
+     </p></td></tr></table></div><p>
+    To add your own policy, create a <code class="filename">.policy</code> file with
+    the structure above, add the appropriate value into the
+    <code class="literal">id</code> attribute, and define the default permissions.
+   </p></section><section class="sect2" id="sec-security-policykit-change-modify-config-authrules" data-id-title="Adding Authorization Rules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.2 </span><span class="title-name">Adding Authorization Rules</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-change-modify-config-authrules">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Your own authorization rules overrule the default settings. To add your
+    own settings, store your files under
+    <code class="filename">/etc/polkit-1/rules.d/</code>.
+   </p><p>
+    The files in this directory start with a two-digit number, followed by a
+    descriptive name, and end with <code class="filename">.rules</code>. Functions
+    inside these files are executed in the order they have been sorted in.
+    For example, <code class="filename">00-foo.rules</code> is sorted (and hence
+    executed) before <code class="filename">60-bar.rules</code> or even
+    <code class="filename">90-default-privs.rules</code>.
+   </p><p>
+    Inside the file, the script checks for the specified action ID, which is
+    defined in the <code class="filename">.policy</code> file. For example, if you
+    want to allow the command <code class="command">gparted</code> to be executed by
+    any member of the <code class="systemitem">admin</code>
+    group, check for the action ID
+    <code class="literal">org.opensuse.policykit.gparted</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">/* Allow users in admin group to run GParted without authentication */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.opensuse.policykit.gparted" &amp;&amp;
+        subject.isInGroup("admin")) {
+        return polkit.Result.YES;
+    }
+});</pre></div><p>
+    Find the description of all classes and methods of the functions in the
+    Polkit API at
+    <a class="link" href="http://www.freedesktop.org/software/polkit/docs/latest/ref-api.html" target="_blank">http://www.freedesktop.org/software/polkit/docs/latest/ref-api.html</a>.
+   </p></section><section class="sect2" id="sec-security-policykit-change-modify-config-implicit" data-id-title="Modifying Configuration Files for Implicit Privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.3 </span><span class="title-name">Modifying Configuration Files for Implicit Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-change-modify-config-implicit">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> ships with two sets of default authorizations, located
+    in <code class="filename">/etc/polkit-default-privs.standard</code> and
+    <code class="filename">/etc/polkit-default-privs.restrictive</code>. For more
+    information, refer to
+    <a class="xref" href="cha-security-policykit.html#sec-security-policykit-policies-default" title="10.2.3. Default Privileges">Section 10.2.3, “Default Privileges”</a>.
+   </p><p>
+    Custom privileges are defined in
+    <code class="filename">/etc/polkit-default-privs.local</code>. Privileges defined
+    here will always take precedence over the ones defined in the other
+    configuration files. To define your custom set of privileges,
+    do the following:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open <code class="filename">/etc/polkit-default-privs.local</code>. To define a
+      privilege, add a line for each policy with the following format:
+     </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">&lt;privilege_identifier&gt;</em>     <em class="replaceable">&lt;any session&gt;</em>:<em class="replaceable">&lt;inactive session&gt;</em>:<em class="replaceable">&lt;active session&gt;</em></pre></div><p>
+      For example:
+     </p><div class="verbatim-wrap"><pre class="screen">org.freedesktop.policykit.modify-defaults     auth_admin_keep_always</pre></div><p>
+      The following values are valid for the
+      <em class="replaceable">SESSION</em> placeholders:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.6.5.4.1.6.1"><span class="term"><code class="literal">yes</code>
+       </span></dt><dd><p>
+         grant privilege
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.2"><span class="term"><code class="literal">no</code>
+       </span></dt><dd><p>
+         block
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.3"><span class="term"><code class="literal">auth_self</code>
+       </span></dt><dd><p>
+         user needs to authenticate with own password every time the
+         privilege is requested
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.4"><span class="term"><code class="literal">auth_self_keep_session</code>
+       </span></dt><dd><p>
+         user needs to authenticate with own password once per session,
+         privilege is granted for the whole session
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.5"><span class="term"><code class="literal">auth_self_keep_always</code>
+       </span></dt><dd><p>
+         user needs to authenticate with own password once, privilege is
+         granted for the current and for future sessions
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.6"><span class="term"><code class="literal">auth_admin</code>
+       </span></dt><dd><p>
+         user needs to authenticate with <code class="systemitem">root</code> password every time
+         the privilege is requested
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.7"><span class="term"><code class="literal">auth_admin_keep_session</code>
+       </span></dt><dd><p>
+         user needs to authenticate with <code class="systemitem">root</code> password once per
+         session, privilege is granted for the whole session
+        </p></dd><dt id="id-1.7.5.4.6.5.4.1.6.8"><span class="term"><code class="literal">auth_admin_keep_always</code>
+       </span></dt><dd><p>
+         user needs to authenticate with <code class="systemitem">root</code> password once,
+         privilege is granted for the current and for future sessions
+        </p></dd></dl></div></li><li class="step"><p>
+      Run as <code class="systemitem">root</code> for changes to take effect:
+     </p><div class="verbatim-wrap"><pre class="screen"># /sbin/set_polkit_default_privs</pre></div></li><li class="step"><p>
+      Optionally check the list of all privilege identifiers with the
+      command <code class="command">pkaction</code>.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-security-policykit-change-defaults" data-id-title="Restoring the Default Privileges"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.5 </span><span class="title-name">Restoring the Default Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-policykit.html#sec-security-policykit-change-defaults">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> comes with a predefined set of privileges that is
+   activated by default and thus overrides the upstream defaults. For
+   details, refer to
+   <a class="xref" href="cha-security-policykit.html#sec-security-policykit-policies-default" title="10.2.3. Default Privileges">Section 10.2.3, “Default Privileges”</a>.
+  </p><p>
+   Since the graphical Polkit tools and the command line tools always
+   operate on the upstream defaults, <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> includes an additional
+   command-line tool, <code class="command">set_polkit_default_privs</code>. It resets
+   privileges to the values defined in
+   <code class="filename">/etc/polkit-default-privs.*</code>. However, the command
+   <code class="command">set_polkit_default_privs</code> will only reset policies that
+   are set to the upstream defaults.
+  </p><div class="procedure" id="id-1.7.5.4.7.4" data-id-title="Restoring the SUSE Linux Enterprise Server Defaults"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.1: </span><span class="title-name">Restoring the <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> Defaults </span></span><a title="Permalink" class="permalink" href="cha-security-policykit.html#id-1.7.5.4.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/security_policy_kit.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Make sure <code class="filename">/etc/polkit-default-privs.local</code> does not
+     contain any overrides of the default policies.
+    </p><div id="id-1.7.5.4.7.4.2.2" data-id-title="Custom Policy Configuration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Custom Policy Configuration</div><p>
+      Policies defined in
+      <code class="filename">/etc/polkit-default-privs.local</code> will be applied
+      on top of the defaults during the next step.
+     </p></div></li><li class="step"><p>
+     To reset all policies to the upstream defaults first and then apply the
+     <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> defaults:
+    </p><div class="verbatim-wrap"><pre class="screen">rm -f /var/lib/polkit/* &amp;&amp; set_polkit_default_privs</pre></div></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-yast-security.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 9 </span>Configuring Security Settings with YaST</span></a> </div><div><a class="pagination-link next" href="cha-security-acls.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Access Control Lists in Linux</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-policykit.html#sec-security-policykit-oview"><span class="title-number">10.1 </span><span class="title-name">Conceptual Overview</span></a></span></li><li><span class="sect1"><a href="cha-security-policykit.html#sec-security-policykit-types"><span class="title-number">10.2 </span><span class="title-name">Authorization Types</span></a></span></li><li><span class="sect1"><a href="cha-security-policykit.html#sec-security-security-policykit-query"><span class="title-number">10.3 </span><span class="title-name">Querying Privileges</span></a></span></li><li><span class="sect1"><a href="cha-security-policykit.html#sec-security-policykit-change-modify-config"><span class="title-number">10.4 </span><span class="title-name">Modifying Configuration Files</span></a></span></li><li><span class="sect1"><a href="cha-security-policykit.html#sec-security-policykit-change-defaults"><span class="title-number">10.5 </span><span class="title-name">Restoring the Default Privileges</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | Security and Hardening Guide | Setting up a freeRADIUS server</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Setting up a freeRADIUS server | SLED 15 SP6"/>
+<meta name="description" content="The RADIUS (Remote Authentication Dial-In User Service) protocol has long been a standard service for manage network access. It provides authenticati…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 8. Setting up a freeRADIUS server"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Setting up a freeRADIUS server",
+  
+    "description": "Setting up a freeRADIUS server",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-security-ad.html" title="Chapter 7. Active Directory support"/><link rel="next" href="part-local-security.html" title="Part II. Local security"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/security_freeradius.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-auth.html">Authentication</a><span> / </span><a class="crumb" href="cha-security-freeradius.html">Setting up a freeRADIUS server</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li class="active"><a href="part-auth.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" you-are-here"><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">29 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">30 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">31 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">32 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">33 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">34 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">35 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">36 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">37 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">38 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">39 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">40 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">42 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">43 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">44 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk05apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-freeradius" data-id-title="Setting up a freeRADIUS server"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></span> <a title="Permalink" class="permalink" href="cha-security-freeradius.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_freeradius.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The RADIUS (Remote Authentication Dial-In User Service) protocol has
+        long been a standard service for manage network access. It provides
+        authentication, authorization and accounting (AAA) for
+        large businesses such as Internet service providers and cellular
+        network providers, and is also popular for small networks. It
+        authenticates users and devices, authorizes those users and
+        devices for certain network services, and tracks use of services for
+        billing and auditing. You do not have to use all three of the AAA
+        protocols, but only the ones you need. For example, you may not need
+        accounting but only client authentication, or perhaps all you want is accounting, 
+        and client authorization is managed by something else.
+    </p><p>
+        It is efficient and manages thousands of requests on modest
+        hardware. It works for all network protocols and not just
+        dial-up, but the name remains the same.
+    </p><p>
+        RADIUS operates in a distributed architecture, sitting separately
+        from the Network Access Server (NAS). User access data is stored on a
+        central RADIUS server that is available to multiple NAS. The NAS
+        provides the physical access to the network, such as a managed
+        Ethernet switch, or wireless access point.
+    </p><p>
+        FreeRADIUS is the open source RADIUS implementation, and is the most
+        widely used RADIUS server. In this chapter you learn how to
+        install and test a FreeRADIUS server. Because of the numerous
+        use cases, after your initial setup is working correctly,
+        your next stop is the official documentation,
+        which is detailed and thorough (see
+        <a class="link" href="https://freeradius.org/documentation/" target="_blank">https://freeradius.org/documentation/</a>).
+    </p><section class="sect1" id="sec-test-radiusd" data-id-title="Installation and testing on SUSE Linux Enterprise Desktop"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">8.1 </span><span class="title-name">Installation and testing on <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span></span> <a title="Permalink" class="permalink" href="cha-security-freeradius.html#sec-test-radiusd">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_freeradius.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The following steps set up a simple test system. When you have
+        verified that the server is operating correctly and you are ready to
+        create a production configuration, you have several undo steps
+        to perform before starting your production configuration.
+    </p><p>
+        First install the <code class="systemitem">freeradius-server</code> and
+        <code class="systemitem">freeradius-server-utils</code>
+        packages. Then enter <code class="filename">/etc/raddb/certs</code> and run
+        the <code class="filename">bootstrap</code> script to create a set of test
+        certificates:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">zypper in freeradius-server freeradius-server-utils</code>
+<code class="prompt root"># </code><code class="command">cd /etc/raddb/certs</code>
+<code class="prompt root"># </code><code class="command">./bootstrap</code></pre></div><p>
+        The README in the <code class="filename">certs</code> directory contains a
+        great deal of useful information. When the
+        <code class="filename">bootstrap</code> script has completed, start the server
+        in debugging mode:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">radiusd -X</code>
+[...]
+Listening on auth address * port 1812 bound to server default
+Listening on acct address * port 1813 bound to server default
+Listening on auth address :: port 1812 bound to server default
+Listening on acct address :: port 1813 bound to server default
+Listening on auth address 127.0.0.1 port 18120 bound to server inner-tunnel
+Listening on proxy address * port 54435
+Listening on proxy address :: port 58415
+Ready to process requests</pre></div><p>
+        When you see the <code class="literal">Listening</code> and <code class="literal">Ready to process requests</code> lines,
+        your server has started correctly. If it does not start, read the
+        output carefully because it tells you what went wrong. You may direct
+        the output to a text file with <code class="command">tee</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">radiusd -X | tee radiusd.text</code></pre></div><p>
+        The next step is to test authentication with a test client and user.
+        The client is a client of the RADIUS server, such as a wireless
+        access point or switch. Clients are configured in
+        <code class="filename">/etc/raddb/client.conf</code>. Human users are
+        configured in
+        <code class="filename">/etc/raddb/mods-config/files/authorize</code>.
+    </p><p>
+        Open
+        <code class="filename">/etc/raddb/mods-config/files/authorize</code> and
+        uncomment the following lines:
+    </p><div class="verbatim-wrap"><pre class="screen">bob   Cleartext-Password := "hello"
+Reply-Message := "Hello, %{User-Name}"</pre></div><p>
+        A test client, <code class="literal">client localhost</code>, is provided in
+        <code class="filename">/etc/raddb/client.conf</code>, with a secret of
+        <code class="literal">testing123</code>. Open a second terminal, and as an
+        unprivileged user use the <code class="command">radtest</code> command to log
+        in as bob:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">radtest bob hello 127.0.0.1 0 testing123</code>
+Sent Access-Request Id 241 from 0.0.0.0:35234 to 127.0.0.1:1812 length 73
+        User-Name = "bob"
+        User-Password = "hello"
+        NAS-IP-Address = 127.0.0.1
+        NAS-Port = 0
+        Message-Authenticator = 0x00
+        Cleartext-Password = "hello"
+Received Access-Accept Id 241 from 127.0.0.1:1812 to 0.0.0.0:0 length 20</pre></div><p>
+        In your <code class="literal">radius -X</code> terminal, a successful login looks
+        like this:
+    </p><div class="verbatim-wrap"><pre class="screen">(3) pap: Login attempt with password
+(3) pap: Comparing with "known good" Cleartext-Password
+(3) pap: User authenticated successfully
+(3)     [pap] = ok
+[...]
+(3) Sent Access-Accept Id 241 from 127.0.0.1:1812 to 127.0.0.1:35234 length 0
+(3) Finished request
+Waking up in 4.9 seconds.
+(3) Cleaning up request packet ID 241 with timestamp +889</pre></div><p>
+        Now run one more login test from a different computer on your
+        network. Create a client configuration on your server by uncommenting
+        and modifying the following entry in
+        <code class="filename">clients.conf</code>, using the IP address of your test
+        machine:
+    </p><div class="verbatim-wrap"><pre class="screen">client private-network-1 }
+  ipaddr          = <em class="replaceable">192.0.2.0/24</em>
+  secret          = testing123-1
+  {</pre></div><p>
+        On the client machine, install
+        <code class="systemitem">freeradius-server-utils</code>. Try logging in from the client as <code class="literal">bob</code>, using the <code class="command">radtest</code> command. It
+        is better to use the IP address of the RADIUS server rather than the
+        hostname because it is faster:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">radtest bob hello 192.168.2.100 0 testing123-1</code></pre></div><p>
+        If your test logins fail, review all the output to learn what went
+        wrong. There are several test users and test clients provided. The
+        configuration files are full of useful information, and we recommend
+        studying them. When you are satisfied with your testing and ready to
+        create a production configuration, remove all the test certificates
+        in <code class="filename">/etc/raddb/certs</code> and replace them with your
+        own certificates, comment out all the test users and clients, and
+        stop <code class="command">radiusd</code> by pressing
+        <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">C</span>. Manage
+        the <code class="literal">radiusd.service</code> with
+        <code class="command">systemctl</code>, just like any other service.
+    </p><p>
+        To learn how to fit a FreeRADIUS server in your network, see
+        <a class="link" href="https://freeradius.org/documentation/" target="_blank">https://freeradius.org/documentation/</a>
+        and
+        <a class="link" href="https://networkradius.com/freeradius-documentation/" target="_blank">https://networkradius.com/freeradius-documentation/</a>
+        for in-depth references and howtos.
+    </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-ad.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 7 </span>Active Directory support</span></a> </div><div><a class="pagination-link next" href="part-local-security.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part II </span>Local security</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-freeradius.html#sec-test-radiusd"><span class="title-number">8.1 </span><span class="title-name">Installation and testing on <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

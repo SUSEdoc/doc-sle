@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP4 | Storage Administration Guide | Resizing file systems</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Resizing file systems | SLES 15 SP4"/>
+<meta name="description" content="Resizing file systems—not to be confused with resizing partitions or volumes—can be used to make space available on physical volumes or to use additi…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP4"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 2. Resizing file systems"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Resizing file systems",
+  
+    "description": "Resizing file systems",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-04-26T00:00+02:00",
+      
+    "datePublished": "2022-06-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-filesystems.html" title="Chapter 1. Overview of file systems in Linux"/><link rel="next" href="cha-uuid.html" title="Chapter 3. Mounting storage devices"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-filesystems.html">File systems and mounting</a><span> / </span><a class="crumb" href="cha-resize-fs.html">Resizing file systems</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li class="active"><a href="part-filesystems.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" you-are-here"><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li><a href="part-software-raid.html" class="has-children "><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li><a href="part-net-storage.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-resize-fs" data-id-title="Resizing file systems"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Resizing file systems—not to be confused with resizing partitions or
+  volumes—can be used to make space available on physical volumes or to
+  use additional space available on a physical volume.
+ </p><section class="sect1" id="sec-resize-fs-usecases" data-id-title="Use cases"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.1 </span><span class="title-name">Use cases</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-usecases">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   It is strongly recommended to use the YaST Partitioner to resize
+   partitions or logical volumes. When doing so, the file system will
+   automatically be adjusted to the new size of the partition or volume.
+   However, there are some cases where you need to resize the file system
+   manually, because they are not supported by YaST:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     After having resized a virtual disk of a VM Guest.
+    </p></li><li class="listitem"><p>
+     After having resized a volume from a network-attached storage.
+    </p></li><li class="listitem"><p>
+     After having manually resized partitions (for example by using
+     <code class="command">fdisk</code> or <code class="command">parted</code>) or logical volumes
+     (for example by using <code class="command">lvresize</code>).
+    </p></li><li class="listitem"><p>
+     When wanting to shrink Btrfs file systems (as of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> 12, YaST
+     only supports growing Btrfs file systems).
+    </p></li></ul></div></section><section class="sect1" id="sec-resize-fs-guidelines" data-id-title="Guidelines for resizing"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.2 </span><span class="title-name">Guidelines for resizing</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-guidelines">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Resizing any file system involves some risks that can potentially result in
+   losing data.
+  </p><div id="id-1.11.3.3.5.3" data-id-title="Back up your data" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Back up your data</div><p>
+    To avoid data loss, ensure that you back up your data before you begin any
+    resizing task.
+   </p></div><p>
+   Consider the following guidelines when planning to resize a file system.
+  </p><section class="sect2" id="sec-resize-fs-guidelines-support" data-id-title="File systems that support resizing"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.2.1 </span><span class="title-name">File systems that support resizing</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-guidelines-support">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The file system must support resizing to take advantage of increases in
+    available space for the volume. In <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, file system resizing
+    utilities are available for file systems Ext2, Ext3, and Ext4.
+    The utilities support increasing and decreasing the size as follows:
+   </p><div class="table" id="id-1.11.3.3.5.5.3" data-id-title="File system support for resizing"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 2.1: </span><span class="title-name">File system support for resizing </span></span><a title="Permalink" class="permalink" href="cha-resize-fs.html#id-1.11.3.3.5.5.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/><col class="4"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         File System
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Utility
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Increase Size (Grow)
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Decrease Size (Shrink)
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Btrfs
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">btrfs filesystem resize</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Online
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Online
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         XFS
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">xfs_growfs</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Online
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Not supported
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Ext2
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">resize2fs</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Online or offline
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Offline only
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Ext3
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">resize2fs</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Online or offline
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Offline only
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         Ext4
+        </p>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="command">resize2fs</code>
+        </p>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         Online or offline
+        </p>
+       </td><td>
+        <p>
+         Offline only
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect2" id="sec-resize-fs-guidelines-increase" data-id-title="Increasing the size of a file system"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.2.2 </span><span class="title-name">Increasing the size of a file system</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-guidelines-increase">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    You can grow a file system to the maximum space available on the device, or
+    specify an exact size. Ensure that you grow the size of the device or
+    logical volume before you attempt to increase the size of the file system.
+   </p><p>
+    When specifying an exact size for the file system, ensure that the new size
+    satisfies the following conditions:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The new size must be greater than the size of the existing data;
+      otherwise, data loss occurs.
+     </p></li><li class="listitem"><p>
+      The new size must be equal to or less than the current device size
+      because the file system size cannot extend beyond the space available.
+     </p></li></ul></div></section><section class="sect2" id="sec-resize-fs-guidelines-decrease" data-id-title="Decreasing the size of a file system"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.2.3 </span><span class="title-name">Decreasing the size of a file system</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-guidelines-decrease">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When decreasing the size of the file system on a device, ensure that the
+    new size satisfies the following conditions:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The new size must be greater than the size of the existing data;
+      otherwise, data loss occurs.
+     </p></li><li class="listitem"><p>
+      The new size must be equal to or less than the current device size
+      because the file system size cannot extend beyond the space available.
+     </p></li></ul></div><p>
+    If you plan to also decrease the size of the logical volume that holds the
+    file system, ensure that you decrease the size of the file system before
+    you attempt to decrease the size of the device or logical volume.
+   </p><div id="id-1.11.3.3.5.7.5" data-id-title="XFS" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: XFS</div><p>
+     Decreasing the size of a file system formatted with XFS is not possible,
+     since such a feature is not supported by XFS.
+    </p></div></section></section><section class="sect1" id="sec-resize-fs-btrfs" data-id-title="Changing the size of a Btrfs file system"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.3 </span><span class="title-name">Changing the size of a Btrfs file system</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-btrfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The size of a Btrfs file system can be changed by using the <code class="command">btrfs
+   filesystem resize</code> command when the file system is mounted.
+   Increasing and decreasing the size are both supported while the file system
+   is mounted.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Open a terminal.
+    </p></li><li class="step"><p>
+     Make sure the file system you want to change is mounted.
+    </p></li><li class="step"><p>
+     Change the size of the file system using the <code class="command">btrfs filesystem
+     resize</code> command with one of the following methods:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       To extend the file system size to the maximum available size of the
+       device, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem resize max /mnt</pre></div></li><li class="listitem"><p>
+       To extend the file system to a specific size, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem resize <em class="replaceable">SIZE</em> /mnt</pre></div><p>
+       Replace <em class="replaceable">SIZE</em> with the desired size in bytes.
+       You can also specify units on the value, such as 50000K (kilobytes),
+       250M (megabytes), or 2G (gigabytes). Alternatively, you can specify an
+       increase or decrease to the current size by prefixing the value with a
+       plus (<code class="literal">+</code>) or a minus (<code class="literal">-</code>) sign,
+       respectively:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> btrfs filesystem resize +<em class="replaceable">SIZE</em> /mnt
+sudo btrfs filesystem resize -<em class="replaceable">SIZE</em> /mnt</pre></div></li></ul></div></li><li class="step"><p>
+     Check the effect of the resize on the mounted file system by entering
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>df -h</pre></div><p>
+     The Disk Free (<code class="command">df</code>) command shows the total size of the
+     disk, the number of blocks used, and the number of blocks available on the
+     file system. The -h option prints sizes in human-readable format, such as
+     1K, 234M, or 2G.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-resize-fs-xfs" data-id-title="Changing the size of an XFS file system"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.4 </span><span class="title-name">Changing the size of an XFS file system</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-xfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The size of an XFS file system can be increased by using the
+   <code class="command">xfs_growfs</code> command when the file system is mounted.
+   Reducing the size of an XFS file system is not possible.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Open a terminal.
+    </p></li><li class="step"><p>
+     Make sure the file system you want to change is mounted.
+    </p></li><li class="step"><p>
+     Increase the size of the file system using the
+     <code class="command">xfs_growfs</code> command. The following example expands the
+     size of the file system to the maximum value available. See <code class="command">man 8
+     xfs_growfs</code> for more options.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xfs_growfs -d /mnt</pre></div></li><li class="step"><p>
+     Check the effect of the resize on the mounted file system by entering
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>df -h</pre></div><p>
+     The Disk Free (<code class="command">df</code>) command shows the total size of the
+     disk, the number of blocks used, and the number of blocks available on the
+     file system. The -h option prints sizes in human-readable format, such as
+     1K, 234M, or 2G.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-resize-fs-ext" data-id-title="Changing the size of an ext2, ext3, or ext4 file system"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.5 </span><span class="title-name">Changing the size of an ext2, ext3, or ext4 file system</span></span> <a title="Permalink" class="permalink" href="cha-resize-fs.html#sec-resize-fs-ext">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/storage_fs-resizing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The size of Ext2, Ext3, and Ext4 file systems can be increased by using the
+   <code class="command">resize2fs</code> command, regardless of whether the respective
+   partition is mounted or not. To decrease the size of an Ext file system it
+   needs to be unmounted.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Open a terminal.
+    </p></li><li class="step"><p>
+     If the file system size should be decreased, unmount it.
+    </p></li><li class="step"><p>
+     Change the size of the file system using one of the following methods:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       To extend the file system size to the maximum available size of the
+       device called <code class="filename">/dev/sda1</code>, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> resize2fs /dev/sda1</pre></div><p>
+       If a size parameter is not specified, the size defaults to the size of
+       the partition.
+      </p></li><li class="listitem"><p>
+       To change the file system to a specific size, enter
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> resize2fs /dev/sda1 <em class="replaceable">SIZE</em></pre></div><p>
+       The <em class="replaceable">SIZE</em> parameter specifies the requested
+       new size of the file system. If no units are specified, the unit of the
+       size parameter is the block size of the file system. Optionally, the
+       size parameter can be suffixed by one of the following unit designations:
+       <code class="literal">s</code> for 512 byte sectors; <code class="literal">K</code> for
+       kilobytes (1 kilobyte is 1024 bytes); <code class="literal">M</code> for
+       megabytes; or <code class="literal">G</code> for gigabytes.
+      </p></li></ul></div><p>
+     Wait until the resizing is completed before continuing.
+    </p></li><li class="step"><p>
+     If the file system is not mounted, mount it now.
+    </p></li><li class="step"><p>
+     Check the effect of the resize on the mounted file system by entering
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>df -h</pre></div><p>
+     The Disk Free (<code class="command">df</code>) command shows the total size of the
+     disk, the number of blocks used, and the number of blocks available on the
+     file system. The -h option prints sizes in human-readable format, such as
+     1K, 234M, or 2G.
+    </p></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-filesystems.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 1 </span>Overview of file systems in Linux</span></a> </div><div><a class="pagination-link next" href="cha-uuid.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 3 </span>Mounting storage devices</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-resize-fs.html#sec-resize-fs-usecases"><span class="title-number">2.1 </span><span class="title-name">Use cases</span></a></span></li><li><span class="sect1"><a href="cha-resize-fs.html#sec-resize-fs-guidelines"><span class="title-number">2.2 </span><span class="title-name">Guidelines for resizing</span></a></span></li><li><span class="sect1"><a href="cha-resize-fs.html#sec-resize-fs-btrfs"><span class="title-number">2.3 </span><span class="title-name">Changing the size of a Btrfs file system</span></a></span></li><li><span class="sect1"><a href="cha-resize-fs.html#sec-resize-fs-xfs"><span class="title-number">2.4 </span><span class="title-name">Changing the size of an XFS file system</span></a></span></li><li><span class="sect1"><a href="cha-resize-fs.html#sec-resize-fs-ext"><span class="title-number">2.5 </span><span class="title-name">Changing the size of an ext2, ext3, or ext4 file system</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

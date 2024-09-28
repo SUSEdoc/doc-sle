@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Security and Hardening Guide | Configuring SELinux</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Configuring SELinux | SLES 12 SP5"/>
+<meta name="description" content="In this chapter, you will learn how to set up and manage SELinux on SUSE Linux Enterprise Server. The following topics are covered:"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 32. Configuring SELinux"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security Guide"/>
+<meta property="og:description" content="Implement system security for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security Guide"/>
+<meta name="twitter:description" content="Implement system security for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Configuring SELinux",
+  
+    "description": "Configuring SELinux",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="bk05pt05.html" title="Part V. SELinux"/><link rel="next" href="part-audit.html" title="Part VI. The Linux Audit Framework"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="bk05pt05.html">SELinux</a><span> / </span><a class="crumb" href="cha-selinux.html">Configuring SELinux</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and Confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting Up Authentication Servers and Clients Using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP—A Directory Service</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network Authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local Security</span></a><ol><li><a href="cha-spectre.html" class=" "><span class="title-number">8 </span><span class="title-name">Spectre/Meltdown Checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Configuring Security Settings with YaST</span></a></li><li><a href="cha-security-policykit.html" class=" "><span class="title-number">10 </span><span class="title-name">Authorization with Polkit</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">11 </span><span class="title-name">Access Control Lists in Linux</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting Partitions and Files</span></a></li><li><a href="cha-certstore.html" class=" "><span class="title-number">13 </span><span class="title-name">Certificate Store</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">14 </span><span class="title-name">Intrusion Detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network Security</span></a><ol><li><a href="cha-ssh.html" class=" "><span class="title-number">15 </span><span class="title-name">SSH: Secure Network Operations</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">16 </span><span class="title-name">Masquerading and Firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring a VPN Server</span></a></li><li><a href="cha-security-yast-ca.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing X.509 Certification</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">19 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">20 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">21 </span><span class="title-name">Getting Started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">22 </span><span class="title-name">Immunizing Programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">23 </span><span class="title-name">Profile Components and Syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">24 </span><span class="title-name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">25 </span><span class="title-name">Building and Managing Profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">26 </span><span class="title-name">Building Profiles from the Command Line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">27 </span><span class="title-name">Profiling Your Web Applications Using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">28 </span><span class="title-name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">29 </span><span class="title-name">Managing Profiled Applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">30 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">31 </span><span class="title-name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li class="active"><a href="bk05pt05.html" class="has-children you-are-here"><span class="title-number">V </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" you-are-here"><span class="title-number">32 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">33 </span><span class="title-name">Understanding Linux Audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting Up the Linux Audit Framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">35 </span><span class="title-name">Introducing an Audit Rule Set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">36 </span><span class="title-name">Useful Resources</span></a></li></ol></li><li><a href="app-pcidss.html" class=" "><span class="title-number">A </span><span class="title-name">Achieving PCI DSS Compliance</span></a></li><li><a href="bk05apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-selinux" data-id-title="Configuring SELinux"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">32 </span><span class="title-name">Configuring SELinux</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  In this chapter, you will learn how to set up and manage SELinux on
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. The following topics are covered:
+ </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+    Why Use SELinux?
+   </p></li><li class="listitem"><p>
+    Understanding SELinux
+   </p></li><li class="listitem"><p>
+    Setting Up SELinux
+   </p></li><li class="listitem"><p>
+    Managing SELinux
+   </p></li></ul></div><section class="sect1" id="sec-selinux-why" data-id-title="Why Use SELinux?"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.1 </span><span class="title-name">Why Use SELinux?</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-why">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SELinux was developed as an additional Linux security solution that uses
+   the security framework in the Linux kernel. The purpose was to allow for
+   a more granular security policy that goes beyond what is offered by the
+   default existing permissions of Read, Write, and Execute, and beyond
+   assigning permissions to the different capabilities that are available on
+   Linux. SELinux does this by trapping all system calls that reach the
+   kernel, and denying them by default. This means that on a system that has
+   SELinux enabled and nothing else configured, nothing will work. To allow
+   your system to do anything, as an administrator you will need to write
+   rules and put them in a policy.
+  </p><p>
+   An example explains why a solution such as SELinux (or its counterpart
+   <span class="phrase">AppArmor</span>) is needed:
+  </p><p>
+   <span class="quote">“<span class="quote">One morning, I found out that my server was hacked. The server was
+   running a fully patched SLES installation. A firewall was configured on
+   it and no unnecessary services were offered by this server. Further
+   analysis revealed that the hacker had come in through a vulnerable PHP script
+   that was a part of one of the Apache virtual hosts that were running on
+   this server. The intruder had managed to get access to a shell, using the
+   <code class="systemitem">wwwrun</code> account that was used by
+   the Apache Web server. As this
+   <code class="systemitem">wwwrun</code> user, the intruder had
+   created several scripts in the <code class="filename">/var/tmp</code> and the
+   <code class="filename">/tmp</code> directories, which were a part of a botnet that
+   was launching a Distributed Denial of Service attack against several
+   servers.</span>”</span>
+  </p><p>
+   The interesting thing about this hack is that it occurred on a server
+   where nothing was really wrong. All permissions where set OK, but the
+   intruder had managed to get into the system. What becomes clearly evident
+   from this example is that in some cases additional security is
+   needed—a security that goes beyond what is offered by using
+   SELinux. As a less complete and less complex alternative, <span class="phrase">AppArmor</span> can be
+   used.
+  </p><p>
+   <span class="phrase">AppArmor</span> confines specific processes in their abilities to read/write and
+   execute files (and other things). Its view is mostly that things that
+   happen inside a process cannot escape.
+  </p><p>
+   SELinux instead uses labels attached to objects (for example, files, binaries,
+   network sockets) and uses them to determine privilege boundaries, thereby
+   building up a level of confinement that can span more than a process or
+   even the whole system.
+  </p><p>
+   SELinux was developed by the US National Security Agency (NSA), and since
+   the beginning Red Hat has been heavily involved in its development. The
+   first version of SELinux was offered in the era of <span class="trademark">Red Hat
+   Enterprise Linux 4</span>™, around the year 2006. In the beginning it
+   offered support for essential services only, but over the years it has
+   developed into a system that offers many rules that are collected in
+   policies to offer protection to a broad range of services.
+  </p><p>
+   SELinux was developed in accordance with some certification standards
+   like Common Criteria and FIPS 140. Because some customers specifically
+   requested solutions that met these standards, SELinux rapidly became
+   relatively popular.
+  </p><p>
+   As an alternative to SELinux, Immunix, a company that was purchased by
+   Novell in 2005, had developed <span class="phrase">AppArmor</span>. <span class="phrase">AppArmor</span> was built on top of the same
+   security principles as SELinux, but took a completely different approach,
+   where it was possible to restrict services to exactly what they needed to
+   do by using an easy to use wizard-driven procedure. Nevertheless, <span class="phrase">AppArmor</span>
+   has never reached the same status as SELinux, even if there are some good
+   arguments to secure a server with <span class="phrase">AppArmor</span> rather than with SELinux.
+  </p><p>
+   Because many organizations are requesting SELinux to be in the
+   Linux distributions they are using, SUSE is offering support for the
+   SELinux framework in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. This does not mean that the default
+   installation of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> will switch from <span class="phrase">AppArmor</span> to SELinux in the
+   near future.
+  </p><section class="sect2" id="sec-selinux-support" data-id-title="Support Status"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.1.1 </span><span class="title-name">Support Status</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-support">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The SELinux framework is supported on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. This means that
+    <span class="productname"><span class="phrase">SLES</span></span> offers all binaries and libraries you need to be able
+    to use SELinux on your server. You may however miss some software that
+    you may be familiar with from other Linux distributions.
+   </p><p>
+    SELinux support is at a fairly early stage in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, which means
+    that unexpected behavior may occur. To limit this risk as much as
+    possible, it is best to use only the binaries that have been provided by
+    default on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>.
+   </p></section><section class="sect2" id="sec-selinux-component" data-id-title="Understanding SELinux Components"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.1.2 </span><span class="title-name">Understanding SELinux Components</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-component">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Before starting the configuration of SELinux, you should know a bit
+    about how SELinux is organized. Three components play a role:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      The security framework in the Linux kernel
+     </p></li><li class="listitem"><p>
+      The SELinux libraries and binaries
+     </p></li><li class="listitem"><p>
+      The SELinux policy
+     </p></li></ul></div><p>
+    The default kernel of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports SELinux and the tools that
+    are needed to manage it. The most important part of the work of the
+    administrator with regard to SELinux is managing the policy.
+   </p><p>
+    In the SELinux policy, security labels are applied to different objects
+    on a Linux server. These objects typically are users, ports, processes
+    and files. Using these security labels, rules are created that define
+    what is and what is not allowed on a server. Remember, by default
+    SELinux denies everything, and by creating the appropriate rules you can
+    allow the access that is strictly necessary. Rules should therefore
+    exist for all programs that you want to use on a system. Alternatively,
+    you should configure parts of a system to run in unconfined mode, which
+    means that specific ports, programs, users, files and directories are
+    not protected by SELinux. This mode is useful if you only want to use
+    SELinux to protect some essential services, while you are not
+    specifically worried about other services. To get a really secure
+    system, you should avoid this.
+   </p><p>
+    To ensure the appropriate protection of your system, you need an SELinux
+    policy. This must be a tailor-made policy in which all files are
+    provided with a label, and all services and users have a security label
+    as well to express which files and directories can be accessed by which
+    user and processed on the server. Developing such a policy is a
+    tremendous amount of work.
+   </p><p>
+    The complexity of SELinux is also one of the main arguments against
+    using it. Because a typical Linux system is so very complex, it is easy
+    to overlook something and leave an opening that intruders can abuse to
+    get into your system. And even if it is set up completely the way it
+    should be, it still is very hard for an administrator to overlook all
+    aspects with SELinux. With regard to the complexity, <span class="phrase">AppArmor</span> takes a
+    completely different approach and works with automated procedures that
+    allow the administrator to set up <span class="phrase">AppArmor</span> protection and understand exactly
+    what is happening.
+   </p><p>
+    Note that a freely available SELinux policy might work on your server,
+    but is unlikely to offer the same protection as a custom policy. SUSE
+    also does not support third-party policies.
+   </p></section></section><section class="sect1" id="sec-selinux-policy" data-id-title="Policy"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.2 </span><span class="title-name">Policy</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-policy">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   As mentioned, the policy is the key component in SELinux. It defines
+   rules that specify which objects can access which files, directories,
+   ports and processes on a system. To do this, a security context is
+   defined for all of these. On an SELinux system where the policy has been
+   applied to label the file system, you can use the <code class="command">ls
+   -Z</code> command on any directory to find the security context for
+   the files in that directory.
+   <a class="xref" href="cha-selinux.html#ex-selnx-con-set" title="Security Context Settings Using ls -Z">Example 32.1: “Security Context Settings Using <code class="command">ls -Z</code>”</a>
+   shows the security context settings for the directories in the
+   <code class="filename">/</code> directory of a <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> system with an
+   SELinux-labeled file system.
+  </p><div class="example" id="ex-selnx-con-set" data-id-title="Security Context Settings Using ls -Z"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.1: </span><span class="title-name">Security Context Settings Using <code class="command">ls -Z</code> </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-con-set">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">ls -Z
+system_u:object_r:bin_t bin
+system_u:object_r:boot_t boot
+system_u:object_r:device_t dev
+system_u:object_r:etc_t etc
+system_u:object_r:home_root_t home
+system_u:object_r:lib_t lib
+system_u:object_r:lib_t lib64
+system_u:object_r:lost_found_t lost+found
+system_u:object_r:mnt_t media
+system_u:object_r:mnt_t mnt
+system_u:object_r:usr_t opt
+system_u:object_r:proc_t proc
+system_u:object_r:default_t root
+system_u:object_r:bin_t sbin
+system_u:object_r:security_t selinux
+system_u:object_r:var_t srv
+system_u:object_r:sysfs_t sys
+system_u:object_r:tmp_t tmp
+system_u:object_r:usr_t usr
+system_u:object_r:var_t var</pre></div></div></div><p>
+   The most important line in the security context is the context type. This
+   is the part of the security context that ends in _t. It tells SELinux
+   which kind of access the object is allowed. In the policy, rules are
+   specified to define which type of user or which type of role has access
+   to which type of context. For example, this can happen by using a rule
+   like the following:
+  </p><div class="verbatim-wrap"><pre class="screen">allow user_t bin_t:file {read execute gettattr};</pre></div><p>
+   This example rule states that the user who has the context type
+   <code class="systemitem">user_t</code> (this user is called
+   the source object) is allowed to access objects of class "file"
+   with the context type <code class="filename">bin_t</code> (the target), using the
+   permissions read, execute and getattr.
+  </p><p>
+   The standard policy that you are going to use contains a huge amount of
+   rules. To make it more manageable, policies are often split into modules.
+   This allows administrator to switch protection on or off for different
+   parts of the system.
+  </p><p>
+   When compiling the policy for your system, you will have a choice to
+   either work with a modular policy, or a monolithic policy, where one huge
+   policy is used to protect everything on your system. It is strongly
+   recommended to use a modular policy and not a monolithic policy. Modular
+   policies are much easier to manage.
+  </p></section><section class="sect1" id="sec-selinux-install" data-id-title="Installing SELinux Packages and Modifying GRUB 2"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.3 </span><span class="title-name">Installing SELinux Packages and Modifying GRUB 2</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-install">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The easiest way to make sure that all SELinux components are installed is
+   by using YaST. The procedure described below shows what to do on an
+   installed <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Log in to your server as <code class="systemitem">root</code>
+     and start YaST.
+    </p></li><li class="step"><p>
+     Select <span class="guimenu">Software</span> › <span class="guimenu">Software
+     Management</span>
+    </p></li><li class="step"><p>
+     <span class="guimenu">Select View</span> › <span class="guimenu">Patterns</span> and select the entire C<span class="guimenu">/C++ Development</span> category for installation.
+    </p></li><li class="step"><p>
+     <span class="guimenu">Select View</span> › <span class="guimenu">Search</span> and make sure that <span class="guimenu">Search in Name</span>,
+     <span class="guimenu">Keywords</span> and <span class="guimenu">Summary</span> are
+     selected. Now enter the keyword <code class="literal">selinux</code> and click
+     <span class="guimenu">Search</span>. You now see a list of packages.
+    </p></li><li class="step"><p>
+     Make sure that all the packages you have found are selected and click
+     <span class="guimenu">Accept</span> to install them.
+    </p></li></ol></div></div><div class="figure" id="fig-packages-yast"><div class="figure-contents"><div class="mediaobject"><a href="images/selnx_policy_compiler.png"><img src="images/selnx_policy_compiler.png" width="95%" alt="Selecting all SELinux Packages in YaST" title="Selecting all SELinux Packages in YaST"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 32.1: </span><span class="title-name">Selecting all SELinux Packages in YaST </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#fig-packages-yast">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div><p>
+   After installing the SELinux packages, you need to modify the GRUB 2 boot
+   loader. Do this from YaST, select <span class="guimenu">System</span> › <span class="guimenu">Boot Loader</span> › <span class="guimenu">Kernel
+   Parameters</span>. Now add the following parameters to
+   the <span class="guimenu">Optional Kernel Command Line Parameters</span>:
+  </p><div class="verbatim-wrap"><pre class="screen">security=selinux selinux=1 enforcing=0</pre></div><p>
+   These options are used for the following purposes:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.8.3.7.8.1"><span class="term"><code class="literal">security=selinux</code>
+    </span></dt><dd><p>
+      This option tells the kernel to use SELinux and not <span class="phrase">AppArmor</span>
+     </p></dd><dt id="id-1.7.8.3.7.8.2"><span class="term"><code class="literal">selinux=1</code>
+    </span></dt><dd><p>
+      This option switches on SELinux
+     </p></dd><dt id="id-1.7.8.3.7.8.3"><span class="term"><code class="literal">enforcing=0</code>
+    </span></dt><dd><p>
+      This option puts SELinux in permissive mode. In this mode, SELinux is
+      fully functional, but does not enforce any of the security settings in
+      the policy. Use this mode for configuring your system. To switch on
+      SELinux protection, when the system is fully operational, change the
+      option to <code class="literal">enforcing=1</code> and add
+      <code class="literal">SELINUX=enforcing</code> in
+      <code class="filename">/etc/selinux/config</code>.
+     </p></dd></dl></div><p>
+   After installing the SELinux packages and enabling the SELinux GRUB 2
+   boot options, reboot your server to activate the configuration.
+  </p></section><section class="sect1" id="sec-selinux-compilepolicy" data-id-title="SELinux Policy"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.4 </span><span class="title-name">SELinux Policy</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-compilepolicy">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The policy is an essential component of SELinux. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="productnumber">12 SP5</span>
+   includes the <span class="emphasis"><em>minimum</em></span> SELinux reference policy in the
+   package <span class="package">selinux-policy-minimum</span>. You must build a
+   policy that is customized for your installation. SELinux policies
+   should be customized for your particular needs. Contact SUSE
+   consulting services for assistance.
+   We recommend <code class="literal">slemicro</code> for customers and partners who are looking for a containerized or virtualized
+   host with full SELinux support, including a supported policy.
+   The examples in this chapter refer to this policy, if not stated otherwise.
+  </p><p>
+   After installing the policy, you are ready to start file system labeling.
+   Run
+  </p><div class="verbatim-wrap"><pre class="screen">restorecon -Rp /</pre></div><p>
+   to start the <code class="command">/sbin/setfiles</code> command to label all files
+   on your system. The
+   <code class="filename">/etc/selinux/minimum/contexts/files/file_contexts</code>
+   input file is used. The <code class="filename">file_contexts</code> file needs to
+   match your actual file system as much as possible. Otherwise, it can lead
+   to a completely unbootable system. If that happens, modify the records in
+   <code class="filename">file_contexts</code> with the <code class="command">semanage
+   fcontext</code> command to match the real structure of the file system
+   your server is using. For example
+  </p><div class="verbatim-wrap"><pre class="screen">semanage fcontext -a -t samba_share_t /etc/example_file</pre></div><p>
+   changes the file type from the default <code class="literal">etc_t</code> to
+   <code class="literal">samba_share_t</code> and adds the following record to the
+   related <code class="filename">file_contexts.local</code> file:
+  </p><div class="verbatim-wrap"><pre class="screen">/etc/example_file    unconfined_u:object_r:samba_share_t:s0</pre></div><p>
+   Then run
+  </p><div class="verbatim-wrap"><pre class="screen">restorecon -v /etc/example_file</pre></div><p>
+   for the type change to take effect.
+  </p><p>
+   Before doing this, make sure to read the rest of this chapter, so you
+   fully understand how context type is applied to files and directories. Do
+   not forget to make a backup of the <code class="filename">file_contexts</code>
+   file before starting.
+  </p><div id="id-1.7.8.3.8.13" data-id-title="The User nobody" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: The User <code class="systemitem">nobody</code></div><p>
+    While using <code class="command">semanage</code>, you may get a message that
+    complains about the home directory of
+    <code class="systemitem">nobody</code>. In this case, change
+    the login shell of user <code class="systemitem">nobody</code>
+    to <code class="filename">/sbin/nologin</code>. Then the settings of
+    <code class="systemitem">nobody</code> match the current
+    policy settings.
+   </p></div><p>
+   After another reboot SELinux should be operational. To verify this, use
+   the command <code class="command">sestatus -v</code>. It should give you an output
+   similar to
+   <a class="xref" href="cha-selinux.html#ex-selnx-sestatus" title="Verifying that SELinux is functional">Example 32.2: “Verifying that SELinux is functional”</a>.
+  </p><div class="example" id="ex-selnx-sestatus" data-id-title="Verifying that SELinux is functional"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.2: </span><span class="title-name">Verifying that SELinux is functional </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-sestatus">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">sestatus -v
+SELinux status:                 enabled
+SELinuxfs mount:                /selinux
+Current mode:                   permissive
+Mode from config file:          permissive
+Policy version:                 26
+Policy from config file:        minimum
+
+Process contexts:
+Current context:                root:staff_r:staff_t
+Init context:                   system_u:system_r:init_t
+/sbin/mingetty                  system_u:system_r:sysadm_t
+/usr/sbin/sshd                  system_u:system_r:sshd_t
+
+File contexts:
+Controlling term:               root:object_r:user_devpts_t
+/etc/passwd                     system_u:object_r:etc_t
+/etc/shadow                     system_u:object_r:shadow_t
+/bin/bash                       system_u:object_r:shell_exec_t
+/bin/login                      system_u:object_r:login_exec_t
+/bin/sh                         system_u:object_r:bin_t -&gt; system_u:object_r:shell_exec_t
+/sbin/agetty                    system_u:object_r:getty_exec_t
+/sbin/init                      system_u:object_r:init_exec_t
+/sbin/mingetty                  system_u:object_r:getty_exec_t
+/usr/sbin/sshd                  system_u:object_r:sshd_exec_t
+/lib/libc.so.6                  system_u:object_r:lib_t -&gt; system_u:object_r:lib_t
+/lib/ld-linux.so.2              system_u:object_r:lib_t -&gt; system_u:object_r:ld_so_t</pre></div></div></div></section><section class="sect1" id="sec-selinux-configure" data-id-title="Configuring SELinux"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.5 </span><span class="title-name">Configuring SELinux</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-configure">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   At this point you have a completely functional SELinux system and it is
+   time to further configure it. In the current status, SELinux is
+   operational but not in enforcing mode. This means that it does not limit
+   you in doing anything, it logs everything that it should be doing if it
+   were in enforcing mode. This is good, because based on the log files you
+   can find what it is that it would prevent you from doing. As a first
+   test, put SELinux in enforcing mode and find out if you can still use
+   your server after doing so: check that the option
+   <code class="option">enforcing=1</code> is set in the GRUB 2 configuration file,
+   while <code class="option">SELINUX=enforcing</code> is set in
+   <code class="filename">/etc/selinux/config</code>. Reboot your server and see if
+   it still comes up the way you expect it to. If it does, leave it like
+   that and start modifying the server in a way that everything works as
+   expected. However, you may not even be able to boot the server properly.
+   In that case, switch back to the mode where SELinux is not enforcing and
+   start tuning your server.
+  </p><p>
+    Before you start tuning your server, verify the SELinux installation.
+    You have already used the command <code class="command">sestatus -v</code> to view
+    the current mode, process, and file contexts. Next, run
+   </p><div class="verbatim-wrap"><pre class="screen">semanage boolean -l</pre></div><p>
+    which lists all Boolean switches that are available, and at
+    the same time verifies that you can access the policy.
+    <a class="xref" href="cha-selinux.html#ex-selnx-ls-bool" title="Getting a List of Booleans and Verifying Policy Access">Example 32.3, “Getting a List of Booleans and Verifying Policy Access”</a> shows part of the output of this
+    command.
+   </p><div class="complex-example"><div class="example" id="ex-selnx-ls-bool" data-id-title="Getting a List of Booleans and Verifying Policy Access"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.3: </span><span class="title-name">Getting a List of Booleans and Verifying Policy Access </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-ls-bool">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">semanage boolean -l
+SELinux boolean                          Description
+ftp_home_dir                   -&gt; off   ftp_home_dir
+mozilla_read_content           -&gt; off   mozilla_read_content
+spamassassin_can_network       -&gt; off   spamassassin_can_network
+httpd_can_network_relay        -&gt; off   httpd_can_network_relay
+openvpn_enable_homedirs        -&gt; off   openvpn_enable_homedirs
+gpg_agent_env_file             -&gt; off   gpg_agent_env_file
+allow_httpd_awstats_script_anon_write -&gt; off   allow_httpd_awstats_script_anon_write
+httpd_can_network_connect_db   -&gt; off   httpd_can_network_connect_db
+allow_ftpd_full_access         -&gt; off   allow_ftpd_full_access
+samba_domain_controller        -&gt; off   samba_domain_controller
+httpd_enable_cgi               -&gt; off   httpd_enable_cgi
+virt_use_nfs                   -&gt; off   virt_use_nfs</pre></div><p>
+     Another command that outputs useful information at this stage is
+    </p><div class="verbatim-wrap"><pre class="screen">semanage fcontext -l</pre></div><p>
+     It shows the default file context settings as provided by the policy
+     (see
+     <a class="xref" href="cha-selinux.html#ex-selnx-fcon" title="Getting File Context Information">Example 32.4: “Getting File Context Information”</a>
+     for partial output of this command).
+    </p></div></div></div><div class="example" id="ex-selnx-fcon" data-id-title="Getting File Context Information"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.4: </span><span class="title-name">Getting File Context Information </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-fcon">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">semanage fcontext -l
+/var/run/usb(/.*)?                                 all files          system_u:object_r:hotplug_var_run_t
+/var/run/utmp                                      regular file       system_u:object_r:initrc_var_run_t
+/var/run/vbe.*                                     regular file       system_u:object_r:hald_var_run_t
+/var/run/vmnat.*                                   socket             system_u:object_r:vmware_var_run_t
+/var/run/vmware.*                                  all files          system_u:object_r:vmware_var_run_t
+/var/run/vpnc(/.*)?                                all files          system_u:object_r:vpnc_var_run_t
+/var/run/watchdog\.pid                             regular file       system_u:object_r:watchdog_var_run_t
+/var/run/winbindd(/.*)?                            all files          system_u:object_r:winbind_var_run_t
+/var/run/wnn-unix(/.*)                             all files          system_u:object_r:canna_var_run_t
+/var/run/wpa_supplicant(/.*)?                      all files          system_u:object_r:NetworkManager_var_run_t
+/var/run/wpa_supplicant-global                     socket             system_u:object_r:NetworkManager_var_run_t
+/var/run/xdmctl(/.*)?                              all files          system_u:object_r:xdm_var_run_t
+/var/run/yiff-[0-9]+\.pid                          regular file       system_u:object_r:soundd_var_run_t</pre></div></div></div></section><section class="sect1" id="sec-selinux-manage" data-id-title="Managing SELinux"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.6 </span><span class="title-name">Managing SELinux</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-manage">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The base SELinux configuration is now operational and it can now be
+   configured to secure your server. In SELinux, an additional set of rules
+   is used to define exactly which process or user can access which files,
+   directories, or ports. To do this, SELinux applies a context to every
+   file, directory, process, and port. This context is a security label that
+   defines how this file, directory, process, or port should be treated.
+   These context labels are used by the SELinux policy, which defines
+   exactly what should be done with the context labels. By default, the
+   policy blocks all non-default access, which means that, as an
+   administrator, you need to enable all features that are non-default on
+   your server.
+  </p><section class="sect2" id="sec-selinux-viewcontext" data-id-title="Viewing the Security Context"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.6.1 </span><span class="title-name">Viewing the Security Context</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-viewcontext">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As already mentioned, files, directories, and ports can be labeled.
+    Within each label, different contexts are used. To be able to perform
+    your daily administration work, the type context is what you are most
+    interested in. As an administrator, you will mostly work with the type
+    context. Many commands allow you to use the <code class="option">-Z</code> option
+    to list current context settings. In
+    <a class="xref" href="cha-selinux.html#ex-selnx-def-con" title="The default context for directories in the root directory">Example 32.5: “The default context for directories in the root directory”</a>
+    you can see what the context settings are for the directories in the
+    root directory.
+   </p><div class="example" id="ex-selnx-def-con" data-id-title="The default context for directories in the root directory"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.5: </span><span class="title-name">The default context for directories in the root directory </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-def-con">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">ls -Z
+dr-xr-xr-x. root root system_u:object_r:bin_t:s0       bin
+dr-xr-xr-x. root root system_u:object_r:boot_t:s0      boot
+drwxr-xr-x. root root system_u:object_r:cgroup_t:s0    cgroup
+drwxr-xr-x+ root root unconfined_u:object_r:default_t:s0 data
+drwxr-xr-x. root root system_u:object_r:device_t:s0    dev
+drwxr-xr-x. root root system_u:object_r:etc_t:s0       etc
+drwxr-xr-x. root root system_u:object_r:home_root_t:s0 home
+dr-xr-xr-x. root root system_u:object_r:lib_t:s0       lib
+dr-xr-xr-x. root root system_u:object_r:lib_t:s0       lib64
+drwx------. root root system_u:object_r:lost_found_t:s0 lost+found
+drwxr-xr-x. root root system_u:object_r:mnt_t:s0       media
+drwxr-xr-x. root root system_u:object_r:autofs_t:s0    misc
+drwxr-xr-x. root root system_u:object_r:mnt_t:s0       mnt
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 mnt2
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 mounts
+drwxr-xr-x. root root system_u:object_r:autofs_t:s0    net
+drwxr-xr-x. root root system_u:object_r:usr_t:s0       opt
+dr-xr-xr-x. root root system_u:object_r:proc_t:s0      proc
+drwxr-xr-x. root root unconfined_u:object_r:default_t:s0 repo
+dr-xr-x---. root root system_u:object_r:admin_home_t:s0 root
+dr-xr-xr-x. root root system_u:object_r:bin_t:s0       sbin
+drwxr-xr-x. root root system_u:object_r:security_t:s0  selinux
+drwxr-xr-x. root root system_u:object_r:var_t:s0       srv
+-rw-r--r--. root root unconfined_u:object_r:swapfile_t:s0 swapfile
+drwxr-xr-x. root root system_u:object_r:sysfs_t:s0     sys
+drwxrwxrwt. root root system_u:object_r:tmp_t:s0       tmp
+-rw-r--r--. root root unconfined_u:object_r:etc_runtime_t:s0 tmp2.tar
+-rw-r--r--. root root unconfined_u:object_r:etc_runtime_t:s0 tmp.tar
+drwxr-xr-x. root root system_u:object_r:usr_t:s0       usr
+drwxr-xr-x. root root system_u:object_r:var_t:s0       var</pre></div></div></div><p>
+    In the listing above, you can see the complete context for all
+    directories. It consists of a user, a role, and a type. The s0 setting
+    indicates the security level in Multi Level Security environments. These
+    environments are not discussed here. In such an environment, make sure
+    that s0 is set. The Context Type defines what kind of activity is
+    permitted in the directory. Compare, for example, the
+    <code class="filename">/root</code> directory, which has the
+    <code class="filename">admin_home_t</code> context type, and the
+    <code class="filename">/home</code> directory, which has the
+    <code class="filename">home_root_t</code> context type. In the SELinux policy,
+    different kinds of access are defined for these context types.
+   </p><p>
+    Security labels are not only associated with files, but also with other
+    items, such as ports and processes. In
+    <a class="xref" href="cha-selinux.html#ex-selnx-set-proc" title="Showing SELinux settings for processes with ps Zaux">Example 32.6: “Showing SELinux settings for processes with <code class="command">ps Zaux</code>”</a>
+    for example you can see the context settings for processes on your
+    server.
+   </p><div class="example" id="ex-selnx-set-proc" data-id-title="Showing SELinux settings for processes with ps Zaux"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.6: </span><span class="title-name">Showing SELinux settings for processes with <code class="command">ps Zaux</code> </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-set-proc">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">ps Zaux
+LABEL                           USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+system_u:system_r:init_t        root         1  0.0  0.0  10640   808 ?        Ss   05:31   0:00 init [5]
+system_u:system_r:kernel_t      root         2  0.0  0.0      0     0 ?        S    05:31   0:00 [kthreadd]
+system_u:system_r:kernel_t      root         3  0.0  0.0      0     0 ?        S    05:31   0:00 [ksoftirqd/0]
+system_u:system_r:kernel_t      root         6  0.0  0.0      0     0 ?        S    05:31   0:00 [migration/0]
+system_u:system_r:kernel_t      root         7  0.0  0.0      0     0 ?        S    05:31   0:00 [watchdog/0]
+system_u:system_r:sysadm_t      root      2344  0.0  0.0  27640   852 ?        Ss   05:32   0:00 /usr/sbin/mcelog --daemon --config-file /etc/mcelog/mcelog.conf
+system_u:system_r:sshd_t        root      3245  0.0  0.0  69300  1492 ?        Ss   05:32   0:00 /usr/sbin/sshd -o PidFile=/var/run/sshd.init.pid
+system_u:system_r:cupsd_t       root      3265  0.0  0.0  68176  2852 ?        Ss   05:32   0:00 /usr/sbin/cupsd
+system_u:system_r:nscd_t        root      3267  0.0  0.0 772876  1380 ?        Ssl  05:32   0:00 /usr/sbin/nscd
+system_u:system_r:postfix_master_t root   3334  0.0  0.0  38320  2424 ?        Ss   05:32   0:00 /usr/lib/postfix/master
+system_u:system_r:postfix_qmgr_t postfix  3358  0.0  0.0  40216  2252 ?        S    05:32   0:00 qmgr -l -t fifo -u
+system_u:system_r:crond_t       root      3415  0.0  0.0  14900   800 ?        Ss   05:32   0:00 /usr/sbin/cron
+system_u:system_r:fsdaemon_t    root      3437  0.0  0.0  16468  1040 ?        S    05:32   0:00 /usr/sbin/smartd
+system_u:system_r:sysadm_t      root      3441  0.0  0.0  66916  2152 ?        Ss   05:32   0:00 login -- root
+system_u:system_r:sysadm_t      root      3442  0.0  0.0   4596   800 tty2     Ss+  05:32   0:00 /sbin/mingetty tty2</pre></div></div></div></section><section class="sect2" id="sec-selinux-selectmode" data-id-title="Selecting the SELinux Mode"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.6.2 </span><span class="title-name">Selecting the SELinux Mode</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-selectmode">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    In SELinux, three different modes can be used:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.8.3.10.4.3.1"><span class="term">Enforcing:</span></dt><dd><p>
+       This is the default mode. SELinux protects your server according to
+       the rules in the policy, and SELinux logs all of its activity to the
+       audit log.
+      </p></dd><dt id="id-1.7.8.3.10.4.3.2"><span class="term">Permissive:</span></dt><dd><p>
+       This mode is useful for troubleshooting. If set to Permissive,
+       SELinux does not protect your server, but it still logs everything
+       that happens to the log files.
+      </p></dd><dt id="id-1.7.8.3.10.4.3.3"><span class="term">Disabled:</span></dt><dd><p>
+       In this mode, SELinux is switched off completely and no logging
+       occurs. The file system labels however are not removed from the file
+       system.
+      </p></dd></dl></div><p>
+    You have already read how you can set the current SELinux mode from
+    GRUB 2 while booting using the enforcing boot parameter.
+   </p></section><section class="sect2" id="sec-selinux-modifycontext" data-id-title="Modifying SELinux Context Types"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.6.3 </span><span class="title-name">Modifying SELinux Context Types</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-modifycontext">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    An important part of the work of an administrator is setting context
+    types on files to ensure appropriate working of SELinux.
+   </p><p>
+    If a file is created within a specific directory, it inherits the
+    context type of the parent directory by default. If, however, a file is
+    moved from one location to another location, it retains the context type
+    that it had in the old location.
+   </p><p>
+    To set the context type for files, you can use the <code class="command">semanage
+    fcontext</code> command. With this command, you write the new context
+    type to the policy, but it does not change the actual context type
+    immediately! To apply the context types that are in the policy, you need
+    to run the <code class="command">restorecon</code> command afterward.
+   </p><p>
+    The challenge when working with <code class="command">semanage fcontext</code> is
+    to find out which context you actually need. You can use
+   </p><div class="verbatim-wrap"><pre class="screen">semanage fcontext -l</pre></div><p>
+    to list all contexts in the policy, but it may be a bit hard
+    to find out the actual context you need from that list as it is rather
+    long (see
+    <a class="xref" href="cha-selinux.html#ex-selnx-semanage" title="Viewing Default File Contexts">Example 32.7: “Viewing Default File Contexts”</a>).
+   </p><div class="example" id="ex-selnx-semanage" data-id-title="Viewing Default File Contexts"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.7: </span><span class="title-name">Viewing Default File Contexts </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-semanage">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">semanage fcontext -l | less
+SELinux fcontext                                   type               Context
+
+/                                                  directory          system_u:object_r:root_t:s0
+/.*                                                all files          system_u:object_r:default_t:s0
+/[^/]+                                             regular file       system_u:object_r:etc_runtime_t:s0
+/\.autofsck                                        regular file       system_u:object_r:etc_runtime_t:s0
+/\.autorelabel                                     regular file       system_u:object_r:etc_runtime_t:s0
+/\.journal                                         all files          X:&gt;&gt;None&gt;&gt;
+/\.suspended                                       regular file       system_u:object_r:etc_runtime_t:s0
+/a?quota\.(user|group)                             regular file       system_u:object_r:quota_db_t:s0
+/afs                                               directory          system_u:object_r:mnt_t:s0
+/bin                                               directory          system_u:object_r:bin_t:s0
+/bin/.*                                            all files          system_u:object_r:bin_t:s0</pre></div></div></div><p>
+    There are three ways to find out which context settings are available
+    for your services:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Install the service and look at the default context settings that are
+      used. This is the easiest and recommended option.
+     </p></li><li class="listitem"><p>
+      Consult the man page for the specific service. Some services have a
+      man page that ends in <code class="literal">_selinux</code>, which contains all
+      the information you need to find the correct context settings.
+     </p><p>
+      When you have found the right context setting, apply it using
+      <code class="command">semanage fcontext</code>. This command takes
+      <code class="option">-t</code> context type as its first argument, followed by
+      the name of the directory or file to which you want to apply the
+      context settings. To apply the context to everything that already
+      exists in the directory where you want to apply the context, you add
+      the regular expression <code class="literal">(/.*)?</code> to the name of the
+      directory. This means: optionally, match a slash followed by any
+      character. The examples section of the <code class="command">semanage</code> man
+      page has some useful usage examples for <code class="command">semanage</code>.
+      For more information on regular expressions, see for example the
+      tutorial at <a class="link" href="http://www.regular-expressions.info/" target="_blank">http://www.regular-expressions.info/</a>.
+     </p></li><li class="listitem"><p>
+      Display a list of all context types that are available on your system:
+     </p><div class="verbatim-wrap"><pre class="screen">seinfo -t</pre></div><p>
+      Since the command by itself outputs an overwhelming amount of
+      information, it should be used in combination with
+      <code class="command">grep</code> or a similar command for filtering.
+     </p></li></ul></div></section><section class="sect2" id="sec-selinux-applyfilecontext" data-id-title="Applying File Contexts"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.6.4 </span><span class="title-name">Applying File Contexts</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-applyfilecontext">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p> To help you apply the SELinux context properly, the following
+        procedure shows how to set a context using <code class="command">semanage
+          fcontext</code> and <code class="command">restorecon</code>. You will
+        notice that at first attempt, the Web server with a non-default
+        document root does not work. After changing the SELinux context,
+        it will:</p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Create the <code class="filename">/web</code> directory and then change to it:
+     </p><div class="verbatim-wrap"><pre class="screen">sudo mkdir /web  &amp;&amp; cd /web</pre></div></li><li class="step"><p>
+      Use a text editor to create the file
+      <code class="filename">/web/index.html</code> that contains the text welcome to
+      my Web site.
+     </p></li><li class="step"><p>
+      Open the file <code class="filename">/etc/apache2/default-server.conf</code>
+      with an editor, and change the DocumentRoot line to
+      <code class="literal">DocumentRoot /web</code>
+     </p></li><li class="step"><p>
+      Start the Apache Web server:
+     </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl start apache2</pre></div></li><li class="step"><p>
+      Open a session to your local Web server:
+     </p><div class="verbatim-wrap"><pre class="screen">w3m localhost</pre></div><p>
+      You will receive a <span class="emphasis"><em>Connection refused</em></span> message.
+      Press <span class="keycap">Enter</span>, and then <code class="command">q</code> to
+      quit w3m.
+     </p></li><li class="step"><p>
+      Find the current context type for the default Apache
+      <code class="literal">DocumentRoot</code>, which is
+      <code class="filename">/srv/www/htdocs</code>. It should be set to
+      <code class="filename">httpd_sys_content_t</code>:
+     </p><div class="verbatim-wrap"><pre class="screen">ls -Z /srv/www</pre></div></li><li class="step"><p>
+      Set the new context in the policy and press
+      <span class="keycap">Enter</span>:
+     </p><div class="verbatim-wrap"><pre class="screen">semanage fcontext -a -f "" -t httpd_sys_content_t '/web(/.*) ?'</pre></div></li><li class="step"><p>
+      Apply the new context type:
+     </p><div class="verbatim-wrap"><pre class="screen">restorecon /web</pre></div></li><li class="step"><p>
+      Show the context of the files in the directory
+      <code class="filename">/web</code>. You will see that the new context type has
+      been set properly to the <code class="filename">/web</code> directory, but not
+      to its contents.
+     </p><div class="verbatim-wrap"><pre class="screen">ls -Z /web</pre></div></li><li class="step"><p>
+      Apply the new context recursively to the <code class="filename">/web</code>
+      directory. The type context has now been set correctly.
+     </p><div class="verbatim-wrap"><pre class="screen">restorecon -R /web</pre></div></li><li class="step"><p>
+      Restart the Web server:
+     </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl restart apache2</pre></div><p>
+      You should now be able to access the contents of the
+      <code class="filename">/web</code> directory.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-selinux-configurepolicy" data-id-title="Configuring SELinux Policies"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.6.5 </span><span class="title-name">Configuring SELinux Policies</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-configurepolicy">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The easiest way to change the behavior of the policy is by working with
+    Booleans. These are on-off switches that you can use to change the
+    settings in the policy. To find out which Booleans are available, run
+   </p><div class="verbatim-wrap"><pre class="screen">semanage boolean -l</pre></div><p>
+    It will show a long list of Booleans, with a short description of
+    what each of these Booleans will do for you. When you have found the
+    Boolean you want to set, you can use <code class="command">setsebool -P</code>,
+    followed by the name of the Boolean that you want to change. It is
+    important to use the <code class="option">-P</code> option at all times when using
+    <code class="command">setsebool</code>. This option writes the setting to the
+    policy file on disk, and this is the only way to make sure that the
+    Boolean is applied automatically after a reboot.
+   </p><p>
+    The procedure below gives an example of changing Boolean settings
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      List Booleans that are related to FTP servers.</p><div class="verbatim-wrap"><pre class="screen">semanage boolean -l | grep ftp</pre></div></li><li class="step"><p>
+      Turn the Boolean off:
+     </p><div class="verbatim-wrap"><pre class="screen">setsebool allow_ftpd_anon_write off</pre></div><p>
+      Note that it does not take much time to write the change. Then verify
+      that the Boolean is indeed turned off:</p><div class="verbatim-wrap"><pre class="screen">semanage boolean -l|grep ftpd_anon</pre></div></li><li class="step"><p>
+      Reboot your server.
+     </p></li><li class="step"><p>
+      Check again to see if the <code class="literal">allow_ftpd_anon_write</code>
+      Boolean is still turned on. As it has not yet been written to the
+      policy, you will notice that it is off.
+     </p></li><li class="step"><p>
+      Switch the Boolean and write the setting to the policy:
+     </p><div class="verbatim-wrap"><pre class="screen">setsebool -P allow_ftpd_anon_write</pre></div></li></ol></div></div></section><section class="sect2" id="sec-selinux-module" data-id-title="Working with SELinux Modules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.6.6 </span><span class="title-name">Working with SELinux Modules</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-module">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    By default, SELinux uses a modular policy. This means that the
+    policy that implements SELinux features is not just one huge policy, but
+    it consists of many smaller modules. Each module covers a specific part
+    of the SELinux configuration. The concept of the SELinux module was
+    introduced to make it easier for third party vendors to make their
+    services compatible with SELinux. To get an overview of the SELinux
+    modules, you can use the <code class="command">semodule -l</code> command. This
+    command lists all current modules in use by SELinux and their
+    version numbers.
+   </p><p>
+    As an administrator, you can switch modules on or off. This can be
+    useful if you want to disable only a part of SELinux and not everything
+    to run a specific service without SELinux protection. Especially in the
+    case of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, where there is not a completely supported SELinux
+    policy yet, it can make sense to switch off all modules that you do not
+    need so that you can focus on the services that really do need SELinux
+    protection. To switch off an SELinux module, use
+   </p><div class="verbatim-wrap"><pre class="screen">semodule -d <em class="replaceable">MODULENAME</em></pre></div><p>
+    To switch it on again, you can use
+   </p><div class="verbatim-wrap"><pre class="screen">semodule -e modulename</pre></div><p>
+    As an administrator, you do not typically change the contents of the
+    policy files that come from the SELinux Policy RPM. You would rather use
+    <code class="command">semanage fcontext</code> to change file contexts. If you are
+    using <code class="command">audit2allow</code> to generate policies for your
+    server, you should change the policy files after all.
+   </p><p>
+    To change the contents of any of the policy module files,
+    compile the changes into a new policy module file. To do this,
+    first install the <code class="systemitem">selinux-policy-devel</code> package.
+    Then, in the directory where the files created by
+    <code class="command">audit2allow</code> are located, run:
+   </p><div class="verbatim-wrap"><pre class="screen">make -f /usr/share/selinux/devel/Makefile</pre></div><p>
+    When <code class="command">make</code> has completed, you can manually load the
+    modules into the system, using <code class="command">semodule -i</code>.
+   </p></section></section><section class="sect1" id="sec-selinux-troubleshoot" data-id-title="Troubleshooting"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.7 </span><span class="title-name">Troubleshooting</span></span> <a title="Permalink" class="permalink" href="cha-selinux.html#sec-selinux-troubleshoot">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   By default, if SELinux is the reason something is not working, a log
+   message to this effect is sent to the
+   <code class="filename">/var/log/audit/audit.log</code> file. That is, if the
+   auditd service is running. If you see an empty
+   <code class="filename">/var/log/audit</code>, start the auditd service using
+  </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl start auditd</pre></div><p>
+   and enable it in the targets of your system, using
+  </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl enable auditd</pre></div><p>
+   In
+   <a class="xref" href="cha-selinux.html#ex-selnx-li-auditlog" title="Example Lines from /etc/audit/audit.log">Example 32.8: “Example Lines from <code class="filename">/etc/audit/audit.log</code>”</a>
+   you can see a partial example of the contents of
+   <code class="filename">/var/log/audit/audit.log</code>
+  </p><div class="example" id="ex-selnx-li-auditlog" data-id-title="Example Lines from /etc/audit/audit.log"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.8: </span><span class="title-name">Example Lines from <code class="filename">/etc/audit/audit.log</code> </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#ex-selnx-li-auditlog">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">type=DAEMON_START msg=audit(1348173810.874:6248): auditd start, ver=1.7.7 format=raw kernel=4.12.14-94.37-default auid=0 pid=4235 subj=system_u:system_r:auditd_t res=success
+type=AVC msg=audit(1348173901.081:292): avc:  denied  { write } for  pid=3426 comm="smartd" name="smartmontools" dev=sda6 ino=581743 scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=dir
+type=AVC msg=audit(1348173901.081:293): avc:  denied  { remove_name } for  pid=3426 comm="smartd" name="smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state~" dev=sda6 ino=582390 scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=dir
+type=AVC msg=audit(1348173901.081:294): avc:  denied  { unlink } for  pid=3426 comm="smartd" name="smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state~" dev=sda6 ino=582390 scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=file
+type=AVC msg=audit(1348173901.081:295): avc:  denied  { rename } for  pid=3426 comm="smartd" name="smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state" dev=sda6 ino=582373 scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=file
+type=AVC msg=audit(1348173901.081:296): avc:  denied  { add_name } for  pid=3426 comm="smartd" name="smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state~" scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=dir
+type=AVC msg=audit(1348173901.081:297): avc:  denied  { create } for  pid=3426 comm="smartd" name="smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state" scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=file
+type=AVC msg=audit(1348173901.081:298): avc:  denied  { write open } for  pid=3426 comm="smartd" name="smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state" dev=sda6 ino=582390 scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=file
+type=AVC msg=audit(1348173901.081:299): avc:  denied  { getattr } for  pid=3426 comm="smartd" path="/var/lib/smartmontools/smartd.WDC_WD2500BEKT_75PVMT0-WD_WXC1A21E0454.ata.state" dev=sda6 ino=582390 scontext=system_u:system_r:fsdaemon_t tcontext=system_u:object_r:var_lib_t tclass=file
+type=AVC msg=audit(1348173901.309:300): avc:  denied  { append } for  pid=1316</pre></div></div></div><p>
+   At first look, the lines in <code class="filename">audit.log</code> are a bit hard
+   to read. However, on closer examination they are not that hard to
+   understand. Every line can be broken down into sections. For example, the
+   sections in the last line are:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.8.3.11.9.1"><span class="term"><code class="literal">type=AVC</code>:</span></dt><dd><p>
+      every SELinux-related audit log line starts with the type
+      identification <code class="literal">type=AVC</code>
+     </p></dd><dt id="id-1.7.8.3.11.9.2"><span class="term"><code class="literal">msg=audit(1348173901.309:300)</code>: </span></dt><dd><p>
+      This is the time stamp, which unfortunately is written in epoch time,
+      the number of seconds that have passed since Jan 1, 1970. You can use
+      <code class="command">date -d</code> on the part up to the dot in the epoch time
+      notation to find out when the event has happened:
+     </p><div class="verbatim-wrap"><pre class="screen">date -d @1348173901
+Thu Sep 20 16:45:01 EDT 2012</pre></div></dd><dt id="id-1.7.8.3.11.9.3"><span class="term"><code class="literal">avc: denied { append }</code>:</span></dt><dd><p>
+      the specific action that was denied. In this case the system has
+      denied the appending of data to a file. While browsing through the
+      audit log file, you can see other system actions, such as write open,
+      getattr and more.
+     </p></dd><dt id="id-1.7.8.3.11.9.4"><span class="term"><code class="literal">for pid=1316</code>:</span></dt><dd><p>
+      the process ID of the command or process that initiated the action
+     </p></dd><dt id="id-1.7.8.3.11.9.5"><span class="term"><code class="literal">comm="rsyslogd"</code>:</span></dt><dd><p>
+      the specific command that was associated with that PID
+     </p></dd><dt id="id-1.7.8.3.11.9.6"><span class="term"><code class="literal">name="smartmontools"</code>:</span></dt><dd><p>
+      the name of the subject of the action
+     </p></dd><dt id="id-1.7.8.3.11.9.7"><span class="term"><code class="literal">dev=sda6 ino=582296</code>:</span></dt><dd><p>
+      the block device and inode number of the file that was involved
+     </p></dd><dt id="id-1.7.8.3.11.9.8"><span class="term"><code class="literal">scontext=system_u:system_r:syslogd_t</code>:</span></dt><dd><p>
+      the source context, which is the context of the initiator of the
+      action
+     </p></dd><dt id="id-1.7.8.3.11.9.9"><span class="term"><code class="literal">tclass=file</code>:</span></dt><dd><p>
+      a class identification of the subject
+     </p></dd></dl></div><p>
+   Instead of interpreting the events in audit.log yourself, there is
+   another approach. You can use the <code class="command">audit2allow</code> command,
+   which helps analyze the cryptic log messages in
+   <code class="filename">/var/log/audit/audit.log</code>. An audit2allow
+   troubleshooting session always consists of three different commands.
+   First, you would use <code class="command">audit2allow -w -a</code> to present the
+   audit information in a more readable way. The <code class="command">audit2allow -w
+   -a</code> by default works on the audit.log file. If you want to
+   analyze a specific message in the audit.log file, copy it to a temporary
+   file and analyze the file with:
+  </p><div class="verbatim-wrap"><pre class="screen">audit2allow -w -i <em class="replaceable">FILENAME</em></pre></div><div class="example" id="id-1.7.8.3.11.12" data-id-title="Analyzing Audit Messages"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.9: </span><span class="title-name">Analyzing Audit Messages </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#id-1.7.8.3.11.12">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">audit2allow -w -i testfile
+type=AVC msg=audit(1348173901.309:300): avc:  denied  { append } for  pid=1316
+comm="rsyslogd" name="acpid" dev=sda6 ino=582296
+scontext=system_u:system_r:syslogd_t tcontext=system_u:object_r:apmd_log_t tclass=file</pre></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.8.3.11.13.1"><span class="term">This was caused by:</span></dt><dd><p>
+      Missing type enforcement (TE) allow rule.
+     </p><p>
+      To generate a loadable module to allow this access, run
+     </p><div class="verbatim-wrap"><pre class="screen">audit2allow</pre></div></dd></dl></div><p>
+   To find out which specific rule has denied access, you can use
+   <code class="command">audit2allow -a</code> to show the enforcing rules from all
+   events that were logged to the <code class="filename">audit.log </code> file, or
+   <code class="command">audit2allow -i <em class="replaceable">FILENAME</em></code> to
+   show it for messages that you have stored in a specific file:
+  </p><div class="example" id="id-1.7.8.3.11.15" data-id-title="Viewing Which Lines Deny Access"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.10: </span><span class="title-name">Viewing Which Lines Deny Access </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#id-1.7.8.3.11.15">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">audit2allow -i testfile
+#============= syslogd_t ==============
+allow syslogd_t apmd_log_t:file append;</pre></div></div></div><p>
+   To create an SELinux module with the name <code class="literal">mymodule</code>
+   that you can load to allow the access that was previously denied, run
+  </p><div class="verbatim-wrap"><pre class="screen">audit2allow -a -R -M mymodule</pre></div><p>
+   If you want to do this for all events that have been logged to the
+   audit.log, use the <code class="option">-a -M</code> command arguments. To do it
+   only for specific messages that are in a specific file, use <code class="option">-i
+   -M</code> as in the example below:
+  </p><div class="example" id="id-1.7.8.3.11.19" data-id-title="Creating a Policy Module Allowing an Action Previously Denied"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 32.11: </span><span class="title-name">Creating a Policy Module Allowing an Action Previously Denied </span></span><a title="Permalink" class="permalink" href="cha-selinux.html#id-1.7.8.3.11.19">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/selinux.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">audit2allow -i testfile -M example
+******************** IMPORTANT ***********************
+To make this policy package active, execute:
+
+semodule -i example.pp</pre></div></div></div><p>
+   As indicated by the <code class="command">audit2allow</code> command, you can now
+   run this module by using the <code class="command">semodule -i</code> command,
+   followed by the name of the module that <code class="command">audit2allow</code>
+   has created for you (<code class="filename">example.pp</code> in the above
+   example).
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="bk05pt05.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part V </span>SELinux</span></a> </div><div><a class="pagination-link next" href="part-audit.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part VI </span>The Linux Audit Framework</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-why"><span class="title-number">32.1 </span><span class="title-name">Why Use SELinux?</span></a></span></li><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-policy"><span class="title-number">32.2 </span><span class="title-name">Policy</span></a></span></li><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-install"><span class="title-number">32.3 </span><span class="title-name">Installing SELinux Packages and Modifying GRUB 2</span></a></span></li><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-compilepolicy"><span class="title-number">32.4 </span><span class="title-name">SELinux Policy</span></a></span></li><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-configure"><span class="title-number">32.5 </span><span class="title-name">Configuring SELinux</span></a></span></li><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-manage"><span class="title-number">32.6 </span><span class="title-name">Managing SELinux</span></a></span></li><li><span class="sect1"><a href="cha-selinux.html#sec-selinux-troubleshoot"><span class="title-number">32.7 </span><span class="title-name">Troubleshooting</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

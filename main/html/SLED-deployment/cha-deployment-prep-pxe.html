@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | Deployment Guide | Preparing network boot environment</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Preparing network boot environment | SLED 15 SP6"/>
+<meta name="description" content="This chapter describes how to configure a DHCP and a TFTP server that provide the required infrastructure for booting with PXE."/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Deployment Guide"/>
+<meta name="chapter-title" content="Chapter 14. Preparing network boot environment"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Deployment Guide"/>
+<meta property="og:description" content="Install single or multiple systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Deployment Guide"/>
+<meta name="twitter:description" content="Install single or multiple systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Preparing network boot environment",
+  
+    "description": "This chapter describes how to configure a DHCP and a TFTP server that provide the required infrastructure for booting with PXE.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-deployment-instserver.html" title="Chapter 13. Setting up a network installation source"/><link rel="next" href="cha-deployment-prep-uefi-httpboot.html" title="Chapter 15. Setting up a UEFI HTTP Boot server"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Deployment Guide</a><span> / </span><a class="crumb" href="part-installserver.html">Setting up an installation server</a><span> / </span><a class="crumb" href="cha-deployment-prep-pxe.html">Preparing network boot environment</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Deployment Guide</div><ol><li><a href="preface-deployment.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-prep.html" class="has-children "><span class="title-number">I </span><span class="title-name">Installation preparation</span></a><ol><li><a href="cha-sled-plan.html" class=" "><span class="title-number">1 </span><span class="title-name">Planning for SUSE Linux Enterprise Desktop</span></a></li><li><a href="cha-x86.html" class=" "><span class="title-number">2 </span><span class="title-name">Installation on AMD64 and Intel 64</span></a></li><li><a href="supported-hypervisors.html" class=" "><span class="title-number">3 </span><span class="title-name">Installation on virtualization hosts</span></a></li></ol></li><li><a href="part-deployment.html" class="has-children "><span class="title-number">II </span><span class="title-name">Installation procedure</span></a><ol><li><a href="cha-boot-parameters.html" class=" "><span class="title-number">4 </span><span class="title-name">Boot parameters</span></a></li><li><a href="cha-install.html" class=" "><span class="title-number">5 </span><span class="title-name">Installation steps</span></a></li><li><a href="cha-register-sle.html" class=" "><span class="title-number">6 </span><span class="title-name">Registering SUSE Linux Enterprise and managing modules/extensions</span></a></li><li><a href="cha-expert-partitioner.html" class=" "><span class="title-number">7 </span><span class="title-name"><span class="guimenu">Expert Partitioner</span></span></a></li><li><a href="cha-remote-installation.html" class=" "><span class="title-number">8 </span><span class="title-name">Remote installation</span></a></li><li><a href="cha-installation-troubleshooting.html" class=" "><span class="title-number">9 </span><span class="title-name">Troubleshooting</span></a></li></ol></li><li><a href="part-customize-media.html" class="has-children "><span class="title-number">III </span><span class="title-name">Customizing installation images</span></a><ol><li><a href="cha-deployment-clone-cleanup-tool.html" class=" "><span class="title-number">10 </span><span class="title-name">Prepare a disk for cloning with the system cleanup tool</span></a></li><li><a href="cha-deployment-prep-mksusecd.html" class=" "><span class="title-number">11 </span><span class="title-name">Customizing installation images with mksusecd</span></a></li><li><a href="cha-deployment-prep-customize-installation-images.html" class=" "><span class="title-number">12 </span><span class="title-name">Customizing installation images manually</span></a></li></ol></li><li class="active"><a href="part-installserver.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Setting up an installation server</span></a><ol><li><a href="cha-deployment-instserver.html" class=" "><span class="title-number">13 </span><span class="title-name">Setting up a network installation source</span></a></li><li><a href="cha-deployment-prep-pxe.html" class=" you-are-here"><span class="title-number">14 </span><span class="title-name">Preparing network boot environment</span></a></li><li><a href="cha-deployment-prep-uefi-httpboot.html" class=" "><span class="title-number">15 </span><span class="title-name">Setting up a UEFI HTTP Boot server</span></a></li><li><a href="cha-deployment-firstboot.html" class=" "><span class="title-number">16 </span><span class="title-name">Deploying customized preinstallations</span></a></li></ol></li><li><a href="app-create-os-image.html" class=" "><span class="title-number">A </span><span class="title-name">Imaging and creating products</span></a></li><li><a href="bk02apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-deployment-prep-pxe" data-id-title="Preparing network boot environment"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">14 </span><span class="title-name">Preparing network boot environment</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This chapter describes how to configure a DHCP and a TFTP server
+    that provide the required infrastructure for booting with PXE.
+   </p></div></div></div></div><p>
+  <span class="productname"><span class="phrase">SUSE® Linux Enterprise Desktop</span></span> can be installed via a Preboot Execution Environment
+  (PXE). The client hardware needs to support booting via PXE. The
+  network needs to provide a DHCP server and a TFTP server providing the
+  required data to the clients. This chapter guides you through setting
+  up the required servers.
+ </p><p>
+  PXE only boots a kernel and initrd. This can be used to boot into an
+  installation environment or into live systems. To set up the
+  installation sources, see <a class="xref" href="cha-deployment-instserver.html" title="Chapter 13. Setting up a network installation source">Chapter 13, <em>Setting up a network installation source</em></a>.
+ </p><p>
+  This section covers the configuration tasks needed in complex boot
+  scenarios. It contains ready-to-apply configuration examples for
+  DHCP, PXE boot, TFTP, and Wake on LAN.
+ </p><p>
+  The examples assume that the DHCP, TFTP and NFS server reside on the
+  same machine with the IP <code class="literal">192.168.1.1</code>. All services
+  can reside on different machines without any problems. Make sure to
+  change the IP addresses as required.
+ </p><section class="sect1" id="sec-deployment-dhcp-server" data-id-title="Setting up a DHCP server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">14.1 </span><span class="title-name">Setting up a DHCP server</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-server">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A DHCP server provides both dynamic
+   (<a class="xref" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-dynamic" title="14.1.1. Dynamic address assignment">Section 14.1.1, “Dynamic address assignment”</a>) and static IP address
+   assignments (<a class="xref" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-static" title="14.1.2. Assigning static IP addresses">Section 14.1.2, “Assigning static IP addresses”</a>) to your network
+   clients. It advertises servers, routes, and domains. For TFTP servers, DHCP
+   also provides the kernel and initrd files. Which files are loaded depends
+   on the architecture of the target machine, and whether legacy BIOS or UEFI
+   boot is used. The clients transmit their architecture type in their DHCP
+   requests. Based on this information, the DHCP server decides which files the
+   client must download for booting.
+  </p><div id="id-1.4.6.3.7.3" data-id-title="PXE and AutoYaST installation failure" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: PXE and AutoYaST installation failure</div><p>
+    Starting with SUSE Linux Enterprise 15.0, there are special conditions that cause PXE boot
+    and AutoYaST installations to fail. See
+    <a class="xref" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-rfc4361" title="14.1.3. PXE and AutoYaST installation failures">Section 14.1.3, “PXE and AutoYaST installation failures”</a> for more information and
+    the solution.
+   </p></div><section class="sect2" id="sec-deployment-dhcp-dynamic" data-id-title="Dynamic address assignment"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.1.1 </span><span class="title-name">Dynamic address assignment</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-dynamic">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following example shows how to set up a DHCP server that dynamically
+    assigns IP addresses to clients, and advertises servers, routers, domains,
+    and boot files.
+   </p><div class="procedure" id="pro-deployment-dhcp-server"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Log in as <code class="systemitem">root</code> to the machine hosting the DHCP server.
+     </p></li><li class="step"><p>
+      Enable the DHCP server by executing <code class="command">systemctl enable
+      dhcpd</code>.
+     </p></li><li class="step"><p>
+      Append the following lines to a subnet configuration of your DHCP
+      server's configuration file located under
+      <code class="filename">/etc/dhcpd.conf</code>:
+     </p><div class="verbatim-wrap"><pre class="screen"># The following lines are optional
+option domain-name "my.lab";
+option domain-name-servers 192.168.1.1;
+option routers 192.168.1.1;
+option ntp-servers 192.168.1.1;
+ddns-update-style none;
+default-lease-time 3600;
+
+# The following lines are required
+option arch code 93 = unsigned integer 16; # RFC4578
+subnet 192.168.1.0 netmask 255.255.255.0 {
+ next-server 192.168.1.1;
+ range 192.168.1.100 192.168.1.199;
+ default-lease-time 3600;
+ max-lease-time 3600;
+ if option arch = 00:07 or option arch = 00:09 {
+   filename "/EFI/x86/grub.efi";
+ }
+ else if option arch = 00:0b {
+   filename "/EFI/aarch64/bootaa64.efi";
+ }
+ else  {
+   filename "/BIOS/x86/pxelinux.0";
+ }
+}</pre></div><p>
+      This configuration example uses the subnet
+      <code class="literal">192.168.1.0/24</code> with the DHCP, DNS and gateway on the
+      server with the IP <code class="literal">192.168.1.1</code>. Make sure that all
+      IP addresses are changed according to your network layout. For more
+      information about the options available in
+      <code class="filename">dhcpd.conf</code>, refer to the
+      <code class="systemitem">dhcpd.conf</code> manual page.
+     </p></li><li class="step"><p>
+      Restart the DHCP server by executing <code class="command">systemctl restart
+      dhcpd</code>.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-deployment-dhcp-static" data-id-title="Assigning static IP addresses"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.1.2 </span><span class="title-name">Assigning static IP addresses</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-static">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    A DHCP server may also assign static IP addresses and host names to
+    network clients. One use case is assigning static addresses to servers.
+    Another use case is restricting which clients may join the network to
+    those with assigned static IP addresses, and providing no dynamic address
+    pools.
+  </p><p>
+    Modify the above DHCP configuration according to the  following example:
+   </p><div class="verbatim-wrap"><pre class="screen">group {
+ host test {
+   hardware ethernet <em class="replaceable">MAC_ADDRESS</em>;
+   fixed-address <em class="replaceable">IP_ADDRESS</em>;
+   }
+}</pre></div><p>
+    The host statement assigns a host name to the installation target. To
+    bind the host name and IP address to a specific host, you must
+    specify the client's hardware (MAC) address. Replace all the variables used
+    in this example with the actual values that match your environment, then
+    save your changes and restart the DHCP server.
+   </p></section><section class="sect2" id="sec-deployment-dhcp-rfc4361" data-id-title="PXE and AutoYaST installation failures"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.1.3 </span><span class="title-name">PXE and AutoYaST installation failures</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-rfc4361">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Starting with SUSE Linux Enterprise 15.0 and ISC DHCP 4.3.x, there are special circumstances
+    that cause PXE boot and AutoYaST installations to fail. If your DHCP server does not
+    have a pool of available dynamic IP addresses, but allows only pre-defined static
+    addresses per client, and the clients send RFC 4361 client identifiers, then
+    PXE/AutoYaST installations will not work. (Allowing only addresses assigned to
+    specific network clients, and providing no dynamic address pools, prevents
+    random machines from joining the network.)
+   </p><p>
+    When a new system starts in PXE, it sends a request to the DHCP server and
+    identifies itself using a client identifier constructed from the hardware type plus
+    the MAC address of the network interface. This is an RFC 2132 <code class="literal">client-id</code>. The DHCP
+    server then offers the assigned IP address. Next, the installation kernel is loaded,
+    and sends another DHCP request, but this <code class="literal">client-id</code> is different, and is sent in
+    RFC 4361 format. The DHCP server will not recognize this as the same client, and
+    will look for a free dynamic IP address, which is not available, and the installation stops.
+   </p><p>
+    The solution is to configure clients to send RFC 2132 client IDs.
+    To send an RFC 2132 <code class="literal">client-id</code> during the installation, use
+    <code class="literal">linuxrc</code> to pass
+    the following <code class="literal">ifcfg</code> command:
+   </p><div class="verbatim-wrap"><pre class="screen">ifcfg=eth0=dhcp,DHCLIENT_CLIENT_ID=<em class="replaceable">01:03:52:54:00:02:c2:67</em>,
+DHCLIENT6_CLIENT_ID=<em class="replaceable">00:03:52:54:00:02:c2:67</em></pre></div><p>
+    The traditionally-used RFC 2132 DHCPv4 <code class="literal">client-id</code> on
+    Ethernet is constructed from the hardware type (<code class="literal">01</code> for
+    Ethernet) and followed by the hardware address (the MAC address), for
+    example:
+   </p><div class="verbatim-wrap"><pre class="screen">01:52:54:00:02:c2:67</pre></div><p>
+    The RFC 4361 DHCPv4 <code class="literal">client-id</code> attempts to correct the problem
+    of identifying a machine that has more than one network interface. The new
+    DHCPv4 <code class="literal">client-id</code> has the same format as the DHCPv6
+    <code class="literal">client-id</code>. It starts with the
+    <code class="literal">0xff</code> prefix, instead of the hardware type, followed by the
+    DHCPv6 IAID (the interface-address association ID that describes the
+    interface on the machine), followed by the DHCPv6 Unique Identifier (DUID),
+    which uniquely identifies the machine.
+   </p><p>
+    Using the above hardware type-based and hardware address-based DUID, the new
+    RFC 4361 DHCPv4 <code class="literal">client-id</code> would be:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Using the last bytes of the MAC address as the IAID:
+      <code class="literal">ff:00:02:c2:67:00:01:xx:xx:xx:xx:52:54:00:02:c2:67</code>
+     </p></li><li class="listitem"><p>
+      When the IAID is a simple incremented number:
+      <code class="literal">ff:00:00:00:01:00:01:xx:xx:xx:xx:52:54:00:02:c2:67</code>
+     </p></li></ul></div><p>
+    The <em class="replaceable">xx:xx:xx:xx</em> field in the DUID-Link-Layer 
+    Timestamp (DUID-LLT) is a creation time stamp. A DUID-Link-Layer (DUID-LL)
+    (<code class="literal">00:03:00:01:$MAC</code>) does not have a time stamp.
+   </p><p>
+    For more information on using <code class="literal">linuxrc</code>, see the AutoYaST Guide.
+    Also see <code class="literal">man 4 initrd</code>, and the
+    documentation for the options <code class="literal">dhcp4
+    "create-cid"</code>, <code class="literal">dhcp6 "default-duid"</code> in
+    <code class="literal">man 5 wicked-config</code>, <code class="literal">wicked duid
+    --help</code>, and <code class="literal">wicked iaid --help</code>.
+   </p></section></section><section class="sect1" id="sec-deployment-tftp-server" data-id-title="Setting up a TFTP server"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">14.2 </span><span class="title-name">Setting up a TFTP server</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-tftp-server">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The following procedure describes how to prepare the server so that the
+   client machines with UEFI and BIOS can boot remotely using files exported by
+   TFTP.
+  </p><section class="sect2" id="sec-deployment-tftp-server-install" data-id-title="Installing a TFTP server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.2.1 </span><span class="title-name">Installing a TFTP server</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-tftp-server-install">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To install a TFTP server, use the following procedure:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Install the <code class="systemitem">tftp</code> package.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">zypper in tftp</code></pre></div></li><li class="step"><p>
+      Review the <code class="systemitem">tftpd</code> configuration in
+      <code class="filename">/etc/sysconfig/tftp</code> and add or change options as
+      required. Refer to <code class="command">man 8 tftpd</code> for more details.
+      The TFTP daemon works without changing the configuration. The default root
+      directory for the files is <code class="filename">/srv/tftpboot</code>.
+     </p></li><li class="step"><p>
+      Ensure that <code class="systemitem">tftpd</code> is started at
+      boot time, and restart it to read the new configuration.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl enable tftp.socket</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">systemctl restart tftp.socket</code></pre></div></li></ol></div></div></section><section class="sect2" id="sec-deployment-tftp-server-grub-package" data-id-title="Installing files for boot"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.2.2 </span><span class="title-name">Installing files for boot</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-tftp-server-grub-package">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> provides the required files for booting via PXE on BIOS or
+    UEFI machines. The following hardware architectures are supported:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      AMD64/Intel 64
+     </p></li><li class="listitem"><p>
+      AArch64
+     </p></li><li class="listitem"><p>
+      POWER
+     </p></li><li class="listitem"><p>
+      IBM Z
+     </p></li></ul></div><p>
+    Files required to boot from a specific hardware architecture are included
+    in an RPM package. Install it on the machine running the TFTP server:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">zypper in tftpboot-installation-SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em></code></pre></div><p>
+    Replace <em class="replaceable">OS_VERSION</em> with the version number of
+    your <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> installation, for example
+    <em class="replaceable">SLE-15-SP3-x86_64</em>, and replace
+    <em class="replaceable">ARCHITECTURE</em> with the architecture of your
+    system, for example <code class="literal">x86_64</code>.  So the resulting text would
+    look like this: <span class="package">tftpboot-installation-SLE-15-SP3-x86_64</span>.
+    Run <code class="command">zypper se tftpboot</code> to search for all available
+    versions and architectures.
+   </p><p>
+    The files will be installed in
+    <code class="filename">/srv/tftpboot/SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em></code>.
+    You can also copy the files for other versions and architectures of
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> to the <code class="filename">/srv/tftpboot</code> directory.
+   </p><div id="id-1.4.6.3.8.4.8" data-id-title="Serving different architectures" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Serving different architectures</div><p>
+     The client and server hardware architecture can vary. For example, you can
+     run an AMD64/Intel 64 TFTP server and provide a bootable environment for AArch64
+     client machines by installing the
+     <span class="package">tftpboot-installation-SLE-15-SP3-aarch64</span> package.
+    </p></div><div id="id-1.4.6.3.8.4.9" data-id-title="Existing /srv/tftpboot/ directory" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Existing <code class="filename">/srv/tftpboot/</code> directory</div><p>
+     If the directory <code class="filename">/srv/tftpboot/</code> already
+     exists on your machine, then all files will be installed to
+     <code class="filename">/usr/share/tftpboot-installation/</code>. This is
+     the case if you are upgrading your PXE server from a previous
+     SLES release.
+    </p><p>
+     To fix this problem, copy the files manually from
+     <code class="filename">/usr/share/tftpboot-installation/</code> to
+     <code class="filename">/srv/tftpboot/</code>. Alternatively, remove
+     <code class="filename">/srv/tftpboot/</code> and reinstall the
+     <span class="package">tftpboot-installation-SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em></span>
+     package.
+    </p></div></section><section class="sect2" id="sec-deployment-tftp-server-pxelinux" data-id-title="Configuring PXELINUX"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.2.3 </span><span class="title-name">Configuring PXELINUX</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-tftp-server-pxelinux">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Open the file
+    <code class="filename">/srv/tftpboot/SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em>/net/pxelinux.cfg/default</code>
+    in an editor. Replace the path for the <code class="literal">install</code>
+    parameter according to your setup as described in <a class="xref" href="cha-deployment-instserver.html" title="Chapter 13. Setting up a network installation source">Chapter 13, <em>Setting up a network installation source</em></a>. Also replace
+    <em class="replaceable">TFTP_SERVER</em> with the IP address of the
+    TFTP server. For an overview of the PXELINUX configuration options,
+    see <a class="xref" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-pxeopts" title="14.3. PXELINUX configuration options">Section 14.3, “PXELINUX configuration options”</a>.
+   </p><div class="verbatim-wrap"><pre class="screen">default linux
+
+# install
+label linux
+  ipappend 2
+  kernel boot/<em class="replaceable">ARCHITECTURE</em>/loader/linux
+  append initrd=boot/<em class="replaceable">ARCHITECTURE</em>/loader/initrd instsys=tftp://<em class="replaceable">TFTP_SERVER</em>/SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em>/boot/<em class="replaceable">ARCHITECTURE</em>/root install=<em class="replaceable">PROTOCOL</em>://<em class="replaceable">SERVER_IP</em>:/<em class="replaceable">PATH</em>
+
+display  message
+implicit 1
+prompt  1
+timeout  50</pre></div><p>
+    For details about the boot parameters that are used in the <code class="literal">append</code> line,
+    see <a class="xref" href="cha-boot-parameters.html#sec-boot-parameters-list" title="4.3. List of important boot parameters">Section 4.3, “List of important boot parameters”</a>.
+   </p><p>
+    If required, edit the
+    <code class="filename">/srv/tftpboot/SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em>/net/pxelinux.cfg/message</code>
+    to display a message in the boot menu.
+   </p></section><section class="sect2" id="sec-deployment-tftp-server-efilinux-x86" data-id-title="Preparing PXE boot for EFI with GRUB2"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.2.4 </span><span class="title-name">Preparing PXE boot for EFI with GRUB2</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-tftp-server-efilinux-x86">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Normally, the GRUB2 configuration files require no 
+     modifications. However, the default settings do not include
+     a network resource for the installation system.
+     To perform a full <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> installation via
+     network, you need to specify the <code class="option">install</code>
+     parameter in the <code class="option">linuxefi</code> instruction of the
+     <code class="filename">/srv/tftpboot/SLE-<em class="replaceable">OS_VERSION</em>-<em class="replaceable">ARCHITECTURE</em>/EFI/BOOT/grub.cfg</code>
+     file.  Refer to <a class="xref" href="cha-boot-parameters.html#sec-boot-parameters-list-install-source" title="4.3.3. Specifying the installation source">Section 4.3.3, “Specifying the installation source”</a> for further
+     information about the <code class="option">install</code> parameter.
+   </p></section></section><section class="sect1" id="sec-deployment-prep-boot-pxeopts" data-id-title="PXELINUX configuration options"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">14.3 </span><span class="title-name">PXELINUX configuration options</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-pxeopts">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The options listed here are a subset of all the options available for the
+   PXELINUX configuration file.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.4.6.3.9.3.1"><span class="term"><code class="option">APPEND <em class="replaceable">OPTIONS</em></code>
+    </span></dt><dd><p>
+      Adds one or more options to the kernel command line. These are added for
+      both automatic and manual boots. The options are added at the very
+      beginning of the kernel command line, usually permitting explicitly
+      entered kernel options to override them.
+     </p></dd><dt id="id-1.4.6.3.9.3.2"><span class="term"><code class="option">APPEND -</code>
+    </span></dt><dd><p>
+      Appends nothing. <code class="option">APPEND</code> with a single hyphen as argument
+      in a <code class="option">LABEL</code> section can be used to override a global
+      <code class="option">APPEND</code>.
+     </p></dd><dt id="id-1.4.6.3.9.3.3"><span class="term"><code class="option">DEFAULT <em class="replaceable">KERNEL_OPTIONS</em>...</code>
+    </span></dt><dd><p>
+      Sets the default kernel command line. When PXELINUX boots automatically, it executes the specified entries, appending the <code class="option">auto</code> option.
+     </p><p>
+      If no configuration file exists or no DEFAULT entry is defined in the
+      configuration file, the default is the kernel name <span class="quote">“<span class="quote">linux</span>”</span>
+      with no options.
+     </p></dd><dt id="id-1.4.6.3.9.3.4"><span class="term"><code class="option">IFAPPEND <em class="replaceable">FLAG</em></code>
+    </span></dt><dd><p>
+      Adds a specific option to the kernel command line depending on the
+      <em class="replaceable">FLAG</em> value. The <code class="option">IFAPPEND</code>
+      option is available only on PXELINUX. <em class="replaceable">FLAG</em>
+      expects a value, described in
+      <a class="xref" href="cha-deployment-prep-pxe.html#tab-deployment-boot-pxeopts-ifappend" title="Generated and added kernel command line options from IFAPPEND">Table 14.1, “Generated and added kernel command line options from <code class="option">IFAPPEND</code>”</a>:
+     </p><div class="table" id="tab-deployment-boot-pxeopts-ifappend" data-id-title="Generated and added kernel command line options from IFAPPEND"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table 14.1: </span><span class="title-name">Generated and added kernel command line options from <code class="option">IFAPPEND</code> </span></span><a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#tab-deployment-boot-pxeopts-ifappend">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col/><col/></colgroup><thead><tr><th style="vertical-align: middle; border-right: 1px solid ; border-bottom: 1px solid ; ">
+          <p>
+           Argument
+          </p>
+         </th><th style="border-bottom: 1px solid ; ">
+          <p>
+           Generated kernel command line / Description
+          </p>
+         </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+          <p>
+           <code class="option">1</code>
+          </p>
+         </td><td style="border-bottom: 1px solid ; ">
+<div class="verbatim-wrap"><pre class="screen">ip=<em class="replaceable">CLIENT_IP</em>:<em class="replaceable">BOOT_SERVER_IP</em>:<em class="replaceable">GW_IP</em>:<em class="replaceable">NETMASK</em></pre></div>
+          <p>
+           The placeholders are replaced based on the input from the DHCP/BOOTP
+           or PXE boot server.
+          </p>
+          <p>
+           Note, this option is not a substitute for running a DHCP client in
+           the booted system. Without regular renewals, the lease acquired by
+           the PXE BIOS will expire, making the IP address available for reuse
+           by the DHCP server.
+          </p>
+         </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+          <p>
+           <code class="option">2</code>
+          </p>
+         </td><td style="border-bottom: 1px solid ; ">
+<div class="verbatim-wrap"><pre class="screen">BOOTIF=<em class="replaceable">MAC_ADDRESS_OF_BOOT_INTERFACE</em></pre></div>
+          <p>
+           This option is useful to avoid timeouts when the
+           installation server probes one LAN interface after another until
+           it gets a reply from a DHCP server. This option allows an
+           initrd program to determine from which interface the system has been
+           booted. linuxrc reads this option and uses this network interface.
+          </p>
+         </td></tr><tr><td style="border-right: 1px solid ; ">
+          <p>
+           <code class="option">4</code>
+          </p>
+         </td><td>
+<div class="verbatim-wrap"><pre class="screen">SYSUUID=<em class="replaceable">SYSTEM_UUID</em></pre></div>
+          <p>
+           Adds UUIDs in lowercase hexadecimals, see
+           <code class="filename">/usr/share/doc/packages/syslinux/pxelinux.txt</code>
+          </p>
+         </td></tr></tbody></table></div></div></dd><dt id="id-1.4.6.3.9.3.5"><span class="term"><code class="option">LABEL <em class="replaceable">LABEL</em> KERNEL <em class="replaceable">IMAGE</em>
+       APPEND <em class="replaceable">OPTIONS</em>...</code>
+    </span></dt><dd><p>
+      Indicates that if <em class="replaceable">LABEL</em> is entered as the
+      kernel to boot, PXELINUX should instead boot
+      <em class="replaceable">IMAGE</em> and the specified
+      <code class="option">APPEND</code> options should be used. They replace the ones
+      specified in the global section of the file, before the first
+      <code class="option">LABEL</code> command. The default for
+      <em class="replaceable">IMAGE</em> is the same as
+      <em class="replaceable">LABEL</em> and, if no <code class="option">APPEND</code> is
+      given, the default is to use the global entry (if any). Up to 128
+      <code class="option">LABEL</code> entries are permitted.
+     </p><p>
+      PXELINUX uses the following syntax:
+     </p><div class="verbatim-wrap"><pre class="screen">label <em class="replaceable">MYLABEL</em>
+  kernel <em class="replaceable">MYKERNEL</em>
+  append <em class="replaceable">MYOPTIONS</em></pre></div><p>
+      Labels are mangled as if they were file names and they must be unique
+      after mangling. For example, the two labels <span class="quote">“<span class="quote">v2.6.30</span>”</span> and
+      <span class="quote">“<span class="quote">v2.6.31</span>”</span> would not be distinguishable under PXELINUX
+      because both mangle to the same DOS file name.
+     </p><p>
+      The kernel does not need to be a Linux kernel. It can also be a boot
+      sector or a COMBOOT file.
+     </p></dd><dt id="id-1.4.6.3.9.3.6"><span class="term"><code class="option">LOCALBOOT <em class="replaceable">TYPE</em></code>
+    </span></dt><dd><p>
+      On PXELINUX, specifying <code class="option">LOCALBOOT 0</code> instead of a
+      <code class="option">KERNEL</code> option means invoking this particular label and
+      causes a local disk boot instead of a kernel boot.
+     </p><div class="informaltable"><table style="border-collapse: collapse;border-top: 1px solid ; border-bottom: 1px solid ; "><colgroup><col/><col/></colgroup><thead><tr><th style="border-right: 1px solid ; ">
+          <p>
+           Argument
+          </p>
+         </th><th>
+          <p>
+           Description
+          </p>
+         </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+          <p>
+           <code class="literal">0</code>
+          </p>
+         </td><td>
+          <p>
+           Perform a normal boot
+          </p>
+         </td></tr><tr><td style="border-right: 1px solid ; ">
+          <p>
+           <code class="literal">4</code>
+          </p>
+         </td><td>
+          <p>
+           Perform a local boot with the Universal Network Driver Interface
+           (UNDI) driver still resident in memory
+          </p>
+         </td></tr><tr><td style="border-right: 1px solid ; ">
+          <p>
+           <code class="literal">5</code>
+          </p>
+         </td><td>
+          <p>
+           Perform a local boot with the entire PXE stack, including the UNDI
+           driver, still resident in memory
+          </p>
+         </td></tr></tbody></table></div><p>
+      All other values are undefined. If you do not know what the UNDI or PXE
+      stacks are, specify <code class="literal">0</code>.
+     </p></dd><dt id="id-1.4.6.3.9.3.7"><span class="term"><code class="option">TIMEOUT <em class="replaceable">TIME-OUT</em></code>
+    </span></dt><dd><p>
+      Indicates how long to wait at the boot prompt until booting
+      automatically, in units of 1/10 second. The time-out is canceled when the
+      user types anything on the keyboard, assuming the user will complete the
+      command begun. A time-out of zero disables the time-out completely (this
+      is also the default). The maximum possible time-out value is 35996 (just
+      less than one hour).
+     </p></dd><dt id="id-1.4.6.3.9.3.8"><span class="term"><code class="option">PROMPT<em class="replaceable"> flag_val</em></code>
+    </span></dt><dd><p>
+      If <code class="option">flag_val</code> is 0, displays the boot prompt only if
+      <span class="keycap">Shift</span> or <span class="keycap">Alt</span> is pressed or
+      <span class="keycap">Caps Lock</span> or <span class="keycap">Scroll Lock</span> is set (this
+      is the default). If <code class="option">flag_val</code> is 1, always displays the
+      boot prompt.
+     </p><div class="verbatim-wrap"><pre class="screen">F2  <em class="replaceable">FILENAME</em>
+F1  <em class="replaceable">FILENAME</em>
+..etc...
+F9  <em class="replaceable">FILENAME</em>
+F10 <em class="replaceable">FILENAME</em></pre></div><p>
+      Displays the indicated file on the screen when a function key is pressed
+      at the boot prompt. This can be used to implement preboot online help
+      (presumably for the kernel command line options). For backward
+      compatibility with earlier releases, <span class="keycap">F10</span> can be also
+      entered as <code class="literal">F0</code>. Note that there is currently no way to
+      bind file names to <span class="keycap">F11</span> and <span class="keycap">F12</span>.
+     </p></dd></dl></div></section><section class="sect1" id="sec-deployment-prep-boot-pxeprep" data-id-title="Preparing the target system for PXE boot"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">14.4 </span><span class="title-name">Preparing the target system for PXE boot</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-pxeprep">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Prepare the system's BIOS for PXE boot by including the PXE option in the
+   BIOS boot order.
+  </p><div id="id-1.4.6.3.10.3" data-id-title="BIOS boot order" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: BIOS boot order</div><p>
+    Do not place the PXE option ahead of the hard disk boot parameter in the BIOS.
+    Otherwise this system would try to re-install itself every time you boot
+    it.
+   </p></div></section><section class="sect1" id="sec-deployment-prep-boot-wol" data-id-title="Using wake-on-LAN for remote wakeups"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">14.5 </span><span class="title-name">Using wake-on-LAN for remote wakeups</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-wol">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+       Wake-on-LAN (WOL) is an Ethernet standard for remotely waking up a computer 
+       by sending it a wakeup signal over a network. This signal is called the 
+       <span class="quote">“<span class="quote">magic packet</span>”</span>. Install WOL on client machines to enable remote wakeups,
+       and on every machine you want to use for sending the wakeup signal. The
+       magic packet is broadcast over UDP port 9 to the MAC address of the network 
+       interface on the client machine.
+   </p><p>
+       When computers are shut down they usually are not turned all the way off,
+       but remain in a low power mode. When the network interface supports WOL, it
+       listens for the magic packet wakeup signal when the machine is powered off.
+       You can send the magic packet manually, or schedule wakeups in a cron job
+       on the sending machine.
+   </p><section class="sect2" id="sec-deployment-prep-boot-wol-prereqs" data-id-title="Prerequisites"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.5.1 </span><span class="title-name">Prerequisites</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-wol-prereqs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+       WOL works with both wired and wireless Ethernet cards that support it.
+   </p><p>
+       You may need to enable WOL in your system BIOS/UEFI.
+   </p><p>
+       Check your BIOS/UEFI
+       settings for PXE boot, and make sure it is disabled to prevent accidental
+       re-installations.
+   </p><p>
+       Adjust your firewall to allow traffic over UDP port 9.
+   </p></section><section class="sect2" id="sec-deployment-prep-boot-wiredethernet" data-id-title="Verifying wired Ethernet support"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.5.2 </span><span class="title-name">Verifying wired Ethernet support</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-wiredethernet">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+       Run the following command to see if a wired Ethernet interface
+       supports WOL:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ethtool <em class="replaceable">eth0</em> | grep -i wake-on
+Supports Wake-on: pumbg
+Wake-on: g</pre></div><p>
+       The example output shows that eth0 supports WOL, indicated by the
+       <code class="literal">g</code> flag on the <code class="literal">Supports Wake-on</code> line.
+       <code class="literal">Wake-on: g</code> shows that WOL is already enabled, so this 
+       interface is ready to receive wakeup signals. If WOL is not enabled,
+       enable it with this command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ethtool -s <em class="replaceable">eth0</em> wol g</pre></div></section><section class="sect2" id="sec-deployment-prep-boot-wirelessethernet" data-id-title="Verifying wireless interface support"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.5.3 </span><span class="title-name">Verifying wireless interface support</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-wirelessethernet">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+       Wakeup-over-wifi, or WoWLAN, requires a wireless network interface that
+       supports WoWLAN. Test it with the <code class="command">iw</code> command, which
+       is provided by the <span class="package">iw</span> package:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper in iw</pre></div><p>
+       Find your device name:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> iw dev
+phy#0
+        Interface wlan2
+                ifindex 3
+                wdev 0x1
+                addr 9c:ef:d5:fe:01:7c
+                ssid accesspoint
+                type managed
+                channel 11 (2462 MHz), width: 20 MHz, center1: 2462 MHz
+                txpower 20.00 dBm</pre></div><p>
+       In this example, the device name to use for querying WoWLAN support is
+       <code class="literal">phy#0</code>. This example shows that it is not supported:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> iw phy#0 wowlan show
+command failed: Operation not supported (-95)</pre></div><p>
+       This example shows an interface that supports WoWLAN, but is not enabled:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> iw phy#0 wowlan show
+WoWLAN is disabled</pre></div><p>
+       Enable it:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> iw phy#0 wowlan enable magic-packet
+WoWLAN is enabled:
+* wake up on magic packet</pre></div></section><section class="sect2" id="sec-deployment-prep-boot-wol-install" data-id-title="Installing and testing WOL"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">14.5.4 </span><span class="title-name">Installing and testing WOL</span></span> <a title="Permalink" class="permalink" href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-wol-install">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/deployment_pxe.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To use WOL, install the <span class="package">wol</span> package on the client
+        and sending machines:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper in wol</pre></div><p>          
+        Install <span class="package">wol-udev-rules</span> on your client machines. This
+        package installs a udev rule that enables WOL automatically at start-up.
+   </p><p>
+       Get the MAC address of the network interface on the client machine:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> ip addr show eth0|grep ether
+link/ether 7c:ef:a5:fe:06:7c brd ff:ff:ff:ff:ff:ff</pre></div><p>
+       In the example output, <code class="literal">7c:ef:a5:fe:06:7c</code> is the MAC
+       address.
+   </p><p>
+       Shut down your client machine, and send it a wakeup signal from another
+       computer on the same subnet:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>wol <em class="replaceable">7c:ef:a5:fe:06:7c</em></pre></div><p>
+       If your target machine and second device are on the same network but in
+       different subnets, specify the broadcast address for your target
+       machine:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>wol -i <em class="replaceable">192.168.0.63 7c:ef:a5:fe:06:7c</em></pre></div><p>
+       Because WOL relies on broadcast domains, the sending machine must be on
+       the same network, though it can be in a different network segment.
+   </p><p>
+       It is possible to send the magic packet from a different network. One way
+       is with port forwarding, if your router supports port forwarding to a 
+       broadcast address. A more secure method is to connect to a host inside
+       your network via SSH, and send the magic packet from there.
+   </p></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-deployment-instserver.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 13 </span>Setting up a network installation source</span></a> </div><div><a class="pagination-link next" href="cha-deployment-prep-uefi-httpboot.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 15 </span>Setting up a UEFI HTTP Boot server</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-deployment-prep-pxe.html#sec-deployment-dhcp-server"><span class="title-number">14.1 </span><span class="title-name">Setting up a DHCP server</span></a></span></li><li><span class="sect1"><a href="cha-deployment-prep-pxe.html#sec-deployment-tftp-server"><span class="title-number">14.2 </span><span class="title-name">Setting up a TFTP server</span></a></span></li><li><span class="sect1"><a href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-pxeopts"><span class="title-number">14.3 </span><span class="title-name">PXELINUX configuration options</span></a></span></li><li><span class="sect1"><a href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-pxeprep"><span class="title-number">14.4 </span><span class="title-name">Preparing the target system for PXE boot</span></a></span></li><li><span class="sect1"><a href="cha-deployment-prep-pxe.html#sec-deployment-prep-boot-wol"><span class="title-number">14.5 </span><span class="title-name">Using wake-on-LAN for remote wakeups</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

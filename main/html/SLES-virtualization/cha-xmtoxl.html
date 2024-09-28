@@ -1,0 +1,2343 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Virtualization Guide | XM, XL toolstacks, and the libvirt framework</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="XM, XL toolstacks, and the libvirt framework | SLES 15…"/>
+<meta name="description" content="Since the early Xen 2.x releases, xend has been the de facto toolstack for managing Xen installations. In Xen 4.1, a new toolstack called libxenlight…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Appendix C. XM, XL toolstacks, and the libvirt framework"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "XM, XL toolstacks, and the libvirt framework",
+  
+    "description": "XM, XL toolstacks, and the libvirt framework",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="app-gpu-passthru.html" title="Appendix B. Configuring GPU Pass-Through for NVIDIA cards"/><link rel="next" href="bk10apd.html" title="Appendix D. GNU licenses"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="cha-xmtoxl.html">XM, XL toolstacks, and the libvirt framework</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name"><code class="systemitem">libvirt</code> daemons</span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="sec-libvirt-admin-migrate.html" class=" "><span class="title-number">16 </span><span class="title-name">Migrating VM Guests</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">17 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">18 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">19 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">20 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">21 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">23 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">24 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">26 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">27 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">28 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">29 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">30 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">32 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">33 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">35 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">36 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">37 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">38 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">39 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" you-are-here"><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="appendix" id="cha-xmtoxl" data-id-title="XM, XL toolstacks, and the libvirt framework"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect1" id="sec-xmtoxl-intro" data-id-title="Xen toolstacks"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">C.1 </span><span class="title-name">Xen toolstacks</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmtoxl-intro">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Since the early Xen 2.x releases, <code class="command">xend</code> has been the
+      de facto toolstack for managing Xen installations. In Xen 4.1, a new
+      toolstack called libxenlight (also known as libxl) was introduced with
+      technology preview status. libxl is a small, low-level library written in
+      C. It has been designed to provide a simple API for all client toolstacks
+      (<a class="link" href="https://wiki.xen.org/wiki/XAPI" target="_blank">XAPI</a>, <code class="systemitem">libvirt</code>,
+      xl). In Xen 4.2, libxl was promoted to supported status and
+      <code class="command">xend</code> was marked deprecated. <code class="command">xend</code>
+      has been included in the Xen 4.3 and 4.4 series to give users enough
+      time to convert their tooling to libxl. It has been removed from the
+      upstream Xen project and is no longer provided starting with the Xen
+      4.5 series and <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> <span class="phrase">12
+      SP1</span>.
+    </p><p>
+      <span class="phrase">Although SLES 11 SP3 contains Xen 4.2, SUSE
+      retained the <code class="command">xend</code> toolstack since making such an
+      invasive change in a service pack would be too disruptive for SUSE Linux Enterprise
+      customers. However, SLES 12 provides a suitable opportunity to move to
+      the new libxl toolstack and remove the deprecated, unmaintained
+      <code class="command">xend</code> stack</span>. Starting with <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>
+      <span class="phrase">12
+      SP1</span>, <code class="command">xend</code> is
+      no longer supported.
+    </p><p>
+      One of the major differences between <code class="command">xend</code> and libxl is
+      that the former is stateful, while the latter is stateless. With
+      <code class="command">xend</code>, all client applications such as
+      <code class="command">xm</code> and <code class="systemitem">libvirt</code> see the same system state.
+      <code class="command">xend</code> maintains the state for the entire Xen host. In
+      libxl, client applications such as <code class="command">xl</code> or <code class="systemitem">libvirt</code>
+      must maintain state. Thus domains created with <code class="command">xl</code> are
+      not visible or known to other libxl applications such as <code class="systemitem">libvirt</code>.
+      Generally, it is discouraged to mix and match libxl applications and is
+      preferred that a single libxl application be used to manage a Xen host.
+      In <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, we recommend using <code class="systemitem">libvirt</code> to manage Xen hosts.
+      This allows management of the Xen system through <code class="systemitem">libvirt</code> applications
+      such as <code class="command">virt-manager</code>, <code class="command">virt-install</code>,
+      <code class="command">virt-viewer</code>, libguestfs, etc. If <code class="command">xl</code>
+      is used to manage the Xen host, any virtual machines under its
+      management are not accessible to <code class="systemitem">libvirt</code>. Hence, they are not
+      accessible to any of the <code class="systemitem">libvirt</code> applications.
+    </p><section class="sect2" id="sec-xmtoxl-upgrade" data-id-title="Upgrading from xend/xm to xl/libxl"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.1.1 </span><span class="title-name">Upgrading from xend/xm to xl/libxl</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmtoxl-upgrade">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The <code class="command">xl</code> application, along with its configuration
+        format (see <code class="command">man xl.cfg</code>), was designed to be
+        backward-compatible with the <code class="command">xm</code> application and its
+        configuration format (see <code class="command">man xm.cfg</code>). Existing
+        <code class="command">xm</code> configuration should be usable with
+        <code class="command">xl</code>. Since libxl is stateless, and
+        <code class="command">xl</code> does not support the notion of managed domains,
+        SUSE recommends using <code class="systemitem">libvirt</code> to manage Xen hosts. SUSE has
+        provided a tool called <code class="command">xen2libvirt</code>, which provides a
+        simple mechanism to import domains previously managed by
+        <code class="command">xend</code> into <code class="systemitem">libvirt</code>. See
+        <a class="xref" href="cha-xmtoxl.html#xen-xen2libvirt" title="C.2. Import Xen domain configuration into libvirt">Section C.2, “Import Xen domain configuration into <code class="systemitem">libvirt</code>”</a> for more information on
+        <code class="command">xen2libvirt</code>.
+      </p></section><section class="sect2" id="sec-xmltoxl-design" data-id-title="XL design"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.1.2 </span><span class="title-name">XL design</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmltoxl-design">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The basic structure of every <code class="command">xl</code> command is:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="command">xl subcommand</code> <code class="option">OPTIONS</code> <em class="replaceable">DOMAIN</em></pre></div><p>
+        <em class="replaceable">DOMAIN</em> is the numeric domain ID, or the
+        domain name (which is internally translated to the domain ID), and
+        <em class="replaceable">OPTIONS</em> are subcommand specific options.
+      </p><p>
+        Although xl/libxl was designed to be backward-compatible with xm/xend,
+        there are a few differences that should be noted:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            Managed or persistent domains. <code class="systemitem">libvirt</code> now provides this
+            functionality.
+          </p></li><li class="listitem"><p>
+            xl/libxl does not support Python code in the domain configuration
+            files.
+          </p></li><li class="listitem"><p>
+            xl/libxl does not support creating domains from SXP format
+            configuration files (<code class="command">xm</code> <code class="option">create</code>
+            -F).
+          </p></li><li class="listitem"><p>
+            xl/libxl does not support sharing storage across DomU's via
+            <code class="command">w!</code> in domain configuration files.
+          </p></li></ul></div><p>
+        xl/libxl is new and under heavy development, hence a few features are
+        still missing with regard to the xm/xend toolstack:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            SCSI LUN/Host pass-through (PVSCSI)
+          </p></li><li class="listitem"><p>
+            USB pass-through (PVUSB)
+          </p></li><li class="listitem"><p>
+            Direct Kernel Boot for fully virtualized Linux guests for Xen
+          </p></li></ul></div></section><section class="sect2" id="sec-xmtoxl-checklist" data-id-title="Checklist before upgrade"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.1.3 </span><span class="title-name">Checklist before upgrade</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmtoxl-checklist">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        <span class="phrase">Before upgrading a SLES 11 SP4 Xen host to
+        SLES 15:</span> 
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            You must remove any Python code from your xm domain configuration
+            files.
+          </p></li><li class="listitem"><p>
+            It is recommended to capture the libvirt domain XML from all
+            existing virtual machines using <code class="command">virsh</code>
+            <code class="option">dumpxml</code> <em class="replaceable">DOMAIN_NAME</em>
+            <em class="replaceable">DOMAIN_NAME.xml</em>.
+          </p></li><li class="listitem"><p>
+            It is recommended to do a backup of
+            <code class="filename">/etc/xen/xend-config.sxp</code> and
+            <code class="filename">/boot/grub/menu.lst</code> files to keep references
+            of previous parameters used for Xen.
+          </p></li></ul></div><div id="id-1.12.12.3.7.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+          Currently, live migrating virtual machines running on a
+          <span class="phrase">SLES 11 SP4 Xen host to a SLES
+          15</span> Xen host is not supported. The <code class="command">xend</code>
+          and libxl toolstacks are not runtime-compatible. Virtual machine
+          downtime is required to move the virtual machines.
+        </p></div></section></section><section class="sect1" id="xen-xen2libvirt" data-id-title="Import Xen domain configuration into libvirt"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">C.2 </span><span class="title-name">Import Xen domain configuration into <code class="systemitem">libvirt</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#xen-xen2libvirt">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl_xen2libvirt.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  <code class="command">xen2libvirt</code> is a command line tool to import legacy
+  Xen domain configuration into the <code class="systemitem">libvirt</code> virtualization library
+  (see The Virtualization book for more information on <code class="systemitem">libvirt</code>).
+  xen2libvirt provides an easy way to import domains managed by the
+  deprecated <code class="command">xm</code>/xend tool stack into the new
+  <code class="systemitem">libvirt</code>/libxl tool stack. Several domains can be imported at once
+  using its <code class="option">--recursive mode</code>
+ </p><p>
+  <code class="command">xen2libvirt</code> is included in the
+  <code class="systemitem">xen-tools</code> package. If needed, install it with
+ </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper install xen-tools</pre></div><p>
+  <code class="command">xen2libvirt</code> general syntax is
+ </p><div class="verbatim-wrap"><pre class="screen">xen2libvirt &lt;options&gt; <em class="replaceable">/path/to/domain/config</em></pre></div><p>
+  where <code class="option">options</code> can be:
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.12.4.9.1"><span class="term"><code class="option">-h</code>, <code class="option">--help</code>
+   </span></dt><dd><p>
+     Prints short information about <code class="command">xen2libvirt</code> usage.
+    </p></dd><dt id="id-1.12.12.4.9.2"><span class="term"><code class="option">-c</code>, <code class="option">--convert-only</code>
+   </span></dt><dd><p>
+     Converts the domain configuration to the <code class="systemitem">libvirt</code> XML format, but
+     does not do the import to <code class="systemitem">libvirt</code>.
+    </p></dd><dt id="id-1.12.12.4.9.3"><span class="term"><code class="option">-r</code>, <code class="option">--recursive</code>
+   </span></dt><dd><p>
+     Converts and/or imports all domains configuration recursively, starting
+     at the specified path.
+    </p></dd><dt id="id-1.12.12.4.9.4"><span class="term"><code class="option">-f</code>, <code class="option">--format</code>
+   </span></dt><dd><p>
+     Specifies the format of the source domain configuration. Can be either
+     <code class="literal">xm</code>, or <code class="literal">sexpr</code> (S-expression
+     format).
+    </p></dd><dt id="id-1.12.12.4.9.5"><span class="term"><code class="option">-v</code>, <code class="option">--verbose</code>
+   </span></dt><dd><p>
+     Prints more detailed information about the import process.
+    </p></dd></dl></div><div class="complex-example"><div class="example" id="id-1.12.12.4.10" data-id-title="Converting Xen domain configuration to libvirt"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example C.1: </span><span class="title-name">Converting Xen domain configuration to <code class="systemitem">libvirt</code> </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.4.10">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl_xen2libvirt.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+   Suppose you have a Xen domain managed with <code class="command">xm</code>
+   with the following configuration saved in
+   <code class="filename">/etc/xen/sle12.xm</code>:
+  </p><div class="verbatim-wrap"><pre class="screen">kernel = "/boot/vmlinuz-2.6-xenU"
+  memory = 128
+  name = "SLE12"
+  root = "/dev/hda1 ro"
+  disk = [ "file:/var/xen/sle12.img,hda1,w" ]</pre></div><p>
+   Convert it to <code class="systemitem">libvirt</code> XML without importing it, and look at its
+   content:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> xen2libvirt -f xm -c /etc/xen/sle12.xm &gt; /etc/libvirt/qemu/sles12.xml
+  # cat /etc/libvirt/qemu/sles12.xml
+  &lt;domain type='xen'&gt;
+  &lt;name&gt;SLE12&lt;/name&gt;
+  &lt;uuid&gt;43e1863c-8116-469c-a253-83d8be09aa1d&lt;/uuid&gt;
+  &lt;memory unit='KiB'&gt;131072&lt;/memory&gt;
+  &lt;currentMemory unit='KiB'&gt;131072&lt;/currentMemory&gt;
+  &lt;vcpu placement='static'&gt;1&lt;/vcpu&gt;
+  &lt;os&gt;
+  &lt;type arch='x86_64' machine='xenpv'&gt;linux&lt;/type&gt;
+  &lt;kernel&gt;/boot/vmlinuz-2.6-xenU&lt;/kernel&gt;
+  &lt;/os&gt;
+  &lt;clock offset='utc' adjustment='reset'/&gt;
+  &lt;on_poweroff&gt;destroy&lt;/on_poweroff&gt;
+  &lt;on_reboot&gt;restart&lt;/on_reboot&gt;
+  &lt;on_crash&gt;restart&lt;/on_crash&gt;
+  &lt;devices&gt;
+  &lt;disk type='file' device='disk'&gt;
+  &lt;driver name='file'/&gt;
+  &lt;source file='/var/xen/sle12.img'/&gt;
+  &lt;target dev='hda1' bus='xen'/&gt;
+  &lt;/disk&gt;
+  &lt;console type='pty'&gt;
+  &lt;target type='xen' port='0'/&gt;
+  &lt;/console&gt;
+  &lt;/devices&gt;
+  &lt;/domain&gt;</pre></div><p>
+   To import the domain into <code class="systemitem">libvirt</code>, you can either run the same
+   <code class="command">xen2libvirt</code> command without the <code class="option">-c</code>
+   option, or use the exported file
+   <code class="filename">/etc/libvirt/qemu/sles12.xml</code> and define a new
+   Xen domain using <code class="command">virsh</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh define /etc/libvirt/qemu/sles12.xml</pre></div></div></div></div></section><section class="sect1" id="sec-xmvsxl" data-id-title="Differences between the xm and xl applications"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">C.3 </span><span class="title-name">Differences between the <code class="command">xm</code> and <code class="command">xl</code> applications</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  The purpose of this chapter is to list all differences between
+  <code class="command">xm</code> and <code class="command">xl</code> applications. Generally,
+  <code class="command">xl</code> is designed to be compatible with
+  <code class="command">xm</code>. Replacing <code class="command">xm</code> with
+  <code class="command">xl</code> in custom scripts or tools is usually sufficient.
+ </p><p>
+  You can also use the <code class="systemitem">libvirt</code> framework using the
+  <code class="command">virsh</code> command. In this documentation only the first
+  <em class="replaceable">OPTION</em> for <code class="command">virsh</code> will be
+  shown. To get more help on this option do a:
+ </p><div class="verbatim-wrap"><pre class="screen"><code class="command">virsh</code> <code class="option">help</code> <em class="replaceable">OPTION</em></pre></div><section class="sect2" id="sec-xmvsxl-conventions" data-id-title="Notation conventions"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.3.1 </span><span class="title-name">Notation conventions</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-conventions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To easily understand the difference between <code class="command">xl</code> and
+   <code class="command">xm</code> commands, the following notation is used in this
+   section:
+  </p><div class="table" id="id-1.12.12.5.6.3" data-id-title="Notation conventions"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.1: </span><span class="title-name">Notation conventions </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.6.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Notation
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Meaning
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        (-) minus
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Option exists in <code class="command">xm</code>, but <code class="command">xl</code>
+        does not include it.
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        (+) plus
+       </p>
+      </td><td>
+       <p>
+        Option exists in <code class="command">xl</code>, but <code class="command">xm</code>
+        does not include it.
+       </p>
+      </td></tr></tbody></table></div></div></section><section class="sect2" id="sec-xmvsxl-global" data-id-title="New global options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.3.2 </span><span class="title-name">New global options</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-global">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><div class="table" id="id-1.12.12.5.7.3" data-id-title="New global options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.2: </span><span class="title-name">New global options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.7.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Options
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Task
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        (+) <code class="option">-v</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Verbose, increase the verbosity of the output
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        (+) <code class="option">-N</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Dry run, do not actually execute the command
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        (+) <code class="option">-f</code>
+       </p>
+      </td><td>
+       <p>
+        Force execution. <code class="command">xl</code> will refuse to run some
+        commands if it detects that <code class="command">xend</code> is also running,
+        this option will force the execution of those commands, even though
+        it is unsafe
+       </p>
+      </td></tr></tbody></table></div></div></section><section class="sect2" id="sec-xmvsxl-common" data-id-title="Unchanged options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.3.3 </span><span class="title-name">Unchanged options</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-common">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   List of common options of <code class="command">xl</code> and
+   <code class="command">xm</code>, and their <code class="systemitem">libvirt</code> equivalents.
+  </p><div class="table" id="id-1.12.12.5.8.3" data-id-title="Common options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.3: </span><span class="title-name">Common options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.8.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Options
+       </p>
+      </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Task
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="systemitem">libvirt</code> equivalent
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        destroy <em class="replaceable">DOMAIN</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Immediately terminate the domain.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">destroy</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        domid <em class="replaceable">DOMAIN_NAME</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Convert a domain name to a <em class="replaceable">DOMAIN_ID</em>.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">domid</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        domname <em class="replaceable">DOMAIN_ID</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Convert a <em class="replaceable">DOMAIN_ID</em> to a
+        <em class="replaceable">DOMAIN_NAME</em>.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">domname</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        help
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Display the short help message (that is, common commands).
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">help</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        pause <em class="replaceable">DOMAIN_ID</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Pause a domain. When in a paused state, the domain will still consume
+        allocated resources such as memory, but will not be eligible for
+        scheduling by the Xen hypervisor.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">suspend</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        unpause <em class="replaceable">DOMAIN_ID</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Move a domain out of the paused state. This will allow a previously
+        paused domain to be eligible for scheduling by the Xen
+        hypervisor.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">resume</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        rename <em class="replaceable">DOMAIN_ID</em>
+        <em class="replaceable">NEW_DOMAIN_NAME</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Change the domain name of <em class="replaceable">DOMAIN_ID</em> to
+        <em class="replaceable">NEW_DOMAIN_NAME</em>.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh dumpxml <em class="replaceable">DOMAINNAME</em> &gt;
+          <em class="replaceable">DOMXML</em></pre></div></li><li class="listitem"><p>
+          modify the domain's name in <em class="replaceable">DOMXML</em>
+         </p></li><li class="listitem"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh undefine <em class="replaceable">DOMAINNAME</em></pre></div></li><li class="listitem"><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh define <em class="replaceable">DOMAINNAME</em></pre></div></li></ol></div>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        sysrq <em class="replaceable">DOMAIN</em> &lt;letter&gt;
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Send a Magic System Request to the domain, each type of request is
+        represented by a different letter. It can be used to send SysRq
+        requests to Linux guests, see <a class="link" href="https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html" target="_blank">https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html</a>
+        for more information. It requires PV drivers to be installed in your
+        guest OS.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">send-keys</code> can send Magic
+        Sys Req only for KVM
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        vncviewer <em class="replaceable">OPTIONS</em>
+        <em class="replaceable">DOMAIN</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Attach to domain's VNC server, forking a
+        <code class="command">vncviewer</code> process.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virt-viewer</code> <em class="replaceable">DOMAIN_ID</em>
+       </p>
+       <p>
+        <code class="command">virsh</code> <em class="replaceable">VNCDISPLAY</em>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">vcpu-set</code> <em class="replaceable">DOMAIN_ID</em> <em class="replaceable">VCPUS</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Set the number of virtual CPUs for the domain in question. Like
+        <code class="option">mem-set</code>, this command can only allocate up to the
+        maximum virtual CPU count configured at boot for the domain.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">setvcpus</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        vcpu-list <em class="replaceable">DOMAIN_ID</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        List VCPU information for a specific domain. If no domain is
+        specified, VCPU information for all domains will be provided.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">vcpuinfo</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        vcpu-pin <em class="replaceable">DOMAIN_ID</em> &lt;VCPU|all&gt;
+        &lt;CPUs|all&gt;
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Pin the VCPU to only run on the specific CPUs. The keyword all can
+        be used to apply the CPU list to all VCPUs in the domain.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">vcpupin</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">dmesg</code> [-c]
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Read the Xen message buffer, similar to dmesg on a Linux system.
+        The buffer contains informational, warning, and error messages
+        created during Xen's boot process.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">top</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Execute the <code class="command">xentop</code> command, which provides real
+        time monitoring of domains. <code class="command">xentop</code> is a curses
+        interface.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">nodecpustats</code>
+       </p>
+       <p>
+        <code class="command">virsh</code> <code class="option">nodememstats</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">uptime</code> [-s] <em class="replaceable">DOMAIN</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Print the current uptime of the domains running. With the
+        <code class="command">xl</code> command, the <em class="replaceable">DOMAIN</em>
+        argument is mandatory.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">debug-keys</code> <em class="replaceable">KEYS</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Send debug keys to Xen. It is the same as pressing the Xen
+        <span class="emphasis"><em>conswitch</em></span> (Ctrl-A by default) three times and
+        then pressing "keys".
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">cpupool-migrate</code> <em class="replaceable">DOMAIN</em>
+        <em class="replaceable">CPU_POOL</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Move a domain specified by <em class="replaceable">DOMAIN_ID</em> or
+        <em class="replaceable">DOMAIN</em> into a
+        <em class="replaceable">CPU_POOL</em>.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">cpupool-destroy</code> <em class="replaceable">CPU_POOL</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Deactivate a cpu pool. This is possible only if no domain is active
+        in the cpu-pool.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">block-detach</code> <em class="replaceable">DOMAIN_ID</em>
+        <em class="replaceable">DevId</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Detach a domain's virtual block device. <span class="emphasis"><em>devid</em></span>
+        may be the symbolic name or the numeric device id given to the
+        device by Dom0. You will need to run <code class="command">xl</code>
+        <code class="option">block-list</code> to determine that number.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">detach-disk</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">network-attach</code> <em class="replaceable">DOMAIN_ID</em>
+        <em class="replaceable">NETWORK_DEVICE</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Create a new network device in the domain specified by
+        <em class="replaceable">DOMAIN_ID</em>. network-device describes the
+        device to attach, using the same format as the vif string in the
+        domain configuration file
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">attach-interface</code>
+       </p>
+       <p>
+        <code class="command">virsh</code> <code class="option">attach-device</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">pci-attach</code> <em class="replaceable">DOMAIN</em> &lt;BDF&gt;
+        [Virtual Slot]
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Hotplug a new pass-through PCI device to the specified domain.
+        <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-bdf" title="BDF">BDF</a> is the PCI Bus/Device/Function
+        of the physical device to be passed through.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">virsh</code> <code class="option">attach-device</code>
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">pci-list</code> <em class="replaceable">DOMAIN_ID</em>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        List pass-through PCI devices for a domain
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="command">getenforce</code>
+       </p>
+      </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Determine if the <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-flask" title="FLASK">FLASK</a> security
+        module is loaded and enforcing its policy.
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        <code class="command">setenforce</code> <code class="option">&lt;1|0|Enforcing|Permissive&gt;</code>
+       </p>
+      </td><td style="border-right: 1px solid ; ">
+       <p>
+        Enable or disable enforcing of the
+        <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-flask" title="FLASK">FLASK</a> access controls. The default
+        is permissive and can be changed using the flask_enforcing option on
+        the hypervisor's command line.
+       </p>
+      </td><td>
+       
+      </td></tr></tbody></table></div></div></section><section class="sect2" id="sec-xmvsxl-removed" data-id-title="Removed options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.3.4 </span><span class="title-name">Removed options</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-removed">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   List of <code class="command">xm</code> <code class="option">options</code> which are no more
+   available with the XL tool stack and a replacement solution if available.
+  </p><section class="sect3" id="sec-xmvsxl-removed-domain" data-id-title="Domain management"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.4.1 </span><span class="title-name">Domain management</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-removed-domain">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The list of Domain management removed command and their replacement.
+   </p><div class="table" id="id-1.12.12.5.9.3.3" data-id-title="Domain management removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.4: </span><span class="title-name">Domain management removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.9.3.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/><col class="3"/></colgroup><thead><tr><th style="border-bottom: 1px solid ; " colspan="3">
+        <p>
+         Domain Management Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Options
+        </p>
+       </th><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Task
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Equivalent
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">log</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Print the Xend log.
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         This log file can be found in
+         <code class="filename">/var/log/xend.log</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">delete</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Remove a domain from Xend domain management. The
+         <code class="option">list</code> option shows the domain names
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">undefine</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">new</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Adds a domain to Xend domain management
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">define</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">start</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Start a Xend managed domain that was added using the
+         <code class="command">xm</code> <code class="option">new</code> command
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">start</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">dryrun</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Dry run - prints the resulting configuration in
+         <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a> but does not create the
+         domain
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">xl</code> <code class="option">-N</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">reset</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Reset a domain
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">reset</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">domstate</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Show domain state
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">domstate</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">serve</code>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Proxy Xend XMLRPC over stdio
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">resume</code> <em class="replaceable">DOMAIN</em>
+         <em class="replaceable">OPTIONS</em>
+        </p>
+       </td><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Moves a domain out of the suspended state and back into memory
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">resume</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">suspend</code> <em class="replaceable">DOMAIN</em>
+        </p>
+       </td><td style="border-right: 1px solid ; ">
+        <p>
+         Suspend a domain to a state file so that it can be later resumed
+         using the <code class="option">resume</code> subcommand. Similar to the
+         <code class="option">save</code> subcommand although the state file may not be
+         specified
+        </p>
+       </td><td>
+        <p>
+         <code class="command">virsh</code> <code class="option">managedsave</code>
+        </p>
+        <p>
+         <code class="command">virsh</code> <code class="option">suspend</code>
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-removed-devices" data-id-title="USB devices"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.4.2 </span><span class="title-name">USB devices</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-removed-devices">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    USB <code class="option">options</code> are not available with xl/libxl tool stack.
+    <code class="command">virsh</code> has the <code class="option"> attach-device</code> and
+    <code class="option">detach-device</code> options but it does not work yet with
+    <code class="option">USB</code>.
+   </p><div class="table" id="id-1.12.12.5.9.4.3" data-id-title="USB devices management removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.5: </span><span class="title-name">USB devices management removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.9.4.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-bottom: 1px solid ; " colspan="2">
+        <p>
+         USB Devices Management Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Options
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Task
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-add</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Add a new USB physical bus to a domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-del</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Delete a USB physical bus from a domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-attach</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Attach a new USB physical bus to domain's virtual port
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-detach</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Detach a USB physical bus from domain's virtual port
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-list</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         List domain's attachment state of all virtual port
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-list-assignable-devices</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         List all the assignable USB devices
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-hc-create</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Create a domain's new virtual USB host controller
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">usb-hc-destroy</code>
+        </p>
+       </td><td>
+        <p>
+         Destroy a domain's virtual USB host controller
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-removed-cpu" data-id-title="CPU management"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.4.3 </span><span class="title-name">CPU management</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-removed-cpu">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    CPU management options has changed. New options are available, see:
+    <a class="xref" href="cha-xmtoxl.html#sec-xmvsxl-changed-cpu" title="C.3.5.10. xl cpupool-*">Section C.3.5.10, “<code class="command">xl</code> <code class="option">cpupool-*</code>”</a>
+   </p><div class="table" id="id-1.12.12.5.9.5.3" data-id-title="CPU management removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.6: </span><span class="title-name">CPU management removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.9.5.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-bottom: 1px solid ; " colspan="2">
+        <p>
+         CPU Management Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Options
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Task
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">cpupool-new</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Adds a CPU pool to Xend CPU pool management
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">cpupool-start</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Starts a Xend CPU pool
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">cpupool-delete</code>
+        </p>
+       </td><td>
+        <p>
+         Removes a CPU pool from Xend management
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-removed-others" data-id-title="Other options"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.4.4 </span><span class="title-name">Other options</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-removed-others">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><div class="table" id="id-1.12.12.5.9.6.3" data-id-title="Other options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.7: </span><span class="title-name">Other options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.9.6.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-bottom: 1px solid ; " colspan="2">
+        <p>
+         Other Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Options
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         Task
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">shell</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Launch an interactive shell
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">change-vnc-passwd</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         Change vnc password
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         (-) <code class="option">vtpm-list</code>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         List virtual TPM devices
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">block-configure</code>
+        </p>
+       </td><td>
+        <p>
+         Change block device configuration
+        </p>
+       </td></tr></tbody></table></div></div></section></section><section class="sect2" id="sec-xmvsxl-changed" data-id-title="Changed options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.3.5 </span><span class="title-name">Changed options</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect3" id="sec-xmvsxl-changed-create" data-id-title="create"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.1 </span><span class="title-name"><code class="option">create</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-create">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">create</code>
+    <em class="replaceable">CONFIG_FILE</em> <em class="replaceable">OPTIONS
+    </em> <em class="replaceable">VARS</em>
+   </p><div id="id-1.12.12.5.10.3.3" data-id-title="libvirt equivalent:" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent:</div><p>
+     <code class="command">virsh</code> <code class="option">create</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.3.4" data-id-title="xl create Changed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.8: </span><span class="title-name"><code class="command">xl</code> <code class="option">create</code> Changed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.3.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">create</code> Changed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (*) -f=<em class="replaceable">FILE</em>,
+         --defconfig=<em class="replaceable">FILE</em>
+        </p>
+       </td><td>
+        <p>
+         Use the given configuration file
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.3.5" data-id-title="xm create Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.9: </span><span class="title-name"><code class="command">xm</code> <code class="option">create</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.3.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">create</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-s</code>, <code class="option">--skipdtd</code>
+        </p>
+       </td><td>
+        <p>
+         Skip DTD checking - skips checks on XML before creating
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-x</code>, <code class="option">--xmldryrun</code>
+        </p>
+       </td><td>
+        <p>
+         XML dry run
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-F=<em class="replaceable">FILE</em>,
+         --config=<em class="replaceable">FILE</em></code>
+        </p>
+       </td><td>
+        <p>
+         Use the given <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a> formatted
+         configuration script
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--path</code>
+        </p>
+       </td><td>
+        <p>
+         Search path for configuration scripts
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--help_config</code>
+        </p>
+       </td><td>
+        <p>
+         Print the available configuration variables (vars) for the
+         configuration script
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-n</code>, <code class="option">--dryrun</code>
+        </p>
+       </td><td>
+        <p>
+         Dry run — prints the configuration in
+         <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a> but does not create the
+         domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-c</code>, <code class="option">--console_autoconnect</code>
+        </p>
+       </td><td>
+        <p>
+         Connect to the console after the domain is created
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-q</code>, <code class="option">--quiet</code>
+        </p>
+       </td><td>
+        <p>
+         Quiet mode
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-p</code>, <code class="option">--paused</code>
+        </p>
+       </td><td>
+        <p>
+         Leave the domain paused after it is created
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.3.6" data-id-title="xl create Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.10: </span><span class="title-name"><code class="command">xl</code> <code class="option">create</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.3.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">create</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-V</code>, <code class="option">--vncviewer</code>
+        </p>
+       </td><td>
+        <p>
+         Attach to domain's VNC server, forking a vncviewer process
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-A</code>, <code class="option">--vncviewer-autopass</code>
+        </p>
+       </td><td>
+        <p>
+         Pass VNC password to vncviewer via stdin
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-console" data-id-title="console"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.2 </span><span class="title-name"><code class="option">console</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-console">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">console</code>
+    <em class="replaceable">OPTIONS</em> <em class="replaceable">DOMAIN</em>
+   </p><div id="id-1.12.12.5.10.4.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">console</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.4.4" data-id-title="xl console Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.11: </span><span class="title-name"><code class="command">xl</code> <code class="option">console</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.4.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col style="width: 20%; " class="c1"/><col style="width: 80%; " class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">console</code> Added Option
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-t</code> [pv|serial]
+        </p>
+       </td><td>
+        <p>
+         Connect to a PV console or connect to an emulated serial console.
+         PV consoles are the only consoles available for PV domains while
+         HVM domains can have both
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-info" data-id-title="info"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.3 </span><span class="title-name">info</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-info">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">info</code>
+   </p><div class="table" id="id-1.12.12.5.10.5.3" data-id-title="xm info Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.12: </span><span class="title-name"><code class="command">xm</code> <code class="option">info</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.5.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">info</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-n</code>, <code class="option">--numa</code>
+        </p>
+       </td><td>
+        <p>
+         Numa info
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-c</code>, <code class="option">--config</code>
+        </p>
+       </td><td>
+        <p>
+         List Xend configuration parameters
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-dump" data-id-title="dump-core"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.4 </span><span class="title-name"><code class="option">dump-core</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-dump">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">dump-core</code>
+    <em class="replaceable">DOMAIN</em> <em class="replaceable">FILENAME</em>
+   </p><div id="id-1.12.12.5.10.6.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">dump</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.6.4" data-id-title="xm dump-core Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.13: </span><span class="title-name"><code class="command">xm</code> <code class="option">dump-core</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.6.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">dump-core</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-L</code>, <code class="option">--live</code>
+        </p>
+       </td><td>
+        <p>
+         Dump core without pausing the domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-C</code>, <code class="option">--crash</code>
+        </p>
+       </td><td>
+        <p>
+         Crash domain after dumping core
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-R</code>, <code class="option">--reset</code>
+        </p>
+       </td><td>
+        <p>
+         Reset domain after dumping core
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-list" data-id-title="list"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.5 </span><span class="title-name"><code class="option">list</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-list">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl list</code> <code class="option">options</code>
+    <em class="replaceable">DOMAIN</em>
+   </p><div id="id-1.12.12.5.10.7.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">list --all</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.7.4" data-id-title="xm list Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.14: </span><span class="title-name"><code class="command">xm</code> <code class="option">list</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">list</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-l</code>, <code class="option">--long</code>
+        </p>
+       </td><td>
+        <p>
+         The output for <code class="command">xm</code> <code class="option">list</code> presents
+         the data in <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a> format
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--state==<em class="replaceable">STATE</em></code>
+        </p>
+       </td><td>
+        <p>
+         Output information for VMs in the specified state
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.7.5" data-id-title="xl list Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.15: </span><span class="title-name"><code class="command">xl</code> <code class="option">list</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.7.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">list</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-Z</code>, <code class="option">--context</code>
+        </p>
+       </td><td>
+        <p>
+         Also prints the security labels
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-v</code>, <code class="option">--verbose</code>
+        </p>
+       </td><td>
+        <p>
+         Also prints the domain UUIDs, the shutdown reason and security
+         labels
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-mem" data-id-title="mem-*"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.6 </span><span class="title-name"><code class="option">mem-*</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-mem">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.12.12.5.10.8.2" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">setmem</code>
+    </p><p>
+     <code class="command">virsh</code> <code class="option">setmaxmem</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.8.3" data-id-title="xl mem-* Changed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.16: </span><span class="title-name"><code class="command">xl</code> <code class="option">mem-*</code> Changed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.8.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">mem-*</code> Changed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">mem-max</code> <em class="replaceable">DOMAIN_ID</em>
+         <em class="replaceable">MEM</em>
+        </p>
+       </td><td>
+        <p>
+         Appending <code class="option">t</code> for terabytes, <code class="option">g</code> for
+         gigabytes, <code class="option">m</code> for megabytes,<code class="option">k</code> for
+         kilobytes and <code class="option">b</code> for bytes. Specify the maximum
+         amount of memory the domain can use.
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">mem-set</code> <em class="replaceable">DOMAIN_ID</em>
+         <em class="replaceable">MEM</em>
+        </p>
+       </td><td>
+        <p>
+         Set the domain's used memory using the balloon driver
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-migrate" data-id-title="migrate"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.7 </span><span class="title-name"><code class="option">migrate</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-migrate">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">migrate</code>
+    <em class="replaceable">OPTIONS</em> <em class="replaceable">DOMAIN</em>
+    <em class="replaceable">HOST</em>
+   </p><div id="id-1.12.12.5.10.9.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh migrate --live hvm-sles11-qcow2 xen+</code>
+     <em class="replaceable">CONNECTOR</em>://<em class="replaceable">USER</em>@<em class="replaceable">IP_ADDRESS</em>/
+    </p></div><div class="table" id="id-1.12.12.5.10.9.4" data-id-title="xm migrate Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.17: </span><span class="title-name"><code class="command">xm</code> <code class="option">migrate</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.9.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">migrate</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-l</code>, <code class="option">--live</code>
+        </p>
+       </td><td>
+        <p>
+         Use live migration. This will migrate the domain between hosts
+         without shutting down the domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-r</code>, <code class="option">--resource</code>
+         <em class="replaceable">Mbs</em>
+        </p>
+       </td><td>
+        <p>
+         Set maximum Mbs allowed for migrating the domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-c</code>, <code class="option">--change_home_server</code>
+        </p>
+       </td><td>
+        <p>
+         Change home server for managed domains
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-)
+         <code class="option">--max_iters=</code><em class="replaceable">MAX_ITERS</em>
+        </p>
+       </td><td>
+        <p>
+         Number of iterations before final suspend (default:30)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-)
+         <code class="option">--max_factor=</code><em class="replaceable">MAX_FACTOR</em>
+        </p>
+       </td><td>
+        <p>
+         Max amount of memory to transfer before final suspend (default:
+         3*RAM).
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-)
+         <code class="option">--min_remaining=</code><em class="replaceable">MIN_REMAINING</em>
+        </p>
+       </td><td>
+        <p>
+         Number of dirty pages before final suspend (default:50)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--abort_if_busy</code>
+        </p>
+       </td><td>
+        <p>
+         Abort migration instead of doing final suspend
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--log_progress</code>
+        </p>
+       </td><td>
+        <p>
+         Log progress of migration to <code class="filename">xend.log</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-s</code>, <code class="option">--ssl</code>
+        </p>
+       </td><td>
+        <p>
+         Use ssl connection for migration
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.9.5" data-id-title="xl migrate Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.18: </span><span class="title-name"><code class="command">xl</code> <code class="option">migrate</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.9.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">migrate</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-s</code> <em class="replaceable">SSHCOMMAND</em>
+        </p>
+       </td><td>
+        <p>
+         Use &lt;sshcommand&gt; instead of <code class="command">ssh</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-e</code>
+        </p>
+       </td><td>
+        <p>
+         On the new host, do not wait in the background (on
+         &lt;host&gt;) for the death of the domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-C</code> <em class="replaceable">CONFIG</em>
+        </p>
+       </td><td>
+        <p>
+         Send &lt;config&gt; instead of the configuration file used when
+         creating the domain
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-management" data-id-title="Domain management"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.8 </span><span class="title-name">Domain management</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-management">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">reboot</code>
+    <em class="replaceable">OPTIONS</em> <em class="replaceable">DOMAIN</em>
+   </p><div id="id-1.12.12.5.10.10.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">reboot</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.10.4" data-id-title="xm reboot Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.19: </span><span class="title-name"><code class="command">xm</code> <code class="option">reboot</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">reboot</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-a</code>, <code class="option">--all</code>
+        </p>
+       </td><td>
+        <p>
+         Reboot all domains
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-w</code>, <code class="option">--wait</code>
+        </p>
+       </td><td>
+        <p>
+         Wait for reboot to complete before returning. This may take a
+         while, as all services in the domain need to be shut down
+         cleanly
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.10.5" data-id-title="xl reboot Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.20: </span><span class="title-name"><code class="command">xl</code> <code class="option">reboot</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">reboot</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-F</code>
+        </p>
+       </td><td>
+        <p>
+         Fallback to ACPI reset event for HVM guests with no PV drivers
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    <code class="command">xl</code> <code class="option">save</code>
+    <em class="replaceable">OPTIONS</em> <em class="replaceable">DOMAIN</em>
+    <em class="replaceable">CHECK_POINT_FILE</em>
+    <em class="replaceable">CONFIG_FILE</em>
+   </p><div id="id-1.12.12.5.10.10.7" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">save</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.10.8" data-id-title="xl save Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.21: </span><span class="title-name"><code class="command">xl</code> <code class="option">save</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">save</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-c</code>
+        </p>
+       </td><td>
+        <p>
+         Leave domain running after creating the snapshot
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    <code class="command">xl</code> <code class="option">restore</code>
+    <em class="replaceable">OPTIONS</em>
+    <em class="replaceable">CONFIG_FILE</em>
+    <em class="replaceable">CHECK_POINT_FILE</em>
+   </p><div id="id-1.12.12.5.10.10.10" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">restore</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.10.11" data-id-title="xl restore Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.22: </span><span class="title-name"><code class="command">xl</code> <code class="option">restore</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.11">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">restore</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-p</code>
+        </p>
+       </td><td>
+        <p>
+         Do not unpause domain after restoring it
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-e</code>
+        </p>
+       </td><td>
+        <p>
+         Do not wait in the background for the death of the domain on the
+         new host
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-d</code>
+        </p>
+       </td><td>
+        <p>
+         Enable debug messages
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-V</code>, <code class="option">--vncviewer</code>
+        </p>
+       </td><td>
+        <p>
+         Attach to domain's VNC server, forking a vncviewer process
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-A</code>, <code class="option">--vncviewer-autopass</code>
+        </p>
+       </td><td>
+        <p>
+         Pass VNC password to vncviewer via stdin
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    <code class="command">xl</code> <code class="option">shutdown</code>
+    <em class="replaceable">OPTIONS</em> <em class="replaceable">DOMAIN</em>
+   </p><div id="id-1.12.12.5.10.10.13" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">shutdown</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.10.14" data-id-title="xm shutdown Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.23: </span><span class="title-name"><code class="command">xm</code> <code class="option">shutdown</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.14">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">shutdown</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-w</code>, <code class="option">--wait</code>
+        </p>
+       </td><td>
+        <p>
+         Wait for the domain to complete shutdown before returning
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-a</code>
+        </p>
+       </td><td>
+        <p>
+         Shutdown all guest domains
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-R</code>
+        </p>
+       </td><td>
+        
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-H</code>
+        </p>
+       </td><td>
+        
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.10.15" data-id-title="xl shutdown Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.24: </span><span class="title-name"><code class="command">xl</code> <code class="option">shutdown</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.15">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">shutdown</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-F</code>
+        </p>
+       </td><td>
+        <p>
+         If the guest does not support PV shutdown control then fallback to
+         sending an ACPI power event
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.10.16" data-id-title="xl trigger Changed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.25: </span><span class="title-name"><code class="command">xl</code> <code class="option">trigger</code> Changed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.10.16">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">trigger</code> Changed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">trigger</code>
+         <em class="replaceable">DOMAIN</em>
+         &lt;nmi|reset|init|power|sleep|s3resume&gt;
+         <em class="replaceable">VCPU</em>
+        </p>
+       </td><td>
+        <p>
+         Send a trigger to a domain. Only available for HVM domains
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-sched" data-id-title="xl sched-*"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.9 </span><span class="title-name"><code class="command">xl</code> <code class="option">sched-*</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-sched">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">sched-credit</code>
+    <em class="replaceable">OPTIONS</em>
+   </p><div id="id-1.12.12.5.10.11.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">schedinfo</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.11.4" data-id-title="xm sched-credit Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.26: </span><span class="title-name"><code class="command">xm</code> <code class="option">sched-credit</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.11.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">sched-credit</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-d</code> <em class="replaceable">DOMAIN</em>,
+         <code class="option">--domain=</code><em class="replaceable">DOMAIN</em>
+        </p>
+       </td><td>
+        <p>
+         Domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-w</code> <em class="replaceable">WEIGHT</em>,
+         <code class="option">--weight=</code><em class="replaceable">WEIGHT</em>
+        </p>
+       </td><td>
+        <p>
+         A domain with a weight of 512 will get twice as much CPU as a
+         domain with a weight of 256 on a contended host. Legal weights
+         range from 1 to 65535 and the default is 256
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-c</code> <em class="replaceable">CAP</em>,
+         <code class="option">--cap=</code><em class="replaceable">CAP</em>
+        </p>
+       </td><td>
+        <p>
+         The CAP optionally fixes the maximum amount of CPU a domain can
+         consume
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.11.5" data-id-title="xl sched-credit Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.27: </span><span class="title-name"><code class="command">xl</code> <code class="option">sched-credit</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.11.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">sched-credit</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-p</code> <em class="replaceable">CPUPOOL</em>,
+         <code class="option">--cpupool=</code><em class="replaceable">CPUPOOL</em>
+        </p>
+       </td><td>
+        <p>
+         Restrict output to domains in the specified cpupool
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-s</code>, <code class="option">--schedparam</code>
+        </p>
+       </td><td>
+        <p>
+         Specify to list or set pool-wide scheduler parameters
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-t</code> <em class="replaceable">TSLICE</em>,
+         <code class="option">--tslice_ms=</code><em class="replaceable">TSLICE</em>
+        </p>
+       </td><td>
+        <p>
+         Timeslice tells the scheduler how long to allow VMs to run before
+         pre-empting
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-r</code> <em class="replaceable">RLIMIT</em>,
+         <code class="option">--ratelimit_us=</code><em class="replaceable">RLIMIT</em>
+        </p>
+       </td><td>
+        <p>
+         Ratelimit attempts to limit the number of schedules per second
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    <code class="command">xl</code> <code class="option">sched-credit2</code>
+    <em class="replaceable">OPTIONS</em>
+   </p><div id="id-1.12.12.5.10.11.7" data-id-title="libvirt status" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> status</div><p>
+     <code class="command">virsh</code> only supports credit scheduler, not credit2
+     scheduler
+    </p></div><div class="table" id="id-1.12.12.5.10.11.8" data-id-title="xm sched-credit2 Removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.28: </span><span class="title-name"><code class="command">xm</code> <code class="option">sched-credit2</code> Removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.11.8">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">sched-credit2</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-d</code> <em class="replaceable">DOMAIN</em>,
+         <code class="option">--domain=</code><em class="replaceable">DOMAIN</em>
+        </p>
+       </td><td>
+        <p>
+         Domain
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-w</code> <em class="replaceable">WEIGHT</em>,
+         <code class="option">--weight=</code><em class="replaceable">WEIGHT</em>
+        </p>
+       </td><td>
+        <p>
+         Legal weights range from 1 to 65535 and the default is 256
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.11.9" data-id-title="xl sched-credit2 Added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.29: </span><span class="title-name"><code class="command">xl</code> <code class="option">sched-credit2</code> Added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.11.9">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">sched-credit2</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-p</code> <em class="replaceable">CPUPOOL</em>,
+         <code class="option">--cpupool=</code><em class="replaceable">CPUPOOL</em>
+        </p>
+       </td><td>
+        <p>
+         Restrict output to domains in the specified cpupool
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    <code class="command">xl</code> <code class="option">sched-sedf</code>
+    <em class="replaceable">OPTIONS</em>
+   </p><div class="table" id="id-1.12.12.5.10.11.11" data-id-title="xm sched-sedf removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.30: </span><span class="title-name"><code class="command">xm</code> <code class="option">sched-sedf</code> removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.11.11">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">sched-sedf</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-p</code> <em class="replaceable">PERIOD</em>,
+         <code class="option">--period=</code><em class="replaceable">PERIOD</em>
+        </p>
+       </td><td>
+        <p>
+         The normal <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-edf" title="EDF">EDF</a> scheduling usage
+         in milliseconds
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-s</code> <em class="replaceable">SLICE</em>,
+         <code class="option">--slice=</code><em class="replaceable">SLICE</em>
+        </p>
+       </td><td>
+        <p>
+         The normal <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-edf" title="EDF">EDF</a> scheduling usage
+         in milliseconds
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-l</code> <em class="replaceable">LATENCY</em>,
+         <code class="option">--latency=</code><em class="replaceable">LATENCY</em>
+        </p>
+       </td><td>
+        <p>
+         Scaled period if domain is doing heavy I/O
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-e</code> <em class="replaceable">EXTRA</em>,
+         <code class="option">--extra=</code><em class="replaceable">EXTRA</em>
+        </p>
+       </td><td>
+        <p>
+         Flag for allowing domain to run in extra time (0 or 1)
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="option">-w</code> <em class="replaceable">WEIGHT</em>,
+         <code class="option">--weight=</code><em class="replaceable">WEIGHT</em>
+        </p>
+       </td><td>
+        <p>
+         Another way of setting CPU slice
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.11.12" data-id-title="xl sched-sedf added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.31: </span><span class="title-name"><code class="command">xl</code> <code class="option">sched-sedf</code> added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.11.12">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">sched-sedf</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-c</code> <em class="replaceable">CPUPOOL</em>,
+         <code class="option">--cpupool=</code><em class="replaceable">CPUPOOL</em>
+        </p>
+       </td><td>
+        <p>
+         Restrict output to domains in the specified cpupool
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-d</code> <em class="replaceable">DOMAIN</em>,
+         <code class="option">--domain=</code><em class="replaceable">DOMAIN</em>
+        </p>
+       </td><td>
+        <p>
+         Domain
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-cpu" data-id-title="xl cpupool-*"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.10 </span><span class="title-name"><code class="command">xl</code> <code class="option">cpupool-*</code></span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-cpu">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">cpupool-cpu-remove</code>
+    <em class="replaceable">CPU_POOL</em> &lt;CPU
+    nr&gt;|node:&lt;node nr&gt;
+   </p><p>
+    <code class="command">xl</code> <code class="option">cpupool-list</code> [-c|--cpus]
+    <em class="replaceable">CPU_POOL</em>
+   </p><div class="table" id="id-1.12.12.5.10.12.4" data-id-title="xm cpupool-list removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.32: </span><span class="title-name"><code class="command">xm</code> <code class="option">cpupool-list</code> removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.12.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">cpupool-*</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-l</code>, <code class="option">--long</code>
+        </p>
+       </td><td>
+        <p>
+         Output all CPU pool details in
+         <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a> format
+        </p>
+       </td></tr></tbody></table></div></div><p>
+    <code class="command">xl</code> <code class="option">cpupool-cpu-add</code>
+    <em class="replaceable">CPU_POOL</em> cpu-nr|node:node-nr
+   </p><p>
+    <code class="command">xl</code> <code class="option">cpupool-create</code>
+    <em class="replaceable">OPTIONS</em>
+    <em class="replaceable">CONFIG_FILE</em> [Variable=Value ...]
+   </p><div class="table" id="id-1.12.12.5.10.12.7" data-id-title="xm cpupool-create removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.33: </span><span class="title-name"><code class="command">xm</code> <code class="option">cpupool-create</code> removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.12.7">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">cpupool-create</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Options</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-f</code> <em class="replaceable">FILE</em>,
+         --defconfig=<em class="replaceable">FILE</em>
+        </p>
+       </td><td>
+        <p>
+         Use the given Python configuration script. The configuration script
+         is loaded after arguments have been processed
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-n</code>, <code class="option">--dryrun</code>
+        </p>
+       </td><td>
+        <p>
+         Dry run - prints the resulting configuration in
+         <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a> but does not create the CPU
+         pool
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--help_config</code>
+        </p>
+       </td><td>
+        <p>
+         Print the available configuration variables (vars) for the
+         configuration script
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">--path=</code><em class="replaceable">PATH</em>
+        </p>
+       </td><td>
+        <p>
+         Search path for configuration scripts. The value of PATH is a
+         colon-separated directory list
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-F=</code><em class="replaceable">FILE</em>,
+         --config=<em class="replaceable">FILE</em>
+        </p>
+       </td><td>
+        <p>
+         CPU pool configuration to use
+         (<a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-sxp" title="SXP">SXP</a>)
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-attach" data-id-title="PCI and block devices"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.11 </span><span class="title-name">PCI and block devices</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-attach">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">xl</code> <code class="option">pci-detach</code> [-f]
+    <em class="replaceable">DOMAIN_ID</em> &lt;BDF&gt;
+   </p><div id="id-1.12.12.5.10.13.3" data-id-title="libvirt equivalent" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <code class="systemitem">libvirt</code> equivalent</div><p>
+     <code class="command">virsh</code> <code class="option">detach-device</code>
+    </p></div><div class="table" id="id-1.12.12.5.10.13.4" data-id-title="xl pci-detach added options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.34: </span><span class="title-name"><code class="command">xl</code> <code class="option">pci-detach</code> added options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.13.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">pci-detach</code> Added Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (+) <code class="option">-f</code>
+        </p>
+       </td><td>
+        <p>
+         If <code class="option">-f</code> is specified, <code class="command">xl</code> is going
+         to forcefully remove the device even without guest's collaboration
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.13.5" data-id-title="xm block-list removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.35: </span><span class="title-name"><code class="command">xm</code> <code class="option">block-list</code> removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.13.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         <code class="option">block-list</code> Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-l</code>, <code class="option">--long</code>
+        </p>
+       </td><td>
+        <p>
+         List virtual block devices for a domain
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.13.6" data-id-title="Other options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.36: </span><span class="title-name">Other options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.13.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Option
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="systemitem">libvirt</code> equivalent
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">xl</code> <code class="option">block-attach</code>
+         <em class="replaceable">DOMAIN</em>
+         &lt;disk-spec-component(s)&gt;
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">attach-disk/attach-device</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="command">xl</code> <code class="option">block-list</code>
+         <em class="replaceable">DOMAIN_ID</em>
+        </p>
+       </td><td>
+        <p>
+         <code class="command">virsh</code> <code class="option">domblklist</code>
+        </p>
+       </td></tr></tbody></table></div></div></section><section class="sect3" id="sec-xmvsxl-changed-net" data-id-title="Network"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">C.3.5.12 </span><span class="title-name">Network</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-changed-net">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><div class="table" id="id-1.12.12.5.10.14.2" data-id-title="Network options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.37: </span><span class="title-name">Network options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.14.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         Option
+        </p>
+       </th><th style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="systemitem">libvirt</code> equivalent
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">xl</code> <code class="option">network-list</code>
+         <em class="replaceable">DOMAIN(s)</em>
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">domiflist</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">xl</code> <code class="option">network-detach</code>
+         <em class="replaceable">DOMAIN_ID</em> devid|mac
+        </p>
+       </td><td style="border-bottom: 1px solid ; ">
+        <p>
+         <code class="command">virsh</code> <code class="option">detach-interface</code>
+        </p>
+       </td></tr><tr><td style="border-right: 1px solid ; ">
+        <p>
+         <code class="command">xl</code> <code class="option">network-attach</code>
+         <em class="replaceable">DOMAIN(s)</em>
+        </p>
+       </td><td>
+        <p>
+         <code class="command">virsh</code>
+         <code class="option">attach-interface/attach-device</code>
+        </p>
+       </td></tr></tbody></table></div></div><div class="table" id="id-1.12.12.5.10.14.3" data-id-title="xl network-attach removed options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.38: </span><span class="title-name"><code class="command">xl</code> <code class="option">network-attach</code> removed options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#id-1.12.12.5.10.14.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="c1"/><col class="c2"/></colgroup><thead><tr><th colspan="2">
+        <p>
+         Removed Options
+        </p>
+       </th></tr><tr><th style="border-right: 1px solid ; ">
+        <p>
+         <span class="emphasis"><em>Option</em></span>
+        </p>
+       </th><th>
+        <p>
+         <span class="emphasis"><em>Task</em></span>
+        </p>
+       </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; ">
+        <p>
+         (-) <code class="option">-l</code>, <code class="option">--long</code>
+        </p>
+       </td><td>
+        
+       </td></tr></tbody></table></div></div></section></section><section class="sect2" id="sec-xmvsxl-new" data-id-title="New options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">C.3.6 </span><span class="title-name">New options</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmvsxl-new">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div></div></div></div><div class="table" id="table-xmtoxl-new-options" data-id-title="New options"><div class="title-container"><div class="table-title-wrap"><div class="table-title"><span class="title-number-name"><span class="title-number">Table C.39: </span><span class="title-name">New options </span></span><a title="Permalink" class="permalink" href="cha-xmtoxl.html#table-xmtoxl-new-options">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl.xml" title="Edit source document"> </a></div></div><div class="table-contents"><table style="border-collapse: collapse; border-top: 1px solid ; border-bottom: 1px solid ; border-left: 1px solid ; border-right: 1px solid ; "><colgroup><col class="1"/><col class="2"/></colgroup><thead><tr><th style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        Options
+       </p>
+      </th><th style="border-bottom: 1px solid ; ">
+       <p>
+        Task
+       </p>
+      </th></tr></thead><tbody><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">config-update</code> <em class="replaceable">DOMAIN</em>
+        <em class="replaceable">CONFIG_FILE</em>
+        <em class="replaceable">OPTIONS</em> <em class="replaceable">VARS</em>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Update the saved configuration for a running domain. This has no
+        immediate effect but will be applied when the guest is next
+        restarted. This command is useful to ensure that runtime
+        modifications made to the guest will be preserved when the guest is
+        restarted
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">migrate-receive</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">sharing</code> <em class="replaceable">DOMAIN</em>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        List count of shared pages.List specifically for that domain.
+        Otherwise, list for all domains
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">vm-list</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Prints information about guests. This list excludes information
+        about service or auxiliary domains such as Dom0 and stubdoms
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">cpupool-rename</code> <em class="replaceable">CPU_POOL</em>
+        <em class="replaceable">NEWNAME</em>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Renames a cpu-pool to newname
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">cpupool-numa-split</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Splits up the machine into one cpu-pool per numa node
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        cd-insert <em class="replaceable">DOMAIN</em>
+        &lt;VirtualDevice&gt; &lt;type:path&gt;
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Insert a CD-ROM into a guest domain's existing virtual CD drive. The
+        virtual drive must already exist but can be current empty
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">cd-eject</code> <em class="replaceable">DOMAIN</em>
+        &lt;VirtualDevice&gt;
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Eject a CD-ROM from a guest's virtual CD drive. Only works with HVM
+        domains
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">pci-assignable-list</code>
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        List all the assignable PCI devices. These are devices in the system
+        which are configured to be available for pass-through and are bound
+        to a suitable PCI back-end driver in Dom0 rather than a real
+        driver
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">pci-assignable-add</code> &lt;BDF&gt;
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Make the device at PCI Bus/Device/Function
+        <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-bdf" title="BDF">BDF</a> assignable to guests.This will
+        bind the device to the pciback driver
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; border-bottom: 1px solid ; ">
+       <p>
+        <code class="option">pci-assignable-remove</code>
+        <em class="replaceable">OPTIONS</em> &lt;BDF&gt;
+       </p>
+      </td><td style="border-bottom: 1px solid ; ">
+       <p>
+        Make the device at PCI Bus/Device/Function
+        <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-bdf" title="BDF">BDF</a> assignable to guests. This
+        will at least unbind the device from pciback
+       </p>
+      </td></tr><tr><td style="border-right: 1px solid ; ">
+       <p>
+        <code class="option">loadpolicy</code> <em class="replaceable">POLICY_FILE</em>
+       </p>
+      </td><td>
+       <p>
+        Load <a class="xref" href="gloss-vt-glossary.html#gloss-xmtoxl-vt-flask" title="FLASK">FLASK</a> policy from the given
+        policy file. The initial policy is provided to the hypervisor as a
+        multiboot module; this command allows runtime updates to the policy.
+        Loading new security policy will reset runtime changes to device
+        labels
+       </p>
+      </td></tr></tbody></table></div></div></section></section><section class="sect1" id="sec-xmtoxl-links" data-id-title="External links"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">C.4 </span><span class="title-name">External links</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-xmtoxl-links">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xm_vs_xl_links.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  For more information on Xen tool stacks refer to the following online
+  resources:
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.12.6.4.1"><span class="term">XL in Xen</span></dt><dd><p>
+     <a class="link" href="https://wiki.xenproject.org/wiki/XL_in_Xen_4.2" target="_blank">XL in
+     Xen 4.2</a>
+    </p></dd><dt id="id-1.12.12.6.4.2"><span class="term"><code class="command">xl</code> command</span></dt><dd><p>
+     <a class="link" href="https://xenbits.xen.org/docs/unstable/man/xl.1.html" target="_blank">XL</a>
+     command line.
+    </p></dd><dt id="id-1.12.12.6.4.3"><span class="term">xl.cfg</span></dt><dd><p>
+     <a class="link" href="https://xenbits.xen.org/docs/unstable/man/xl.cfg.5.html" target="_blank">xl.cfg</a>
+     domain configuration file syntax.
+    </p></dd><dt id="id-1.12.12.6.4.4"><span class="term">xl disk</span></dt><dd><p>
+     <a class="link" href="https://xenbits.xen.org/docs/4.3-testing/misc/xl-disk-configuration.txt" target="_blank">xl
+     disk</a> configuration option.
+    </p></dd><dt id="id-1.12.12.6.4.5"><span class="term">XL vs Xend</span></dt><dd><p>
+     <a class="link" href="https://wiki.xenproject.org/wiki/XL_vs_Xend_Feature_Comparison" target="_blank">XL
+     vs Xend</a> feature comparison.
+    </p></dd><dt id="id-1.12.12.6.4.6"><span class="term">BDF doc</span></dt><dd><p>
+     <a class="link" href="https://wiki.xen.org/wiki/Bus:Device.Function_%28BDF%29_Notation" target="_blank">BDF
+     documentation</a>.
+    </p></dd><dt id="id-1.12.12.6.4.7"><span class="term">libvirt</span></dt><dd><p>
+     <a class="link" href="https://libvirt.org/sources/virshcmdref/html/" target="_blank">virsh</a>
+     command.
+    </p></dd></dl></div></section><section class="sect1" id="sec-libvirt-managing-export-Xen-xm" data-id-title="Saving a Xen guest configuration in an xm compatible format"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">C.5 </span><span class="title-name">Saving a Xen guest configuration in an <code class="command">xm</code> compatible format</span></span> <a title="Permalink" class="permalink" href="cha-xmtoxl.html#sec-libvirt-managing-export-Xen-xm">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/xen_xmtoxl.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Although <code class="command">xl</code> is now the current toolkit for managing
+      Xen guests (apart from the preferred <code class="systemitem">libvirt</code>), you may need to export
+      the guest configuration to the previously used <code class="command">xm</code>
+      format. To do this, follow these steps:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          First export the guest configuration to a file:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh dumpxml guest_id &gt; guest_cfg.xml</pre></div></li><li class="step"><p>
+          Then convert the configuration to the <code class="command">xm</code> format:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh domxml-to-native xen-xm guest_cfg.xml &gt; guest_xm_cfg</pre></div></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="app-gpu-passthru.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Appendix B </span>Configuring GPU Pass-Through for NVIDIA cards</span></a> </div><div><a class="pagination-link next" href="bk10apd.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Appendix D </span>GNU licenses</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-xmtoxl.html#sec-xmtoxl-intro"><span class="title-number">C.1 </span><span class="title-name">Xen toolstacks</span></a></span></li><li><span class="sect1"><a href="cha-xmtoxl.html#xen-xen2libvirt"><span class="title-number">C.2 </span><span class="title-name">Import Xen domain configuration into <code class="systemitem">libvirt</code></span></a></span></li><li><span class="sect1"><a href="cha-xmtoxl.html#sec-xmvsxl"><span class="title-number">C.3 </span><span class="title-name">Differences between the <code class="command">xm</code> and <code class="command">xl</code> applications</span></a></span></li><li><span class="sect1"><a href="cha-xmtoxl.html#sec-xmtoxl-links"><span class="title-number">C.4 </span><span class="title-name">External links</span></a></span></li><li><span class="sect1"><a href="cha-xmtoxl.html#sec-libvirt-managing-export-Xen-xm"><span class="title-number">C.5 </span><span class="title-name">Saving a Xen guest configuration in an <code class="command">xm</code> compatible format</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

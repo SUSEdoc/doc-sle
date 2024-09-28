@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Security and Hardening Guide | Immunizing Programs</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Immunizing Programs | SLES 15 SP2"/>
+<meta name="description" content="Effective hardening of a computer system requires minimizing the number of programs that mediate privilege, then securing the programs as much as pos…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 32. Immunizing Programs"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Immunizing Programs",
+  
+    "description": "Immunizing Programs",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-17T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-apparmor-start.html" title="Chapter 31. Getting Started"/><link rel="next" href="cha-apparmor-profiles.html" title="Chapter 33. Profile Components and Syntax"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-apparmor.html">Confining Privileges with AppArmor</a><span> / </span><a class="crumb" href="cha-apparmor-concept.html">Immunizing Programs</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and Confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting Up Authentication Clients Using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network Authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting Up a FreeRADIUS Server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local Security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical Security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software Management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File Management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting Partitions and Files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage Encryption for Hosted Applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User Management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown Checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring Security Settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access Control Lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion Detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network Security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X Authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and Firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN Server</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">25 </span><span class="title-name">Improving Network Security with <code class="command">sysctl</code> Variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and Compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">26 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">27 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li><li><a href="cha-security-pci-dss.html" class=" "><span class="title-number">28 </span><span class="title-name">Payment Card Industry Data Security Standard (PCI DSS)</span></a></li><li><a href="cha-security-stig.html" class=" "><span class="title-number">29 </span><span class="title-name">Hardening SUSE Linux Enterprise with STIG</span></a></li></ol></li><li class="active"><a href="part-apparmor.html" class="has-children you-are-here"><span class="title-number">V </span><span class="title-name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">30 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">31 </span><span class="title-name">Getting Started</span></a></li><li><a href="cha-apparmor-concept.html" class=" you-are-here"><span class="title-number">32 </span><span class="title-name">Immunizing Programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">33 </span><span class="title-name">Profile Components and Syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">34 </span><span class="title-name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">35 </span><span class="title-name">Building and Managing Profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">36 </span><span class="title-name">Building Profiles from the Command Line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">37 </span><span class="title-name">Profiling Your Web Applications Using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">38 </span><span class="title-name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">39 </span><span class="title-name">Managing Profiled Applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">40 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">41 </span><span class="title-name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li><a href="part-selinux.html" class="has-children "><span class="title-number">VI </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">42 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VII </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">43 </span><span class="title-name">Understanding Linux Audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">44 </span><span class="title-name">Setting Up the Linux Audit Framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">45 </span><span class="title-name">Introducing an Audit Rule Set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">46 </span><span class="title-name">Useful Resources</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-apparmor-concept" data-id-title="Immunizing Programs"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">32 </span><span class="title-name">Immunizing Programs</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Effective hardening of a computer system requires minimizing the number of
+  programs that mediate privilege, then securing the programs as much as
+  possible. With <span class="phrase">AppArmor</span>, you only need to profile the programs that are
+  exposed to attack in your environment, which drastically reduces the
+  amount of work required to harden your computer. <span class="phrase">AppArmor</span> profiles enforce
+  policies to make sure that programs do what they are supposed to do, but
+  nothing else.
+ </p><p>
+  <span class="phrase">AppArmor</span> provides immunization technologies that protect applications from
+  the inherent vulnerabilities they possess. After installing <span class="phrase">AppArmor</span>,
+  setting up <span class="phrase">AppArmor</span> profiles, and rebooting the computer, your system
+  becomes immunized because it begins to enforce the <span class="phrase">AppArmor</span> security
+  policies. Protecting programs with <span class="phrase">AppArmor</span> is called
+  <span class="emphasis"><em>immunizing</em></span>.
+ </p><p>
+  Administrators need only concern themselves with the applications that are
+  vulnerable to attacks, and generate profiles for these. Hardening a system
+  thus comes down to building and maintaining the <span class="phrase">AppArmor</span> profile set and
+  monitoring any policy violations or exceptions logged by <span class="phrase">AppArmor</span>'s
+  reporting facility.
+ </p><p>
+  Users should not notice <span class="phrase">AppArmor</span>. It runs <span class="quote">“<span class="quote">behind the
+  scenes</span>”</span> and does not require any user interaction. Performance is
+  not noticeably affected by <span class="phrase">AppArmor</span>. If some activity of the application is
+  not covered by an <span class="phrase">AppArmor</span> profile or if some activity of the application
+  is prevented by <span class="phrase">AppArmor</span>, the administrator needs to adjust the profile of
+  this application.
+ </p><p>
+  <span class="phrase">AppArmor</span> sets up a collection of default application profiles to protect
+  standard Linux services. To protect other applications, use the <span class="phrase">AppArmor</span>
+  tools to create profiles for the applications that you want protected.
+  This chapter introduces the philosophy of immunizing programs. Proceed to
+  <a class="xref" href="cha-apparmor-profiles.html" title="Chapter 33. Profile Components and Syntax">Chapter 33, <em>Profile Components and Syntax</em></a>,
+  <a class="xref" href="cha-apparmor-yast.html" title="Chapter 35. Building and Managing Profiles with YaST">Chapter 35, <em>Building and Managing Profiles with YaST</em></a>, or
+  <a class="xref" href="cha-apparmor-commandline.html" title="Chapter 36. Building Profiles from the Command Line">Chapter 36, <em>Building Profiles from the Command Line</em></a> if you are ready to build and
+  manage <span class="phrase">AppArmor</span> profiles.
+ </p><p>
+  <span class="phrase">AppArmor</span> provides streamlined access control for network services by
+  specifying which files each program is allowed to read, write, and
+  execute, and which type of network it is allowed to access. This ensures
+  that each program does what it is supposed to do, and nothing else.
+  <span class="phrase">AppArmor</span> quarantines programs to protect the rest of the system from being
+  damaged by a compromised process.
+ </p><p>
+  <span class="phrase">AppArmor</span> is a host intrusion prevention or mandatory access control scheme.
+  Previously, access control schemes were centered around users because they
+  were built for large timeshare systems. Alternatively, modern network
+  servers largely do not permit users to log in, but instead provide a
+  variety of network services for users (such as Web, mail, file, and print
+  servers). <span class="phrase">AppArmor</span> controls the access given to network services and other
+  programs to prevent weaknesses from being exploited.
+ </p><div id="id-1.8.8.4.10" data-id-title="Background Information for AppArmor" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Background Information for <span class="phrase">AppArmor</span></div><p>
+   To get a more in-depth overview of <span class="phrase">AppArmor</span> and the overall concept behind
+   it, refer to <a class="xref" href="cha-apparmor-intro.html#sec-apparmor-intro-background" title="30.2. Background Information on AppArmor Profiling">Section 30.2, “Background Information on <span class="phrase">AppArmor</span> Profiling”</a>.
+  </p></div><section class="sect1" id="sec-apparmor-concept-tools" data-id-title="Introducing the AppArmor Framework"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.1 </span><span class="title-name">Introducing the <span class="phrase">AppArmor</span> Framework</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#sec-apparmor-concept-tools">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section provides a very basic understanding of what is happening
+   <span class="quote">“<span class="quote">behind the scenes</span>”</span> (and under the hood of the YaST
+   interface) when you run <span class="phrase">AppArmor</span>.
+  </p><p>
+   An <span class="phrase">AppArmor</span> profile is a plain text file containing path entries and
+   access permissions. See <a class="xref" href="cha-apparmor-profiles.html#sec-apparmor-profiles-parts" title="33.1. Breaking an AppArmor Profile into Its Parts">Section 33.1, “Breaking an <span class="phrase">AppArmor</span> Profile into Its Parts”</a> for
+   a detailed reference profile. The directives contained in this text file
+   are then enforced by the <span class="phrase">AppArmor</span> routines to quarantine the process or
+   program.
+  </p><p>
+   The following tools interact in the building and enforcement of <span class="phrase">AppArmor</span>
+   profiles and policies:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.8.4.11.5.1"><span class="term"><code class="command">aa-status</code>
+    </span></dt><dd><p>
+      <code class="command">aa-status</code> reports various aspects of the current
+      state of the running <span class="phrase">AppArmor</span> confinement.
+     </p></dd><dt id="id-1.8.8.4.11.5.2"><span class="term"><code class="command">aa-unconfined</code>
+    </span></dt><dd><p>
+      <code class="command">aa-unconfined</code> detects any application running on
+      your system that listens for network connections and is not protected
+      by an <span class="phrase">AppArmor</span> profile. Refer to
+      <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-unconfined" title="36.7.3.12. aa-unconfined—Identifying Unprotected Processes">Section 36.7.3.12, “aa-unconfined—Identifying Unprotected Processes”</a>
+      for detailed information about this tool.
+     </p></dd><dt id="id-1.8.8.4.11.5.3"><span class="term"><code class="command">aa-autodep</code>
+    </span></dt><dd><p>
+      <code class="command">aa-autodep</code> creates a basic framework of a profile
+      that needs to be fleshed out before it is put to use in production.
+      The resulting profile is loaded and put into complain mode, reporting
+      any behavior of the application that is not (yet) covered by <span class="phrase">AppArmor</span>
+      rules. Refer to
+      <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-autodep" title="36.7.3.1. aa-autodep—Creating Approximate Profiles">Section 36.7.3.1, “aa-autodep—Creating Approximate Profiles”</a>
+      for detailed information about this tool.
+     </p></dd><dt id="id-1.8.8.4.11.5.4"><span class="term"><code class="command">aa-genprof</code>
+    </span></dt><dd><p>
+      <code class="command">aa-genprof</code> generates a basic profile and asks you
+      to refine this profile by executing the application and generating log
+      events that need to be taken care of by <span class="phrase">AppArmor</span> policies. You are
+      guided through a series of questions to deal with the log events that
+      have been triggered during the application's execution. After the
+      profile has been generated, it is loaded and put into enforce mode.
+      Refer to
+      <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-genprof" title="36.7.3.8. aa-genprof—Generating Profiles">Section 36.7.3.8, “aa-genprof—Generating Profiles”</a>
+      for detailed information about this tool.
+     </p></dd><dt id="id-1.8.8.4.11.5.5"><span class="term"><code class="command">aa-logprof</code>
+    </span></dt><dd><p>
+      <code class="command">aa-logprof</code> interactively scans and reviews the log
+      entries generated by an application that is confined by an <span class="phrase">AppArmor</span>
+      profile in both complain and enforced modes. It assists you in
+      generating new entries in the profile concerned. Refer to
+      <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-logprof" title="36.7.3.9. aa-logprof—Scanning the System Log">Section 36.7.3.9, “aa-logprof—Scanning the System Log”</a>
+      for detailed information about this tool.
+     </p></dd><dt id="id-1.8.8.4.11.5.6"><span class="term"><code class="command">aa-easyprof</code>
+    </span></dt><dd><p>
+      <code class="command">aa-easyprof</code> provides an easy-to-use interface for
+      <span class="phrase">AppArmor</span> profile generation. <code class="command">aa-easyprof</code> supports
+      the use of templates and policy groups to quickly profile an
+      application. Note that while this tool can help with policy
+      generation, its utility is dependent on the quality of the templates,
+      policy groups and abstractions used. <code class="command">aa-easyprof</code>
+      may create a profile that is less restricted than creating the profile
+      with <code class="command">aa-genprof</code> and <code class="command">aa-logprof</code>.
+     </p></dd><dt id="id-1.8.8.4.11.5.7"><span class="term"><code class="command">aa-complain</code>
+    </span></dt><dd><p>
+      <code class="command">aa-complain</code> toggles the mode of an <span class="phrase">AppArmor</span> profile
+      from enforce to complain. Violations to rules set in a profile are
+      logged, but the profile is not enforced. Refer to
+      <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-complain" title="36.7.3.2. aa-complain—Entering Complain or Learning Mode">Section 36.7.3.2, “aa-complain—Entering Complain or Learning Mode”</a>
+      for detailed information about this tool.
+     </p></dd><dt id="id-1.8.8.4.11.5.8"><span class="term"><code class="command">aa-enforce</code>
+    </span></dt><dd><p>
+      <code class="command">aa-enforce</code> toggles the mode of an <span class="phrase">AppArmor</span> profile
+      from complain to enforce. Violations to rules set in a profile are
+      logged and not permitted—the profile is enforced. Refer to
+      <a class="xref" href="cha-apparmor-commandline.html#sec-apparmor-commandline-profiling-summary-enforce" title="36.7.3.6. aa-enforce—Entering Enforce Mode">Section 36.7.3.6, “aa-enforce—Entering Enforce Mode”</a>
+      for detailed information about this tool.
+     </p></dd><dt id="id-1.8.8.4.11.5.9"><span class="term"><code class="command">aa-disable</code>
+    </span></dt><dd><p>
+      <code class="command">aa-disable</code> disables the enforcement mode for one or
+      more <span class="phrase">AppArmor</span> profiles. This command will unload the profile from the
+      kernel and prevent it from being loaded on <span class="phrase">AppArmor</span> start-up. The
+      <code class="command">aa-enforce</code> and <code class="command">aa-complain</code>
+      utilities may be used to change this behavior.
+     </p></dd><dt id="id-1.8.8.4.11.5.10"><span class="term"><code class="command">aa-exec</code>
+    </span></dt><dd><p>
+      <code class="command">aa-exec</code> launches a program confined by the
+      specified <span class="phrase">AppArmor</span> profile and/or namespace. If both a profile and
+      namespace are specified, the command will be confined by the profile
+      in the new policy namespace. If only a namespace is specified, the
+      profile name of the current confinement will be used. If neither a
+      profile or namespace is specified, the command will be run using
+      standard profile attachment—as if run without
+      <code class="command">aa-exec</code>.
+     </p></dd><dt id="id-1.8.8.4.11.5.11"><span class="term"><code class="command">aa-notify</code>
+    </span></dt><dd><p>
+      <code class="command">aa-notify</code> is a handy utility that displays <span class="phrase">AppArmor</span>
+      notifications in your desktop environment. You can also configure it
+      to display a summary of notifications for the specified number of
+      recent days. For more information, see
+      <a class="xref" href="cha-apparmor-commandline.html#commandline-profiling-summary-aa-notify" title="36.7.3.13. aa-notify">Section 36.7.3.13, “aa-notify”</a>.
+     </p></dd></dl></div></section><section class="sect1" id="sec-apparmor-concept-determine" data-id-title="Determining Programs to Immunize"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.2 </span><span class="title-name">Determining Programs to Immunize</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#sec-apparmor-concept-determine">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Now that you have familiarized yourself with <span class="phrase">AppArmor</span>, start selecting the
+   applications for which to build profiles. Programs that need profiling
+   are those that mediate privilege. The following programs have access to
+   resources that the person using the program does not have, so they grant
+   the privilege to the user when used:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.8.4.12.3.1"><span class="term"><code class="systemitem">cron</code> Jobs</span></dt><dd><p>
+      Programs that are run periodically by
+      <code class="systemitem">cron</code>. Such programs read input
+      from a variety of sources and can run with special privileges,
+      sometimes with as much as <code class="systemitem">root</code> privilege. For example,
+      <code class="systemitem">cron</code> can run
+      <code class="command">/usr/sbin/logrotate</code> daily to rotate, compress, or
+      even mail system logs. For instructions for finding these types of
+      programs, refer to
+      <a class="xref" href="cha-apparmor-concept.html#sec-apparmor-concept-cron" title="32.3. Immunizing cron Jobs">Section 32.3, “Immunizing <code class="systemitem">cron</code> Jobs”</a>.
+     </p></dd><dt id="id-1.8.8.4.12.3.2"><span class="term">Web Applications</span></dt><dd><p>
+      Programs that can be invoked through a Web browser, including CGI Perl
+      scripts, PHP pages, and more complex Web applications. For
+      instructions for finding these types of programs, refer to
+      <a class="xref" href="cha-apparmor-concept.html#sec-apparmor-concept-network-web" title="32.4.1. Immunizing Web Applications">Section 32.4.1, “Immunizing Web Applications”</a>.
+     </p></dd><dt id="id-1.8.8.4.12.3.3"><span class="term">Network Agents</span></dt><dd><p>
+      Programs (servers and clients) that have open network ports. User
+      clients, such as mail clients and Web browsers mediate privilege.
+      These programs run with the privilege to write to the user's home
+      directory and they process input from potentially hostile remote
+      sources, such as hostile Web sites and e-mailed malicious code. For
+      instructions for finding these types of programs, refer to
+      <a class="xref" href="cha-apparmor-concept.html#sec-apparmor-concept-network-agents" title="32.4.2. Immunizing Network Agents">Section 32.4.2, “Immunizing Network Agents”</a>.
+     </p></dd></dl></div><p>
+   Conversely, unprivileged programs do not need to be profiled. For
+   example, a shell script might invoke the <code class="command">cp</code>
+   program to copy a file. Because <code class="command">cp</code> does not by
+   default have its own profile or subprofile, it inherits the profile
+   of the parent shell script.  Thus <code class="command">cp</code> can copy any
+   files that the parent shell script's profile can read and write.
+  </p></section><section class="sect1" id="sec-apparmor-concept-cron" data-id-title="Immunizing cron Jobs"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.3 </span><span class="title-name">Immunizing <code class="systemitem">cron</code> Jobs</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#sec-apparmor-concept-cron">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To find programs that are run by
+   <code class="systemitem">cron</code>, inspect your local
+   <code class="systemitem">cron</code> configuration.
+   Unfortunately, <code class="systemitem">cron</code> configuration
+   is rather complex, so there are numerous files to inspect. Periodic
+   <code class="systemitem">cron</code> jobs are run from these
+   files:
+  </p><div class="verbatim-wrap"><pre class="screen">/etc/crontab
+/etc/cron.d/*
+/etc/cron.daily/*
+/etc/cron.hourly/*
+/etc/cron.monthly/*
+/etc/cron.weekly/*</pre></div><p>
+   
+   The <code class="command">crontab</code> command lists/edits the current user's
+   crontab. To manipulate <code class="systemitem">root</code>'s
+   <code class="systemitem">cron</code> jobs, first become
+   <code class="systemitem">root</code>, and then edit the tasks with <code class="command">crontab -e</code>
+   or list them with <code class="command">crontab -l</code>.
+  </p></section><section class="sect1" id="sec-apparmor-concept-network" data-id-title="Immunizing Network Applications"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">32.4 </span><span class="title-name">Immunizing Network Applications</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#sec-apparmor-concept-network">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   An automated method for finding network server daemons that should be
+   profiled is to use the <code class="command">aa-unconfined</code> tool.
+
+  </p><p>
+   The <code class="command">aa-unconfined</code> tool uses the command
+   <code class="command">netstat -nlp</code> to inspect open ports from inside your
+   computer, detect the programs associated with those ports, and inspect
+   the set of <span class="phrase">AppArmor</span> profiles that you have loaded.
+   <code class="command">aa-unconfined</code> then reports these programs along with
+   the <span class="phrase">AppArmor</span> profile associated with each program, or reports
+   <span class="quote">“<span class="quote">none</span>”</span> (if the program is not confined).
+  </p><div id="id-1.8.8.4.14.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+    If you create a new profile, you must restart the program that has been
+    profiled to have it be effectively confined by <span class="phrase">AppArmor</span>.
+   </p></div><p>
+   Below is a sample <code class="command">aa-unconfined</code> output:
+  </p><div class="verbatim-wrap"><pre class="screen">3702<span class="callout" id="co-apparmor-concept-network-id">1</span> /usr/sbin/sshd<span class="callout" id="co-apparmor-concept-network-string">2</span> confined
+   by '/usr/sbin/sshd<span class="callout" id="co-apparmor-concept-network-confine">3</span> (enforce)'
+4040 /usr/sbin/smbd confined by '/usr/sbin/smbd (enforce)'
+4373 /usr/lib/postfix/master confined by '/usr/lib/postfix/master (enforce)'
+4505 /usr/sbin/httpd2-prefork confined by '/usr/sbin/httpd2-prefork (enforce)'
+646 /usr/lib/wicked/bin/wickedd-dhcp4 not confined
+647 /usr/lib/wicked/bin/wickedd-dhcp6 not confined
+5592 /usr/bin/ssh not confined
+7146 /usr/sbin/cupsd confined by '/usr/sbin/cupsd (complain)'</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apparmor-concept-network-id"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     The first portion is a number. This number is the process ID number
+     (PID) of the listening program.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apparmor-concept-network-string"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     The second portion is a string that represents the absolute path of the
+     listening program
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-apparmor-concept-network-confine"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     The final portion indicates the profile confining the program, if any.
+    </p></td></tr></table></div><div id="id-1.8.8.4.14.8" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+    <code class="command">aa-unconfined</code> requires <code class="systemitem">root</code> privileges and
+    should not be run from a shell that is confined by an <span class="phrase">AppArmor</span> profile.
+   </p></div><p>
+   <code class="command">aa-unconfined</code> does not distinguish between one network
+   interface and another, so it reports all unconfined processes, even those
+   that might be listening to an internal LAN interface.
+  </p><p>
+   Finding user network client applications is dependent on your user
+   preferences. The <code class="command">aa-unconfined</code> tool detects and
+   reports network ports opened by client applications, but only those
+   client applications that are running at the time the
+   <code class="command">aa-unconfined</code> analysis is performed. This is a problem
+   because network services tend to be running all the time, while network
+   client applications tend only to be running when the user is interested
+   in them.
+  </p><p>
+   Applying <span class="phrase">AppArmor</span> profiles to user network client applications is also
+   dependent on user preferences. Therefore, we leave the profiling of user
+   network client applications as an exercise for the user.
+  </p><p>
+   To aggressively confine desktop applications, the
+   <code class="command">aa-unconfined</code> command supports a
+   <code class="option">--paranoid</code> option, which reports all processes running
+   and the corresponding <span class="phrase">AppArmor</span> profiles that might or might not be
+   associated with each process. The user can then decide whether each of
+   these programs needs an <span class="phrase">AppArmor</span> profile.
+  </p><p>
+   If you have new or modified profiles, you can submit them to the
+   &lt;<a class="email" href="mailto:apparmor@lists.ubuntu.com">apparmor@lists.ubuntu.com</a>&gt; mailing list along with a use
+   case for the application behavior that you exercised. The <span class="phrase">AppArmor</span> team
+   reviews and may submit the work into <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. We cannot
+   guarantee that every profile will be included, but we make a sincere
+   effort to include as much as possible.
+  </p><section class="sect2" id="sec-apparmor-concept-network-web" data-id-title="Immunizing Web Applications"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.4.1 </span><span class="title-name">Immunizing Web Applications</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#sec-apparmor-concept-network-web">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To find Web applications, investigate your Web server configuration. The
+    Apache Web server is highly configurable and Web applications can be
+    stored in many directories, depending on your local configuration.
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, by default, stores Web applications in
+    <code class="filename">/srv/www/cgi-bin/</code>. To the maximum extent possible,
+    each Web application should have an <span class="phrase">AppArmor</span> profile.
+   </p><p>
+    Once you find these programs, you can use the
+    <code class="command">aa-genprof</code> and <code class="command">aa-logprof</code> tools to
+    create or update their <span class="phrase">AppArmor</span> profiles.
+   </p><p>
+    Because CGI programs are executed by the Apache Web server, the profile
+    for Apache itself, <code class="filename">usr.sbin.httpd2-prefork</code> for
+    Apache2 on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, must be modified to add execute permissions
+    to each of these programs. For example, adding the line
+    <code class="literal">/srv/www/cgi-bin/my_hit_counter.pl rPx</code> grants Apache
+    permission to execute the Perl script
+    <code class="filename">my_hit_counter.pl</code> and requires that there be a
+    dedicated profile for <code class="filename">my_hit_counter.pl</code>. If
+    <code class="filename">my_hit_counter.pl</code> does not have a dedicated profile
+    associated with it, the rule should say
+    <code class="literal">/srv/www/cgi-bin/my_hit_counter.pl rix</code> to cause
+    <code class="filename">my_hit_counter.pl</code> to inherit the
+    <code class="filename">usr.sbin.httpd2-prefork</code> profile.
+   </p><p>
+    Some users might find it inconvenient to specify execute permission for
+    every CGI script that Apache might invoke. Instead, the administrator
+    can grant controlled access to collections of CGI scripts. For example,
+    adding the line <code class="literal">/srv/www/cgi-bin/*.{pl,py,pyc} rix</code>
+    allows Apache to execute all files in
+    <code class="literal">/srv/www/cgi-bin/</code> ending in <code class="filename">.pl</code>
+    (Perl scripts) and <code class="filename">.py</code> or <code class="filename">.pyc</code>
+    (Python scripts). As above, the <code class="literal">ix</code> part of the rule
+    causes Python scripts to inherit the Apache profile, which is
+    appropriate if you do not want to write individual profiles for each CGI
+    script.
+   </p><div id="id-1.8.8.4.14.14.6" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+     If you want the subprocess confinement module
+     (<code class="filename">apache2-mod-apparmor</code>) functionality when Web
+     applications handle Apache modules (<code class="filename">mod_perl</code> and
+     <code class="filename">mod_php</code>), use the ChangeHat features when you add
+     a profile in YaST or at the command line. To take advantage of the
+     subprocess confinement, refer to
+     <a class="xref" href="cha-apparmor-hat.html#sec-apparmor-hat-apache-managing" title="37.2. Managing ChangeHat-Aware Applications">Section 37.2, “Managing ChangeHat-Aware Applications”</a>.
+    </p></div><p>
+    Profiling Web applications that use <code class="filename">mod_perl</code> and
+    <code class="filename">mod_php</code> requires slightly different handling. In
+    this case, the <span class="quote">“<span class="quote">program</span>”</span> is a script interpreted directly
+    by the module within the Apache process, so no exec happens. Instead,
+    the <span class="phrase">AppArmor</span> version of Apache calls <code class="command">change_hat()</code>
+    using a subprofile (a <span class="quote">“<span class="quote">hat</span>”</span>) corresponding to the name of
+    the URI requested.
+   </p><div id="id-1.8.8.4.14.14.8" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+     The name presented for the script to execute might not be the URI,
+     depending on how Apache has been configured for where to look for
+     module scripts. If you have configured your Apache to place scripts in
+     a different place, the different names appear in the log file when
+     <span class="phrase">AppArmor</span> complains about access violations. See
+     <a class="xref" href="cha-apparmor-managing.html" title="Chapter 39. Managing Profiled Applications">Chapter 39, <em>Managing Profiled Applications</em></a>.
+    </p></div><p>
+    For <code class="filename">mod_perl</code> and <code class="filename">mod_php</code>
+    scripts, this is the name of the Perl script or the PHP page requested.
+    For example, adding this subprofile allows the
+    <code class="filename">localtime.php</code> page to execute and access to the
+    local system time and locale files:
+   </p><div class="verbatim-wrap"><pre class="screen">/usr/bin/httpd2-prefork {
+  # ...
+  ^/cgi-bin/localtime.php {
+    /etc/localtime                  r,
+    /srv/www/cgi-bin/localtime.php  r,
+    /usr/lib/locale/**              r,
+  }
+}</pre></div><p>
+    If no subprofile has been defined, the <span class="phrase">AppArmor</span> version of Apache applies
+    the <code class="systemitem">DEFAULT_URI</code> hat. This subprofile is
+    sufficient to display a Web page. The
+    <code class="systemitem">DEFAULT_URI</code> hat that <span class="phrase">AppArmor</span> provides by
+    default is the following:
+   </p><div class="verbatim-wrap"><pre class="screen">^DEFAULT_URI {
+    /usr/sbin/suexec2                  mixr,
+    /var/log/apache2/**                rwl,
+    @{HOME}/public_html                r,
+    @{HOME}/public_html/**             r,
+    /srv/www/htdocs                    r,
+    /srv/www/htdocs/**                 r,
+    /srv/www/icons/*.{gif,jpg,png}     r,
+    /srv/www/vhosts                    r,
+    /srv/www/vhosts/**                 r,
+    /usr/share/apache2/**              r,
+    /var/lib/php/sess_*                rwl
+}</pre></div><p>
+    To use a single <span class="phrase">AppArmor</span> profile for all Web pages and CGI scripts served
+    by Apache, a good approach is to edit the
+    <code class="systemitem">DEFAULT_URI</code> subprofile. For more information on
+    confining Web applications with Apache, see
+    <a class="xref" href="cha-apparmor-hat.html" title="Chapter 37. Profiling Your Web Applications Using ChangeHat">Chapter 37, <em>Profiling Your Web Applications Using ChangeHat</em></a>.
+   </p></section><section class="sect2" id="sec-apparmor-concept-network-agents" data-id-title="Immunizing Network Agents"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">32.4.2 </span><span class="title-name">Immunizing Network Agents</span></span> <a title="Permalink" class="permalink" href="cha-apparmor-concept.html#sec-apparmor-concept-network-agents">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/apparmor_whatimmunize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To find network server daemons and network clients (such as
+    <code class="command">fetchmail</code> or Firefox) that need to be profiled,
+    you should inspect the open ports on your machine.  Also consider
+    the programs that are answering on those ports, and provide profiles
+    for as many of those programs as possible. If you provide profiles
+    for all programs with open network ports, an attacker cannot get to
+    the file system on your machine without passing through an <span class="phrase">AppArmor</span>
+    profile policy.
+   </p><p>
+    Scan your server for open network ports manually from outside the
+    machine using a scanner (such as nmap), or from inside the machine using
+    the <code class="command">netstat --inet -n -p</code> command as <code class="systemitem">root</code>.
+    Then, inspect the machine to determine which programs are answering on
+    the discovered open ports.
+   </p><div id="id-1.8.8.4.14.15.4" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+     Refer to the man page of the <code class="command">netstat</code> command for a
+     detailed reference of all possible options.
+    </p></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-apparmor-start.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 31 </span>Getting Started</span></a> </div><div><a class="pagination-link next" href="cha-apparmor-profiles.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 33 </span>Profile Components and Syntax</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-apparmor-concept.html#sec-apparmor-concept-tools"><span class="title-number">32.1 </span><span class="title-name">Introducing the <span class="phrase">AppArmor</span> Framework</span></a></span></li><li><span class="sect1"><a href="cha-apparmor-concept.html#sec-apparmor-concept-determine"><span class="title-number">32.2 </span><span class="title-name">Determining Programs to Immunize</span></a></span></li><li><span class="sect1"><a href="cha-apparmor-concept.html#sec-apparmor-concept-cron"><span class="title-number">32.3 </span><span class="title-name">Immunizing <code class="systemitem">cron</code> Jobs</span></a></span></li><li><span class="sect1"><a href="cha-apparmor-concept.html#sec-apparmor-concept-network"><span class="title-number">32.4 </span><span class="title-name">Immunizing Network Applications</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

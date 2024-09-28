@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Authentication with PAM | Security and Hardening Guide | openSUSE Leap 15.6</title><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" /><link rel="stylesheet" type="text/css" href="static/css/style.css" /><link rel="stylesheet" type="text/css" href="static/css/highlight.css" />
+<meta name="title" content="Authentication with PAM | openSUSE Leap 15.6" />
+<meta name="description" content="Linux uses PAM (pluggable authentication modules) in the authentication process as a layer that mediates between user and application. PAM modules are availabl…" />
+<meta name="product-name" content="openSUSE Leap" />
+<meta name="product-number" content="15.6" />
+<meta name="book-title" content="Security and Hardening Guide" />
+<meta name="chapter-title" content="Chapter 2. Authentication with PAM" />
+<meta name="tracker-url" content="https://bugzilla.opensuse.org/enter_bug.cgi" />
+<meta name="tracker-type" content="bsc" />
+<meta name="tracker-bsc-assignee" content="fs@suse.com" />
+<meta name="tracker-bsc-component" content="Documentation" />
+<meta name="tracker-bsc-product" content="openSUSE Distribution" />
+<meta name="tracker-bsc-version" content="Leap 15.4" />
+<meta property="og:title" content="Authentication with PAM | openSUSE Leap 15.6" />
+<meta property="og:description" content="Linux uses PAM (pluggable authentication modules) in the authentication process as a layer that mediates between user and application. PAM modules are availabl…" />
+<meta property="og:type" content="article" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Authentication with PAM | openSUSE Leap 15.6" />
+<meta name="twitter:description" content="Linux uses PAM (pluggable authentication modules) in the authentication process as a layer that mediates between user and application. PAM modules are availabl…" />
+<link rel="home" href="index.html" title="openSUSE Leap Documentation" /><link rel="up" href="part-auth.html" title="Part I. Authentication" /><link rel="prev" href="part-auth.html" title="Part I. Authentication" /><link rel="next" href="cha-nis.html" title="Chapter 3. Using NIS" />
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css" /></noscript><script src="static/js/jquery-1.12.4.min.js" type="text/javascript"></script><script src="static/js/script.js" type="text/javascript"></script><script src="static/js/highlight.min.js" type="text/javascript"></script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script></head><body class="draft offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-navigation">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><div id="_outer-wrap"><div id="_white-bg" style="background-color: #E11;"><div id="_header"><div id="_logo"><img src="static/images/logo.svg" alt="Logo" /></div><div class="crumbs"><a class="book-link" href="index.html" title="Security and Hardening Guide"><span class="book-icon">Security and Hardening Guide</span></a><span> › </span><a class="crumb" href="part-auth.html">Authentication</a><span> › </span><a class="crumb" href="cha-pam.html">Authentication with PAM</a></div><div class="clearme"></div></div></div><div id="_toolbar-wrap"><div id="_toolbar"><div id="_toc-area" class="inactive"><a id="_toc-area-button" class="tool" title="Contents" accesskey="c" href="index.html"><span class="tool-spacer"><span class="toc-icon">Contents</span><span class="clearme"></span></span><span class="tool-label">Contents</span></a><div class="active-contents bubble-corner"></div><div class="active-contents bubble"><div class="bubble-container"><h6>Security and Hardening Guide</h6><div id="_bubble-toc"><ol><li class="inactive"><a href="preface-security.html"><span class="number"> </span><span class="name">Preface</span></a></li><li class="inactive"><a href="cha-security.html"><span class="number">1 </span><span class="name">Security and confidentiality</span></a></li><li class="inactive"><a href="part-auth.html"><span class="number">I </span><span class="name">Authentication</span></a><ol><li class="inactive"><a href="cha-pam.html"><span class="number">2 </span><span class="name">Authentication with PAM</span></a></li><li class="inactive"><a href="cha-nis.html"><span class="number">3 </span><span class="name">Using NIS</span></a></li><li class="inactive"><a href="cha-security-auth.html"><span class="number">4 </span><span class="name">Setting up authentication clients using YaST</span></a></li><li class="inactive"><a href="cha-security-ldap.html"><span class="number">5 </span><span class="name">LDAP with 389 Directory Server</span></a></li><li class="inactive"><a href="cha-security-kerberos.html"><span class="number">6 </span><span class="name">Network authentication with Kerberos</span></a></li><li class="inactive"><a href="cha-security-ad.html"><span class="number">7 </span><span class="name">Active Directory support</span></a></li><li class="inactive"><a href="cha-security-freeradius.html"><span class="number">8 </span><span class="name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="inactive"><a href="part-local-security.html"><span class="number">II </span><span class="name">Local security</span></a><ol><li class="inactive"><a href="cha-physical-security.html"><span class="number">9 </span><span class="name">Physical security</span></a></li><li class="inactive"><a href="sec-sec-software-management.html"><span class="number">10 </span><span class="name">Software management</span></a></li><li class="inactive"><a href="sec-sec-file-management.html"><span class="number">11 </span><span class="name">File management</span></a></li><li class="inactive"><a href="cha-security-cryptofs.html"><span class="number">12 </span><span class="name">Encrypting partitions and files</span></a></li><li class="inactive"><a href="cha-configure-cryptctl.html"><span class="number">13 </span><span class="name">Storage encryption for hosted applications with cryptctl</span></a></li><li class="inactive"><a href="sec-sec-user-management.html"><span class="number">14 </span><span class="name">User management</span></a></li><li class="inactive"><a href="cha-sec-cron-at.html"><span class="number">15 </span><span class="name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li class="inactive"><a href="cha-spectre.html"><span class="number">16 </span><span class="name">Spectre/Meltdown checker</span></a></li><li class="inactive"><a href="cha-security-yast-security.html"><span class="number">17 </span><span class="name">Configuring security settings with YaST</span></a></li><li class="inactive"><a href="cha-security-polkit.html"><span class="number">18 </span><span class="name">The Polkit authentication framework</span></a></li><li class="inactive"><a href="cha-security-acls.html"><span class="number">19 </span><span class="name">Access control lists in Linux</span></a></li><li class="inactive"><a href="cha-aide.html"><span class="number">20 </span><span class="name">Intrusion detection with AIDE</span></a></li></ol></li><li class="inactive"><a href="part-network-security.html"><span class="number">III </span><span class="name">Network security</span></a><ol><li class="inactive"><a href="cha-xauth.html"><span class="number">21 </span><span class="name">X Window System and X authentication</span></a></li><li class="inactive"><a href="cha-ssh.html"><span class="number">22 </span><span class="name">Securing network operations with OpenSSH</span></a></li><li class="inactive"><a href="cha-security-firewall.html"><span class="number">23 </span><span class="name">Masquerading and firewalls</span></a></li><li class="inactive"><a href="cha-security-vpnserver.html"><span class="number">24 </span><span class="name">Configuring a VPN server</span></a></li><li class="inactive"><a href="cha-security-xca.html"><span class="number">25 </span><span class="name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li class="inactive"><a href="cha-sec-sysctl.html"><span class="number">26 </span><span class="name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li class="inactive"><a href="part-apparmor.html"><span class="number">IV </span><span class="name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li class="inactive"><a href="cha-apparmor-intro.html"><span class="number">27 </span><span class="name">Introducing <span class="phrase">AppArmor</span></span></a></li><li class="inactive"><a href="cha-apparmor-start.html"><span class="number">28 </span><span class="name">Getting started</span></a></li><li class="inactive"><a href="cha-apparmor-concept.html"><span class="number">29 </span><span class="name">Immunizing programs</span></a></li><li class="inactive"><a href="cha-apparmor-profiles.html"><span class="number">30 </span><span class="name">Profile components and syntax</span></a></li><li class="inactive"><a href="cha-apparmor-repos.html"><span class="number">31 </span><span class="name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li class="inactive"><a href="cha-apparmor-yast.html"><span class="number">32 </span><span class="name">Building and managing profiles with YaST</span></a></li><li class="inactive"><a href="cha-apparmor-commandline.html"><span class="number">33 </span><span class="name">Building profiles from the command line</span></a></li><li class="inactive"><a href="cha-apparmor-hat.html"><span class="number">34 </span><span class="name">Profiling your Web applications using ChangeHat</span></a></li><li class="inactive"><a href="cha-apparmor-pam.html"><span class="number">35 </span><span class="name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li class="inactive"><a href="cha-apparmor-managing.html"><span class="number">36 </span><span class="name">Managing profiled applications</span></a></li><li class="inactive"><a href="cha-apparmor-support.html"><span class="number">37 </span><span class="name">Support</span></a></li><li class="inactive"><a href="cha-apparmor-glossary.html"><span class="number">38 </span><span class="name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="inactive"><a href="part-selinux.html"><span class="number">V </span><span class="name">SELinux</span></a><ol><li class="inactive"><a href="cha-selinux.html"><span class="number">39 </span><span class="name">Configuring SELinux</span></a></li></ol></li><li class="inactive"><a href="part-audit.html"><span class="number">VI </span><span class="name">The Linux Audit Framework</span></a><ol><li class="inactive"><a href="cha-audit-comp.html"><span class="number">40 </span><span class="name">Understanding Linux audit</span></a></li><li class="inactive"><a href="cha-audit-setup.html"><span class="number">41 </span><span class="name">Setting up the Linux audit framework</span></a></li><li class="inactive"><a href="cha-audit-scenarios.html"><span class="number">42 </span><span class="name">Introducing an audit rule set</span></a></li><li class="inactive"><a href="cha-audit-moreinfo.html"><span class="number">43 </span><span class="name">Useful resources</span></a></li></ol></li><li class="inactive"><a href="bk04apa.html"><span class="number">A </span><span class="name">GNU licenses</span></a></li></ol></div><div class="clearme"></div></div></div></div><div id="_nav-area" class="inactive"><div class="tool"><span class="nav-inner"><span class="tool-label">Navigation</span><a accesskey="p" class="tool-spacer" title="Part I. Authentication" href="part-auth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 3. Using NIS" href="cha-nis.html"><span class="next-icon">→</span></a></span></div></div></div></div><div id="_fixed-header-wrap" style="background-color: #E11;" class="inactive"><div id="_fixed-header"><div class="crumbs"><a class="book-link" href="index.html" title="Security and Hardening Guide"><span class="book-icon">Security and Hardening Guide</span></a><span> › </span><a class="crumb" href="part-auth.html">Authentication</a><span> › </span><a class="crumb" href="cha-pam.html">Authentication with PAM</a></div><div class="buttons"><a class="top-button button" href="#">Top</a><div class="button"><a accesskey="p" class="tool-spacer" title="Part I. Authentication" href="part-auth.html"><span class="prev-icon">←</span></a><a accesskey="n" class="tool-spacer" title="Chapter 3. Using NIS" href="cha-nis.html"><span class="next-icon">→</span></a></div><div class="clearme"></div></div><div class="clearme"></div></div></div><div id="_content" class="draft "><div class="documentation"><div class="chapter " id="cha-pam"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname "><span class="productname"><span class="phrase">openSUSE Leap</span></span></span> <span class="productnumber "><span class="productnumber"><span class="phrase">15.6</span></span></span></div><div><h2 class="title"><span class="number">2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Authentication with PAM</span> <a title="Permalink" class="permalink" href="cha-pam.html#">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>cha-pam</li></ul></div></div><div><div class="abstract"><div class="abstract-title-wrap"><h6 class="abstract-title">Abstract<a title="Permalink" class="permalink" href="cha-pam.html#id-1.6.4.2.2.1">#</a></h6></div><p>
+    Linux uses PAM (pluggable authentication modules) in the authentication
+    process as a layer that mediates between user and application. PAM
+    modules are available on a system-wide basis, so they can be requested by
+    any application. This chapter describes how the modular authentication
+    mechanism works and how it is configured.
+   </p></div></div></div></div><div class="line"><div class="toc"><dl><dt><span class="sect1"><a href="cha-pam.html#sec-security-pam-whatis"><span class="number">2.1 </span><span class="name">What is PAM?</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-struc-files"><span class="number">2.2 </span><span class="name">Structure of a PAM configuration file</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-struc-format"><span class="number">2.3 </span><span class="name">The PAM configuration of sshd</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-struc-conf"><span class="number">2.4 </span><span class="name">Configuration of PAM modules</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-pam-config"><span class="number">2.5 </span><span class="name">Configuring PAM using pam-config</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-manual-config"><span class="number">2.6 </span><span class="name">Manually configuring PAM</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-login"><span class="number">2.7 </span><span class="name">Configuring  U2F keys for local login</span></a></span></dt><dt><span class="sect1"><a href="cha-pam.html#sec-pam-info"><span class="number">2.8 </span><span class="name">More information</span></a></span></dt></dl></div></div><div class="sect1 " id="sec-security-pam-whatis"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">What is PAM?</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-security-pam-whatis">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-security-pam-whatis</li></ul></div></div></div></div><p>
+   System administrators and programmers often want to restrict access to
+   certain parts of the system or to limit the use of certain functions of
+   an application. Without PAM, applications must be adapted every time a
+   new authentication mechanism, such as LDAP, Samba, or Kerberos, is
+   introduced. However, this process is time-consuming and
+   error-prone. One way to avoid these drawbacks is to separate applications
+   from the authentication mechanism and delegate authentication to
+   centrally managed modules. Whenever a newly required authentication
+   scheme is needed, it is sufficient to adapt or write a suitable
+   <span class="emphasis"><em>PAM module</em></span> for use by the program in question.
+  </p><p>
+   The PAM concept consists of:
+  </p><div class="itemizedlist "><ul class="itemizedlist"><li class="listitem "><p>
+     <span class="emphasis"><em>PAM modules</em></span>, which are a set of shared libraries
+     for a specific authentication mechanism.
+    </p></li><li class="listitem "><p>
+     A <span class="emphasis"><em>module stack</em></span> with of one or more PAM modules.
+    </p></li><li class="listitem "><p>
+     A PAM-aware <span class="emphasis"><em>service</em></span> which needs authentication by
+     using a module stack or PAM modules. Usually a service is a familiar
+     name of the corresponding application, like <code class="command">login</code> or
+     <code class="command">su</code>. The service name <code class="literal">other</code> is a
+     reserved word for default rules.
+    </p></li><li class="listitem "><p>
+     <span class="emphasis"><em>Module arguments</em></span>, with which the execution of a
+     single PAM module can be influenced.
+    </p></li><li class="listitem "><p>
+     A mechanism evaluating each <span class="emphasis"><em>result</em></span> of a single PAM
+     module execution. A positive value executes the next PAM module. The
+     way a negative value is dealt with depends on the configuration:
+     <span class="quote">“<span class="quote ">no influence, proceed</span>”</span> up to <span class="quote">“<span class="quote ">terminate
+     immediately</span>”</span> and anything in between are valid options.
+    </p></li></ul></div></div><div class="sect1 " id="sec-pam-struc-files"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Structure of a PAM configuration file</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-struc-files">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-struc-files</li></ul></div></div></div></div><p>
+   PAM can be configured in two ways:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.6.4.2.4.3.1"><span class="term ">File based configuration (<code class="filename">/etc/pam.conf</code>)</span></dt><dd><p>
+      The configuration of each service is stored in
+      <code class="filename">/etc/pam.conf</code>. However, for maintenance and
+      usability reasons, this configuration scheme is not used in
+      <span class="productname"><span class="phrase">openSUSE Leap</span></span>.
+     </p></dd><dt id="id-1.6.4.2.4.3.2"><span class="term ">Directory based configuration (<code class="filename">/etc/pam.d/</code>)</span></dt><dd><p>
+      Every service (or program) that relies on the PAM mechanism has its
+      own configuration file in the <code class="filename">/etc/pam.d/</code>
+      directory. For example, the service for
+      <code class="systemitem">sshd</code> can be found in the
+      <code class="filename">/etc/pam.d/sshd</code> file.
+     </p></dd></dl></div><p>
+   The files under <code class="filename">/etc/pam.d/</code> define the PAM modules
+   used for authentication. Each file consists of lines, which define a
+   service, and each line consists of a maximum of four components:
+  </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable ">TYPE</em>  <em class="replaceable ">CONTROL</em>
+ <em class="replaceable ">MODULE_PATH</em>  <em class="replaceable ">MODULE_ARGS</em></pre></div><p>
+   The components have the following meaning:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.6.4.2.4.7.1"><span class="term "><em class="replaceable ">TYPE</em>
+    </span></dt><dd><p>
+      Declares the type of the service. PAM modules are processed as stacks.
+      Different types of modules have different purposes. For example, one
+      module checks the password, another verifies the location from which
+      the system is accessed, and yet another reads user-specific settings.
+      PAM knows about four different types of modules:
+     </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.6.4.2.4.7.1.2.2.1"><span class="term "><code class="literal">auth</code>
+       </span></dt><dd><p>
+         Check the user's authenticity, traditionally by querying a
+         password. However, this can also be achieved with a
+         chip card or through biometrics (for example, fingerprints or iris
+         scan).
+        </p></dd><dt id="id-1.6.4.2.4.7.1.2.2.2"><span class="term "><code class="literal">account</code>
+       </span></dt><dd><p>
+         Modules of this type check if the user has general permission to
+         use the requested service. As an example, such a check should be
+         performed to ensure that no one can log in with the user name of an
+         expired account.
+        </p></dd><dt id="id-1.6.4.2.4.7.1.2.2.3"><span class="term "><code class="literal">password</code>
+       </span></dt><dd><p>
+         The purpose of this type of module is to enable the change of an
+         authentication token. Usually this is a password.
+        </p></dd><dt id="id-1.6.4.2.4.7.1.2.2.4"><span class="term "><code class="literal">session</code>
+       </span></dt><dd><p>
+         Modules of this type are responsible for managing and configuring
+         user sessions. They are started before and after authentication to
+         log login attempts and configure the user's specific environment
+         <span class="phrase">(mail accounts, home directory, system limits, etc.)</span>.
+        </p></dd></dl></div></dd><dt id="id-1.6.4.2.4.7.2"><span class="term "><em class="replaceable ">CONTROL</em>
+    </span></dt><dd><p>
+      Indicates the behavior of a PAM module. Each module can have the
+      following control flags:
+     </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.6.4.2.4.7.2.2.2.1"><span class="term "><code class="literal">required</code>
+       </span></dt><dd><p>
+         A module with this flag must be successfully processed before the
+         authentication may proceed. After the failure of a module with the
+         <code class="literal">required</code> flag, all other modules with the same
+         flag are processed before the user receives a message about the
+         failure of the authentication attempt.
+        </p></dd><dt id="id-1.6.4.2.4.7.2.2.2.2"><span class="term "><code class="literal">requisite</code>
+       </span></dt><dd><p>
+         Modules having this flag must also be processed successfully, in
+         much the same way as a module with the <code class="literal">required</code>
+         flag. However, in case of failure a module with this flag gives
+         immediate feedback to the user and no further modules are
+         processed. In case of success, other modules are subsequently
+         processed, like any modules with the <code class="literal">required</code>
+         flag. The <code class="literal">requisite</code> flag can be used as a basic
+         filter checking for the existence of certain conditions that are
+         essential for a correct authentication.
+        </p></dd><dt id="id-1.6.4.2.4.7.2.2.2.3"><span class="term "><code class="literal">sufficient</code>
+       </span></dt><dd><p>
+         After a module with this flag has been successfully processed, the
+         requesting application receives an immediate message about the
+         success and no further modules are processed, provided there was no
+         preceding failure of a module with the <code class="literal">required</code>
+         flag. The failure of a module with the
+         <code class="literal">sufficient</code> flag has no direct consequences, in
+         the sense that any subsequent modules are processed in their
+         respective order.
+        </p></dd><dt id="id-1.6.4.2.4.7.2.2.2.4"><span class="term "><code class="literal">optional</code>
+       </span></dt><dd><p>
+         The failure or success of a module with this flag does not have any
+         direct consequences. This can be useful for modules that are only
+         intended to display a message (for example, to tell the user that
+         mail has arrived) without taking any further action.
+        </p></dd><dt id="id-1.6.4.2.4.7.2.2.2.5"><span class="term "><code class="literal">include</code>
+       </span></dt><dd><p>
+         If this flag is given, the file specified as argument is inserted
+         at this place.
+        </p></dd></dl></div></dd><dt id="id-1.6.4.2.4.7.3"><span class="term "><em class="replaceable ">MODULE_PATH</em>
+    </span></dt><dd><p>
+      Contains a full file name of a PAM module. It does not need to be
+      specified explicitly, if the module is located in the default
+      directory <code class="filename">/lib/security</code> (for all 64-bit platforms
+      supported by <span class="productname"><span class="phrase">openSUSE® Leap</span></span>, the directory is
+      <code class="filename">/lib64/security</code>).
+     </p></dd><dt id="id-1.6.4.2.4.7.4"><span class="term "><em class="replaceable ">MODULE_ARGS</em>
+    </span></dt><dd><p>
+      Contains a space-separated list of options to influence the behavior
+      of a PAM module, such as <code class="option">debug</code> (enables debugging) or
+      <code class="option">nullok</code> (allows the use of empty passwords).
+     </p></dd></dl></div><p>
+   In addition, there are global configuration files for PAM modules under
+   <code class="filename">/etc/security</code>, which define the exact behavior of
+   these modules (examples include <code class="filename">pam_env.conf</code> and
+   <code class="filename">time.conf</code>). Every application that uses a PAM module
+   calls a set of PAM functions, which then process the information
+   in the configuration files and return the result to the
+   requesting application.
+  </p><p>
+   To simplify the creation and maintenance of PAM modules, common default
+   configuration files for the types <code class="literal">auth</code>,
+   <code class="literal">account</code>, <code class="literal">password</code>, and
+   <code class="literal">session</code> modules have been introduced. These are
+   retrieved from every application's PAM configuration. Updates to the
+   global PAM configuration modules in <code class="filename">common-*</code> are
+   thus propagated across all PAM configuration files without requiring the
+   administrator to update every single PAM configuration file.
+  </p><p>
+   The global PAM configuration files are maintained using the
+   <code class="command">pam-config</code> tool. This tool automatically adds new
+   modules to the configuration, changes the configuration of existing ones
+   or deletes modules (or options) from the configurations. Manual
+   intervention in maintaining PAM configurations is minimized or no longer
+   required.
+  </p><div id="id-1.6.4.2.4.11" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: 64-bit and 32-bit mixed installations</h6><p>
+    When using a 64-bit operating system, it is possible to also include a
+    runtime environment for 32-bit applications. In this case, make sure
+    that you also install the 32-bit version of the PAM modules.
+   </p></div></div><div class="sect1 " id="sec-pam-struc-format"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">The PAM configuration of sshd</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-struc-format">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-struc-format</li></ul></div></div></div></div><p>
+   Consider the PAM configuration of sshd as an example:
+  </p><div class="example" id="dat-pam-sshd"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 2.1: </span><span class="name">PAM configuration for sshd (<code class="filename">/etc/pam.d/sshd</code>) </span><a title="Permalink" class="permalink" href="cha-pam.html#dat-pam-sshd">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#%PAM-1.0 <span id="co-security-pam-sshd-pam-line"></span><span class="callout">1</span>
+  
+
+auth     requisite      pam_nologin.so                              <span id="co-security-pam-sshd-pam-nologin"></span><span class="callout">2</span>
+auth     include        common-auth                                 <span id="co-security-pam-sshd-common-auth"></span><span class="callout">3</span>
+account  requisite      pam_nologin.so                              <a class="xref" href="cha-pam.html#co-security-pam-sshd-pam-nologin"><span class="callout">2</span></a>
+account  include        common-account                              <a class="xref" href="cha-pam.html#co-security-pam-sshd-common-auth"><span class="callout">3</span></a>
+password include        common-password                             <a class="xref" href="cha-pam.html#co-security-pam-sshd-common-auth"><span class="callout">3</span></a>
+session  required       pam_loginuid.so                             <span id="co-security-pam-sshd-pam-loginuid"></span><span class="callout">4</span>
+session  include        common-session                              <a class="xref" href="cha-pam.html#co-security-pam-sshd-common-auth"><span class="callout">3</span></a>
+session  optional       pam_lastlog.so   silent noupdate showfailed <span id="co-security-pam-sshd-lastlog"></span><span class="callout">5</span></pre></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-pam-line"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+      Declares the version of this configuration file for PAM 1.0. This is
+      merely a convention, but could be used in the future to check the
+      version.
+     </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-pam-nologin"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+      Checks, if <code class="filename">/etc/nologin</code> exists. If it does, no
+      user other than <code class="systemitem">root</code> may log
+      in.
+     </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-common-auth"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+      Refers to the configuration files of four module types:
+      <code class="filename">common-auth</code>, <code class="filename">common-account</code>,
+      <code class="filename">common-password</code>, and
+      <code class="filename">common-session</code>. These four files hold the default
+      configuration for each module type.
+     </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-pam-loginuid"><span class="callout">4</span></a> </p></td><td valign="top" align="left"><p>
+      Sets the login UID process attribute for the process that was
+      authenticated.
+     </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-lastlog"><span class="callout">5</span></a> </p></td><td valign="top" align="left"><p>
+      Displays information about the last login of a user.
+     </p></td></tr></table></div></div></div><p>
+   By including the configuration files instead of adding each module
+   separately to the respective PAM configuration, you automatically get an
+   updated PAM configuration when an administrator changes the defaults.
+   Formerly, you needed to adjust all configuration files manually for all
+   applications when changes to PAM occurred or a new application was
+   installed. Now the PAM configuration is made with central configuration
+   files and all changes are automatically inherited by the PAM
+   configuration of each service.
+  </p><p>
+   The first include file (<code class="filename">common-auth</code>) calls three
+   modules of the <code class="literal">auth</code> type:
+   <code class="systemitem">pam_env.so</code>,
+   <code class="systemitem">pam_gnome_keyring.so</code> and
+   <code class="systemitem">pam_unix.so</code>. See
+   <a class="xref" href="cha-pam.html#dat-pam-common-auth" title="Default configuration for the auth section (common-auth)">Example 2.2, “Default configuration for the <code class="literal">auth</code> section (<code class="filename">common-auth</code>)”</a>.
+  </p><div class="example" id="dat-pam-common-auth"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 2.2: </span><span class="name">Default configuration for the <code class="literal">auth</code> section (<code class="filename">common-auth</code>) </span><a title="Permalink" class="permalink" href="cha-pam.html#dat-pam-common-auth">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">auth  required  pam_env.so                   <span id="co-security-pam-sshd-pam-env"></span><span class="callout">1</span>
+auth  optional  pam_gnome_keyring.so         <span id="co-security-pam-sshd-gnome"></span><span class="callout">2</span>
+auth  required  pam_unix.so  try_first_pass <span id="co-security-pam-sshd-pam-unix"></span><span class="callout">3</span></pre></div></div></div><div class="calloutlist "><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-pam-env"><span class="callout">1</span></a> </p></td><td valign="top" align="left"><p>
+     <code class="systemitem">pam_env.so</code> loads
+     <code class="filename">/etc/security/pam_env.conf</code> to set the environment
+     variables as specified in this file. It can be used to set the
+     <code class="envar">DISPLAY</code> variable to the correct value, because the
+     <code class="systemitem">pam_env</code> module knows about the
+     location from which the login is taking place.
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-gnome"><span class="callout">2</span></a> </p></td><td valign="top" align="left"><p>
+     <code class="systemitem">pam_gnome_keyring.so</code> checks
+     the user's login and password against the GNOME key ring
+    </p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co-security-pam-sshd-pam-unix"><span class="callout">3</span></a> </p></td><td valign="top" align="left"><p>
+     <code class="systemitem">pam_unix</code> checks the user's
+     login and password against <code class="filename">/etc/passwd</code> and
+     <code class="filename">/etc/shadow</code>.
+    </p></td></tr></table></div><p>
+   The whole stack of <code class="literal">auth</code> modules is processed before
+   <code class="systemitem">sshd</code> gets any feedback about
+   whether the login has succeeded. All modules of the stack having the
+   <code class="literal">required</code> control flag must be processed successfully
+   before <code class="systemitem">sshd</code> receives a message
+   about the positive result. If one of the modules is not successful, the
+   entire module stack is still processed and only then is
+   <code class="systemitem">sshd</code> notified about the negative
+   result.
+  </p><p>
+   When all modules of the <code class="literal">auth</code> type have been
+   successfully processed, another include statement is processed, in this
+   case, that in <a class="xref" href="cha-pam.html#dat-pam-common-account" title="Default configuration for the account section (common-account)">Example 2.3, “Default configuration for the <code class="literal">account</code> section (<code class="filename">common-account</code>)”</a>.
+   <code class="filename">common-account</code> contains only one module,
+   <code class="literal">pam_unix</code>. If <code class="literal">pam_unix</code> returns the
+   result that the user exists, sshd receives a message announcing this
+   success and the next stack of modules (<code class="literal">password</code>) is
+   processed, shown in <a class="xref" href="cha-pam.html#dat-pam-common-password" title="Default configuration for the password section (common-password)">Example 2.4, “Default configuration for the <code class="literal">password</code> section (<code class="filename">common-password</code>)”</a>.
+  </p><div class="example" id="dat-pam-common-account"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 2.3: </span><span class="name">Default configuration for the <code class="literal">account</code> section (<code class="filename">common-account</code>) </span><a title="Permalink" class="permalink" href="cha-pam.html#dat-pam-common-account">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">account  required  pam_unix.so  try_first_pass</pre></div></div></div><div class="example" id="dat-pam-common-password"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 2.4: </span><span class="name">Default configuration for the <code class="literal">password</code> section (<code class="filename">common-password</code>) </span><a title="Permalink" class="permalink" href="cha-pam.html#dat-pam-common-password">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">password  requisite  pam_cracklib.so
+password  optional   pam_gnome_keyring.so  use_authtok
+password  required   pam_unix.so  use_authtok nullok shadow try_first_pass</pre></div></div></div><p>
+   Again, the PAM configuration of
+   <code class="systemitem">sshd</code> involves only an include
+   statement referring to the default configuration for
+   <code class="literal">password</code> modules located in
+   <code class="filename">common-password</code>. These modules must successfully be
+   completed (control flags <code class="literal">requisite</code> and
+   <code class="literal">required</code>) whenever the application requests the change
+   of an authentication token.
+  </p><p>
+   Changing a password or another authentication token requires a security
+   check. This is achieved with the <code class="filename">pam_cracklib</code>
+   module. The <code class="filename">pam_unix</code> module used afterward carries
+   over any old and new passwords from <code class="filename">pam_cracklib</code>, so
+   the user does not need to authenticate again after changing the password.
+   This procedure makes it impossible to circumvent the checks carried out
+   by <code class="filename">pam_cracklib</code>. Whenever the
+   <code class="literal">account</code> or the <code class="literal">auth</code> type are
+   configured to complain about expired passwords, the
+   <code class="literal">password</code> modules should also be used.
+  </p><div class="example" id="dat-pam-common-session"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 2.5: </span><span class="name">Default configuration for the <code class="literal">session</code> section (<code class="filename">common-session</code>) </span><a title="Permalink" class="permalink" href="cha-pam.html#dat-pam-common-session">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">session  required  pam_limits.so
+session  required  pam_unix.so  try_first_pass
+session  optional  pam_umask.so
+session  optional  pam_systemd.so
+session  optional  pam_gnome_keyring.so auto_start only_if=gdm,gdm-password,lxdm,lightdm
+session  optional  pam_env.so</pre></div></div></div><p>
+   As the final step, the modules of the <code class="literal">session</code> type
+   (bundled in the <code class="filename">common-session</code> file) are called to
+   configure the session according to the settings for the user in question.
+   The <code class="filename">pam_limits</code> module loads the file
+   <code class="filename">/etc/security/limits.conf</code>, which may define limits
+   on the use of certain system resources. The <code class="filename">pam_unix</code>
+   module is processed again. The <code class="filename">pam_umask</code> module can
+   be used to set the file mode creation mask. Since this module carries the
+   <code class="literal">optional</code> flag, a failure of this module would not
+   affect the successful completion of the entire session module stack. The
+   <code class="literal">session</code> modules are called a second time when the user
+   logs out.
+  </p></div><div class="sect1 " id="sec-pam-struc-conf"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.4 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuration of PAM modules</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-struc-conf">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-struc-conf</li></ul></div></div></div></div><p>
+   Some PAM modules are configurable. The configuration files are
+   located in <code class="filename">/etc/security</code>. This section briefly
+   describes the configuration files relevant to the sshd
+   example—<code class="filename">pam_env.conf</code> and
+   <code class="filename">limits.conf</code>.
+  </p><div class="sect2 " id="sec-pam-struc-conf-pamenv"><div class="titlepage"><div><div><h3 class="title"><span class="number">2.4.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">pam_env.conf</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-struc-conf-pamenv">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-struc-conf-pamenv</li></ul></div></div></div></div><p>
+    <code class="filename">pam_env.conf</code> can be used to define a standardized
+    environment for users that is set whenever the
+    <code class="systemitem">pam_env</code> module is called. With it, preset
+    environment variables using the following syntax:
+   </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable ">VARIABLE</em>  [DEFAULT=<em class="replaceable ">VALUE</em>]  [OVERRIDE=<em class="replaceable ">VALUE</em>]</pre></div><div class="variablelist "><dl class="variablelist"><dt id="id-1.6.4.2.6.3.4.1"><span class="term "><em class="replaceable ">VARIABLE</em>
+     </span></dt><dd><p>
+       Name of the environment variable to set.
+      </p></dd><dt id="id-1.6.4.2.6.3.4.2"><span class="term "><code class="systemitem">[DEFAULT=&lt;value&gt;]</code>
+     </span></dt><dd><p>
+       Default <em class="replaceable ">VALUE</em> the administrator wants to
+       set.
+      </p></dd><dt id="id-1.6.4.2.6.3.4.3"><span class="term "><code class="systemitem">[OVERRIDE=&lt;value&gt;]</code>
+     </span></dt><dd><p>
+       Values that may be queried and set by
+       <code class="systemitem">pam_env</code>, overriding the default value.
+      </p></dd></dl></div><p>
+    A typical example of how <code class="systemitem">pam_env</code> can be used is
+    the adaptation of the <code class="envar">DISPLAY</code> variable, which is changed
+    whenever a remote login takes place. This is shown in
+    <a class="xref" href="cha-pam.html#dat-pam-pamenv" title="pam_env.conf">Example 2.6, “pam_env.conf”</a>.
+   </p><div class="example" id="dat-pam-pamenv"><div class="example-title-wrap"><h6 class="example-title"><span class="number">Example 2.6: </span><span class="name">pam_env.conf </span><a title="Permalink" class="permalink" href="cha-pam.html#dat-pam-pamenv">#</a></h6></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">REMOTEHOST  DEFAULT=localhost          OVERRIDE=@{PAM_RHOST}
+DISPLAY     DEFAULT=${REMOTEHOST}:0.0  OVERRIDE=${DISPLAY}</pre></div></div></div><p>
+    The first line sets the value of the <code class="envar">REMOTEHOST</code> variable
+    to <code class="literal">localhost</code>, which is used whenever
+    <code class="filename">pam_env</code> cannot determine any other value. The
+    <code class="envar">DISPLAY</code> variable in turn contains the value of
+    <code class="envar">REMOTEHOST</code>. Find more information in the comments in
+    <code class="filename">/etc/security/pam_env.conf</code>.
+   </p></div><div class="sect2 " id="sec-pam-struc-conf-pammount"><div class="titlepage"><div><div><h3 class="title"><span class="number">2.4.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">pam_mount.conf.xml</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-struc-conf-pammount">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-struc-conf-pammount</li></ul></div></div></div></div><p>
+    The purpose of <code class="systemitem">pam_mount</code> is to mount user home
+    directories during the login process, and to unmount them during logout
+    in an environment where a central file server keeps all the home
+    directories of users. With this method, it is not necessary to mount a
+    complete <code class="filename">/home</code> directory where all the user home
+    directories would be accessible. Instead, only the home directory of the
+    user who is about to log in, is mounted.
+   </p><p>
+    After installing <code class="systemitem">pam_mount</code>, a template for
+    <code class="filename">pam_mount.conf.xml</code> is available in
+    <code class="filename">/etc/security</code>. The description of the
+    elements can be found in the manual page <code class="command">man 5
+    pam_mount.conf</code>.
+   </p><p>
+    A basic configuration of this feature can be done with YaST. Select
+    <span class="guimenu ">Network Settings</span> › <span class="guimenu ">Windows Domain
+      Membership</span> › <span class="guimenu ">Expert Settings</span> to
+    add the file server.
+   </p></div><div class="sect2 " id="sec-pam-struc-pamlimits"><div class="titlepage"><div><div><h3 class="title"><span class="number">2.4.3 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">limits.conf</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-struc-pamlimits">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-struc-pamlimits</li></ul></div></div></div></div><p>
+    System limits can be set on a user or group basis in
+    <code class="filename">limits.conf</code>, which is read by the
+    <code class="systemitem">pam_limits</code> module. The file allows you to set
+    hard limits, which may not be exceeded, and soft limits, which
+    may be exceeded temporarily. For more information about the syntax and
+    the options, see the comments in
+    <code class="filename">/etc/security/limits.conf</code>.
+   </p></div></div><div class="sect1 " id="sec-pam-pam-config"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.5 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring PAM using pam-config</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-pam-config">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-pam-config</li></ul></div></div></div></div><p>
+   The <code class="command">pam-config</code> tool helps you configure the global PAM
+   configuration files (<code class="filename">/etc/pam.d/common-*</code>) and
+   several selected application configurations. For a list of supported
+   modules, use the <code class="command">pam-config --list-modules</code> command.
+   Use the <code class="command">pam-config</code> command to maintain your PAM
+   configuration files. Add new modules to your PAM configurations, delete
+   other modules or modify options to these modules. When changing global
+   PAM configuration files, no manual tweaking of the PAM setup for
+   individual applications is required.
+  </p><p>
+   A simple use case for <code class="command">pam-config</code> involves the
+   following:
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p><span class="formalpara-title">Auto-generate a fresh unix-style PAM configuration. </span>
+      Let pam-config create the simplest possible setup which you can extend
+      later on. The <code class="command">pam-config --create</code> command creates a
+      simple Unix authentication configuration. Pre-existing configuration
+      files not maintained by pam-config are overwritten, but backup copies
+      are kept as <code class="literal">*.pam-config-backup</code>.
+     </p></li><li class="step "><p><span class="formalpara-title">Add a new authentication method. </span>
+      Adding a new authentication method (for example, SSSD) to your stack
+      of PAM modules comes down to a simple <code class="command">pam-config --add
+      --sss</code> command. SSSD is added wherever appropriate across
+      all <code class="filename">common-*-pc</code> PAM configuration files.
+     </p></li><li class="step "><p><span class="formalpara-title">Add debugging for test purposes. </span>
+      To make sure the new authentication procedure works as planned, turn
+      on debugging for all PAM-related operations. The <code class="command">pam-config
+      --add --sss-debug</code> command turns on debugging for SSSD-related PAM
+      operations.<span class="phrase"> Find the debugging output in the <code class="systemitem">systemd</code> journal (see
+      <span class="intraxref">Book “Reference”, Chapter 11 “<code class="command">journalctl</code>: query the <code class="systemitem">systemd</code> journal”</span>).</span>
+      
+     </p></li><li class="step "><p><span class="formalpara-title">Query your setup. </span>
+      Before you finally apply your new PAM setup, check if it contains all
+      the options you wanted to add. The <code class="command">pam-config --query
+      --</code><em class="replaceable ">MODULE</em> command lists both the type and
+      the options for the queried PAM module.
+     </p></li><li class="step "><p><span class="formalpara-title">Remove the debug options. </span>
+      Finally, remove the debug option from your setup when you are entirely
+      satisfied with its performance. The <code class="command">pam-config --delete
+      --sss-debug</code> command turns off debugging for the <code class="literal">pam_ssh.so</code> module.
+      In case you had debugging options added for other
+      modules, use similar commands to turn these off.
+     </p></li></ol></div></div><p>
+   For more information on the <code class="command">pam-config</code> command and the
+   options available, refer to the manual page of
+   <code class="command">pam-config(8)</code>.
+  </p></div><div class="sect1 " id="sec-pam-manual-config"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.6 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Manually configuring PAM</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-manual-config">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-manual-config</li></ul></div></div></div></div><p>
+   If you prefer to manually create or maintain your PAM configuration
+   files, make sure to disable <code class="command">pam-config</code> for these
+   files.
+  </p><p>
+   When you create your PAM configuration files from scratch using the
+   <code class="command">pam-config --create</code> command, it creates symbolic links
+   from the <code class="filename">common-<em class="replaceable ">*</em></code> to the
+   <code class="filename">common-<em class="replaceable ">*</em>-pc</code> files.
+   <code class="command">pam-config</code> only modifies the
+   <code class="filename">common-<em class="replaceable ">*</em>-pc</code> configuration
+   files. Removing these symbolic links effectively disables pam-config,
+   because pam-config only operates on the
+   <code class="filename">common-<em class="replaceable ">*</em>-pc</code> files and
+   these files are not put into effect without the symbolic links.
+  </p><div id="id-1.6.4.2.8.4" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg" /><h6>Warning: Include <code class="filename">pam_systemd.so</code> in configuration</h6><p>
+    If you are creating your own PAM configuration, make sure to include
+    <code class="literal">pam_systemd.so</code> configured as <code class="literal">session
+    optional</code>. Not including the <code class="literal">pam_systemd.so</code> can
+    cause problems with <code class="systemitem">systemd</code> task limits. For details, refer to the man
+    page of <code class="literal">pam_systemd.so</code>.
+   </p></div></div><div class="sect1 " id="sec-pam-login"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.7 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Configuring  U2F keys for local login</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-login">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_pam_login.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>slemicro_pam_login.xml</li><li><span class="ds-label">ID: </span>sec-pam-login</li></ul></div></div></div></div><p>
+  To provide more security during local login, you can configure
+  two-factor authentication using the <code class="literal">pam-u2f</code> framework and
+  the U2F feature on YubiKeys and Security Keys.
+ </p><p>
+  To set up U2F on your system, you need to associate your key with your
+  account. After that, configure your system to use the key. The
+  procedure is described in the following sections.
+ </p><div class="sect2 " id="sec-attach-account"><div class="titlepage"><div><div><h3 class="title"><span class="number">2.7.1 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Associating the U2F key with your account</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-attach-account">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_pam_login.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>slemicro_pam_login.xml</li><li><span class="ds-label">ID: </span>sec-attach-account</li></ul></div></div></div></div><p>
+   To associate your U2F key with your account, proceed as follows:
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Log in to your machine.
+    </p></li><li class="step "><p>
+     Insert your U2F key.
+    </p></li><li class="step "><p>
+     Create a directory for the U2F key configuration:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir -p ~/.config/Yubico</pre></div></li><li class="step "><p>
+     Run the <code class="command">pamu2fcfg</code> command that outputs configuration
+     lines:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> pamu2fcfg &gt; ~/.config/Yubico/u2f_keys</pre></div></li><li class="step "><p>
+     When your device begins flashing, touch the metal contact to confirm the
+     association.
+    </p></li></ol></div></div><p>
+   We recommend using a backup U2F device, which you can set up by running the
+   following commands:
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Run:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> pamu2fcfg -n &gt;&gt; ~/.config/Yubico/u2f_keys</pre></div></li><li class="step "><p>
+     When your device begins flashing, touch the metal contact to confirm the
+     association.
+    </p></li></ol></div></div><p>
+   You can move the output file from the default location to a directory that
+   requires the <code class="literal">sudo</code> permission to modify the file to
+   increase security. For example, move it to the <code class="filename">/etc</code>
+   directory.
+   To do so, follow the steps:
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Create a directory in <code class="filename">/etc</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir /etc/Yubico</pre></div></li><li class="step "><p>
+     Move the created file:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mv ~/.config/Yubico/u2f_keys /etc/Yubico/u2f_keys</pre></div></li></ol></div></div><div id="id-1.6.4.2.9.5.8" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg" /><h6>Note: Placing the <code class="filename">u2f_keys</code> in a non-default location</h6><p>
+    If you move the output file to a different directory than is the default
+    (<code class="filename">$HOME/.config/Yubico/u2f_keys</code>), you need to add the
+    path to the <code class="filename">/etc/pam.d/login</code> file as described in
+    <a class="xref" href="cha-pam.html#sec-reconfiguring-pam" title="2.7.2. Updating the PAM configuration">Section 2.7.2, “Updating the PAM configuration”</a>.
+   </p></div></div><div class="sect2 " id="sec-reconfiguring-pam"><div class="titlepage"><div><div><h3 class="title"><span class="number">2.7.2 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">Updating the PAM configuration</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-reconfiguring-pam">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_pam_login.xml" title="Edit the source file for this section">Edit source</a></h3><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>slemicro_pam_login.xml</li><li><span class="ds-label">ID: </span>sec-reconfiguring-pam</li></ul></div></div></div></div><p>
+   After you have created the U2F keys configuration, you need to adjust the
+   PAM configuration on your system.
+  </p><div class="procedure "><div class="procedure-contents"><ol class="procedure" type="1"><li class="step "><p>
+     Open the file <code class="filename">/etc/pam.d/login</code>.
+    </p></li><li class="step "><p>
+     Add the line <code class="literal">auth required pam_u2f.so</code> to the file as
+     follows:
+    </p><div class="verbatim-wrap"><pre class="screen">#%PAM-1.0
+auth      include    common-auth
+<span class="bold"><strong>auth      required   pam_u2f.so</strong></span>
+account   include    common-account
+password  include    common-password
+session   optional   pam_keyinit.so revoke
+session   include    common-session
+#session  optional   pam_xauth.so</pre></div></li><li class="step "><p>
+     If you placed the <code class="filename">u2f_keys</code> file in a different
+     location than <code class="filename">$HOME/.config/Yubico/u2f_keys</code>, you need
+     to use the <code class="literal">authfile</code> option in the
+     <code class="filename">/etc/pam.d/login</code> PAM file as follows:
+    </p><div class="verbatim-wrap"><pre class="screen">#%PAM-1.0
+auth     requisite pam_nologin.so
+auth     include   common-auth
+<span class="bold"><strong>auth  required pam_u2f.so authfile=<em class="replaceable ">&lt;PATH_TO_u2f_keys&gt;</em></strong></span>
+...</pre></div><p>
+     where <em class="replaceable ">&lt;PATH_TO_u2f_keys&gt;</em> is the absolute
+     path to the <code class="filename">u2f_keys</code> file.
+    </p></li></ol></div></div></div></div><div class="sect1 " id="sec-pam-info"><div class="titlepage"><div><div><h2 class="title"><span class="number">2.8 </span><span xmlns:dm="urn:x-suse:ns:docmanager" class="name">More information</span> <a title="Permalink" class="permalink" href="cha-pam.html#sec-pam-info">#</a><a class="report-bug" rel="nofollow" target="_blank" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit the source file for this section">Edit source</a></h2><div class="doc-status"><ul><li><span class="ds-label">File Name: </span>security_pam.xml</li><li><span class="ds-label">ID: </span>sec-pam-info</li></ul></div></div></div></div><p>
+   In the <code class="filename">/usr/share/doc/packages/pam</code> directory after
+   installing the <code class="systemitem">pam-doc</code> package, find the
+   following additional documentation:
+  </p><div class="variablelist "><dl class="variablelist"><dt id="id-1.6.4.2.10.3.1"><span class="term ">READMEs</span></dt><dd><p>
+      In the top level of this directory, there is the
+      <code class="filename">modules</code> subdirectory holding README files about
+      the available PAM modules.
+     </p></dd><dt id="id-1.6.4.2.10.3.2"><span class="term ">The Linux-PAM System Administrators' Guide</span></dt><dd><p>
+      This document comprises everything that the system administrator
+      should know about PAM. It discusses a range of topics, from the syntax
+      of configuration files to the security aspects of PAM.
+     </p></dd><dt id="id-1.6.4.2.10.3.3"><span class="term ">The Linux-PAM Module Writers' Manual</span></dt><dd><p>
+      This document summarizes the topic from the developer's point of view,
+      with information about how to write standard-compliant PAM modules.
+     </p></dd><dt id="id-1.6.4.2.10.3.4"><span class="term ">The Linux-PAM Application Developers' Guide</span></dt><dd><p>
+      This document comprises everything needed by an application developer
+      who wants to use the PAM libraries.
+     </p></dd><dt id="id-1.6.4.2.10.3.5"><span class="term ">The PAM manual pages</span></dt><dd><p>
+      PAM and the individual modules come with manual
+      pages that provide a good overview of the functionality of all the
+      components.
+     </p></dd></dl></div></div></div></div><div class="page-bottom"><div id="_bottom-navigation"><a class="nav-link" href="cha-nis.html"><span class="next-icon">→</span><span class="nav-label"><span class="number">Chapter 3 </span>Using NIS</span></a><a class="nav-link" href="part-auth.html"><span class="prev-icon">←</span><span class="nav-label"><span class="number">Part I </span>Authentication</span></a></div><div class="_share-print"><div class="online-contents share"><strong>Share this page: </strong><span class="share-buttons"><span class="_share-fb bottom-button">Facebook</span><span class="spacer"> • </span><span class="_share-in bottom-button">LinkedIn</span><span class="spacer"> • </span><span class="_share-tw bottom-button">Twitter</span><span class="spacer"> • </span><span class="_share-mail bottom-button">E-Mail</span></span></div><div class="print"><span class="_print-button bottom-button">Print this page</span></div><div class="clearme"></div></div></div></div><div id="_inward"></div></div><div id="_footer-wrap"><div id="_footer"><p>©
+        2024 
+        SUSE</p><ul><li><a href="https://jobs.suse.com/" target="_top">Careers</a></li><li><a href="https://www.suse.com/company/legal/" target="_top">Legal</a></li><li><a href="https://www.suse.com/company/about/" target="_top">About</a></li><li><a href="https://www.suse.com/contact/" target="_top">Contact Us</a></li></ul></div></div></body></html>

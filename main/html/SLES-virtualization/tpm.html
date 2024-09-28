@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Virtualization Guide | Software TPM emulator</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Software TPM emulator | SLES 15 SP6"/>
+<meta name="description" content="The Trusted Platform Module (TPM) is a cryptoprocessor that secures hardware using cryptographic keys. For developers who use the TPM to develop secu…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 22. Software TPM emulator"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Software TPM emulator",
+  
+    "description": "Software TPM emulator",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-qemu-ga.html" title="Chapter 21. QEMU guest agent"/><link rel="next" href="virt-crash-dump.html" title="Chapter 23. Creating crash dumps of a VM Guest"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-common.html">Hypervisor-independent features</a><span> / </span><a class="crumb" href="tpm.html">Software TPM emulator</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name"><code class="systemitem">libvirt</code> daemons</span></a></li><li><a href="cha-libvirt-host.html" class=" "><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="sec-libvirt-admin-migrate.html" class=" "><span class="title-number">16 </span><span class="title-name">Migrating VM Guests</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">17 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li class="active"><a href="part-virt-common.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">18 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">19 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">20 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">21 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" you-are-here"><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">23 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">24 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">25 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">26 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">27 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">28 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">29 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">30 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">31 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">32 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">33 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">35 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">36 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">37 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">38 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">39 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="tpm" data-id-title="Software TPM emulator"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">22 </span><span class="title-name">Software TPM emulator</span></span> <a title="Permalink" class="permalink" href="tpm.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect1" id="tpm-introduction" data-id-title="Introduction"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.1 </span><span class="title-name">Introduction</span></span> <a title="Permalink" class="permalink" href="tpm.html#tpm-introduction">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      The Trusted Platform Module (TPM) is a cryptoprocessor that secures
+      hardware using cryptographic keys. For developers who use the TPM to
+      develop security features, a software TPM emulator is a convenient
+      solution. Compared to a hardware TPM device, the emulator has no limit on
+      the number of guests that can access it. Also, it is simple to switch
+      between TPM versions 1.2 and 2.0. QEMU supports the software TPM
+      emulator that is included in the <span class="package">swtpm</span> package.
+    </p></section><section class="sect1" id="tpm-prerequisite" data-id-title="Prerequisites"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.2 </span><span class="title-name">Prerequisites</span></span> <a title="Permalink" class="permalink" href="tpm.html#tpm-prerequisite">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Before you can install and use the software TPM emulator, you need to
+      install the <code class="systemitem">libvirt</code> virtualization environment. Refer to
+      <a class="xref" href="cha-vt-installation.html#install-virtualization-components" title="6.2. Installing virtualization components">Section 6.2, “Installing virtualization components”</a> and install one
+      of the provided virtualization solutions.
+    </p></section><section class="sect1" id="tpm-installation" data-id-title="Installation"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.3 </span><span class="title-name">Installation</span></span> <a title="Permalink" class="permalink" href="tpm.html#tpm-installation">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To use the software TPM emulator, install the <span class="package">swtpm</span>
+      package:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper install swtpm</pre></div></section><section class="sect1" id="tpm-qemu" data-id-title="Using swtpm with QEMU"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.4 </span><span class="title-name">Using <code class="command">swtpm</code> with QEMU</span></span> <a title="Permalink" class="permalink" href="tpm.html#tpm-qemu">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      <code class="command">swtpm</code> provides three types of interface:
+      <code class="literal">socket</code>, <code class="literal">chardev</code>, and
+      <code class="literal">cuse</code>. This procedure focuses on the
+      <span class="emphasis"><em>socket</em></span> interface.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Create a directory <code class="filename">mytpm0</code> inside the VM
+          directory to store the TPM states—for example,
+          <code class="filename">/var/lib/libvirt/qemu/sle15sp3</code>:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir /var/lib/libvirt/qemu/sle15sp3/mytpm0</pre></div></li><li class="step"><p>
+          Start <code class="command">swtmp</code>. It creates a socket file that QEMU
+          can use—for example,
+          <code class="filename">/var/lib/libvirt/qemu/sle15sp3</code>:
+        </p><div class="verbatim-wrap"><pre class="screen"> <code class="prompt user">&gt; </code><code class="command">sudo</code> swtpm socket
+  --tpmstate dir=/var/lib/libvirt/qemu/sle15sp3/mytpm0 \
+  --ctrl type=unixio,path=/var/lib/libvirt/qemu/sle15sp3/mytpm0/swtpm-sock \
+  --log level=20</pre></div><div id="id-1.12.5.6.6.3.2.3" data-id-title="TPM version 2.0" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: TPM version 2.0</div><p>
+            By default, <code class="command">swtpm</code> starts a TPM version 1.2
+            emulator and stores its states in the
+            <code class="filename">tpm-00.permall</code> directory. To create a TPM 2.0
+            instance, run:
+          </p><div class="verbatim-wrap"><pre class="screen"> <code class="prompt user">&gt; </code><code class="command">sudo</code> swtpm socket
+  --tpm2
+  --tpmstate dir=/var/lib/libvirt/qemu/sle15sp3/mytpm0 \
+  --ctrl type=unixio,path=/var/lib/libvirt/qemu/sle15sp3/mytpm0/swtpm-sock \
+  --log level=20</pre></div><p>
+            TPM 2.0 states are stored in the
+            <code class="filename">tpm2-00.permall</code> directory.
+          </p></div></li><li class="step"><p>
+          Add the following command line parameters to the <code class="command">qemu-system-<em class="replaceable">ARCH</em></code>
+          command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>qemu-system-x86_64 \
+[...]
+-chardev socket,id=chrtpm,path=/var/lib/libvirt/qemu/sle15sp3/mytpm0/swtpm-sock \
+-tpmdev emulator,id=tpm0,chardev=chrtpm \
+-device tpm-tis,tpmdev=tpm0</pre></div></li><li class="step"><p>
+          Verify that the TPM device is available in the guest by running the
+          following command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>tpm_version
+TPM 1.2 Version Info:
+Chip Version:        1.2.18.158
+Spec Level:          2
+Errata Revision:     3
+TPM Vendor ID:       IBM
+TPM Version:         01010000
+Manufacturer Info:   49424d00</pre></div></li></ol></div></div></section><section class="sect1" id="tpm-libvirt" data-id-title="Using swtpm with libvirt"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.5 </span><span class="title-name">Using swtpm with <code class="systemitem">libvirt</code></span></span> <a title="Permalink" class="permalink" href="tpm.html#tpm-libvirt">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To use swtpm with <code class="systemitem">libvirt</code>, add the following TPM device to the guest
+      XML specification:
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;devices&gt;
+ &lt;tpm model='tpm-tis'&gt;
+  &lt;backend type='emulator' version='2.0'/&gt;
+ &lt;/tpm&gt;
+&lt;/devices&gt;</pre></div><p>
+      <code class="systemitem">libvirt</code> starts swtpm for the guest automatically. You do not need to
+      start it manually in advance. The corresponding
+      <code class="filename">permall</code> file is created in
+      <code class="filename">/var/lib/libvirt/swtpm/<em class="replaceable">VM_UUID</em></code>.
+    </p></section><section class="sect1" id="tpm-ovmf" data-id-title="TPM measurement with OVMF firmware"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.6 </span><span class="title-name">TPM measurement with OVMF firmware</span></span> <a title="Permalink" class="permalink" href="tpm.html#tpm-ovmf">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      If the guest uses the Open Virtual Machine Firmware (OVMF), it measures
+      components with TPM. You can find the event log in
+      <code class="filename">/sys/kernel/security/tpm0/binary_bios_measurements</code>.
+    </p></section><section class="sect1" id="qemu-tpm-resources" data-id-title="Resources"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">22.7 </span><span class="title-name">Resources</span></span> <a title="Permalink" class="permalink" href="tpm.html#qemu-tpm-resources">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/vt_qemu_tpm.xml" title="Edit source document"> </a></div></div></div></div></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          Wikipedia offers a thorough description of the TPM at the page
+          <a class="link" href="https://en.wikipedia.org/wiki/Trusted_Platform_Module" target="_blank">https://en.wikipedia.org/wiki/Trusted_Platform_Module</a>.
+        </p></li><li class="listitem"><p>
+          Configuring a specific virtualization environment on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is
+          described in <a class="xref" href="cha-vt-installation.html" title="Chapter 6. Installation of virtualization components">Chapter 6, <em>Installation of virtualization components</em></a>.
+        </p></li><li class="listitem"><p>
+          Details on the use of <span class="package">swtpm</span> are on its man page
+          (<code class="command">man 8 swtpm</code>).
+        </p></li><li class="listitem"><p>
+          A detailed <code class="systemitem">libvirt</code> specification of TPM is at
+          <a class="link" href="https://libvirt.org/formatdomain.html#elementsTpm" target="_blank">https://libvirt.org/formatdomain.html#elementsTpm</a>
+        </p></li><li class="listitem"><p>
+          A description of enabling UEFI firmware by using OVMF is at
+          <a class="xref" href="cha-kvm-inst.html#cha-kvm-inst-virtman-advanced-uefi" title="10.3.1. Advanced UEFI configuration">Section 10.3.1, “Advanced UEFI configuration”</a>.
+        </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-qemu-ga.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 21 </span>QEMU guest agent</span></a> </div><div><a class="pagination-link next" href="virt-crash-dump.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 23 </span>Creating crash dumps of a VM Guest</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="tpm.html#tpm-introduction"><span class="title-number">22.1 </span><span class="title-name">Introduction</span></a></span></li><li><span class="sect1"><a href="tpm.html#tpm-prerequisite"><span class="title-number">22.2 </span><span class="title-name">Prerequisites</span></a></span></li><li><span class="sect1"><a href="tpm.html#tpm-installation"><span class="title-number">22.3 </span><span class="title-name">Installation</span></a></span></li><li><span class="sect1"><a href="tpm.html#tpm-qemu"><span class="title-number">22.4 </span><span class="title-name">Using <code class="command">swtpm</code> with QEMU</span></a></span></li><li><span class="sect1"><a href="tpm.html#tpm-libvirt"><span class="title-number">22.5 </span><span class="title-name">Using swtpm with <code class="systemitem">libvirt</code></span></a></span></li><li><span class="sect1"><a href="tpm.html#tpm-ovmf"><span class="title-number">22.6 </span><span class="title-name">TPM measurement with OVMF firmware</span></a></span></li><li><span class="sect1"><a href="tpm.html#qemu-tpm-resources"><span class="title-number">22.7 </span><span class="title-name">Resources</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

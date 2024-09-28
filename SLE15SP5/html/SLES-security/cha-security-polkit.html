@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP5 | Security and Hardening Guide | The Polkit authentication framework</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="The Polkit authentication framework | SLES 15 SP5"/>
+<meta name="description" content="Polkit is an authentication framework used in graphical Linux desktop environments, for fine-grained management of access rights on the system. Tradi…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP5"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 18. The Polkit authentication framework"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "The Polkit authentication framework",
+  
+    "description": "Polkit is an authentication framework used in graphical Linux desktop environments, for fine-grained management of access rights on the system. Tradi…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-27T00:00+02:00",
+      
+    "datePublished": "2023-06-20T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-security-yast-security.html" title="Chapter 17. Configuring security settings with YaST"/><link rel="next" href="cha-security-acls.html" title="Chapter 19. Access control lists in Linux"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-local-security.html">Local security</a><span> / </span><a class="crumb" href="cha-security-polkit.html">The Polkit authentication framework</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="active"><a href="part-local-security.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" you-are-here"><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and Compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li><li><a href="cha-security-pci-dss.html" class=" "><span class="title-number">29 </span><span class="title-name">Payment Card Industry Data Security Standard (PCI DSS)</span></a></li><li><a href="cha-security-stig.html" class=" "><span class="title-number">30 </span><span class="title-name">Hardening SUSE Linux Enterprise with STIG</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">31 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">32 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">33 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">34 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">35 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">36 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">37 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">38 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">39 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">40 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">42 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-selinux.html" class="has-children "><span class="title-number">VI </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">43 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VII </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">44 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">45 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">46 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">47 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-polkit" data-id-title="The Polkit authentication framework"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP5</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+         Polkit is an authentication framework used in graphical Linux desktop
+         environments, for fine-grained management of access rights on the
+         system. Traditionally, there is a strong separation of
+         privileges on Linux between the <code class="systemitem">root</code> user as the fully authorized
+         administrator account, and all other accounts and groups on the
+         system. These non-administrator accounts may have certain additional
+         privileges, like accessing sound hardware through an
+         <code class="literal">audio</code> group. However, this kind of
+         privilege is fixed and cannot be granted only in certain
+         specific situations, or for a certain duration of time.
+        </p><p>
+         Instead of fully switching to the <code class="systemitem">root</code> user (using programs
+         such as <code class="command">sudo</code>) for gaining higher privileges,
+         Polkit grants specific privileges to a user or group on an
+         as-needed basis. This is controlled by configuration files that
+         describe individual actions that need to be authorized
+	        in a dynamic context.
+        </p></div></div></div></div><section class="sect1" id="sec-security-polkit-oview" data-id-title="Conceptual overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.1 </span><span class="title-name">Conceptual overview</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-oview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Polkit consists of multiple components. <code class="command">polkitd</code> is a
+   privileged central background service that performs authentication checks
+   based on the existing Polkit configuration. Polkit-enabled applications
+   forward specific authentication requests to the
+   <code class="command">polkitd</code> daemon. A Polkit authentication agent running in
+   the unprivileged user context is responsible for displaying
+   authentication requests on behalf of the <code class="command">polkitd</code>
+   daemon, and providing the credentials that have been entered interactively by
+   the user.
+  </p><p>
+   A Polkit <span class="emphasis"><em>action</em></span> represents a single activity that is
+   subject to Polkit's authorization rules. For example, the intent to reboot the
+   computer can be modeled as a single action in Polkit. Each action has a unique
+   identifier, for the reboot example the action is called
+   <code class="literal">org.freedesktop.login1.reboot</code>.
+  </p><section class="sect2" id="sec-security-polkit-agents" data-id-title="The authentication agent"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.1.1 </span><span class="title-name">The authentication agent</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-agents">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When a user starts a graphical session in a fully featured desktop
+    environment, an authentication agent is typically started automatically,
+    running in the background. You notice it when an authentication
+    prompt appears in response to an application requesting authorization for a
+    certain action. Using Polkit in text mode or via SSH is not easily possible,
+    therefore this document focuses on its use in a graphical session context.
+   </p></section><section class="sect2" id="sec-security-polkit-structure" data-id-title="Configuration of Polkit"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.1.2 </span><span class="title-name">Configuration of Polkit</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-structure">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Polkit's configuration consists of <span class="emphasis"><em>actions</em></span> and
+    <span class="emphasis"><em>authorization rules</em></span>:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.11.3.5.3.1"><span class="term">Actions (file extension <code class="filename">*.policy</code>)</span></dt><dd><p>
+       Actions are defined in XML files that are located in
+       <code class="filename">/usr/share/polkit-1/actions</code>. Each file defines
+       one or more actions for a certain application domain, and each action
+       contains human-readable descriptions and its default authorization
+       settings. Although a system administrator can write their own rules, these
+       default policy files must not be edited directly.
+      </p></dd><dt id="id-1.8.5.11.3.5.3.2"><span class="term">Authorization rules (file extension <code class="filename">*.rules</code>)</span></dt><dd><p>
+       Rules are written in the JavaScript programming language, and are located
+       in two places: <code class="filename">/usr/share/polkit-1/rules.d </code> is used
+       by system packages, and <code class="filename">/etc/polkit-1/rules.d</code> is for
+       locally administered configurations. The rule files contain more complex
+       logic on top of the default action authorization settings. For example,
+       a rule file could overrule a restrictive action and allow certain users
+       to use it even without authorization.
+      </p></dd></dl></div></section><section class="sect2" id="sec-security-polkit-oview-commands" data-id-title="Polkit Utilities"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.1.3 </span><span class="title-name">Polkit Utilities</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-oview-commands">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Polkit provides utilities for specific tasks (see also their
+    respective man pages for further details):
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.11.3.6.3.1"><span class="term"><code class="command">pkaction</code>
+     </span></dt><dd><p>
+       Get details about a defined action. See
+       <a class="xref" href="cha-security-polkit.html#sec-security-polkit-query" title="18.3. Querying Privileges">Section 18.3, “Querying Privileges”</a> for more
+       information.
+      </p></dd><dt id="id-1.8.5.11.3.6.3.2"><span class="term"><code class="command">pkcheck</code>
+     </span></dt><dd><p>
+       Checks whether a process is authorized for a specific Polkit action.
+      </p></dd><dt id="id-1.8.5.11.3.6.3.3"><span class="term"><code class="command">pkexec</code>
+     </span></dt><dd><p>
+       Allows programs to be executed as a different user based on Polkit authorization
+       settings. This is similar to <code class="command">su</code> or <code class="command">sudo</code>.
+      </p></dd><dt id="id-1.8.5.11.3.6.3.4"><span class="term"><code class="command">pkttyagent</code>
+     </span></dt><dd><p>
+       Starts a textual authentication agent. This agent is used if a
+       desktop environment does not have its own authentication agent.
+      </p></dd></dl></div></section></section><section class="sect1" id="sec-security-polkit-types" data-id-title="Authorization types"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.2 </span><span class="title-name">Authorization types</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-types">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Every time a Polkit-enabled application carries out a privileged operation,
+   Polkit is asked whether the user is entitled to do so. The answer can be
+   <code class="literal">yes</code>, <code class="literal">no</code> or
+   <code class="literal">authentication needed</code>. In the latter case, an authentication
+   dialog is displayed for the user to enter the necessary credentials.
+  </p><section class="sect2" id="sec-security-polkit-policies-implicit" data-id-title="Implicit Authorizations"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.1 </span><span class="title-name">Implicit Authorizations</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-policies-implicit">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When no dedicated Polkit JavaScript rules exist for a given action, the outcome
+    depends on the implicit authorizations settings that are defined for each
+    action in a Polkit policy file. There are three authorization categories:
+    <code class="literal">allow_active</code>,
+    <code class="literal">allow_inactive</code> and <code class="literal">allow_any</code>.
+    <code class="literal">allow_active</code> is applied to users in an active session. An
+    active session is a local login on the text mode console or in a graphical
+    user environment. The session becomes inactive when you switch to another
+    console, for example, in which case the category
+    <code class="literal">allow_inactive</code> is relevant. <code class="literal">allow_any</code>
+    is used for all other contexts, for example for remote users logged in via
+    SSH or VNC. Each of these categories has one of the following authorization
+    settings assigned:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.11.4.3.3.1"><span class="term">no</span></dt><dd><p>
+       The user is never granted authorization of the desired action.
+      </p></dd><dt id="id-1.8.5.11.4.3.3.2"><span class="term">yes</span></dt><dd><p>
+       The user is always granted authorization without the need to enter any credentials.
+      </p></dd><dt id="id-1.8.5.11.4.3.3.3"><span class="term">auth_self</span></dt><dd><p>
+       The user needs to enter their own password for the action to be
+       authorized.
+      </p></dd><dt id="id-1.8.5.11.4.3.3.4"><span class="term">auth_self_keep</span></dt><dd><p>
+       Like <code class="literal">auth_self</code>, but the authorization is cached for a
+       certain duration, for example, if the same action is executed by the same
+       application again, then it is not necessary to re-enter the password.
+      </p></dd><dt id="id-1.8.5.11.4.3.3.5"><span class="term">auth_admin</span></dt><dd><p>
+       The user needs to enter the administrator (<code class="systemitem">root</code>) password for the action to be authorized.
+      </p></dd><dt id="id-1.8.5.11.4.3.3.6"><span class="term">auth_admin_keep</span></dt><dd><p>
+       Similar to <code class="literal">auth_self_keep</code>, only requiring the administrator (<code class="systemitem">root</code>) password.
+      </p></dd></dl></div></section><section class="sect2" id="sec-security-polkit-policies-default" data-id-title="SUSE default privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.2.2 </span><span class="title-name">SUSE default privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-policies-default">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The implicit authorization settings found in Polkit policy files described so
+    far are from the upstream developers of the respective applications.
+    We call these settings the <span class="emphasis"><em>upstream defaults</em></span>. These
+    upstream defaults are not necessarily the same defaults that are used on
+    SUSE systems. <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> comes with a predefined set of privileges that
+    override the upstream defaults. These settings come in three different
+    flavors (profiles) of which only one can be active at any time:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.11.4.4.3.1"><span class="term"><code class="filename">/etc/polkit-default-privs.easy</code>
+     </span></dt><dd><p>
+       Authorization settings tailored towards single-user desktop systems where
+       the administrator is also the only active interactive user. It offers
+       reduced security in favor of improved user experience.
+      </p></dd><dt id="id-1.8.5.11.4.4.3.2"><span class="term"><code class="filename">/etc/polkit-default-privs.standard</code>
+     </span></dt><dd><p>
+       Balanced settings suitable for most systems.
+      </p></dd><dt id="id-1.8.5.11.4.4.3.3"><span class="term"><code class="filename">/etc/polkit-default-privs.restrictive</code>
+     </span></dt><dd><p>
+       More conservative authorization settings that reduce possible attack
+       surface at the expense of user experience in certain areas.
+      </p></dd></dl></div><p>
+    To switch the active polkit profile, edit
+    <code class="filename">/etc/sysconfig/security</code>
+    and adjust the value of <code class="varname">POLKIT_DEFAULT_PRIVS</code> to one of
+    <code class="literal">easy</code>, <code class="literal">standard</code> or
+    <code class="literal">restrictive</code>.
+    Then run the command <code class="command">set_polkit_default_privs</code> as <code class="systemitem">root</code>.
+   </p><p>
+    Do not modify the profile settings in the files listed above. To define your
+    own custom Polkit settings, use
+    <code class="filename">/etc/polkit-default-privs.local</code>. For details, refer to
+    <a class="xref" href="cha-security-polkit.html#sec-security-polkit-change-modify-config-implicit" title="18.4.3. Modifying the SUSE default privileges">Section 18.4.3, “Modifying the SUSE default privileges”</a>.
+   </p></section></section><section class="sect1" id="sec-security-polkit-query" data-id-title="Querying Privileges"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.3 </span><span class="title-name">Querying Privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-query">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To query privileges, use the command <code class="command">pkaction</code> included
+   in Polkit.
+  </p><p>
+   Polkit comes with command-line tools for changing privileges and
+   executing commands as another user (see
+   <a class="xref" href="cha-security-polkit.html#sec-security-polkit-oview-commands" title="18.1.3. Polkit Utilities">Section 18.1.3, “Polkit Utilities”</a> for a short
+   overview). Each existing policy has a unique name with which it
+   can be identified. List all available policies with the command
+   <code class="command">pkaction</code>. See <code class="command">man pkaction</code> for more
+   information.
+  </p><p>
+   To display the needed authorization for a given policy (for
+   example, <code class="literal">org.freedesktop.login1.reboot</code>), use
+   <code class="command">pkaction</code> as follows:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">pkaction -v --action-id=org.freedesktop.login1.reboot</code>
+org.freedesktop.login1.reboot:
+  description:       Reboot the system
+  message:           Authentication is required to allow rebooting the system
+  vendor:            The systemd Project
+  vendor_url:        http://www.freedesktop.org/wiki/Software/systemd
+  icon:
+  implicit any:      auth_admin_keep
+  implicit inactive: auth_admin_keep
+  implicit active:   yes</pre></div><div id="id-1.8.5.11.5.6" data-id-title="Restrictions of pkaction on SUSE Linux Enterprise Server" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Restrictions of <code class="command">pkaction</code> on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></div><p>
+    <code class="command">pkaction</code> only takes the upstream defaults into account.
+    It is not aware of the SUSE default privileges that are overriding the
+    upstream defaults. Therefore, be careful about interpreting this output.
+   </p></div></section><section class="sect1" id="sec-security-polkit-change-modify-config" data-id-title="Modifying Polkit Configuration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.4 </span><span class="title-name">Modifying Polkit Configuration</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-change-modify-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Adjusting Polkit settings is useful when you want to deploy the same set of
+   policies to different machines, for example to the computers of a specific
+   team. Customization of Polkit authorization settings can also be used to harden
+   security for specific actions, or to improve the user experience by reducing
+   the amount of password prompts for frequently used actions. Note, however,
+   that granting certain Polkit actions without authentication
+   can be a security hazard that may grant a regular user full <code class="systemitem">root</code>
+   privileges. Only lower Polkit authentication requirements when you are certain
+   it does not violate the system security in your specific environment.
+  </p><section class="sect2" id="sec-security-polkit-change-modify-config-actions" data-id-title="Overriding Polkit policy files"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.4.1 </span><span class="title-name">Overriding Polkit policy files</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-change-modify-config-actions">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The list of available Polkit actions depends on the packages that you have
+    installed on your system. For a quick overview, use
+    <code class="command">pkaction</code> to list all actions Polkit knows about.
+   </p><p>
+    For the purposes of this example, we show how the command
+    <code class="command">gparted</code> (<span class="quote">“<span class="quote">GNOME Partition Editor</span>”</span>)
+    is integrated into Polkit.
+   </p><p>
+    The file
+    <code class="filename">/usr/share/polkit-1/actions/org.opensuse.policykit.gparted.policy</code>
+    has the following content:
+   </p><div class="verbatim-wrap"><pre class="screen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd"&gt;
+&lt;policyconfig&gt; <span class="callout" id="co-polkit-actions-policyconfig">1</span>
+
+  &lt;action id="org-opensuse-polkit-gparted"&gt; <span class="callout" id="co-polkit-actions-action">2</span>
+    &lt;message&gt;Authentication is required to run the GParted Partition Editor&lt;/message&gt;
+    &lt;icon_name&gt;gparted&lt;/icon_name&gt;
+    &lt;defaults&gt; <span class="callout" id="co-polkit-actions-defaults">3</span>
+      &lt;allow_any&gt;auth_admin&lt;/allow_any&gt;
+      &lt;allow_inactive&gt;auth_admin&lt;/allow_inactive&gt;
+     &lt; allow_active&gt;auth_admin&lt;/allow_active&gt;
+    &lt;/defaults&gt;
+    &lt;annotate <span class="callout" id="co-polkit-actions-annotate">4</span>
+      key="org.freedesktop.policykit.exec.path"&gt;/usr/sbin/gparted&lt;/annotate&gt;
+    &lt;annotate <a class="xref" href="cha-security-polkit.html#co-polkit-actions-annotate"><span class="callout">4</span></a>
+      key="org.freedesktop.policykit.exec.allow_gui"&gt;true&lt;/annotate&gt;
+  &lt;/action&gt;
+
+&lt;/policyconfig&gt;</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-policyconfig"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Root XML element of the policy file.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-action"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Start of the definition of the only action in this policy.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-defaults"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Here the implicit authorization settings as described above are found.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-polkit-actions-annotate"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The <code class="literal">annotate</code> element contains additional information
+      regarding how Polkit performs an action. In this case, it contains
+      the path to the gparted executable and a setting that this program is
+      allowed to access the graphical display. These annotations are necessary
+      for the use of an action in conjunction with the Polkit tool <code class="command">pkexec</code>.
+     </p></td></tr></table></div><p>
+    To add your own policy, create a <code class="filename">.policy</code> file with
+    the structure above, add the appropriate action name into the
+    <code class="literal">id</code> attribute, and define the desired override implicit
+    authorization settings.
+   </p><div id="id-1.8.5.11.6.3.8" data-id-title="Deprecated name PolicyKit" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Deprecated name PolicyKit</div><p>
+     The Polkit authorization framework was formerly named PolicyKit. In certain
+     places, like the XML document preamble above, this old name still
+     appears.
+    </p></div></section><section class="sect2" id="sec-security-polkit-change-modify-config-authrules" data-id-title="Adding JavaScript authorization rules"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.4.2 </span><span class="title-name">Adding JavaScript authorization rules</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-change-modify-config-authrules">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Authorization rules overrule the implicit authorization settings.
+    To add your own rules, store your files under <code class="filename">/etc/polkit-1/rules.d/</code>.
+   </p><p>
+    The files in this directory start with a two-digit number, a dash, a
+    descriptive name, and end with <code class="filename">.rules</code>. Functions
+    inside these files are executed in the lexicographical order of the file names
+    in the directory. For example, <code class="filename">00-foo.rules</code> is ordered
+    (and hence executed) before <code class="filename">60-bar.rules</code> or even
+    <code class="filename">90-default-privs.rules</code>.
+   </p><p>
+    Inside the rule file, the script typically checks for the action ID to be
+    authorized. For example, to allow the command
+    <code class="command">gparted</code> to be executed by
+    any member of the <code class="systemitem">admin</code>
+    group, check for the action ID <code class="literal">org.opensuse.policykit.gparted</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">/* Allow users in admin group to run GParted without authentication */
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.opensuse.policykit.gparted" &amp;&amp;
+        subject.isInGroup("admin")) {
+        return polkit.Result.YES;
+    }
+});</pre></div><p>
+    Find the description of all classes and methods of the functions in the
+    Polkit API at
+    <a class="link" href="https://www.freedesktop.org/software/polkit/docs/latest/ref-api.html" target="_blank">https://www.freedesktop.org/software/polkit/docs/latest/ref-api.html</a>.
+   </p></section><section class="sect2" id="sec-security-polkit-change-modify-config-implicit" data-id-title="Modifying the SUSE default privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">18.4.3 </span><span class="title-name">Modifying the SUSE default privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-change-modify-config-implicit">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    As described in <a class="xref" href="cha-security-polkit.html#sec-security-polkit-policies-default" title="18.2.2. SUSE default privileges">Section 18.2.2, “SUSE default privileges”</a>,
+    SUSE ships different override profiles for the Polkit implicit authorization
+    settings defined by the upstream developers. Custom privileges can be defined
+    in <code class="filename">/etc/polkit-default-privs.local</code>. Privileges defined
+    here always take precedence over the predefined profile settings.
+    To add a custom privilege setting, do the following:
+   </p><div class="procedure" id="pro-custom-privileges" data-id-title="Modifying default privileges"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 18.1: </span><span class="title-name">Modifying default privileges </span></span><a title="Permalink" class="permalink" href="cha-security-polkit.html#pro-custom-privileges">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Edit <code class="filename">/etc/polkit-default-privs.local</code>. To define a
+      privilege, add a line for each action in the following format:
+     </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">&lt;action-id&gt;</em>     <em class="replaceable">&lt;auth_any&gt;</em>:<em class="replaceable">&lt;auth_inactive&gt;</em>:<em class="replaceable">&lt;auth_active&gt;</em></pre></div><p>
+      Alternatively, if all three categories receive the same value, you can also specify only a single value:
+     </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">&lt;action-id&gt;</em>     <em class="replaceable">&lt;auth_all&gt;</em></pre></div><p>
+      For example:
+     </p><div class="verbatim-wrap"><pre class="screen">org.freedesktop.color-manager.modify-profile     auth_admin_keep</pre></div></li><li class="step"><p>
+      Run this tool as <code class="systemitem">root</code> for the changes to take effect:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">/sbin/set_polkit_default_privs</code></pre></div></li></ol></div></div><p>
+   Refer to <code class="command">man polkit-default-privs</code> for the full
+   documentation of the SUSE Polkit default privileges.
+   </p></section></section><section class="sect1" id="sec-security-polkit-change-defaults" data-id-title="Restoring the SUSE default privileges"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">18.5 </span><span class="title-name">Restoring the SUSE default privileges</span></span> <a title="Permalink" class="permalink" href="cha-security-polkit.html#sec-security-polkit-change-defaults">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To restore the SUSE default authorization settings follow these steps:
+  </p><div class="procedure" id="pro-restore-polkit-defaults" data-id-title="Restoring the SUSE Linux Enterprise Server defaults"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 18.2: </span><span class="title-name">Restoring the <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> defaults </span></span><a title="Permalink" class="permalink" href="cha-security-polkit.html#pro-restore-polkit-defaults">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_polkit.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Choose the desired profile as described in <a class="xref" href="cha-security-polkit.html#sec-security-polkit-policies-default" title="18.2.2. SUSE default privileges">Section 18.2.2, “SUSE default privileges”</a>
+    </p></li><li class="step"><p>
+     Remove any overrides from <code class="filename">/etc/polkit-default-privs.local</code>.
+    </p></li><li class="step"><p>
+     Run <code class="command">set_polkit_default_privs</code> to regenerate the default rules.
+    </p></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-security-yast-security.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 17 </span>Configuring security settings with YaST</span></a> </div><div><a class="pagination-link next" href="cha-security-acls.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 19 </span>Access control lists in Linux</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-polkit.html#sec-security-polkit-oview"><span class="title-number">18.1 </span><span class="title-name">Conceptual overview</span></a></span></li><li><span class="sect1"><a href="cha-security-polkit.html#sec-security-polkit-types"><span class="title-number">18.2 </span><span class="title-name">Authorization types</span></a></span></li><li><span class="sect1"><a href="cha-security-polkit.html#sec-security-polkit-query"><span class="title-number">18.3 </span><span class="title-name">Querying Privileges</span></a></span></li><li><span class="sect1"><a href="cha-security-polkit.html#sec-security-polkit-change-modify-config"><span class="title-number">18.4 </span><span class="title-name">Modifying Polkit Configuration</span></a></span></li><li><span class="sect1"><a href="cha-security-polkit.html#sec-security-polkit-change-defaults"><span class="title-number">18.5 </span><span class="title-name">Restoring the SUSE default privileges</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

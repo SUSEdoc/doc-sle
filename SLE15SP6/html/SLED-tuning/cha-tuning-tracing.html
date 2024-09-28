@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | System Analysis and Tuning Guide | Tracing tools</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Tracing tools | SLED 15 SP6"/>
+<meta name="description" content="SUSE Linux Enterprise Desktop comes with several tools that help you obtain useful information about your system. You can use the information for dif…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 17. Tracing tools"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLED systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLED systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Tracing tools",
+  
+    "description": "Tracing tools",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-tuning-dumps.html" title="Part VI. Handling system dumps"/><link rel="next" href="cha-tuning-kexec.html" title="Chapter 18. Kexec and Kdump"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-dumps.html">Handling system dumps</a><span> / </span><a class="crumb" href="cha-tuning-tracing.html">Tracing tools</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General notes on system tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System monitoring utilities</span></a></li><li><a href="cha-tuning-syslog.html" class=" "><span class="title-number">3 </span><span class="title-name">System log files</span></a></li></ol></li><li><a href="part-tuning-kerneltrace.html" class="has-children "><span class="title-number">III </span><span class="title-name">Kernel monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—filtering and analyzing system data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-based performance monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—system-wide profiler</span></a></li><li><a href="cha-tuning-dynamic-debug.html" class=" "><span class="title-number">8 </span><span class="title-name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li><a href="part-tuning-resources.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Resource management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">9 </span><span class="title-name">General system resource management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">10 </span><span class="title-name">Kernel control groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">11 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">12 </span><span class="title-name">Power management</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">13 </span><span class="title-name">Tuning I/O performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning the task scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the memory management subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">16 </span><span class="title-name">Tuning the network</span></a></li></ol></li><li class="active"><a href="part-tuning-dumps.html" class="has-children you-are-here"><span class="title-number">VI </span><span class="title-name">Handling system dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" you-are-here"><span class="title-number">17 </span><span class="title-name">Tracing tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">18 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">19 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to debug application crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">20 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-tracing" data-id-title="Tracing tools"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">17 </span><span class="title-name">Tracing tools</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> comes with several tools that help you obtain useful
+  information about your system. You can use the information for different
+  purposes. For example, to debug and find problems in your program, to
+  discover places causing performance drops, or to trace a running process to
+  find out what system resources it uses. <span class="phrase">Most of the
+  tools are part of the installation media. In certain cases, they need to be
+  installed from the SUSE Software Development Kit, which is a separate download.</span>
+ </p><div id="id-1.8.8.2.4" data-id-title="Tracing and impact on performance" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Tracing and impact on performance</div><p>
+   While a running process is being monitored for system or library calls,
+   the performance of the process is heavily reduced. You are advised to use
+   tracing tools only for the time you need to collect the data.
+  </p></div><section class="sect1" id="sec-tuning-tracing-strace" data-id-title="Tracing system calls with strace"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.1 </span><span class="title-name">Tracing system calls with strace</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-strace">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <code class="command">strace</code> command traces system calls of a process
+   and signals received by the process. <code class="command">strace</code> can either
+   run a new command and trace its system calls, or you can attach
+   <code class="command">strace</code> to an already running command. Each line of the
+   command's output contains the system call name, followed by its arguments
+   in parentheses and its return value.
+  </p><p>
+   To run a new command and start tracing its system calls, enter the
+   command to be monitored as you normally do, and add
+   <code class="command">strace</code> at the beginning of the command line:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace ls
+execve("/bin/ls", ["ls"], [/* 52 vars */]) = 0
+brk(0)                                  = 0x618000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) \
+        = 0x7f9848667000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) \
+        = 0x7f9848666000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT \
+(No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY)      = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=200411, ...}) = 0
+mmap(NULL, 200411, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f9848635000
+close(3)                                = 0
+open("/lib64/librt.so.1", O_RDONLY)     = 3
+[...]
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) \
+= 0x7fd780f79000
+write(1, "Desktop\nDocuments\nbin\ninst-sys\n", 31Desktop
+Documents
+bin
+inst-sys
+) = 31
+close(1)                                = 0
+munmap(0x7fd780f79000, 4096)            = 0
+close(2)                                = 0
+exit_group(0)                           = ?</pre></div><p>
+   To attach <code class="command">strace</code> to an already running process, you
+   need to specify the <code class="option">-p</code> with the process ID
+   (<code class="systemitem">PID</code>) of the process that you want to monitor:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace -p `pidof cron`
+ Process 1261 attached
+ restart_syscall(&lt;... resuming interrupted call ...&gt;) = 0
+  stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=2309, ...}) = 0
+  select(5, [4], NULL, NULL, {0, 0})      = 0 (Timeout)
+  socket(PF_LOCAL, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 5
+  connect(5, {sa_family=AF_LOCAL, sun_path="/var/run/nscd/socket"}, 110) = 0
+  sendto(5, "\2\0\0\0\0\0\0\0\5\0\0\0root\0", 17, MSG_NOSIGNAL, NULL, 0) = 17
+  poll([{fd=5, events=POLLIN|POLLERR|POLLHUP}], 1, 5000) = 1 ([{fd=5, revents=POLLIN|POLLHUP}])
+  read(5, "\2\0\0\0\1\0\0\0\5\0\0\0\2\0\0\0\0\0\0\0\0\0\0\0\5\0\0\0\6\0\0\0"..., 36) = 36
+  read(5, "root\0x\0root\0/root\0/bin/bash\0", 28) = 28
+  close(5)                                = 0
+  rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+  rt_sigaction(SIGCHLD, NULL, {0x7f772b9ea890, [], SA_RESTORER|SA_RESTART, 0x7f772adf7880}, 8) = 0
+  rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+  nanosleep({60, 0}, 0x7fff87d8c580)      = 0
+  stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=2309, ...}) = 0
+  select(5, [4], NULL, NULL, {0, 0})      = 0 (Timeout)
+  socket(PF_LOCAL, SOCK_STREAM|SOCK_CLOEXEC|SOCK_NONBLOCK, 0) = 5
+  connect(5, {sa_family=AF_LOCAL, sun_path="/var/run/nscd/socket"}, 110) = 0
+  sendto(5, "\2\0\0\0\0\0\0\0\5\0\0\0root\0", 17, MSG_NOSIGNAL, NULL, 0) = 17
+  poll([{fd=5, events=POLLIN|POLLERR|POLLHUP}], 1, 5000) = 1 ([{fd=5, revents=POLLIN|POLLHUP}])
+  read(5, "\2\0\0\0\1\0\0\0\5\0\0\0\2\0\0\0\0\0\0\0\0\0\0\0\5\0\0\0\6\0\0\0"..., 36) = 36
+  read(5, "root\0x\0root\0/root\0/bin/bash\0", 28) = 28
+  close(5)
+  [...]</pre></div><p>
+   The <code class="option">-e</code> option understands several sub-options and
+   arguments. For example, to trace all attempts to open or write to a
+   particular file, use the following:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace -e trace=open,write ls ~
+open("/etc/ld.so.cache", O_RDONLY)       = 3
+open("/lib64/librt.so.1", O_RDONLY)      = 3
+open("/lib64/libselinux.so.1", O_RDONLY) = 3
+open("/lib64/libacl.so.1", O_RDONLY)     = 3
+open("/lib64/libc.so.6", O_RDONLY)       = 3
+open("/lib64/libpthread.so.0", O_RDONLY) = 3
+[...]
+open("/usr/lib/locale/cs_CZ.utf8/LC_CTYPE", O_RDONLY) = 3
+open(".", O_RDONLY|O_NONBLOCK|O_DIRECTORY|O_CLOEXEC) = 3
+write(1, "addressbook.db.bak\nbin\ncxoffice\n"..., 311) = 311</pre></div><p>
+   To trace only network related system calls, use <code class="option">-e
+   trace=network</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace -e trace=network -p 26520
+Process 26520 attached - interrupt to quit
+socket(PF_NETLINK, SOCK_RAW, 0)         = 50
+bind(50, {sa_family=AF_NETLINK, pid=0, groups=00000000}, 12) = 0
+getsockname(50, {sa_family=AF_NETLINK, pid=26520, groups=00000000}, \
+[12]) = 0
+sendto(50, "\24\0\0\0\26\0\1\3~p\315K\0\0\0\0\0\0\0\0", 20, 0,
+{sa_family=AF_NETLINK, pid=0, groups=00000000}, 12) = 20
+[...]</pre></div><p>
+   The <code class="option">-c</code> calculates the time the kernel spent on each
+   system call:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace -c find /etc -name xorg.conf
+/etc/X11/xorg.conf
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 32.38    0.000181         181         1           execve
+ 22.00    0.000123           0       576           getdents64
+ 19.50    0.000109           0       917        31 open
+ 19.14    0.000107           0       888           close
+  4.11    0.000023           2        10           mprotect
+  0.00    0.000000           0         1           write
+[...]
+  0.00    0.000000           0         1           getrlimit
+  0.00    0.000000           0         1           arch_prctl
+  0.00    0.000000           0         3         1 futex
+  0.00    0.000000           0         1           set_tid_address
+  0.00    0.000000           0         4           fadvise64
+  0.00    0.000000           0         1           set_robust_list
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000559                  3633        33 total</pre></div><p>
+   To trace all child processes of a process, use <code class="option">-f</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace -f systemctl status apache2.service
+execve("/usr/bin/systemctl", ["systemctl", "status", "apache2.service"], \
+ 0x7ffea44a3318 /* 56 vars */) = 0
+brk(NULL)                               = 0x5560f664a000
+[...]
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f98c58a5000
+mmap(NULL, 4420544, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f98c524a000
+mprotect(0x7f98c53f4000, 2097152, PROT_NONE) = 0
+[...]
+[pid  9130] read(0, "\342\227\217 apache2.service - The Apache"..., 8192) = 165
+[pid  9130] read(0, "", 8027)           = 0
+● apache2.service - The Apache Webserver227\217 apache2.service - Th"..., 193
+   Loaded: loaded (/usr/lib/systemd/system/apache2.service; disabled; vendor preset: disabled)
+   Active: inactive (dead)
+) = 193
+[pid  9130] ioctl(3, SNDCTL_TMR_STOP or TCSETSW, {B38400 opost isig icanon echo ...}) = 0
+[pid  9130] exit_group(0)               = ?
+[pid  9130] +++ exited with 0 +++
+&lt;... waitid resumed&gt;{si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=9130, \
+ si_uid=0, si_status=0, si_utime=0, si_stime=0}, WEXITED, NULL) = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=9130, si_uid=0, \
+  si_status=0, si_utime=0, si_stime=0} ---
+exit_group(3)                           = ?
++++ exited with 3 +++</pre></div><p>
+   If you need to analyze the output of <code class="command">strace</code> and the
+   output messages are too long to be inspected directly in the console
+   window, use <code class="option">-o</code>. In that case, unnecessary messages, such
+   as information about attaching and detaching processes, are suppressed.
+   You can also suppress these messages (normally printed on the standard
+   output) with <code class="option">-q</code>. To add time stamps at the beginning of each line
+   with a system call, use <code class="option">-t</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>strace -t -o strace_sleep.txt sleep 1; more strace_sleep.txt
+08:44:06 execve("/bin/sleep", ["sleep", "1"], [/* 81 vars */]) = 0
+08:44:06 brk(0)                         = 0x606000
+08:44:06 mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, \
+-1, 0) = 0x7f8e78cc5000
+[...]
+08:44:06 close(3)                       = 0
+08:44:06 nanosleep({1, 0}, NULL)        = 0
+08:44:07 close(1)                       = 0
+08:44:07 close(2)                       = 0
+08:44:07 exit_group(0)                  = ?</pre></div><p>
+   The behavior and output format of strace can be controlled. For
+   more information, see the relevant manual page (man 1 strace).
+  </p></section><section class="sect1" id="sec-tuning-tracing-ltrace" data-id-title="Tracing library calls with ltrace"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.2 </span><span class="title-name">Tracing library calls with ltrace</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-ltrace">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="command">ltrace</code> traces dynamic library calls of a process. It
+   is used in a similar way to <code class="command">strace</code>, and most of their
+   parameters have a similar or identical meaning. By default,
+   <code class="command">ltrace</code> uses <code class="filename">/etc/ltrace.conf</code> or
+   <code class="filename">~/.ltrace.conf</code> configuration files. You can,
+   however, specify an alternative one with the <code class="option">-F
+   <em class="replaceable">CONFIG_FILE</em></code> option.
+  </p><p>
+   In addition to library calls, <code class="command">ltrace</code> with the
+   <code class="option">-S</code> option can trace system calls as well:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ltrace -S -o ltrace_find.txt find /etc -name \
+xorg.conf; more ltrace_find.txt
+SYS_brk(NULL)                                              = 0x00628000
+SYS_mmap(0, 4096, 3, 34, 0xffffffff)                       = 0x7f1327ea1000
+SYS_mmap(0, 4096, 3, 34, 0xffffffff)                       = 0x7f1327ea0000
+[...]
+fnmatch("xorg.conf", "xorg.conf", 0)                       = 0
+free(0x0062db80)                                           = &lt;void&gt;
+__errno_location()                                         = 0x7f1327e5d698
+__ctype_get_mb_cur_max(0x7fff25227af0, 8192, 0x62e020, -1, 0) = 6
+__ctype_get_mb_cur_max(0x7fff25227af0, 18, 0x7f1327e5d6f0, 0x7fff25227af0,
+0x62e031) = 6
+__fprintf_chk(0x7f1327821780, 1, 0x420cf7, 0x7fff25227af0, 0x62e031
+&lt;unfinished ...&gt;
+SYS_fstat(1, 0x7fff25227230)                               = 0
+SYS_mmap(0, 4096, 3, 34, 0xffffffff)                       = 0x7f1327e72000
+SYS_write(1, "/etc/X11/xorg.conf\n", 19)                   = 19
+[...]</pre></div><p>
+   You can change the type of traced events with the <code class="option">-e</code>
+   option. The following example prints library calls related to
+   <code class="systemitem">fnmatch</code> and <code class="systemitem">strlen</code>
+   functions:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ltrace -e fnmatch,strlen find /etc -name xorg.conf
+[...]
+fnmatch("xorg.conf", "xorg.conf", 0)             = 0
+strlen("Xresources")                             = 10
+strlen("Xresources")                             = 10
+strlen("Xresources")                             = 10
+fnmatch("xorg.conf", "Xresources", 0)            = 1
+strlen("xorg.conf.install")                      = 17
+[...]</pre></div><p>
+   To display only the symbols included in a specific library, use
+   <code class="option">-l <em class="replaceable">/path/to/library</em></code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ltrace -l /lib64/librt.so.1 sleep 1
+clock_gettime(1, 0x7fff4b5c34d0, 0, 0, 0)                  = 0
+clock_gettime(1, 0x7fff4b5c34c0, 0xffffffffff600180, -1, 0) = 0
++++ exited (status 0) +++</pre></div><p>
+   You can make the output more readable by indenting each nested call by
+   the specified number of space with the <code class="option">-n
+   <em class="replaceable">NUM_OF_SPACES</em></code>.
+  </p></section><section class="sect1" id="sec-tuning-tracing-valgrind" data-id-title="Debugging and profiling with Valgrind"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.3 </span><span class="title-name">Debugging and profiling with Valgrind</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Valgrind is a set of tools to debug and profile your programs so that
+   they can run both faster and with fewer errors. Valgrind can detect problems
+   related to memory management and threading, or can also serve as a
+   framework for building new debugging tools. It is well known that this
+   tool can incur high overhead, causing, for example, higher runtimes or
+   changing the normal program behavior under concurrent workloads based on timing.
+  </p><section class="sect2" id="sec-tuning-tracing-valgrind-install" data-id-title="Installation"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.1 </span><span class="title-name">Installation</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-install">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Valgrind is not shipped with standard <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> distribution. To
+    install it on your system, you need to obtain SUSE Software Development Kit, and either
+    install it and run
+   </p><p>
+    <code class="command">zypper</code> <code class="option">install
+    <em class="replaceable">VALGRIND</em></code>
+   </p><p>
+    or browse through the SUSE Software Development Kit directory tree, locate the Valgrind
+    package and install it with
+   </p><p>
+    <code class="command">rpm</code> <code class="option">-i</code>
+    valgrind-<em class="replaceable">VERSION_ARCHITECTURE</em>.rpm
+   </p><p>
+    The SDK is a module for SUSE Linux Enterprise and is available via an online channel from
+    the SUSE Customer Center. Refer to <span class="intraxref">Article “Modules and Extensions Quick Start”</span> for details.
+   </p></section><section class="sect2" id="sec-tuning-tracing-valgrind-supparch" data-id-title="Supported architectures"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.2 </span><span class="title-name">Supported architectures</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-supparch">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> supports Valgrind on the following architectures:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      AMD64/Intel 64
+     </p></li><li class="listitem"><p>
+      POWER
+     </p></li><li class="listitem"><p>
+      IBM Z
+     </p></li></ul></div></section><section class="sect2" id="sec-tuning-tracing-valgrind-core" data-id-title="General information"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.3 </span><span class="title-name">General information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-core">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The main advantage of Valgrind is that it works with existing compiled
+    executables. You do not need to recompile or modify your programs to
+    use it. Run Valgrind like this:
+   </p><p>
+    <code class="command">valgrind</code> <em class="replaceable">VALGRIND_OPTIONS</em>
+    your-prog <em class="replaceable">YOUR-PROGRAM-OPTIONS</em>
+   </p><p>
+    Valgrind consists of several tools, and each provides specific
+    functionality. Information in this section is general and valid
+    regardless of the used tool. The most important configuration option is
+    <code class="option">--tool</code>. This option tells Valgrind which tool to run.
+    If you omit this option, <code class="systemitem">memcheck</code> is selected
+    by default. For example, to run <code class="command">find ~</code>
+    <code class="option">-name</code> .bashrc with Valgrind's
+    <code class="systemitem">memcheck</code> tools, enter the following in the
+    command line:
+   </p><p>
+    <code class="command">valgrind</code> <code class="option">--tool</code>=memcheck find ~ -name
+    .bashrc
+   </p><p>
+    A list of standard Valgrind tools with a brief description follows:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.8.2.7.5.7.1"><span class="term"><code class="systemitem">memcheck</code>
+     </span></dt><dd><p>
+       Detects memory errors. It helps you tune your programs to behave
+       correctly.
+      </p></dd><dt id="id-1.8.8.2.7.5.7.2"><span class="term"><code class="systemitem">cachegrind</code>
+     </span></dt><dd><p>
+       Profiles cache prediction. It helps you tune your programs to run
+       faster.
+      </p></dd><dt id="id-1.8.8.2.7.5.7.3"><span class="term"><code class="systemitem">callgrind</code>
+     </span></dt><dd><p>
+       Works in a similar way to <code class="systemitem">cachegrind</code> but
+       also gathers additional cache-profiling information.
+      </p></dd><dt id="id-1.8.8.2.7.5.7.4"><span class="term"><code class="systemitem">exp-drd</code>
+     </span></dt><dd><p>
+       Detects thread errors. It helps you tune your multi-threaded programs
+       to behave correctly.
+      </p></dd><dt id="id-1.8.8.2.7.5.7.5"><span class="term"><code class="systemitem">helgrind</code>
+     </span></dt><dd><p>
+       Another thread error detector. Similar to
+       <code class="systemitem">exp-drd</code> but uses different techniques for
+       problem analysis.
+      </p></dd><dt id="id-1.8.8.2.7.5.7.6"><span class="term"><code class="systemitem">massif</code>
+     </span></dt><dd><p>
+       A heap profiler. Heap is an area of memory used for dynamic memory
+       allocation. This tool helps you tune your program to use less memory.
+      </p></dd><dt id="id-1.8.8.2.7.5.7.7"><span class="term"><code class="systemitem">lackey</code>
+     </span></dt><dd><p>
+       An example tool showing instrumentation basics.
+      </p></dd></dl></div></section><section class="sect2" id="sec-tuning-tracing-valgrind-defopts" data-id-title="Default options"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.4 </span><span class="title-name">Default options</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-defopts">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Valgrind can read options at start-up. There are three places which
+    Valgrind checks:
+   </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+      The file <code class="filename">.valgrindrc</code> in the home directory of the
+      user who runs Valgrind.
+     </p></li><li class="listitem"><p>
+      The environment variable <code class="literal">$VALGRIND_OPTS</code>
+     </p></li><li class="listitem"><p>
+      The file <code class="filename">.valgrindrc</code> in the current directory
+      where Valgrind is run from.
+     </p></li></ol></div><p>
+    These resources are parsed exactly in this order, while later given
+    options take precedence over earlier processed options. Options specific
+    to a particular Valgrind tool must be prefixed with the tool name and a
+    colon. For example, if you want <code class="systemitem">cachegrind</code> to
+    always write profile data to the
+    <code class="filename">/tmp/cachegrind_<em class="replaceable">PID</em>.log</code>,
+    add the following line to the <code class="filename">.valgrindrc</code> file in
+    your home directory:
+   </p><p>
+    <code class="literal">--cachegrind:cachegrind-out-file=/tmp/cachegrind_%p.log</code>
+   </p></section><section class="sect2" id="sec-tuning-tracing-valgrind-howorks" data-id-title="How Valgrind works"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.5 </span><span class="title-name">How Valgrind works</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-howorks">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Valgrind takes control of your executable before it starts. It reads
+    debugging information from the executable and related shared libraries.
+    The executable's code is redirected to the selected Valgrind tool, and
+    the tool adds its own code to handle its debugging. Then the code is
+    handed back to the Valgrind core and the execution continues.
+   </p><p>
+    For example, <code class="systemitem">memcheck</code> adds its code, which
+    checks every memory access. As a consequence, the program runs much
+    slower than in the native execution environment.
+   </p><p>
+    Valgrind simulates every instruction of your program. Therefore, it not
+    only checks the code of your program, but also all related libraries
+    (including the C library), libraries used for graphical environment, and
+    so on. If you try to detect errors with Valgrind, it also detects errors
+    in associated libraries (like C, X11, or Gtk libraries). Because you
+    do not need all these errors frequently, Valgrind can selectively suppress
+    these error messages to suppression files. The
+    <code class="option">--gen-suppressions=yes</code> tells Valgrind to report these
+    suppressions which you can copy to a file.
+   </p><p>
+    You should supply a real executable (machine code) as a Valgrind
+    argument. If your application is run, for example, from a shell or Perl
+    script, you can by mistake get error reports related to
+    <code class="command">/bin/sh</code> (or <code class="command">/usr/bin/perl</code>). In
+    such cases, you can use
+    <code class="option">--trace-children=yes</code> to work
+    around this issue. However, using the executable itself avoids any
+    confusion over this issue.
+   </p></section><section class="sect2" id="sec-tuning-tracing-valgrind-messages" data-id-title="Messages"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.6 </span><span class="title-name">Messages</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-messages">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    During its runtime, Valgrind reports messages with detailed errors and
+    important events. The following example explains the messages:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>valgrind --tool=memcheck find ~ -name .bashrc
+[...]
+==6558== Conditional jump or move depends on uninitialised value(s)
+==6558==    at 0x400AE79: _dl_relocate_object (in /lib64/ld-2.11.1.so)
+==6558==    by 0x4003868: dl_main (in /lib64/ld-2.11.1.so)
+[...]
+==6558== Conditional jump or move depends on uninitialised value(s)
+==6558==    at 0x400AE82: _dl_relocate_object (in /lib64/ld-2.11.1.so)
+==6558==    by 0x4003868: dl_main (in /lib64/ld-2.11.1.so)
+[...]
+==6558== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==6558== malloc/free: in use at exit: 2,228 bytes in 8 blocks.
+==6558== malloc/free: 235 allocs, 227 frees, 489,675 bytes allocated.
+==6558== For counts of detected errors, rerun with: -v
+==6558== searching for pointers to 8 not-freed blocks.
+==6558== checked 122,584 bytes.
+==6558==
+==6558== LEAK SUMMARY:
+==6558==    definitely lost: 0 bytes in 0 blocks.
+==6558==      possibly lost: 0 bytes in 0 blocks.
+==6558==    still reachable: 2,228 bytes in 8 blocks.
+==6558==         suppressed: 0 bytes in 0 blocks.
+==6558== Rerun with --leak-check=full to see details of leaked memory.</pre></div><p>
+    The <code class="literal">==6558==</code> introduces Valgrind's messages and
+    contains the process ID number (PID). You can easily distinguish
+    Valgrind's messages from the output of the program itself, and decide
+    which messages belong to a particular process.
+   </p><p>
+    To make Valgrind's messages more detailed, use <code class="option">-v</code> or
+    even <code class="option">-v -v</code>.
+   </p><p>
+    You can make Valgrind send its messages to three different places:
+   </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+      By default, Valgrind sends its messages to the file descriptor 2,
+      which is the standard error output. You can tell Valgrind to send its
+      messages to any other file descriptor with the
+      <code class="option">--log-fd=<em class="replaceable">FILE_DESCRIPTOR_NUMBER</em></code>
+      option.
+     </p></li><li class="listitem"><p>
+      The second, and a more useful way, is to send Valgrind's messages
+      to a file with
+      <code class="option">--log-file=<em class="replaceable">FILENAME</em></code>. This
+      option accepts several variables, for example, <code class="literal">%p</code>
+      gets replaced with the PID of the currently profiled process. This way
+      you can send messages to different files based on their PID.
+      <code class="literal">%q{env_var}</code> is replaced with the value of the
+      related <code class="literal">env_var</code> environment variable.
+     </p><p>
+      The following example checks for possible memory errors during the
+      Apache Web server restart, while following children processes and
+      writing detailed Valgrind's messages to separate files distinguished
+      by the current process PID:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>valgrind -v --tool=memcheck --trace-children=yes \
+--log-file=valgrind_pid_%p.log systemctl restart apache2.service</pre></div><p>
+      This process created 52 log files in the testing system, and took 75
+      seconds instead of the usual 7 seconds needed to run <code class="command">sudo
+       systemctl restart apache2.service</code> without Valgrind, which is
+      approximately 10 times more.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ls -1 valgrind_pid_*log
+valgrind_pid_11780.log
+valgrind_pid_11782.log
+valgrind_pid_11783.log
+[...]
+valgrind_pid_11860.log
+valgrind_pid_11862.log
+valgrind_pid_11863.log</pre></div></li><li class="listitem"><p>
+      You may also prefer to send the Valgrind's messages over the network.
+      You need to specify the <code class="literal">aa.bb.cc.dd</code> IP address and
+      <code class="literal">port_num</code> port number of the network socket with the
+      <code class="option">--log-socket=<em class="replaceable">AA.BB.CC.DD:PORT_NUM</em></code>
+      option. If you omit the port number, 1500 is used.
+     </p><p>
+      It is useless to send Valgrind's messages to a network socket if no
+      application is capable of receiving them on the remote machine. That
+      is why <code class="command">valgrind-listener</code>, a simple listener, is
+      shipped together with Valgrind. It accepts connections on the
+      specified port and copies everything it receives to the standard
+      output.
+     </p></li></ol></div></section><section class="sect2" id="sec-tuning-tracing-valgrind-error" data-id-title="Error messages"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">17.3.7 </span><span class="title-name">Error messages</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-error">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Valgrind remembers all error messages, and if it detects a new error,
+    the error is compared against old error messages. This way Valgrind
+    checks for duplicate error messages. In case of a duplicate error, it is
+    recorded but no message is shown. This mechanism prevents you from being
+    overwhelmed by millions of duplicate errors.
+   </p><p>
+    The <code class="option">-v</code> option adds a summary of all reports (sorted
+    by their total count) to the end of the Valgrind's execution output.
+    Moreover, Valgrind stops collecting errors if it detects either 1000
+    different errors, or 10 000 000 errors in total. To suppress
+    this limit and see all error messages, use
+    <code class="option">--error-limit=no</code>.
+   </p><p>
+    Certain errors cause other errors. Therefore, fix errors in the same
+    order as they appear and re-check the program continuously.
+   </p></section></section><section class="sect1" id="sec-tuning-tracing-valgrind-moreinfo" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">17.4 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-moreinfo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_tracing.xml" title="Edit source document"> </a></div></div></div></div></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     For a complete list of options related to the described tracing tools,
+     see the corresponding man page (<code class="command">man 1 strace</code>,
+     <code class="command">man 1 ltrace</code>, and <code class="command">man 1
+     valgrind</code>).
+    </p></li><li class="listitem"><p>
+     To describe advanced usage of Valgrind is beyond the scope of this
+     document. It is well documented, see
+     <a class="link" href="https://valgrind.org/docs/manual/manual.html" target="_blank">Valgrind
+     User Manual</a>. These pages are indispensable if you need more
+     advanced information on Valgrind or the usage and purpose of its
+     standard tools.
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-tuning-dumps.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part VI </span>Handling system dumps</span></a> </div><div><a class="pagination-link next" href="cha-tuning-kexec.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 18 </span>Kexec and Kdump</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-tracing.html#sec-tuning-tracing-strace"><span class="title-number">17.1 </span><span class="title-name">Tracing system calls with strace</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tracing.html#sec-tuning-tracing-ltrace"><span class="title-number">17.2 </span><span class="title-name">Tracing library calls with ltrace</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind"><span class="title-number">17.3 </span><span class="title-name">Debugging and profiling with Valgrind</span></a></span></li><li><span class="sect1"><a href="cha-tuning-tracing.html#sec-tuning-tracing-valgrind-moreinfo"><span class="title-number">17.4 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

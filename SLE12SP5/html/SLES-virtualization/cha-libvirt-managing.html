@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP5 | Virtualization Guide | Basic VM Guest Management</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Basic VM Guest Management | SLES 12 SP5"/>
+<meta name="description" content="Most management tasks, such as starting or stopping a VM Guest, can either be done using the graphical application Virtual Machine Manager or on the …"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP5"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 10. Basic VM Guest Management"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Basic VM Guest Management",
+  
+    "description": "Basic VM Guest Management",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2019-12-09T00:00+02:00",
+      
+    "datePublished": "2019-12-09T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-kvm-inst.html" title="Chapter 9. Guest Installation"/><link rel="next" href="cha-libvirt-connect.html" title="Chapter 11. Connecting and Authorizing"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-libvirt.html">Managing Virtual Machines with libvirt</a><span> / </span><a class="crumb" href="cha-libvirt-managing.html">Basic VM Guest Management</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-containers-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to Linux Containers</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Supported Hosts, Guests, and Features</span></a></li></ol></li><li class="active"><a href="part-virt-libvirt.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">9 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" you-are-here"><span class="title-number">10 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">11 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">13 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">15 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">16 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">17 </span><span class="title-name">libguestfs</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">18 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">19 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">20 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">21 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">23 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">24 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">25 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">26 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">27 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">28 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">29 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">30 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">31 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">32 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Tool Stacks and Libvirt framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-libvirt-managing" data-id-title="Basic VM Guest Management"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber">12 SP5</span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">10 </span><span class="title-name">Basic VM Guest Management</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Most management tasks, such as starting or stopping a VM Guest, can either
+  be done using the graphical application Virtual Machine Manager or on the command line using
+  <code class="command">virsh</code>. Connecting to the graphical console via VNC is only
+  possible from a graphical user interface.
+ </p><div id="id-1.12.4.4.4" data-id-title="Managing VM Guests on a Remote VM Host Server" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Managing VM Guests on a Remote VM Host Server</div><p>
+   If started on a VM Host Server, the <code class="systemitem">libvirt</code> tools Virtual Machine Manager,
+   <code class="command">virsh</code>, and <code class="command">virt-viewer</code> can be used to
+   manage VM Guests on the host. However, it is also possible to manage
+   VM Guests on a remote VM Host Server. This requires configuring remote access for
+   <code class="systemitem">libvirt</code> on the host. For instructions, see
+   <a class="xref" href="cha-libvirt-connect.html" title="Chapter 11. Connecting and Authorizing">Chapter 11, <em>Connecting and Authorizing</em></a>.
+  </p><p>
+   To connect to such a remote host with Virtual Machine Manager, you need to set up a connection
+   as explained in <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting-vmm" title="11.2.2. Managing Connections with Virtual Machine Manager">Section 11.2.2, “Managing Connections with Virtual Machine Manager”</a>. If
+   connecting to a remote host using <code class="command">virsh</code> or
+   <code class="command">virt-viewer</code>, you need to specify a connection URI with
+   the parameter <code class="option">-c</code> (for example, <code class="command">virsh -c
+   qemu+tls://saturn.example.com/system</code> or <code class="command">virsh -c
+   xen+ssh://</code>). The form of connection URI depends on the connection
+   type and the hypervisor—see
+   <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-connecting" title="11.2. Connecting to a VM Host Server">Section 11.2, “Connecting to a VM Host Server”</a> for details.
+  </p><p>
+   Examples in this chapter are all listed without a connection URI.
+  </p></div><section class="sect1" id="sec-libvirt-managing-list" data-id-title="Listing VM Guests"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.1 </span><span class="title-name">Listing VM Guests</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-list">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The VM Guest listing shows all VM Guests managed by <code class="systemitem">libvirt</code> on a
+   VM Host Server.
+  </p><section class="sect2" id="sec-libvirt-managing-list-vmm" data-id-title="Listing VM Guests with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.1 </span><span class="title-name">Listing VM Guests with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-list-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The main window of the Virtual Machine Manager lists all VM Guests for each VM Host Server it is
+    connected to. Each VM Guest entry contains the machine's name, its status
+    (<span class="guimenu">Running</span>, <span class="guimenu">Paused</span>, or
+    <span class="guimenu">Shutoff</span>) displayed as an icon and literally, and a CPU
+    usage bar.
+   </p></section><section class="sect2" id="sec-libvirt-managing-list-virsh" data-id-title="Listing VM Guests with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.1.2 </span><span class="title-name">Listing VM Guests with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-list-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Use the command <code class="command">virsh</code> <code class="option">list</code> to get a
+    list of VM Guests:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.5.4.3.1"><span class="term">List all running guests
+     </span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh list</pre></div></dd><dt id="id-1.12.4.4.5.4.3.2"><span class="term">List all running and inactive guests</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh list --all</pre></div></dd></dl></div><p>
+    For more information and further options, see <code class="command">virsh help
+    list</code> or <code class="command">man 1 virsh</code>.
+   </p></section></section><section class="sect1" id="sec-libvirt-managing-console" data-id-title="Accessing the VM Guest via Console"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.2 </span><span class="title-name">Accessing the VM Guest via Console</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-console">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   VM Guests can be accessed via a VNC connection (graphical console) or, if
+   supported by the guest operating system, via a serial console.
+  </p><section class="sect2" id="sec-libvirt-managing-console-vnc" data-id-title="Opening a Graphical Console"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.1 </span><span class="title-name">Opening a Graphical Console</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-console-vnc">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Opening a graphical console to a VM Guest lets you interact with the
+    machine like a physical host via a VNC connection. If accessing the VNC
+    server requires authentication, you are prompted to enter a user name (if
+    applicable) and a password.
+   </p><p>
+    When you click into the VNC console, the cursor is <span class="quote">“<span class="quote">grabbed</span>”</span>
+    and cannot be used outside the console anymore. To release it, press
+    <span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">Ctrl</span>.
+   </p><div id="id-1.12.4.4.6.3.4" data-id-title="Seamless (Absolute) Cursor Movement" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Seamless (Absolute) Cursor Movement</div><p>
+     To prevent the console from grabbing the cursor and to enable seamless
+     cursor movement, add a tablet input device to the VM Guest. See
+     <a class="xref" href="cha-libvirt-config.html#sec-libvirt-config-tablet" title="14.5. Enabling Seamless and Synchronized Mouse Pointer Movement">Section 14.5, “Enabling Seamless and Synchronized Mouse Pointer Movement”</a> for more information.
+    </p></div><p>
+    Certain key combinations such as <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">Del</span> are
+    interpreted by the host system and are not passed to the VM Guest. To pass
+    such key combinations to a VM Guest, open the <span class="guimenu">Send Key</span>
+    menu from the VNC window and choose the desired key combination entry. The
+    <span class="guimenu">Send Key</span> menu is only available when using Virtual Machine Manager and
+    <code class="command">virt-viewer</code>. With Virtual Machine Manager, you can alternatively use the
+    <span class="quote">“<span class="quote">sticky key</span>”</span> feature as explained in
+    <a class="xref" href="cha-kvm-inst.html#tip-libvirt-inst-vmm-sticky" title="Tip: Passing Key Combinations to Virtual Machines">Tip: Passing Key Combinations to Virtual Machines</a>.
+   </p><div id="id-1.12.4.4.6.3.6" data-id-title="Supported VNC Viewers" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Supported VNC Viewers</div><p>
+     Principally all VNC viewers can connect to the console of a VM Guest.
+     However, if you are using SASL authentication and/or TLS/SSL connection to
+     access the guest, the options are limited. Common VNC viewers such as
+     <code class="command">tightvnc</code> or <code class="command">tigervnc</code> support neither
+     SASL authentication nor TLS/SSL. The only supported alternative to Virtual Machine Manager
+     and <code class="command">virt-viewer</code> is Vinagre.
+    </p></div><section class="sect3" id="sec-libvirt-managing-console-vnc-vmm" data-id-title="Opening a Graphical Console with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.2.1.1 </span><span class="title-name">Opening a Graphical Console with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-console-vnc-vmm">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       In the Virtual Machine Manager, right-click a VM Guest entry.
+      </p></li><li class="step"><p>
+       Choose <span class="guimenu">Open</span> from the pop-up menu.
+      </p></li></ol></div></div></section><section class="sect3" id="sec-libvirt-managing-vnc-viewer" data-id-title="Opening a Graphical Console with virt-viewer"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.2.1.2 </span><span class="title-name">Opening a Graphical Console with <code class="command">virt-viewer</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-vnc-viewer">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     <code class="command">virt-viewer</code> is a simple VNC viewer with added
+     functionality for displaying VM Guest consoles. For example, it can be
+     started in <span class="quote">“<span class="quote">wait</span>”</span> mode, where it waits for a VM Guest to
+     start before it connects. It also supports automatically reconnecting to a
+     VM Guest that is rebooted.
+    </p><p>
+     <code class="command">virt-viewer</code> addresses VM Guests by name, by ID or by
+     UUID. Use <code class="command">virsh</code> <code class="option">list --all</code> to get this
+     data.
+    </p><p>
+     To connect to a guest that is running or paused, use either the ID, UUID,
+     or name. VM Guests that are shut off do not have an ID—you can only
+     connect to them by UUID or name.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.6.3.8.5.1"><span class="term">Connect to guest with the ID <code class="literal">8</code>
+      </span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virt-viewer 8</pre></div></dd><dt id="id-1.12.4.4.6.3.8.5.2"><span class="term">Connect to the inactive guest named <code class="literal">sles12</code>; the
+      connection window will open once the guest starts</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virt-viewer --wait sles12</pre></div><p>
+        With the <code class="option">--wait</code> option, the connection will be upheld
+        even if the VM Guest is not running at the moment. When the guest
+        starts, the viewer will be launched.
+       </p></dd></dl></div><p>
+     For more information, see <code class="command">virt-viewer</code>
+     <code class="option">--help</code> or <code class="command">man 1 virt-viewer</code>.
+    </p><div id="id-1.12.4.4.6.3.8.7" data-id-title="Password Input on Remote connections with SSH" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Password Input on Remote connections with SSH</div><p>
+      When using <code class="command">virt-viewer</code> to open a connection to a
+      remote host via SSH, the SSH password needs to be entered twice. The
+      first time for authenticating with <code class="systemitem">libvirt</code>, the second time for
+      authenticating with the VNC server. The second password needs to be
+      provided on the command line where virt-viewer was started.
+     </p></div></section></section><section class="sect2" id="sec-libvirt-managing-console-serial" data-id-title="Opening a Serial Console"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.2.2 </span><span class="title-name">Opening a Serial Console</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-console-serial">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Accessing the graphical console of a virtual machine requires a graphical
+    environment on the client accessing the VM Guest. As an alternative,
+    virtual machines managed with libvirt can also be accessed from the shell
+    via the serial console and <code class="command">virsh</code>. To open a serial
+    console to a VM Guest named <span class="quote">“<span class="quote">sles12</span>”</span>, run the following
+    command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh console sles12</pre></div><p>
+    <code class="command">virsh console</code> takes two optional flags:
+    <code class="option">--safe</code> ensures exclusive access to the console,
+    <code class="option">--force</code> disconnects any existing sessions before
+    connecting. Both features need to be supported by the guest operating
+    system.
+   </p><p>
+    Being able to connect to a VM Guest via serial console requires that the
+    guest operating system supports serial console access and is properly
+    supported. Refer to the guest operating system manual for more information.
+   </p><div id="id-1.12.4.4.6.4.6" data-id-title="Enabling Serial Console Access for SUSE Linux Enterprise and openSUSE Guests" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Enabling Serial Console Access for SUSE Linux Enterprise and openSUSE Guests</div><p>
+     Serial console access in SUSE Linux Enterprise and openSUSE is disabled by default. To
+     enable it, proceed as follows:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.6.4.6.3.1"><span class="term">SLES 12 / openSUSE</span></dt><dd><p>
+        Launch the YaST Boot Loader module and switch to the <span class="guimenu">Kernel
+        Parameters</span> tab. Add <code class="literal">console=ttyS0</code> to the
+        field <span class="guimenu">Optional Kernel Command Line Parameter</span>.
+       </p></dd><dt id="id-1.12.4.4.6.4.6.3.2"><span class="term">SLES 11</span></dt><dd><p>
+        Launch the YaST Boot Loader module and select the boot entry for
+        which to activate serial console access. Choose <span class="guimenu">Edit</span>
+        and add <code class="literal">console=ttyS0</code> to the field <span class="guimenu">Optional
+        Kernel Command Line Parameter</span>. Additionally, edit
+        <code class="filename">/etc/inittab</code> and uncomment the line with the
+        following content:
+       </p><div class="verbatim-wrap"><pre class="screen">#S0:12345:respawn:/sbin/agetty -L 9600 ttyS0 vt102</pre></div></dd></dl></div></div></section></section><section class="sect1" id="sec-libvirt-managing-status" data-id-title="Changing a VM Guests State: Start, Stop, Pause"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.3 </span><span class="title-name">Changing a VM Guest's State: Start, Stop, Pause</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-status">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Starting, stopping or pausing a VM Guest can be done with either Virtual Machine Manager or
+   <code class="command">virsh</code>. You can also configure a VM Guest to be
+   automatically started when booting the VM Host Server.
+  </p><p>
+   When shutting down a VM Guest, you may either shut it down gracefully, or
+   force the shutdown. The latter is equivalent to pulling the power plug on a
+   physical host and is only recommended if there are no alternatives. Forcing
+   a shutdown may cause file system corruption and loss of data on the
+   VM Guest.
+  </p><div id="id-1.12.4.4.7.4" data-id-title="Graceful Shutdown" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Graceful Shutdown</div><p>
+    To be able to perform a graceful shutdown, the VM Guest must be configured
+    to support <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acpi" title="ACPI">ACPI</a>. If you have created the guest
+    with the Virtual Machine Manager, ACPI should be available in the VM Guest.
+   </p><p>
+    Depending on the guest operating system, availability of ACPI may not be
+    sufficient to perform a graceful shutdown. It is strongly recommended to
+    test shutting down and rebooting a guest before using it in production.
+    openSUSE or SUSE Linux Enterprise Desktop, for example, can require Polkit authorization for
+    shutdown and reboot. Make sure this policy is turned off on all VM Guests.
+   </p><p>
+    If ACPI was enabled during a Windows XP/Windows Server 2003 guest
+    installation, turning it on in the VM Guest configuration only is not
+    sufficient. For more information, see:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <a class="link" href="https://support.microsoft.com/en-us/kb/314088" target="_blank">https://support.microsoft.com/en-us/kb/314088</a>
+     </p></li><li class="listitem"><p>
+      <a class="link" href="https://support.microsoft.com/en-us/kb/309283" target="_blank">https://support.microsoft.com/en-us/kb/309283</a>
+     </p></li></ul></div><p>
+    Regardless of the VM Guest's configuration, a graceful shutdown is always
+    possible from within the guest operating system.
+   </p></div><section class="sect2" id="sec-libvirt-managing-status-vmm" data-id-title="Changing a VM Guests State with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.3.1 </span><span class="title-name">Changing a VM Guest's State with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-status-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Changing a VM Guest's state can be done either from Virtual Machine Manager's main window,
+    or from a VNC window.
+   </p><div class="procedure" id="id-1.12.4.4.7.5.3" data-id-title="State Change from the Virtual Machine Manager Window"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.1: </span><span class="title-name">State Change from the Virtual Machine Manager Window </span></span><a title="Permalink" class="permalink" href="cha-libvirt-managing.html#id-1.12.4.4.7.5.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Right-click a VM Guest entry.
+     </p></li><li class="step"><p>
+      Choose <span class="guimenu">Run</span>, <span class="guimenu">Pause</span>, or one of the
+      <span class="guimenu">Shutdown options</span> from the pop-up menu.
+     </p></li></ol></div></div><div class="procedure" id="id-1.12.4.4.7.5.4" data-id-title="State change from the VNC Window"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.2: </span><span class="title-name">State change from the VNC Window </span></span><a title="Permalink" class="permalink" href="cha-libvirt-managing.html#id-1.12.4.4.7.5.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a VNC Window as described in
+      <a class="xref" href="cha-libvirt-managing.html#sec-libvirt-managing-console-vnc-vmm" title="10.2.1.1. Opening a Graphical Console with Virtual Machine Manager">Section 10.2.1.1, “Opening a Graphical Console with Virtual Machine Manager”</a>.
+     </p></li><li class="step"><p>
+      Choose <span class="guimenu">Run</span>, <span class="guimenu">Pause</span>, or one of the
+      <span class="guimenu">Shut Down</span> options either from the toolbar or from the
+      <span class="guimenu">Virtual Machine</span> menu.
+     </p></li></ol></div></div><section class="sect3" id="sec-libvirt-managing-status-vmm-autostart" data-id-title="Automatically Starting a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.3.1.1 </span><span class="title-name">Automatically Starting a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-status-vmm-autostart">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     You can automatically start a guest when the VM Host Server boots. This feature
+     is not enabled by default and needs to be enabled for each VM Guest
+     individually. There is no way to activate it globally.
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Double-click the VM Guest entry in Virtual Machine Manager to open its console.
+      </p></li><li class="step"><p>
+       Choose <span class="guimenu">View</span> › <span class="guimenu">Details</span> to open the VM Guest
+       configuration window.
+      </p></li><li class="step"><p>
+       Choose <span class="guimenu">Boot Options</span> and check <span class="guimenu">Start virtual
+       machine on host boot up</span>.
+      </p></li><li class="step"><p>
+       Save the new configuration with <span class="guimenu">Apply</span>.
+      </p></li></ol></div></div></section></section><section class="sect2" id="sec-libvirt-managing-status-virsh" data-id-title="Changing a VM Guests State with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.3.2 </span><span class="title-name">Changing a VM Guest's State with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-status-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    In the following examples, the state of a VM Guest named
+    <span class="quote">“<span class="quote">sles12</span>”</span> is changed.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.7.6.3.1"><span class="term">Start</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh start sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.2"><span class="term">Pause</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh suspend sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.3"><span class="term">Resume (a Suspended  VM Guest)</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh resume sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.4"><span class="term">Reboot</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh reboot sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.5"><span class="term">Graceful shutdown</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh shutdown sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.6"><span class="term">Force shutdown</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh destroy sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.7"><span class="term">Turn on automatic start</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh autostart sles12</pre></div></dd><dt id="id-1.12.4.4.7.6.3.8"><span class="term">Turn off automatic start</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh autostart --disable sles12</pre></div></dd></dl></div></section></section><section class="sect1" id="sec-libvirt-manage-save" data-id-title="Saving and Restoring the State of a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.4 </span><span class="title-name">Saving and Restoring the State of a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-manage-save">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Saving a VM Guest preserves the exact state of the guest’s memory. The
+   operation is similar to <span class="emphasis"><em>hibernating</em></span> a computer. A saved
+   VM Guest can be quickly restored to its previously saved running condition.
+  </p><p>
+   When saved, the VM Guest is paused, its current memory state is saved to
+   disk, and then the guest is stopped. The operation does not make a copy of
+   any portion of the VM Guest’s virtual disk. The amount of time taken to
+   save the virtual machine depends on the amount of memory allocated. When
+   saved, a VM Guest’s memory is returned to the pool of memory available on
+   the VM Host Server.
+  </p><p>
+   The restore operation loads a VM Guest’s previously saved memory state
+   file and starts it. The guest is not booted but instead resumed at the point
+   where it was previously saved. The operation is similar to coming out of
+   hibernation.
+  </p><p>
+   The VM Guest is saved to a state file. Make sure there is enough space on
+   the partition you are going to save to. For an estimation of the file size
+   in megabytes to be expected, issue the following command on the guest:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>free -mh | awk '/^Mem:/ {print $3}'</pre></div><div id="adm-vm-restore" data-id-title="Always Restore Saved Guests" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Always Restore Saved Guests</div><p>
+    After using the save operation, do not boot or start the saved VM Guest.
+    Doing so would cause the machine's virtual disk and the saved memory state
+    to get out of synchronization. This can result in critical errors when
+    restoring the guest.
+   </p><p>
+    To be able to work with a saved VM Guest again, use the restore operation.
+    If you used <code class="command">virsh</code> to save a VM Guest, you cannot
+    restore it using Virtual Machine Manager. In this case, make sure to restore using
+    <code class="command">virsh</code>.
+   </p></div><div id="id-1.12.4.4.8.8" data-id-title="Only for VM Guests with Disk Types raw, qcow2, qed" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Only for VM Guests with Disk Types <code class="literal">raw</code>, <code class="literal">qcow2</code>, <code class="literal">qed</code></div><p>
+    Saving and restoring VM Guests is only possible if the VM Guest is using
+    a virtual disk of the type <code class="literal">raw</code>
+    (<code class="filename">.img</code>), <span class="emphasis"><em>qcow2</em></span>, or
+    <code class="literal">qed</code>.
+   </p></div><section class="sect2" id="sec-libvirt-manage-save-vmm" data-id-title="Saving/Restoring with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.1 </span><span class="title-name">Saving/Restoring with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-manage-save-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure" id="id-1.12.4.4.8.9.2" data-id-title="Saving a VM Guest"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.3: </span><span class="title-name">Saving a VM Guest </span></span><a title="Permalink" class="permalink" href="cha-libvirt-managing.html#id-1.12.4.4.8.9.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a VNC connection window to a VM Guest. Make sure the guest is
+      running.
+     </p></li><li class="step"><p>
+      Choose <span class="guimenu">Virtual Machine</span> › <span class="guimenu">Shutdown</span> › <span class="guimenu">Save</span>.
+     </p></li></ol></div></div><div class="procedure" id="id-1.12.4.4.8.9.3" data-id-title="Restoring a VM Guest"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 10.4: </span><span class="title-name">Restoring a VM Guest </span></span><a title="Permalink" class="permalink" href="cha-libvirt-managing.html#id-1.12.4.4.8.9.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Open a VNC connection window to a VM Guest. Make sure the guest is not
+      running.
+     </p></li><li class="step"><p>
+      Choose <span class="guimenu">Virtual Machine</span> › <span class="guimenu">Restore</span>.
+     </p><p>
+      If the VM Guest was previously saved using Virtual Machine Manager, you will not be
+      offered an option to <span class="guimenu">Run</span> the guest. However, note the
+      caveats on machines saved with <code class="command">virsh</code> outlined in
+      <a class="xref" href="cha-libvirt-managing.html#adm-vm-restore" title="Warning: Always Restore Saved Guests">Warning: Always Restore Saved Guests</a>.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-libvirt-manage-save-virsh" data-id-title="Saving and Restoring with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.4.2 </span><span class="title-name">Saving and Restoring with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-manage-save-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Save a running VM Guest with the command <code class="command">virsh</code>
+    <code class="option">save</code> and specify the file which it is saved to.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.8.10.3.1"><span class="term">Save the guest named <code class="literal">opensuse13</code>
+     </span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh save opensuse13 /virtual/saves/opensuse13.vmsav</pre></div></dd><dt id="id-1.12.4.4.8.10.3.2"><span class="term">Save the guest with the ID <code class="literal">37</code>
+     </span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh save 37 /virtual/saves/opensuse13.vmsave</pre></div></dd></dl></div><p>
+    To restore a VM Guest, use <code class="command">virsh</code>
+    <code class="option">restore</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh restore /virtual/saves/opensuse13.vmsave</pre></div></section></section><section class="sect1" id="sec-libvirt-managing-snapshots" data-id-title="Creating and Managing Snapshots"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.5 </span><span class="title-name">Creating and Managing Snapshots</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   VM Guest snapshots are snapshots of the complete virtual machine including
+   the state of CPU, RAM, devices, and the content of all writable disks. To
+   use virtual machine snapshots, all the attached hard disks need to use the
+   qcow2 disk image format, and at least one of them needs to be writable.
+  </p><p>
+   Snapshots let you restore the state of the machine at a particular point in
+   time. This is useful when undoing a faulty configuration or the installation
+   of a lot of packages. After starting a snapshot that was created while the
+   VM Guest was shut off, you will need to boot it. Any changes written to the
+   disk after that point in time will be lost when starting the snapshot.
+  </p><div id="id-1.12.4.4.9.4" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+    Snapshots are supported on KVM VM Host Servers only.
+   </p></div><section class="sect2" id="libvirt-snapshots-terminology" data-id-title="Terminology"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.5.1 </span><span class="title-name">Terminology</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#libvirt-snapshots-terminology">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    There are several specific terms used to describe the type of snapshots:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.9.5.3.1"><span class="term">Internal snapshots</span></dt><dd><p>
+       Snapshots that are saved into the qcow2 file of the original VM Guest.
+       The file holds both the saved state of the snapshot and the changes made
+       since the snapshot was taken. The main advantage of internal snapshots
+       is that they are all stored in one file and therefore it is easy to copy
+       or move them across multiple machines.
+      </p></dd><dt id="id-1.12.4.4.9.5.3.2"><span class="term">External snapshots</span></dt><dd><p>
+       When creating an external snapshot, the original qcow2 file is saved and
+       made read-only, while a new qcow2 file is created to hold the changes.
+       The original file is sometimes called a 'backing' or 'base' file, while
+       the new file with all the changes is called an 'overlay' or 'derived'
+       file. External snapshots are useful when performing backups of VM Guests.
+       However, external snapshots are not supported by Virtual Machine Manager, and
+       cannot be deleted by <code class="command">virsh</code> directly.
+       For more information on external snapshots in QEMU, refer
+       to <a class="xref" href="cha-qemu-guest-inst.html#cha-qemu-guest-inst-qemu-img-effect" title="28.2.4. Manipulate Disk Images Effectively">Section 28.2.4, “Manipulate Disk Images Effectively”</a>.
+      </p></dd><dt id="id-1.12.4.4.9.5.3.3"><span class="term">Live snapshots</span></dt><dd><p>
+       Snapshots created when the original VM Guest is running. Internal live
+       snapshots support saving the devices, and memory and disk states, while
+       external live snapshots with <code class="command">virsh</code> support saving
+       either the memory state, or the disk state, or both.
+      </p></dd><dt id="id-1.12.4.4.9.5.3.4"><span class="term">Offline snapshots</span></dt><dd><p>
+       Snapshots created from a VM Guest that is shut off. This ensures data
+       integrity as all the guest's processes are stopped and no memory is in
+       use.
+      </p></dd></dl></div></section><section class="sect2" id="sec-libvirt-managing-snapshots-vmm" data-id-title="Creating and Managing Snapshots with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.5.2 </span><span class="title-name">Creating and Managing Snapshots with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.12.4.4.9.6.2" data-id-title="Internal Snapshots Only" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Internal Snapshots Only</div><p>
+     Virtual Machine Manager supports only internal snapshots, both live and offline.
+    </p></div><p>
+    To open the snapshot management view in Virtual Machine Manager, open the VNC window as
+    described in <a class="xref" href="cha-libvirt-managing.html#sec-libvirt-managing-console-vnc-vmm" title="10.2.1.1. Opening a Graphical Console with Virtual Machine Manager">Section 10.2.1.1, “Opening a Graphical Console with Virtual Machine Manager”</a>. Now
+    either choose <span class="guimenu">View</span> › <span class="guimenu">Snapshots</span> or click <span class="guimenu">Manage VM
+    Snapshots</span> in the toolbar.
+   </p><div class="informalfigure"><div class="mediaobject"><a href="images/virt_vmm_snapshots_list.png"><img src="images/virt_vmm_snapshots_list.png" width="75%" alt="Manage VM Snapshots" title="Manage VM Snapshots"/></a></div></div><p>
+    The list of existing snapshots for the chosen VM Guest is displayed in the
+    left-hand part of the window. The snapshot that was last started is marked
+    with a green tick. The right-hand part of the window shows details of the
+    snapshot currently marked in the list. These details include the snapshot's
+    title and time stamp, the state of the VM Guest at the time the snapshot
+    was taken and a description. Snapshots of running guests also include a
+    screenshot. The <span class="guimenu">Description</span> can be changed directly from
+    this view. Other snapshot data cannot be changed.
+   </p><section class="sect3" id="sec-libvirt-managing-snapshots-vmm-add" data-id-title="Creating a Snapshot"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.2.1 </span><span class="title-name">Creating a Snapshot</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-vmm-add">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To take a new snapshot of a VM Guest, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Optionally, shut down the VM Guest if you want to create an offline
+       snapshot.
+      </p></li><li class="step"><p>
+       Click <span class="guimenu">Add</span> in the bottom left corner of the VNC
+       window.
+      </p><p>
+       The window <span class="guimenu">Create Snapshot</span> opens.
+      </p></li><li class="step"><p>
+       Provide a <span class="guimenu">Name</span> and, optionally, a description. The
+       name cannot be changed after the snapshot has been taken. To be able to
+       identify the snapshot later easily, use a <span class="quote">“<span class="quote">speaking name</span>”</span>.
+      </p></li><li class="step"><p>
+       Confirm with <span class="guimenu">Finish</span>.
+      </p></li></ol></div></div></section><section class="sect3" id="sec-libvirt-managing-snapshots-vmm-delete" data-id-title="Deleting a Snapshot"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.2.2 </span><span class="title-name">Deleting a Snapshot</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-vmm-delete">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To delete a snapshot of a VM Guest, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Click <span class="guimenu">Delete</span> in the bottom left corner of the VNC
+       window.
+      </p></li><li class="step"><p>
+       Confirm the deletion with <span class="guimenu">Yes</span>.
+      </p></li></ol></div></div></section><section class="sect3" id="sec-libvirt-managing-snapshots-vmm-start" data-id-title="Starting a Snapshot"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.2.3 </span><span class="title-name">Starting a Snapshot</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-vmm-start">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To start a snapshot, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Click <span class="guimenu">Run</span> in the bottom left corner of the VNC
+       window.
+      </p></li><li class="step"><p>
+       Confirm the start with <span class="guimenu">Yes</span>.
+      </p></li></ol></div></div></section></section><section class="sect2" id="sec-libvirt-managing-snapshots-virsh" data-id-title="Creating and Managing Snapshots with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.5.3 </span><span class="title-name">Creating and Managing Snapshots with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To list all existing snapshots for a domain
+    (<em class="replaceable">admin_server</em> in the following), run the
+    <code class="literal">snapshot-list</code> command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-list --domain admin_server
+ Name                 Creation Time             State
+------------------------------------------------------------
+ Basic installation incl. SMT finished 2013-09-18 09:45:29 +0200 shutoff
+ Basic installation incl. SMT for CLOUD3 2013-12-11 15:11:05 +0100 shutoff
+ Basic installation incl. SMT for CLOUD3-HA 2014-03-24 13:44:03 +0100 shutoff
+ Basic installation incl. SMT for CLOUD4 2014-07-07 11:27:47 +0200 shutoff
+ Beta1 Running        2013-07-12 12:27:28 +0200 shutoff
+ Beta2 prepared       2013-07-12 17:00:44 +0200 shutoff
+ Beta2 running        2013-07-29 12:14:11 +0200 shutoff
+ Beta3 admin node deployed 2013-07-30 16:50:40 +0200 shutoff
+ Beta3 prepared       2013-07-30 17:07:35 +0200 shutoff
+ Beta3 running        2013-09-02 16:13:25 +0200 shutoff
+ Cloud2 GM running    2013-12-10 15:44:58 +0100 shutoff
+ CLOUD3 RC prepared   2013-12-20 15:30:19 +0100 shutoff
+ CLOUD3-HA Build 680 prepared 2014-03-24 14:20:37 +0100 shutoff
+ CLOUD3-HA Build 796 installed (zypper up) 2014-04-14 16:45:18 +0200 shutoff
+ GMC2 post Cloud install 2013-09-18 10:53:03 +0200 shutoff
+ GMC2 pre Cloud install 2013-09-18 10:31:17 +0200 shutoff
+ GMC2 prepared (incl. Add-On Installation) 2013-09-17 16:22:37 +0200 shutoff
+ GMC_pre prepared     2013-09-03 13:30:38 +0200 shutoff
+ OS + SMT + eth[01]   2013-06-14 16:17:24 +0200 shutoff
+ OS + SMT + Mirror + eth[01] 2013-07-30 15:50:16 +0200 shutoff</pre></div><p>
+    The snapshot that was last started is shown with the
+    <code class="literal">snapshot-current command:</code>
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-current --domain admin_server
+Basic installation incl. SMT for CLOUD4</pre></div><p>
+    Details about a particular snapshot can be obtained by running the
+    <code class="literal">snapshot-info</code> command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-info --domain admin_server \
+   -name  "Basic installation incl. SMT for CLOUD4"
+Name:           Basic installation incl. SMT for CLOUD4
+Domain:         admin_server
+Current:        yes
+State:          shutoff
+Location:       internal
+Parent:         Basic installation incl. SMT for CLOUD3-HA
+Children:       0
+Descendants:    0
+Metadata:       yes</pre></div><section class="sect3" id="sec-libvirt-managing-snapshots-virsh-add" data-id-title="Creating Internal Snapshots"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.3.1 </span><span class="title-name">Creating Internal Snapshots</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-virsh-add">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To take an internal snapshot of a VM Guest, both live and offline, use
+     the <code class="literal">snapshot-create-as</code> command as follows:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-create-as --domain admin_server<span class="callout" id="virsh-snapshot-add-domain">1</span> --name "Snapshot 1"<span class="callout" id="virsh-snapshot-add-name">2</span> \
+--description "First snapshot"<span class="callout" id="virsh-snapshot-add-description">3</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#virsh-snapshot-add-domain"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Domain name. Mandatory.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#virsh-snapshot-add-name"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Name of the snapshot. It is recommended to use a <span class="quote">“<span class="quote">speaking
+       name</span>”</span>, since that makes it easier to identify the snapshot.
+       Mandatory.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#virsh-snapshot-add-description"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Description for the snapshot. Optional.
+      </p></td></tr></table></div></section><section class="sect3" id="sec-libvirt-managing-snapshots-virsh-add-ext" data-id-title="Creating External Snapshots"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.3.2 </span><span class="title-name">Creating External Snapshots</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-virsh-add-ext">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     With <code class="command">virsh</code>, you can take external snapshots of the
+     guest's memory state, disk state, or both.
+    </p><p>
+     To take both live and offline external snapshots of the guest's disk,
+     specify the <code class="option">--disk-only</code> option:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-create-as --domain admin_server --name \
+ "Offline external snapshot" --disk-only</pre></div><p>
+     You can specify the <code class="option">--diskspec</code> option to control how the
+     external files are created:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-create-as --domain admin_server --name \
+ "Offline external snapshot" \
+ --disk-only --diskspec vda,snapshot=external,file=/path/to/snapshot_file</pre></div><p>
+     To take a live external snapshot of the guest's memory, specify the
+     <code class="option">--live</code> and <code class="option">--memspec</code> options:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-create-as --domain admin_server --name \
+ "Offline external snapshot" --live \
+ --memspec snapshot=external,file=/path/to/snapshot_file</pre></div><p>
+     To take a live external snapshot of both the guest's disk and memory
+     states, combine the <code class="option">--live</code>, <code class="option">--diskspec</code>,
+     and <code class="option">--memspec</code> options:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-create-as --domain admin_server --name \
+ "Offline external snapshot" --live \
+ --memspec snapshot=external,file=/path/to/snapshot_file
+ --diskspec vda,snapshot=external,file=/path/to/snapshot_file</pre></div><p>
+     Refer to the <em class="citetitle">SNAPSHOT COMMANDS</em> section in
+     <code class="command">man 1 virsh</code> for more details.
+    </p></section><section class="sect3" id="sec-libvirt-managing-snapshots-virsh-delete" data-id-title="Deleting a Snapshot"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.3.3 </span><span class="title-name">Deleting a Snapshot</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-virsh-delete">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     External snapshots cannot be deleted with <code class="command">virsh</code>.
+     To delete an internal snapshot of a VM Guest and restore the disk space
+     it occupies, use the <code class="literal">snapshot-delete</code> command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-delete --domain admin_server --snapshotname "Snapshot 2"</pre></div></section><section class="sect3" id="sec-libvirt-managing-snapshots-virsh-start" data-id-title="Starting a Snapshot"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.5.3.4 </span><span class="title-name">Starting a Snapshot</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots-virsh-start">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     To start a snapshot, use the <code class="literal">snapshot-revert</code> command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-revert --domain admin_server --snapshotname "Snapshot 1"</pre></div><p>
+     To start the current snapshot (the one the VM Guest was started off), it
+     is sufficient to use <code class="option">--current</code> rather than specifying the
+     snapshot name:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh snapshot-revert --domain admin_server --current</pre></div></section></section></section><section class="sect1" id="sec-libvirt-managing-delete" data-id-title="Deleting a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.6 </span><span class="title-name">Deleting a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-delete">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   By default, deleting a VM Guest using <code class="command">virsh</code> removes only
+   its XML configuration. Since attached storage is not deleted by default, you
+   can reuse it with another VM Guest. With Virtual Machine Manager, you can also delete a
+   guest's storage files as well—this will completely erase the guest.
+  </p><section class="sect2" id="sec-libvirt-managing-delete-vmm" data-id-title="Deleting a VM Guest with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.6.1 </span><span class="title-name">Deleting a VM Guest with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-delete-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      In the Virtual Machine Manager, right-click a VM Guest entry.
+     </p></li><li class="step"><p>
+      From the context menu, choose <span class="guimenu">Delete</span>.
+     </p></li><li class="step"><p>
+      A confirmation window opens. Clicking <span class="guimenu">Delete</span> will
+      permanently erase the VM Guest. The deletion is not recoverable.
+     </p><p>
+      You can also permanently delete the guest's virtual disk by activating
+      <span class="guimenu">Delete Associated Storage Files</span>. The deletion is not
+      recoverable either.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-libvirt-managing-delete-virsh" data-id-title="Deleting a VM Guest with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.6.2 </span><span class="title-name">Deleting a VM Guest with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-managing-delete-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To delete a VM Guest, it needs to be shut down first. It is not possible
+    to delete a running guest. For information on shutting down, see
+    <a class="xref" href="cha-libvirt-managing.html#sec-libvirt-managing-status" title="10.3. Changing a VM Guest's State: Start, Stop, Pause">Section 10.3, “Changing a VM Guest's State: Start, Stop, Pause”</a>.
+   </p><p>
+    To delete a VM Guest with <code class="command">virsh</code>, run
+    <code class="command">virsh</code> <code class="option">undefine</code>
+    <em class="replaceable">VM_NAME</em>.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh undefine sles12</pre></div><p>
+    There is no option to automatically delete the attached storage files. If
+    they are managed by libvirt, delete them as described in
+    <a class="xref" href="cha-libvirt-storage.html#sec-libvirt-storage-virsh-del-volumes" title="12.2.4. Deleting Volumes from a Storage Pool">Section 12.2.4, “Deleting Volumes from a Storage Pool”</a>.
+   </p></section></section><section class="sect1" id="sec-libvirt-admin-migrate" data-id-title="Migrating VM Guests"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.7 </span><span class="title-name">Migrating VM Guests</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-admin-migrate">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   One of the major advantages of virtualization is that VM Guests are
+   portable. When a VM Host Server needs to go down for maintenance, or when the host
+   gets overloaded, the guests can easily be moved to another VM Host Server. KVM
+   and Xen even support <span class="quote">“<span class="quote">live</span>”</span> migrations during which the
+   VM Guest is constantly available.
+  </p><section class="sect2" id="libvirt-admin-live-migration-requirements" data-id-title="Migration Requirements"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.1 </span><span class="title-name">Migration Requirements</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#libvirt-admin-live-migration-requirements">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To successfully migrate a VM Guest to another VM Host Server, the following
+    requirements need to be met:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      It is recommended that the source and destination systems have the same
+      architecture. However, it is possible to migrate between hosts with AMD*
+      and Intel* architectures.
+     </p></li><li class="listitem"><p>
+      Storage devices must be accessible from both machines (for example, via
+      NFS or iSCSI) and must be configured as a storage pool on both machines.
+      For more information, see <a class="xref" href="cha-libvirt-storage.html" title="Chapter 12. Managing Storage">Chapter 12, <em>Managing Storage</em></a>.
+     </p><p>
+      This is also true for CD-ROM or floppy images that are connected during
+      the move. However, you can disconnect them prior to the move as described
+      in <a class="xref" href="cha-libvirt-config.html#sec-libvirt-config-cdrom-media-change" title="14.8. Ejecting and Changing Floppy or CD/DVD-ROM Media with Virtual Machine Manager">Section 14.8, “Ejecting and Changing Floppy or CD/DVD-ROM Media with Virtual Machine Manager”</a>.
+     </p></li><li class="listitem"><p>
+      <code class="systemitem">libvirtd</code> needs to run on both VM Host Servers and you must be able to open a
+      remote <code class="systemitem">libvirt</code> connection between the target and the source host (or
+      vice versa). Refer to <a class="xref" href="cha-libvirt-connect.html#sec-libvirt-connect-remote" title="11.3. Configuring Remote Connections">Section 11.3, “Configuring Remote Connections”</a> for
+      details.
+     </p></li><li class="listitem"><p>
+      If a firewall is running on the target host, ports need to be opened to
+      allow the migration. If you do not specify a port during the migration
+      process, <code class="systemitem">libvirt</code> chooses one from the range 49152:49215. Make sure that
+      either this range (recommended) or a dedicated port of your choice is
+      opened in the firewall on the <span class="emphasis"><em>target host</em></span>.
+     </p></li><li class="listitem"><p>
+      Host and target machine should be in the same subnet on the network,
+      otherwise networking will not work after the migration.
+     </p></li><li class="listitem"><p>
+      All VM Host Servers participating in migration must have the same UID for
+      the qemu user and the same GIDs for the kvm, qemu, and libvirt groups.
+     </p></li><li class="listitem"><p>
+      No running or paused VM Guest with the same name must exist on the
+      target host. If a shut down machine with the same name exists, its
+      configuration will be overwritten.
+     </p></li><li class="listitem"><p>
+      All CPU models except <span class="emphasis"><em>host cpu</em></span> model are supported
+      when migrating VM Guests.
+     </p></li><li class="listitem"><p>
+      <a class="xref" href="gloss-vt-glossary.html#gloss-vt-acronym-sata" title="SATA">SATA</a> disk device type is not
+      migratable.
+     </p></li><li class="listitem"><p>
+      File system pass-through feature is incompatible with migration.
+     </p></li><li class="listitem"><p>
+      The VM Host Server and VM Guest need to have proper timekeeping installed. See
+      <a class="xref" href="sec-kvm-managing-clock.html" title="Chapter 16. VM Guest Clock Settings">Chapter 16, <em>VM Guest Clock Settings</em></a>.
+     </p></li><li class="listitem"><p>
+      No physical devices can be passed from host to guest. Live migration is
+      currently not supported when using devices with PCI pass-through or
+      <a class="xref" href="chap-virtualization-introduction.html#vt-io-sriov">SR-IOV</a>. If live migration needs to be supported,
+      you need to use software virtualization (paravirtualization or full
+      virtualization).
+     </p></li><li class="listitem"><p>
+      Cache mode setting is an important setting for migration. See:
+      <a class="xref" href="cha-cachemodes.html#sec-cache-mode-live-migration" title="15.5. Effect of Cache Modes on Live Migration">Section 15.5, “Effect of Cache Modes on Live Migration”</a>.
+     </p></li><li class="listitem"><p>
+      Backward migration (for example, from SLES 15 SP2 to 15 SP1) is not
+      supported.
+     </p></li><li class="listitem"><p>
+      SUSE strives to support live migration of VM Guests from a VM Host Server
+      running a service pack under LTSS to a VM Host Server running a newer service
+      pack, within the same SLES major version. For example VM Guest
+      migration from a SLES 12 SP2 host to a SLES 12 SP5 host. SUSE only
+      performs minimal testing of LTSS-to-newer migration scenarios and
+      recommends thorough on-site testing before attempting to migrate critical
+      VM Guests.
+     </p></li><li class="listitem"><p>
+      The image directory should be located in the same path on both hosts.
+     </p></li><li class="listitem"><p>
+      All hosts should be on the same level of microcode (especially the spectre
+      microcode updates). This can be achieved by installing the latest updates
+      of SUSE Linux Enterprise Server on all hosts.
+     </p></li></ul></div></section><section class="sect2" id="id-1.12.4.4.11.4" data-id-title="Supported Migration Scenarios"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.2 </span><span class="title-name">Supported Migration Scenarios</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#id-1.12.4.4.11.4">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following list enumerates supported migration scenarios for SLES 12
+    SP5 VM Host Servers:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      SLES 12 SP4 to SLES 12 SP5
+     </p></li><li class="listitem"><p>
+      SLES 12 SP5 to SLES 12 SP5
+     </p></li><li class="listitem"><p>
+      SLES 12 SP5 to SLES 15 SP1
+     </p></li></ul></div></section><section class="sect2" id="sec-libvirt-admin-migrate-virtmanager" data-id-title="Migrating with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.3 </span><span class="title-name">Migrating with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-admin-migrate-virtmanager">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When using the Virtual Machine Manager to migrate VM Guests, it does not matter on which
+    machine it is started. You can start Virtual Machine Manager on the source or the target host
+    or even on a third host. In the latter case you need to be able to open
+    remote connections to both the target and the source host.
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start Virtual Machine Manager and establish a connection to the target or the source host.
+      If the Virtual Machine Manager was started neither on the target nor the source host,
+      connections to both hosts need to be opened.
+     </p></li><li class="step"><p>
+      Right-click the VM Guest that you want to migrate and choose
+      <span class="guimenu">Migrate</span>. Make sure the guest is running or
+      paused—it is not possible to migrate guests that are shut down.
+     </p><div id="id-1.12.4.4.11.5.3.2.2" data-id-title="Increasing the Speed of the Migration" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Increasing the Speed of the Migration</div><p>
+       To increase the speed of the migration somewhat, pause the VM Guest.
+       This is the equivalent of the former so-called <span class="quote">“<span class="quote">offline
+       migration</span>”</span> option of Virtual Machine Manager.
+      </p></div></li><li class="step"><p>
+      Choose a <span class="guimenu">New Host</span> for the VM Guest. If the desired
+      target host does not show up, make sure that you are connected to the
+      host.
+     </p><p>
+      To change the default options for connecting to the remote host, under
+      <span class="guimenu">Connection</span>, set the <span class="guimenu">Mode</span>, and the
+      target host's <span class="guimenu">Address</span> (IP address or host name) and
+      <span class="guimenu">Port</span>. If you specify a <span class="guimenu">Port</span>, you
+      must also specify an <span class="guimenu">Address</span>.
+     </p><p>
+      Under <span class="guimenu">Advanced options</span>, choose whether the move should
+      be permanent (default) or temporary, using <span class="guimenu">Temporary
+      move</span>.
+     </p><p>
+      Additionally, there is the option <span class="guimenu">Allow unsafe</span>, which
+      allows migrating without disabling the cache of the VM Host Server. This can
+      speed up the migration but only works when the current configuration
+      allows for a consistent view of the VM Guest storage without using
+      <code class="literal">cache="none"</code>/<code class="literal">0_DIRECT</code>.
+     </p><div id="id-1.12.4.4.11.5.3.3.5" data-id-title="Bandwidth Option" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Bandwidth Option</div><p>
+       In recent versions of Virtual Machine Manager, the option of setting a bandwidth for the
+       migration has been removed. To set a specific bandwidth, use
+       <code class="command">virsh</code> instead.
+      </p></div></li><li class="step"><p>
+      To perform the migration, click <span class="guimenu">Migrate</span>.
+     </p><p>
+      When the migration is complete, the <span class="guimenu">Migrate</span> window
+      closes and the VM Guest is now listed on the new host in the Virtual Machine Manager
+      window. The original VM Guest will still be available on the target host
+      (in shut down state).
+     </p></li></ol></div></div></section><section class="sect2" id="sec-libvirt-admin-migrate-virsh" data-id-title="Migrating with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.4 </span><span class="title-name">Migrating with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-admin-migrate-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To migrate a VM Guest with <code class="command">virsh</code>
+    <code class="option">migrate</code>, you need to have direct or remote shell access to
+    the VM Host Server, because the command needs to be run on the host. The
+    migration command looks like this:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh migrate [OPTIONS] <em class="replaceable">VM_ID_or_NAME</em> <em class="replaceable">CONNECTION_URI</em> [--migrateuri tcp://<em class="replaceable">REMOTE_HOST:PORT</em>]</pre></div><p>
+    The most important options are listed below. See <code class="command">virsh help
+    migrate</code> for a full list.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.11.6.5.1"><span class="term"><code class="option">--live</code>
+     </span></dt><dd><p>
+       Does a live migration. If not specified, the guest will be paused during
+       the migration (<span class="quote">“<span class="quote">offline migration</span>”</span>).
+      </p></dd><dt id="id-1.12.4.4.11.6.5.2"><span class="term"><code class="option">--suspend</code>
+     </span></dt><dd><p>
+       Does an offline migration and does not restart the VM Guest on the
+       target host.
+      </p></dd><dt id="id-1.12.4.4.11.6.5.3"><span class="term"><code class="option">--persistent</code>
+     </span></dt><dd><p>
+       By default a migrated VM Guest will be migrated temporarily, so its
+       configuration is automatically deleted on the target host if it is shut
+       down. Use this switch to make the migration persistent.
+      </p></dd><dt id="id-1.12.4.4.11.6.5.4"><span class="term"><code class="option">--undefinesource</code>
+     </span></dt><dd><p>
+       When specified, the VM Guest definition on the source host will be
+       deleted after a successful migration (however, virtual disks attached to
+       this guest will <span class="emphasis"><em>not</em></span> be deleted).
+      </p></dd></dl></div><p>
+    The following examples use mercury.example.com as the source system and jupiter.example.com as
+    the target system; the VM Guest's name is <code class="literal">opensuse131</code>
+    with Id <code class="literal">37</code>.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.4.11.6.7.1"><span class="term">Offline migration with default parameters</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh migrate 37 qemu+ssh://tux@jupiter.example.com/system</pre></div></dd><dt id="id-1.12.4.4.11.6.7.2"><span class="term">Transient live migration with default parameters</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh migrate --live opensuse131 qemu+ssh://tux@jupiter.example.com/system</pre></div></dd><dt id="id-1.12.4.4.11.6.7.3"><span class="term">Persistent live migration; delete VM definition on source</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh migrate --live --persistent --undefinesource 37 \
+qemu+tls://tux@jupiter.example.com/system</pre></div></dd><dt id="id-1.12.4.4.11.6.7.4"><span class="term">Offline migration using port 49152</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code>virsh migrate opensuse131 qemu+ssh://tux@jupiter.example.com/system \
+--migrateuri tcp://@jupiter.example.com:49152</pre></div></dd></dl></div><div id="id-1.12.4.4.11.6.8" data-id-title="Transient Compared to Persistent Migrations" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Transient Compared to Persistent Migrations</div><p>
+     By default <code class="command">virsh migrate</code> creates a temporary
+     (transient) copy of the VM Guest on the target host. A shut down version
+     of the original guest description remains on the source host. A transient
+     copy will be deleted from the server after it is shut down.
+    </p><p>
+     To create a permanent copy of a guest on the target host, use the switch
+     <code class="option">--persistent</code>. A shut down version of the original guest
+     description remains on the source host, too. Use the option
+     <code class="option">--undefinesource</code> together with
+     <code class="option">--persistent</code> for a <span class="quote">“<span class="quote">real</span>”</span> move where a
+     permanent copy is created on the target host and the version on the source
+     host is deleted.
+    </p><p>
+     It is not recommended to use <code class="option">--undefinesource</code> without the
+     <code class="option">--persistent</code> option, since this will result in the loss
+     of both VM Guest definitions when the guest is shut down on the target
+     host.
+    </p></div></section><section class="sect2" id="sec-libvirt-migrate-stepbstep" data-id-title="Step-by-Step Example"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.7.5 </span><span class="title-name">Step-by-Step Example</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-libvirt-migrate-stepbstep">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect3" id="sec-migrate-stepbstep-export" data-id-title="Exporting the Storage"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.7.5.1 </span><span class="title-name">Exporting the Storage</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-migrate-stepbstep-export">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     First you need to export the storage, to share the Guest image between
+     host. This can be done by an NFS server. In the following example we want
+     to share the <code class="filename">/volume1/VM</code> directory for all machines
+     that are on the network 10.0.1.0/24. We will use a SUSE Linux Enterprise NFS server. As
+     root user, edit the <code class="filename">/etc/exports</code> file and add:
+    </p><div class="verbatim-wrap"><pre class="screen">/volume1/VM 10.0.1.0/24  (rw,sync,no_root_squash)</pre></div><p>
+     You need to restart the NFS server:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> systemctl restart nfsserver
+<code class="prompt user">tux &gt; </code><code class="command">sudo</code> exportfs
+/volume1/VM      10.0.1.0/24</pre></div></section><section class="sect3" id="sec-migrate-stepbstep-pool" data-id-title="Defining the Pool on the Target Hosts"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.7.5.2 </span><span class="title-name">Defining the Pool on the Target Hosts</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-migrate-stepbstep-pool">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     On each host where you want to migrate the VM Guest, the pool must be
+     defined to be able to access the volume (that contains the Guest image).
+     Our NFS server IP address is 10.0.1.99, its share is the
+     <code class="filename">/volume1/VM</code> directory, and we want to get it mounted
+     in the <code class="filename">/var/lib/libvirt/images/VM</code> directory. The pool
+     name will be <span class="emphasis"><em>VM</em></span>. To define this pool, create a
+     <code class="filename">VM.xml</code> file with the following content:
+    </p><div class="verbatim-wrap"><pre class="screen">&lt;pool type='netfs'&gt;
+  &lt;name&gt;VM&lt;/name&gt;
+  &lt;source&gt;
+    &lt;host name='10.0.1.99'/&gt;
+    &lt;dir path='/volume1/VM'/&gt;
+    &lt;format type='auto'/&gt;
+  &lt;/source&gt;
+  &lt;target&gt;
+    &lt;path&gt;/var/lib/libvirt/images/VM&lt;/path&gt;
+    &lt;permissions&gt;
+      &lt;mode&gt;0755&lt;/mode&gt;
+      &lt;owner&gt;-1&lt;/owner&gt;
+      &lt;group&gt;-1&lt;/group&gt;
+    &lt;/permissions&gt;
+  &lt;/target&gt;
+  &lt;/pool&gt;</pre></div><p>
+     Then load it into <code class="systemitem">libvirt</code> using the <code class="command">pool-define</code>
+     command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virsh pool-define VM.xml</pre></div><p>
+     An alternative way to define this pool is to use the
+     <code class="command">virsh</code> command:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virsh pool-define-as VM --type netfs --source-host 10.0.1.99 \
+     --source-path /volume1/VM --target /var/lib/libvirt/images/VM
+Pool VM created</pre></div><p>
+     The following commands assume that you are in the interactive shell of
+     <code class="command">virsh</code> which can also be reached by using the command
+     <code class="command">virsh</code> without any arguments. Then the pool can be set
+     to start automatically at host boot (autostart option):
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>pool-autostart VM
+Pool VM marked as autostarted</pre></div><p>
+     If you want to disable the autostart:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>pool-autostart VM --disable
+Pool VM unmarked as autostarted</pre></div><p>
+     Check if the pool is present:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>pool-list --all
+ Name                 State      Autostart
+-------------------------------------------
+ default              active     yes
+ VM                   active     yes
+
+<code class="prompt user">virsh # </code>pool-info VM
+Name:           VM
+UUID:           42efe1b3-7eaa-4e24-a06a-ba7c9ee29741
+State:          running
+Persistent:     yes
+Autostart:      yes
+Capacity:       2,68 TiB
+Allocation:     2,38 TiB
+Available:      306,05 GiB</pre></div><div id="id-1.12.4.4.11.7.4.14" data-id-title="Pool Needs to Exist on All Target Hosts" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Pool Needs to Exist on All Target Hosts</div><p>
+      Remember: this pool must be defined on each host where you want to be
+      able to migrate your VM Guest.
+     </p></div></section><section class="sect3" id="sec-migrate-stepbstep-volume" data-id-title="Creating the Volume"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.7.5.3 </span><span class="title-name">Creating the Volume</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-migrate-stepbstep-volume">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     The pool has been defined—now we need a volume which will contain
+     the disk image:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">virsh # </code>vol-create-as VM sled12.qcow2 8G --format qcow2
+Vol sled12.qcow2 created</pre></div><p>
+     The volume names shown will be used later to install the guest with
+     virt-install.
+    </p></section><section class="sect3" id="sec-migrate-stepbstep-guest" data-id-title="Creating the VM Guest"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.7.5.4 </span><span class="title-name">Creating the VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-migrate-stepbstep-guest">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Let's create a <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> VM Guest with the
+     <code class="command">virt-install</code> command. The <span class="emphasis"><em>VM</em></span> pool
+     will be specified with the <code class="command">--disk</code> option,
+     <span class="emphasis"><em>cache=none</em></span> is recommended if you do not want to use
+     the <code class="command">--unsafe</code> option while doing the migration.
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code>virt-install --connect qemu:///system --virt-type kvm --name \
+   sled12 --memory 1024 --disk vol=VM/sled12.qcow2,cache=none --cdrom \
+   /mnt/install/ISO/SLE-12-Desktop-DVD-x86_64-Build0327-Media1.iso --graphics \
+   vnc --os-variant sled12
+Starting install...
+Creating domain...</pre></div></section><section class="sect3" id="sec-migrate-stepbstep-migrate" data-id-title="Migrate the VM Guest"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">10.7.5.5 </span><span class="title-name">Migrate the VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#sec-migrate-stepbstep-migrate">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Everything is ready to do the migration now. Run the
+     <code class="command">migrate</code> command on the VM Host Server that is currently
+     hosting the VM Guest, and choose the destination.
+    </p><div class="verbatim-wrap"><pre class="screen">virsh # migrate --live sled12 --verbose qemu+ssh://<em class="replaceable">IP/Hostname</em>/system
+Password:
+Migration: [ 12 %]</pre></div></section></section></section><section class="sect1" id="cha-libvirt-admin-monitor" data-id-title="Monitoring"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">10.8 </span><span class="title-name">Monitoring</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#cha-libvirt-admin-monitor">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="cha-libvirt-admin-monitor-virt-manager" data-id-title="Monitoring with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.8.1 </span><span class="title-name">Monitoring with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#cha-libvirt-admin-monitor-virt-manager">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    After starting Virtual Machine Manager and connecting to the VM Host Server, a CPU usage graph of
+    all the running guests is displayed.
+   </p><p>
+    It is also possible to get information about disk and network usage with
+    this tool, however, you must first activate this in
+    <span class="guimenu">Preferences</span>:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Run <code class="command">virt-manager</code>.
+     </p></li><li class="step"><p>
+      Select <span class="guimenu">Edit</span> › <span class="guimenu">Preferences</span>.
+     </p></li><li class="step"><p>
+      Change the tab from <span class="guimenu">General</span> to
+      <span class="guimenu">Polling</span>.
+     </p></li><li class="step"><p>
+      Activate the check boxes for the kind of activity you want to see:
+      <span class="guimenu">Poll Disk I/O</span>, <span class="guimenu">Poll Network I/O</span>,
+      and <span class="guimenu">Poll Memory stats</span>.
+     </p></li><li class="step"><p>
+      If desired, also change the update interval using <span class="guimenu">Update status
+      every n seconds</span>.
+     </p></li><li class="step"><p>
+      Close the <span class="guimenu">Preferences</span> dialog.
+     </p></li><li class="step"><p>
+      Activate the graphs that should be displayed under <span class="guimenu">View</span> › <span class="guimenu">Graph</span>.
+     </p></li></ol></div></div><p>
+    Afterward, the disk and network statistics are also displayed in the main
+    window of the Virtual Machine Manager.
+   </p><p>
+    More precise data is available from the VNC window. Open a VNC window as
+    described in <a class="xref" href="cha-libvirt-managing.html#sec-libvirt-managing-console-vnc" title="10.2.1. Opening a Graphical Console">Section 10.2.1, “Opening a Graphical Console”</a>. Choose
+    <span class="guimenu">Details</span> from the toolbar or the <span class="guimenu">View</span>
+    menu. The statistics are displayed from the <span class="guimenu">Performance</span>
+    entry of the left-hand tree menu.
+   </p></section><section class="sect2" id="cha-libvirt-admin-monitor-virt-top" data-id-title="Monitoring with virt-top"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.8.2 </span><span class="title-name">Monitoring with <code class="command">virt-top</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#cha-libvirt-admin-monitor-virt-top">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">virt-top</code> is a command line tool similar to the
+    well-known process monitoring tool <code class="command">top</code>.
+    <code class="command">virt-top</code> uses libvirt and therefore is capable of
+    showing statistics for VM Guests running on different hypervisors. It is
+    recommended to use <code class="command">virt-top</code> instead of
+    hypervisor-specific tools like <code class="command">xentop</code>.
+   </p><p>
+    By default <code class="command">virt-top</code> shows statistics for all running
+    VM Guests. Among the data that is displayed is the percentage of memory
+    used (<code class="literal">%MEM</code>) and CPU (<code class="literal">%CPU</code>) and the
+    uptime of the guest (<code class="literal">TIME</code>). The data is updated
+    regularly (every three seconds by default). The following shows the output
+    on a VM Host Server with seven VM Guests, four of them inactive:
+   </p><div class="verbatim-wrap"><pre class="screen">virt-top 13:40:19 - x86_64 8/8CPU 1283MHz 16067MB 7.6% 0.5%
+7 domains, 3 active, 3 running, 0 sleeping, 0 paused, 4 inactive D:0 O:0 X:0
+CPU: 6.1%  Mem: 3072 MB (3072 MB by guests)
+
+   ID S RDRQ WRRQ RXBY TXBY %CPU %MEM    TIME   NAME
+    7 R  123    1  18K  196  5.8  6.0   0:24.35 sled12_sp1
+    6 R    1    0  18K    0  0.2  6.0   0:42.51 sles12_sp1
+    5 R    0    0  18K    0  0.1  6.0  85:45.67 opensuse_leap
+    -                                           (Ubuntu_1410)
+    -                                           (debian_780)
+    -                                           (fedora_21)
+    -                                           (sles11sp3)</pre></div><p>
+    By default the output is sorted by ID. Use the following key combinations
+    to change the sort field:
+   </p><table style="border: 0; " class="simplelist"><tr><td><span class="keycap">Shift</span><span class="key-connector">–</span><span class="keycap">P</span>: CPU
+     usage
+    </td></tr><tr><td><span class="keycap">Shift</span><span class="key-connector">–</span><span class="keycap">M</span>:
+     Total memory allocated by the guest
+    </td></tr><tr><td><span class="keycap">Shift</span><span class="key-connector">–</span><span class="keycap">T</span>: Time
+    </td></tr><tr><td><span class="keycap">Shift</span><span class="key-connector">–</span><span class="keycap">I</span>: ID
+    </td></tr></table><p>
+    To use any other field for sorting, press <span class="keycap">Shift</span><span class="key-connector">–</span><span class="keycap">F</span> and select a
+    field from the list. To toggle the sort order, use <span class="keycap">Shift</span><span class="key-connector">–</span><span class="keycap">R</span>.
+   </p><p>
+    <code class="command">virt-top</code> also supports different views on the VM Guests
+    data, which can be changed on-the-fly by pressing the following keys:
+   </p><table style="border: 0; " class="simplelist"><tr><td><span class="keycap">0</span>: default view</td></tr><tr><td><span class="keycap">1</span>: show physical CPUs</td></tr><tr><td><span class="keycap">2</span>: show network interfaces</td></tr><tr><td><span class="keycap">3</span>: show virtual disks</td></tr></table><p>
+    <code class="command">virt-top</code> supports more hot keys to change the view of
+    the data and many command line switches that affect the behavior of the
+    program. For more information, see <code class="command">man 1 virt-top</code>.
+   </p></section><section class="sect2" id="cha-libvirt-admin-monitor-kvm-stat" data-id-title="Monitoring with kvm_stat"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">10.8.3 </span><span class="title-name">Monitoring with <code class="command">kvm_stat</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-managing.html#cha-libvirt-admin-monitor-kvm-stat">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="command">kvm_stat</code> can be used to trace KVM performance events.
+    It monitors <code class="filename">/sys/kernel/debug/kvm</code>, so it needs the
+    debugfs to be mounted. On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> it should be mounted by default. In
+    case it is not mounted, use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">tux &gt; </code><code class="command">sudo</code> mount -t debugfs none /sys/kernel/debug</pre></div><p>
+    <code class="command">kvm_stat</code> can be used in three different modes:
+   </p><div class="verbatim-wrap"><pre class="screen">kvm_stat                    # update in 1 second intervals
+kvm_stat -1                 # 1 second snapshot
+kvm_stat -l &gt; kvmstats.log  # update in 1 second intervals in log format
+                            # can be imported to a spreadsheet</pre></div><div class="example" id="id-1.12.4.4.12.5.6" data-id-title="Typical Output of kvm_stat"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 10.1: </span><span class="title-name">Typical Output of <code class="command">kvm_stat</code> </span></span><a title="Permalink" class="permalink" href="cha-libvirt-managing.html#id-1.12.4.4.12.5.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP5/xml/libvirt_managing.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">kvm statistics
+
+ efer_reload                  0       0
+ exits                 11378946  218130
+ fpu_reload               62144     152
+ halt_exits              414866     100
+ halt_wakeup             260358      50
+ host_state_reload       539650     249
+ hypercalls                   0       0
+ insn_emulation         6227331  173067
+ insn_emulation_fail          0       0
+ invlpg                  227281      47
+ io_exits                113148      18
+ irq_exits               168474     127
+ irq_injections          482804     123
+ irq_window               51270      18
+ largepages                   0       0
+ mmio_exits                6925       0
+ mmu_cache_miss           71820      19
+ mmu_flooded              35420       9
+ mmu_pde_zapped           64763      20
+ mmu_pte_updated              0       0
+ mmu_pte_write           213782      29
+ mmu_recycled                 0       0
+ mmu_shadow_zapped       128690      17
+ mmu_unsync                  46      -1
+ nmi_injections               0       0
+ nmi_window                   0       0
+ pf_fixed               1553821     857
+ pf_guest               1018832     562
+ remote_tlb_flush        174007      37
+ request_irq                  0       0
+ signal_exits                 0       0
+ tlb_flush               394182     148</pre></div></div></div><p>
+    See
+    <a class="link" href="http://clalance.blogspot.com/2009/01/kvm-performance-tools.html" target="_blank">http://clalance.blogspot.com/2009/01/kvm-performance-tools.html</a>
+    for further information on how to interpret these values.
+   </p></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-kvm-inst.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 9 </span>Guest Installation</span></a> </div><div><a class="pagination-link next" href="cha-libvirt-connect.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Connecting and Authorizing</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-managing-list"><span class="title-number">10.1 </span><span class="title-name">Listing VM Guests</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-managing-console"><span class="title-number">10.2 </span><span class="title-name">Accessing the VM Guest via Console</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-managing-status"><span class="title-number">10.3 </span><span class="title-name">Changing a VM Guest's State: Start, Stop, Pause</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-manage-save"><span class="title-number">10.4 </span><span class="title-name">Saving and Restoring the State of a VM Guest</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-managing-snapshots"><span class="title-number">10.5 </span><span class="title-name">Creating and Managing Snapshots</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-managing-delete"><span class="title-number">10.6 </span><span class="title-name">Deleting a VM Guest</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#sec-libvirt-admin-migrate"><span class="title-number">10.7 </span><span class="title-name">Migrating VM Guests</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-managing.html#cha-libvirt-admin-monitor"><span class="title-number">10.8 </span><span class="title-name">Monitoring</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

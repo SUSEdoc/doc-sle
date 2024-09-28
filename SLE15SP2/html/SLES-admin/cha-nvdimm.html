@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP2 | Administration Guide | Persistent Memory</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Persistent Memory | SLES 15 SP2"/>
+<meta name="description" content="This chapter contains additional information about using SUSE Linux Enterprise with non-volatile main memory, also known as Persistent Memory, compri…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP2"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 28. Persistent Memory"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 15 SP2"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Persistent Memory",
+  
+    "description": "This chapter contains additional information about using SUSE Linux Enterprise with non-volatile main memory, also known as Persistent Memory, compri…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-05-17T00:00+02:00",
+      
+    "datePublished": "2020-07-21T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-power-mgmt.html" title="Chapter 27. Power Management"/><link rel="next" href="part-services.html" title="Part IV. Services"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-system.html">System</a><span> / </span><a class="crumb" href="cha-nvdimm.html">Persistent Memory</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="pre-sle.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="part-administration.html" class="has-children "><span class="title-number">I </span><span class="title-name">Common Tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash Scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name"><code class="command">sudo</code> Basics</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">3 </span><span class="title-name">Using YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST in Text Mode</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">5 </span><span class="title-name">YaST Online Update</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing Software with Command Line Tools</span></a></li><li><a href="cha-snapper.html" class=" "><span class="title-number">7 </span><span class="title-name">System Recovery and Snapshot Management with Snapper</span></a></li><li><a href="cha-klp.html" class=" "><span class="title-number">8 </span><span class="title-name">Live kernel patching with KLP</span></a></li><li><a href="cha-transactional-updates.html" class=" "><span class="title-number">9 </span><span class="title-name">Transactional Updates</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">10 </span><span class="title-name">Remote Graphical Sessions with VNC</span></a></li><li><a href="cha-net-rsync.html" class=" "><span class="title-number">11 </span><span class="title-name">File Copying with RSync</span></a></li></ol></li><li><a href="part-boot.html" class="has-children "><span class="title-number">II </span><span class="title-name">Booting a Linux System</span></a><ol><li><a href="cha-boot.html" class=" "><span class="title-number">12 </span><span class="title-name">Introduction to the Boot Process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">13 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" "><span class="title-number">14 </span><span class="title-name">The Boot Loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">15 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li class="active"><a href="part-system.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">16 </span><span class="title-name">32-Bit and 64-Bit Applications in a 64-Bit System Environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">17 </span><span class="title-name"><code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> Journal</span></a></li><li><a href="cha-update-alternative.html" class=" "><span class="title-number">18 </span><span class="title-name"><code class="command">update-alternatives</code>: Managing Multiple Versions of Commands and Files</span></a></li><li><a href="cha-network.html" class=" "><span class="title-number">19 </span><span class="title-name">Basic Networking</span></a></li><li><a href="cha-print.html" class=" "><span class="title-number">20 </span><span class="title-name">Printer Operation</span></a></li><li><a href="cha-gui-desktop.html" class=" "><span class="title-number">21 </span><span class="title-name">Graphical User Interface</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">22 </span><span class="title-name">Accessing File Systems with FUSE</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">23 </span><span class="title-name">Managing Kernel Modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">24 </span><span class="title-name">Dynamic Kernel Device Management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">25 </span><span class="title-name">Special System Features</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">26 </span><span class="title-name">Using NetworkManager</span></a></li><li><a href="cha-power-mgmt.html" class=" "><span class="title-number">27 </span><span class="title-name">Power Management</span></a></li><li><a href="cha-nvdimm.html" class=" you-are-here"><span class="title-number">28 </span><span class="title-name">Persistent Memory</span></a></li></ol></li><li><a href="part-services.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Services</span></a><ol><li><a href="cha-yast-serviceman.html" class=" "><span class="title-number">29 </span><span class="title-name">Service Management with YaST</span></a></li><li><a href="cha-ntp.html" class=" "><span class="title-number">30 </span><span class="title-name">Time Synchronization with NTP</span></a></li><li><a href="cha-dns.html" class=" "><span class="title-number">31 </span><span class="title-name">The Domain Name System</span></a></li><li><a href="cha-dhcp.html" class=" "><span class="title-number">32 </span><span class="title-name">DHCP</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">33 </span><span class="title-name">Sharing File Systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">34 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" "><span class="title-number">35 </span><span class="title-name">On-Demand Mounting with Autofs</span></a></li><li><a href="cha-slp.html" class=" "><span class="title-number">36 </span><span class="title-name">SLP</span></a></li><li><a href="cha-apache2.html" class=" "><span class="title-number">37 </span><span class="title-name">The Apache HTTP Server</span></a></li><li><a href="cha-ftp.html" class=" "><span class="title-number">38 </span><span class="title-name">Setting Up an FTP Server with YaST</span></a></li><li><a href="cha-squid.html" class=" "><span class="title-number">39 </span><span class="title-name">Squid Caching Proxy Server</span></a></li><li><a href="cha-wbem.html" class=" "><span class="title-number">40 </span><span class="title-name">Web Based Enterprise Management Using SFCB</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">V </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">41 </span><span class="title-name">Help and Documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">42 </span><span class="title-name">Gathering System Information for Support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">43 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An Example Network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-nvdimm" data-id-title="Persistent Memory"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP2</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">28 </span><span class="title-name">Persistent Memory</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This chapter contains additional information about using SUSE Linux Enterprise with
+    non-volatile main memory, also known as <span class="emphasis"><em>Persistent Memory</em></span>,
+    comprising one or more NVDIMMs.
+   </p></div></div></div></div><section class="sect1" id="sec-nvdimm-intro" data-id-title="Introduction"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">28.1 </span><span class="title-name">Introduction</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-intro">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Persistent memory is a new type of computer storage, combining speeds
+   approaching those of dynamic RAM (DRAM) along with RAM's byte-by-byte
+   addressability, plus the permanence of solid-state disks (SSDs).
+  </p><p>
+   SUSE currently supports the use of persistent memory with SUSE Linux Enterprise Server on machines
+   with the AMD64/Intel 64 and POWER architectures.
+  </p><p>
+   Like conventional RAM, persistent memory is installed directly into
+   motherboard memory slots. As such, it is supplied in the same physical form
+   factor as RAM—as DIMMs. These are known as NVDIMMs: non-volatile dual
+   inline memory modules.
+  </p><p>
+   Unlike RAM, though, persistent memory is also similar to flash-based SSDs in
+   several ways. Both are based on forms of solid-state memory circuitry, but 
+   despite this, both provide non-volatile storage: Their contents are retained
+   when the system is powered off or restarted. For both forms of medium,
+   writing data is slower than reading it, and both support a limited number of
+   rewrite cycles. Finally, also like SSDs, sector-level access to persistent
+   memory is possible if that is more suitable for a particular application.
+  </p><p>
+   Different models use different forms of electronic storage medium, such as
+   Intel 3D XPoint, or a combination of NAND-flash and DRAM. New forms of
+   non-volatile RAM are also in development. This means that different vendors
+   and models of NVDIMM offer different performance and durability
+   characteristics.
+  </p><p>
+   Because the storage technologies involved are in an early stage of
+   development, different vendors' hardware may impose different limitations.
+   Thus, the following statements are generalizations.
+  </p><p>
+   Persistent memory is up to ten times slower than DRAM, but around a thousand
+   times faster than flash storage. It can be rewritten on a byte-by-byte basis
+   rather than flash memory's whole-sector erase-and-rewrite process. Finally, 
+   while rewrite cycles are limited, most forms of persistent memory can handle
+   millions of rewrites, compared to the thousands of cycles of flash storage.
+  </p><p>
+   This has two important consequences:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     It is not possible with current technology to run a system with only
+     persistent memory and thus achieve completely non-volatile main memory. You
+     must use a mixture of both conventional RAM and NVDIMMs. The operating
+     system and applications will execute in conventional RAM, with the NVDIMMs
+     providing very fast supplementary storage.
+    </p></li><li class="listitem"><p>
+     The performance characteristics of different vendors' persistent memory
+     mean that it may be necessary for programmers to be aware of the hardware
+     specifications of the NVDIMMs in a particular server, including how many
+     NVDIMMs there are and in which memory slots they are fitted. This will
+     obviously impact hypervisor use, migration of software between different
+     host machines, and so on.
+    </p></li></ul></div><p>
+   This new storage subsystem is defined in version 6 of the ACPI standard.
+   However, <code class="filename">libnvdimm</code> supports pre-standard NVDIMMs and
+   they can be used in the same way.
+  </p><div id="id-1.3.5.14.3.12" data-id-title="Intel Optane DC Persistent Memory" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Intel Optane DC Persistent Memory</div><p>
+    Intel Optane DIMMs memory can be used in specific modes:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      In <span class="emphasis"><em>App Direct Mode</em></span>, the Intel Optane memory is used as
+      fast persistent storage, an alternative to SSDs and NVMe devices. Data in
+      this mode is kept when the system is powered off.
+     </p><p>
+      App Direct Mode has been supported since SLE 12 SP4.
+     </p></li><li class="listitem"><p>
+      In <span class="emphasis"><em>Memory Mode</em></span>, the Intel Optane memory serves as a
+      cost-effective, high-capacity alternative to DRAM. In this mode, separate
+      DRAM DIMMs act as a cache for the most frequently accessed data while the
+      Optane DIMMs memory provides large memory capacity. However, compared with
+      DRAM-only systems, this mode is slower under random access workloads. If
+      you run applications without Optane-specific enhancements that take
+      advantage of this mode, memory performance may decrease. Data in this
+      mode is lost when the system is powered off.
+     </p><p>
+      Memory Mode has been supported since SLE 15 SP1.
+     </p></li><li class="listitem"><p>
+      In <span class="emphasis"><em>Mixed Mode</em></span>, the Intel Optane memory is
+      partitioned, so it can serve in both modes simultaneously.
+     </p><p>
+      Mixed Mode has been supported since SLE 15 SP1.
+     </p></li></ul></div><p>
+    For more detailed information about Intel Optane DC persistent memory,
+    refer to <a class="link" href="https://www.intel.com/content/dam/support/us/en/documents/memory-and-storage/data-center-persistent-mem/Intel-Optane-DC-Persistent-Memory-Quick-Start-Guide.pdf" target="_blank">https://www.intel.com/content/dam/support/us/en/documents/memory-and-storage/data-center-persistent-mem/Intel-Optane-DC-Persistent-Memory-Quick-Start-Guide.pdf</a>.
+   </p></div></section><section class="sect1" id="sec-nvdimm-terms" data-id-title="Terms"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">28.2 </span><span class="title-name">Terms</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-terms">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.5.14.4.2.1"><span class="term">Region</span></dt><dd><p>
+      A <span class="emphasis"><em>region</em></span> is a block of persistent memory that can
+      be divided up into one or more <span class="emphasis"><em>namespace</em></span>s. You
+      cannot access the persistent memory of a region without first allocating
+      it to a namespace.
+     </p></dd><dt id="id-1.3.5.14.4.2.2"><span class="term">Namespace</span></dt><dd><p>
+      A single contiguously-addressed range of non-volatile storage, comparable
+      to NVM Express SSD namespaces, or to SCSI Logical Units (LUNs). Namespaces
+      appear in the server's <code class="filename">/dev</code> directory as separate
+      block devices. Depending on the method of access required, namespaces can
+      either amalgamate storage from multiple NVDIMMs into larger volumes, or
+      allow it to be partitioned into smaller volumes.
+     </p></dd><dt id="id-1.3.5.14.4.2.3"><span class="term">Mode</span></dt><dd><p>
+      Each namespace also has a <span class="emphasis"><em>mode</em></span> that defines which
+      NVDIMM features are enabled for that namespace. Sibling namespaces of the
+      same parent region will always have the same type, but might be
+      configured to have different modes. Namespace modes include:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.5.14.4.2.3.2.2.1"><span class="term">devdax</span></dt><dd><p>
+         Device-DAX mode. Creates a single-character device file (<code class="filename">
+          /dev/dax<em class="replaceable">X</em>.<em class="replaceable">Y</em>
+         </code>). Does <span class="emphasis"><em>not</em></span> require file system
+         creation.
+        </p></dd><dt id="id-1.3.5.14.4.2.3.2.2.2"><span class="term">fsdax</span></dt><dd><p>
+         File system-DAX mode. Default if no other mode is specified. Creates a
+         block device (<code class="filename">/dev/pmem<em class="replaceable">X</em>
+          [.<em class="replaceable">Y</em>]</code>) which supports DAX for
+         <code class="literal">ext4</code> or <code class="literal">XFS</code>.
+        </p></dd><dt id="id-1.3.5.14.4.2.3.2.2.3"><span class="term">sector</span></dt><dd><p>
+         For legacy file systems which do not checksum metadata. Suitable for
+         small boot volumes. Compatible with other operating systems.
+        </p></dd><dt id="id-1.3.5.14.4.2.3.2.2.4"><span class="term">raw</span></dt><dd><p>
+         A memory disk without a label or metadata. Does not support DAX.
+         Compatible with other operating systems.
+        </p><div id="id-1.3.5.14.4.2.3.2.2.4.2.2" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+          <code class="literal">raw</code> mode is not supported by SUSE. It is not
+          possible to mount file systems on <code class="literal">raw</code> namespaces.
+         </p></div></dd></dl></div></dd><dt id="id-1.3.5.14.4.2.4"><span class="term">Type</span></dt><dd><p>
+      Each namespace and region has a <span class="emphasis"><em>type</em></span> that defines
+      the way in which the persistent memory associated with that namespace or
+      region can be accessed. A namespace always has the same type as its
+      parent region. There are two different types: Persistent Memory, which
+      can be configured in two different ways, and the deprecated Block Mode.
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.5.14.4.2.4.2.2.1"><span class="term">Persistent Memory (PMEM)</span></dt><dd><p>
+         PMEM storage offers byte-level access, just like RAM. Using PMEM, a
+         single namespace can include multiple interleaved NVDIMMs, allowing
+         them all to be used as a single device.
+        </p><p>
+         There are two ways to configure a PMEM namespace.
+        </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.5.14.4.2.4.2.2.1.2.3.1"><span class="term">PMEM with DAX</span></dt><dd><p>
+            A PMEM namespace configured for Direct Access (DAX) means that
+            accessing the memory bypasses the kernel's page cache and goes
+            direct to the medium. Software can directly read or write every
+            byte of the namespace separately.
+           </p></dd><dt id="id-1.3.5.14.4.2.4.2.2.1.2.3.2"><span class="term">PMEM with Block Translation Table (BTT)</span></dt><dd><p>
+            A PMEM namespace configured to operate in BTT mode is accessed on a
+            sector-by-sector basis, like a conventional disk drive, rather than
+            the more RAM-like byte-addressable model. A translation table
+            mechanism batches accesses into sector-sized units.
+           </p><p>
+            The advantage of BTT is data protection. The storage subsystem
+            ensures that each sector is completely written to the underlying
+            medium. If a sector cannot be completely written (that is, if the
+            write operation fails for some reason), then the whole sector will
+            be rolled back to its previous state. Thus a given sector cannot be
+            partially written. 
+           </p><p>
+            Additionally, access to BTT namespaces is cached by the kernel.
+           </p><p>
+            The drawback is that DAX is not possible for BTT namespaces.
+           </p></dd></dl></div></dd><dt id="id-1.3.5.14.4.2.4.2.2.2"><span class="term">Block Mode (BLK)</span></dt><dd><p>
+         Block mode storage addresses each NVDIMM as a separate device. Its use
+         is deprecated and no longer supported.
+        </p></dd></dl></div><p>
+      Apart from <code class="literal">devdax</code> namespaces, all other types must be
+      formatted with a file system, just as with a conventional drive.
+      <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> supports the <code class="literal">ext2</code>,
+      <code class="literal">ext4</code> and <code class="literal">XFS</code> file systems for this.
+     </p></dd><dt id="id-1.3.5.14.4.2.5"><span class="term">Direct Access (DAX)</span></dt><dd><p>
+      DAX allows persistent memory to be directly mapped into a process's
+      address space, for example using the <code class="literal">mmap</code> system call.
+     </p></dd><dt id="id-1.3.5.14.4.2.6"><span class="term">DIMM Physical Address (DPA)</span></dt><dd><p>
+      A memory address as an offset into a single DIMM's memory; that is,
+      starting from zero as the lowest addressable byte on that DIMM.
+     </p></dd><dt id="id-1.3.5.14.4.2.7"><span class="term">Label</span></dt><dd><p>
+      Metadata stored on the NVDIMM, such as namespace definitions. This can be
+      accessed using DSMs.
+     </p></dd><dt id="id-1.3.5.14.4.2.8"><span class="term">Device-specific method (DSM)</span></dt><dd><p>
+      ACPI method to access the firmware on an NVDIMM.
+     </p></dd></dl></div></section><section class="sect1" id="sec-nvdimm-uses" data-id-title="Use Cases"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">28.3 </span><span class="title-name">Use Cases</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-uses">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-nvdimm-uses-pmem" data-id-title="PMEM with DAX"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">28.3.1 </span><span class="title-name">PMEM with DAX</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-uses-pmem">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    It is important to note that this form of memory access is
+    <span class="emphasis"><em>not</em></span> transactional. In the event of a power outage or
+    other system failure, data may not be completely written into storage. PMEM
+    storage is only suitable if the application can handle the situation of
+    partially-written data.
+   </p><section class="sect3" id="id-1.3.5.14.5.2.3" data-id-title="Applications That Benefit from Large Amounts of Byte-addressable Storage"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">28.3.1.1 </span><span class="title-name">
+     Applications That Benefit from Large Amounts of Byte-addressable Storage</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#id-1.3.5.14.5.2.3">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     If the server will host an application that can directly use large amounts
+     of fast storage on a byte-by-byte basis, the programmer can use the <code class="literal">mmap</code>
+     system call to place blocks of persistent memory directly into the
+     application's address space, without using any additional system RAM.
+    </p></section><section class="sect3" id="id-1.3.5.14.5.2.4" data-id-title="Avoiding Use of the Kernel Page Cache"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">28.3.1.2 </span><span class="title-name">Avoiding Use of the Kernel Page Cache</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#id-1.3.5.14.5.2.4">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Avoid using the kernel page cache if you wish to conserve the use of RAM for the page cache, and instead
+     give it to your applications. For instance, non-volatile memory could be
+     dedicated to holding virtual machine (VM) images. As these would not be
+     cached, this would reduce the cache usage on the host, allowing more VMs
+     per host.
+    </p></section></section><section class="sect2" id="id-1.3.5.14.5.3" data-id-title="PMEM with BTT"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">28.3.2 </span><span class="title-name">PMEM with BTT</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#id-1.3.5.14.5.3">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This is useful when you want to use the persistent memory on a set of
+    NVDIMMs as a disk-like pool of very fast storage. For example, placing
+    the filesystem journal on PMEM with BTT increase the reliability 
+    of filesystem recovery after a power failure or other sudden
+    interruption (see <a class="xref" href="cha-nvdimm.html#sec-nvdimm-setup-btt" title="28.5.3. Creating a PMEM Namespace with BTT">Section 28.5.3, “Creating a PMEM Namespace with BTT”</a>).
+   </p><p>
+    To applications, such devices just appear as very fast SSDs and can be used
+    like any other storage device. For example, LVM can be layered on top of
+    the persistent memory and will work as normal.
+   </p><p>
+    The advantage of BTT is that sector write atomicity is guaranteed, so even
+    sophisticated applications that depend on data integrity will keep
+    working. Media error reporting works through standard error-reporting
+    channels. 
+   </p></section></section><section class="sect1" id="sec-nvdimm-tools" data-id-title="Tools for Managing Persistent Memory"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">28.4 </span><span class="title-name">Tools for Managing Persistent Memory</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-tools">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To manage persistent memory, it is necessary to install the
+   <code class="literal">ndctl</code> package. This also installs the
+   <code class="filename">libndctl</code> package, which provides a set of user-space
+   libraries to configure NVDIMMs.
+  </p><p>
+   These tools work via the <code class="filename">libnvdimm</code> library, which
+   supports three types of NVDIMM:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     PMEM
+    </p></li><li class="listitem"><p>
+     BLK
+    </p></li><li class="listitem"><p>
+     Simultaneous PMEM and BLK
+    </p></li></ul></div><p>
+   The <code class="command">ndctl</code> utility has a helpful set of
+   <code class="command">man</code> pages, accessible with the command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ndctl help <em class="replaceable">subcommand</em></code></pre></div><p>
+   To see a list of available subcommands, use:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">ndctl --list-cmds</code></pre></div><p>
+   The available subcommands include:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.5.14.6.10.1"><span class="term">version</span></dt><dd><p>
+      Displays the current version of the NVDIMM support tools.
+     </p></dd><dt id="id-1.3.5.14.6.10.2"><span class="term">enable-namespace</span></dt><dd><p>
+      Makes the specified namespace available for use.
+     </p></dd><dt id="id-1.3.5.14.6.10.3"><span class="term">disable-namespace</span></dt><dd><p>
+      Prevents the specified namespace from being used.
+     </p></dd><dt id="id-1.3.5.14.6.10.4"><span class="term">create-namespace</span></dt><dd><p>
+      Creates a new namespace from the specified storage devices.
+     </p></dd><dt id="id-1.3.5.14.6.10.5"><span class="term">destroy-namespace</span></dt><dd><p>
+      Removes the specified namespace.
+     </p></dd><dt id="id-1.3.5.14.6.10.6"><span class="term">enable-region</span></dt><dd><p>
+      Makes the specified region available for use.
+     </p></dd><dt id="id-1.3.5.14.6.10.7"><span class="term">disable-region</span></dt><dd><p>
+      Prevents the specified region from being used.
+     </p></dd><dt id="id-1.3.5.14.6.10.8"><span class="term">zero-labels</span></dt><dd><p>
+      Erases the metadata from a device.
+     </p></dd><dt id="id-1.3.5.14.6.10.9"><span class="term">read-labels</span></dt><dd><p>
+      Retrieves the metadata of the specified device.
+     </p></dd><dt id="id-1.3.5.14.6.10.10"><span class="term">list</span></dt><dd><p>
+      Displays available devices.
+     </p></dd><dt id="id-1.3.5.14.6.10.11"><span class="term">help</span></dt><dd><p>
+      Displays information about using the tool.
+     </p></dd></dl></div></section><section class="sect1" id="sec-nvdimm-setup" data-id-title="Setting Up Persistent Memory"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">28.5 </span><span class="title-name">Setting Up Persistent Memory</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-setup">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect2" id="sec-nvdimm-setup-view" data-id-title="Viewing Available NVDIMM Storage"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">28.5.1 </span><span class="title-name">Viewing Available NVDIMM Storage</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-setup-view">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">ndctl</code> <code class="literal">list</code> command can be used to
+    list all available NVDIMMs in a system.
+   </p><p>
+    In the following example, the system has three NVDIMMs, which are in a
+    single, triple-channel interleaved set.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ndctl list --dimms</code>
+
+[
+ {
+  "dev":"nmem2",
+  "id":"8089-00-0000-12325476"
+ },
+ {
+  "dev":"nmem1",
+  "id":"8089-00-0000-11325476"
+ },
+ {
+  "dev":"nmem0",
+  "id":"8089-00-0000-10325476"
+ }
+]</pre></div><p>
+    With a different parameter, <code class="command">ndctl</code>
+    <code class="literal">list</code> will also list the available regions.
+   </p><div id="id-1.3.5.14.7.2.6" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+     Regions may not appear in numerical order.
+    </p></div><p>
+    Note that although there are only three NVDIMMs, they appear as four
+    regions.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ndctl list --regions</code>
+
+[
+ {
+  "dev":"region1",
+  "size":68182605824,
+  "available_size":68182605824,
+  "type":"blk"
+ },
+ {
+  "dev":"region3",
+  "size":202937204736,
+  "available_size":202937204736,
+  "type":"pmem",
+  "iset_id":5903239628671731251
+  },
+  {
+   "dev":"region0",
+   "size":68182605824,
+   "available_size":68182605824,
+   "type":"blk"
+  },
+  {
+   "dev":"region2",
+   "size":68182605824,
+   "available_size":68182605824,
+   "type":"blk"
+  }
+]</pre></div><p>
+    The space is available in two different forms: either as three separate 64
+    GB regions of type BLK, or as one combined 189 GB region of type PMEM which
+    presents all the space on the three interleaved NVDIMMs as a single volume.
+   </p><p>
+    Note that the displayed value for <code class="literal">available_size</code> is the
+    same as that for <code class="literal">size</code>. This means that none of the space
+    has been allocated yet.
+   </p></section><section class="sect2" id="sec-nvdimm-setup-dax" data-id-title="Configuring the Storage as a Single PMEM Namespace with DAX"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">28.5.2 </span><span class="title-name">Configuring the Storage as a Single PMEM Namespace with DAX</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-setup-dax">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    For the first example, we will configure our three NVDIMMs into a single
+    PMEM namespace with Direct Access (DAX).
+   </p><p>
+    The first step is to create a new namespace.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ndctl create-namespace --type=<em class="replaceable">pmem</em> --mode=<em class="replaceable">fsdax</em> --map=<em class="replaceable">memory</em></code>
+{
+ "dev":"namespace3.0",
+ "mode":"memory",
+ "size":199764213760,
+ "uuid":"dc8ebb84-c564-4248-9e8d-e18543c39b69",
+ "blockdev":"pmem3"
+}</pre></div><p>
+    This creates a block device <code class="filename">/dev/pmem3</code>, which supports
+    DAX. The <code class="literal">3</code> in the device name is inherited from the
+    parent region number, in this case <code class="filename">region3</code>.
+   </p><p>
+    The <code class="option">--map=memory</code> option sets aside part of the PMEM
+    storage space on the NVDIMMs so that it can be used to allocate internal
+    kernel data structures called <code class="literal">struct pages</code>. This allows
+    the new PMEM namespace to be used with features such as <code class="literal">O_DIRECT
+    I/O</code> and <code class="literal">RDMA</code>.
+   </p><p>
+    The reservation of some persistent memory for kernel data structures is why
+    the resulting PMEM namespace has a smaller capacity than the parent PMEM
+    region.
+   </p><p>
+    Next, we verify that the new block device is available to the operating
+    system:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">fdisk -l /dev/<em class="replaceable">pmem3</em></code>
+Disk /dev/pmem3: 186 GiB, 199764213760 bytes, 390164480 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes</pre></div><p>
+    Before it can be used, like any other drive, it must be formatted. In this
+    example, we format it with XFS:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">mkfs.xfs /dev/<em class="replaceable">pmem3</em></code>
+meta-data=/dev/pmem3      isize=256    agcount=4, agsize=12192640 blks
+         =                sectsz=4096  attr=2, projid32bit=1
+         =                crc=0        finobt=0, sparse=0
+data     =                bsize=4096   blocks=48770560, imaxpct=25
+         =                sunit=0      swidth=0 blks
+naming   =version 2       bsize=4096   ascii-ci=0 ftype=1
+log      =internal log    bsize=4096   blocks=23813, version=2
+         =                sectsz=4096  sunit=1 blks, lazy-count=1
+realtime =none            extsz=4096   blocks=0, rtextents=0</pre></div><p>
+    Next, we can mount the new drive onto a directory:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">mount -o dax /dev/<em class="replaceable">pmem3</em> /mnt/<em class="replaceable">pmem3</em></code></pre></div><p>
+    Then we can verify that we now have a DAX-capable device:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">mount | grep dax</code>
+/dev/pmem3 on /mnt/pmem3 type xfs (rw,relatime,attr2,dax,inode64,noquota)</pre></div><p>
+    The result is that we now have a PMEM namespace formatted with the XFS file
+    system and mounted with DAX.
+   </p><p>
+    Any <code class="literal">mmap()</code> calls to files in that file system will
+    return virtual addresses that directly map to the persistent memory on our
+    NVDIMMs, completely bypassing the page cache.
+   </p><p>
+    Any <code class="literal">fsync</code> or <code class="literal">msync</code> calls on files in
+    that file system will still ensure that modified data has been fully
+    written to the NVDIMMs. These calls flush the processor cache lines
+    associated with any pages that have been modified in user space via
+    <code class="literal">mmap</code> mappings.
+   </p><section class="sect3" id="sec-nvdimm-setup-deldax" data-id-title="Removing a Namespace"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">28.5.2.1 </span><span class="title-name">Removing a Namespace</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-setup-deldax">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Before creating any other type of volume that uses the same storage, we
+     must unmount and then remove this PMEM volume.
+    </p><p>
+     First, unmount it:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">umount /mnt/<em class="replaceable">pmem3</em></code></pre></div><p>
+     Then disable the namespace:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ndctl disable-namespace <em class="replaceable">namespace3.0</em></code>
+disabled 1 namespace</pre></div><p>
+     Then delete it:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ndctl destroy-namespace <em class="replaceable">namespace3.0</em></code>
+destroyed 1 namespace</pre></div></section></section><section class="sect2" id="sec-nvdimm-setup-btt" data-id-title="Creating a PMEM Namespace with BTT"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">28.5.3 </span><span class="title-name">Creating a PMEM Namespace with BTT</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-setup-btt">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     BTT provides sector write atomicity, which makes it a good choice
+     when you need data protection, for example for Ext4 and XFS journals. 
+     If there is a power failure, the journals
+     are protected and should be recoverable. The following examples
+     show how to create a PMEM namespace with BTT in sector mode, and how
+     to place the filesystem journal in this namespace.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">ndctl create-namespace --type=pmem --mode=sector</code>
+{
+ "dev":"namespace3.0",
+ "mode":"sector",
+ "uuid":"51ab652d-7f20-44ea-b51d-5670454f8b9b",
+ "sector_size":4096,
+ "blockdev":"pmem3s"
+}</pre></div><p>
+    Next, verify that the new device is present:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">fdisk -l /dev/<em class="replaceable">pmem3s</em></code>
+Disk /dev/pmem3s: 188.8 GiB, 202738135040 bytes, 49496615 sectors
+Units: sectors of 1 * 4096 = 4096 bytes
+Sector size (logical/physical): 4096 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes</pre></div><p>
+    Like the DAX-capable PMEM namespace we previously configured, this
+    BTT-capable PMEM namespace consumes all the available storage on the
+    NVDIMMs.
+   </p><div id="id-1.3.5.14.7.4.7" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note</div><p>
+     The trailing <code class="literal">s</code> in the device name
+     (<code class="filename">/dev/<em class="replaceable">pmem3s</em></code>) stands for
+     <code class="literal">sector</code> and can be used to easily distinguish namespaces
+     that are configured to use the BTT.
+    </p></div><p>
+    The volume can be formatted and mounted as in the previous example.
+   </p><p>
+    The PMEM namespace shown here cannot use DAX. Instead it uses the BTT to
+    provide <span class="emphasis"><em>sector write atomicity</em></span>. On each sector write
+    through the PMEM block driver, the BTT will allocate a new sector to
+    receive the new data. The BTT atomically updates its internal mapping
+    structures after the new data is fully written so the newly written data
+    will be available to applications. If the power fails at any point during
+    this process, the write will be completely lost and the application will
+    have access to its old data, still intact. This prevents the condition
+    known as "torn sectors".
+   </p><p>
+    This BTT-enabled PMEM namespace can be formatted and used with a file system
+    just like any other standard block device. It cannot be used with DAX.
+    However, <code class="literal">mmap</code> mappings for files on this block device
+    will use the page cache.
+   </p></section><section class="sect2" id="sec-nvdimm-fs-journal" data-id-title="Placing the Filesystem Journal on PMEM/BTT"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">28.5.4 </span><span class="title-name">Placing the Filesystem Journal on PMEM/BTT</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-fs-journal">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      When you place the filesystem journal on a separate device, it
+      must use the same filesystem block size as the filesystem. Most 
+      likely this is 4096, and you can find the block size with this 
+      command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">blockdev --getbsz /dev/<em class="replaceable">sda3</em></code></pre></div><p>
+      The following example creates a new Ext4 journal on a separate 
+      NVDIMM device, creates the filesystem on a SATA device, then 
+      attaches the new filesystem to the journal:
+ </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">mke2fs -b 4096 -O journal_dev /dev/<em class="replaceable">pmem3s</em></code>
+<code class="prompt root"># </code><code class="command">mkfs.ext4 -J device=/dev/<em class="replaceable">pmem3s</em> /dev/<em class="replaceable">sda3</em></code></pre></div><p>
+      The following example creates a new XFS filesystem on a SATA drive,
+      and creates the journal on a separate NVDIMM device:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">mkfs.xfs -l logdev=/dev/<em class="replaceable">pmem3s </em> /dev/<em class="replaceable">sda3</em></code></pre></div><p>
+    See <code class="command">man 8 mkfs.ext4</code> and <code class="command">man 8 mkfs.ext4</code> for detailed information about options.
+</p></section></section><section class="sect1" id="sec-nvdimm-moreinfo" data-id-title="For More Information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">28.6 </span><span class="title-name">For More Information</span></span> <a title="Permalink" class="permalink" href="cha-nvdimm.html#sec-nvdimm-moreinfo">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/hardware_nvdimm.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   More about this topic can be found in the following list:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <a class="link" href="https://nvdimm.wiki.kernel.org/" target="_blank">
+      Persistent Memory Wiki</a>
+    </p><p>
+     Contains instructions for configuring NVDIMM systems, information about
+     testing, and links to specifications related to NVDIMM enabling. This site
+     is developing as NVDIMM support in Linux is developing.
+    </p></li><li class="listitem"><p>
+     <a class="link" href="http://pmem.io/" target="_blank">Persistent Memory Programming</a>
+    </p><p>
+     Information about configuring, using and programming systems with
+     non-volatile memory under Linux and other operating systems. Covers the
+     NVM Library (NVML), which aims to provide useful APIs for programming with
+     persistent memory in user space.
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://www.kernel.org/doc/Documentation/nvdimm/nvdimm.txt" target="_blank">
+      LIBNVDIMM: Non-Volatile Devices</a>
+    </p><p>
+     Aimed at kernel developers, this is part of the Documentation folder in
+     the current Linux kernel tree. It talks about the different kernel modules
+     involved in NVDIMM enablement, lays out some technical details of the
+     kernel implementation, and talks about the
+     <code class="filename">sysfs</code>interface to the kernel that is used by the
+     <code class="command">ndctl</code> tool.
+    </p></li><li class="listitem"><p>
+     <a class="link" href="https://github.com/pmem/ndctl" target="_blank">GitHub: pmem/ndctl</a>
+    </p><p>
+     Utility library for managing the <code class="command">libnvdimm</code> subsystem
+     in the Linux kernel. Also contains user space libraries, as well as unit
+     tests and documentation.
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-power-mgmt.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 27 </span>Power Management</span></a> </div><div><a class="pagination-link next" href="part-services.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Part IV </span>Services</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-nvdimm.html#sec-nvdimm-intro"><span class="title-number">28.1 </span><span class="title-name">Introduction</span></a></span></li><li><span class="sect1"><a href="cha-nvdimm.html#sec-nvdimm-terms"><span class="title-number">28.2 </span><span class="title-name">Terms</span></a></span></li><li><span class="sect1"><a href="cha-nvdimm.html#sec-nvdimm-uses"><span class="title-number">28.3 </span><span class="title-name">Use Cases</span></a></span></li><li><span class="sect1"><a href="cha-nvdimm.html#sec-nvdimm-tools"><span class="title-number">28.4 </span><span class="title-name">Tools for Managing Persistent Memory</span></a></span></li><li><span class="sect1"><a href="cha-nvdimm.html#sec-nvdimm-setup"><span class="title-number">28.5 </span><span class="title-name">Setting Up Persistent Memory</span></a></span></li><li><span class="sect1"><a href="cha-nvdimm.html#sec-nvdimm-moreinfo"><span class="title-number">28.6 </span><span class="title-name">For More Information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>
