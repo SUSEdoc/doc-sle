@@ -1,0 +1,1407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><title>SLE Micro 5.5 | Security and Hardening Guide</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Security and Hardening Guide | SLE Micro 5.5"/>
+<meta name="description" content="The security guide focuses on using SELinux, FIPS, and gives details about the remote attestation using the Keylime agent"/>
+<meta name="product-name" content="SUSE Linux Enterprise Micro"/>
+<meta name="product-number" content="5.5"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="jsindelarova@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Micro 5.5"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide | SLE Micro 5.5"/>
+<meta property="og:description" content="The security guide focuses on using SELinux, FIPS, and give…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide | SLE Micro 5.5"/>
+<meta name="twitter:description" content="The security guide focuses on using SELinux, FIPS, and give…"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Security and Hardening Guide",
+  
+    "description": "The security guide focuses on using SELinux, FIPS, and gives details about the remote attestation using the Keylime agent",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+
+    "about": [
+      {
+        "@type": "Thing",
+        "name": "Security"
+      }
+    ],
+  
+    "mentions": [
+      
+      { "@type": "SoftwareApplication",
+        "name": "SUSE Linux Enterprise Micro",
+        "softwareVersion": "5.5",
+        "applicationCategory": "Operating System",
+        "operatingSystem": "Linux"
+      }
+      
+    ],
+    
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/book_security_slemicro.xml"/></head><body class="draft single normal offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="#book-security-slemicro">Security and Hardening Guide</a></div></div><main id="_content"><nav class="side-toc placebo" id="_side-toc-overall"> </nav><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="book" id="book-security-slemicro" data-id-title="Security and Hardening Guide"><div class="titlepage"><div><div class="big-version-info"><span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">5.5</span></span></span></div><div class="title-container"><h1 class="title">Security and Hardening Guide</h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/book_security_slemicro.xml" title="Edit source document"> </a></div></div><div class="abstract"><p>
+    The security guide focuses on using SELinux, FIPS, and gives details about
+    the remote attestation using the <span class="emphasis"><em>Keylime</em></span> agent
+   </p></div><div class="date"><span class="imprint-label">Publication Date: </span>October 10, 2024
+</div></div></div><div class="toc"><ul><li><span class="preface"><a href="#preface-security"><span class="title-name">Preface</span></a></span><ul><li><span class="sect1"><a href="#id-1.7.2.3"><span class="title-name">Available documentation</span></a></span></li><li><span class="sect1"><a href="#id-1.7.2.4"><span class="title-name">Improving the documentation</span></a></span></li><li><span class="sect1"><a href="#id-1.7.2.5"><span class="title-name">Documentation conventions</span></a></span></li><li><span class="sect1"><a href="#id-1.7.2.6"><span class="title-name">Support</span></a></span></li></ul></li><li><span class="chapter"><a href="#cha-selinux-slemicro"><span class="title-number">1 </span><span class="title-name">SELinux</span></a></span><ul><li><span class="section"><a href="#sec-getting-selinux"><span class="title-number">1.1 </span><span class="title-name">Getting SELinux</span></a></span></li><li><span class="section"><a href="#sec-switching-modes"><span class="title-number">1.2 </span><span class="title-name">SELinux modes</span></a></span></li><li><span class="section"><a href="#sec-policy-overview"><span class="title-number">1.3 </span><span class="title-name">SELinux policy overview</span></a></span></li><li><span class="section"><a href="#sec-security-context"><span class="title-number">1.4 </span><span class="title-name">SELinux security context</span></a></span></li><li><span class="section"><a href="#sec-managing-modes"><span class="title-number">1.5 </span><span class="title-name">Tools for managing SELinux</span></a></span></li></ul></li><li><span class="chapter"><a href="#cha-security-attestation"><span class="title-number">2 </span><span class="title-name">Remote attestation using Keylime</span></a></span><ul><li><span class="section"><a href="#sec-keylime-about"><span class="title-number">2.1 </span><span class="title-name">About <span class="emphasis"><em>Keylime</em></span></span></a></span></li><li><span class="section"><a href="#sec-setup-verifier"><span class="title-number">2.2 </span><span class="title-name">Setting up the verifier and registrar</span></a></span></li><li><span class="section"><a href="#sec-install-keylime"><span class="title-number">2.3 </span><span class="title-name">Installing the <span class="emphasis"><em>Keylime</em></span> agent</span></a></span></li><li><span class="section"><a href="#sec-keyline-registration"><span class="title-number">2.4 </span><span class="title-name">Registering agents</span></a></span></li><li><span class="section"><a href="#keylime-payload"><span class="title-number">2.5 </span><span class="title-name">Secure payloads</span></a></span></li><li><span class="section"><a href="#enable-ima-tracking"><span class="title-number">2.6 </span><span class="title-name">Enabling IMA tracking</span></a></span></li></ul></li><li><span class="chapter"><a href="#cha-pam"><span class="title-number">3 </span><span class="title-name">Authentication with PAM</span></a></span><ul><li><span class="sect1"><a href="#sec-security-pam-whatis"><span class="title-number">3.1 </span><span class="title-name">What is PAM?</span></a></span></li><li><span class="sect1"><a href="#sec-pam-struc-files"><span class="title-number">3.2 </span><span class="title-name">Structure of a PAM configuration file</span></a></span></li><li><span class="sect1"><a href="#sec-pam-struc-format"><span class="title-number">3.3 </span><span class="title-name">The PAM configuration of sshd</span></a></span></li><li><span class="sect1"><a href="#sec-pam-struc-conf"><span class="title-number">3.4 </span><span class="title-name">Configuration of PAM modules</span></a></span></li><li><span class="sect1"><a href="#sec-pam-pam-config"><span class="title-number">3.5 </span><span class="title-name">Configuring PAM using pam-config</span></a></span></li><li><span class="sect1"><a href="#sec-pam-manual-config"><span class="title-number">3.6 </span><span class="title-name">Manually configuring PAM</span></a></span></li><li><span class="sect1"><a href="#sec-pam-login"><span class="title-number">3.7 </span><span class="title-name">Configuring <span class="phrase">SLE Micro to require</span> U2F keys for local login</span></a></span></li></ul></li><li><span class="chapter"><a href="#cha-security-fips"><span class="title-number">4 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></span><ul><li><span class="sect1"><a href="#sec-fips-concept"><span class="title-number">4.1 </span><span class="title-name">FIPS overview</span></a></span></li><li><span class="sect1"><a href="#sec-fips-use-case"><span class="title-number">4.2 </span><span class="title-name">When to enable FIPS mode</span></a></span></li><li><span class="sect1"><a href="#sec-fips-slemicro-install"><span class="title-number">4.3 </span><span class="title-name">Installing FIPS</span></a></span></li><li><span class="sect1"><a href="#ssec-fips-containers"><span class="title-number">4.4 </span><span class="title-name">Running containers on <span class="productname"><span class="phrase">SLE Micro</span></span></span></a></span></li><li><span class="sect1"><a href="#sec-fips-samba-cifs"><span class="title-number">4.5 </span><span class="title-name">MD5 not supported in Samba/CIFS</span></a></span></li><li><span class="sect1"><a href="#sec-fips-more"><span class="title-number">4.6 </span><span class="title-name">More information</span></a></span></li></ul></li></ul></div><div class="list-of-examples"><div class="toc-title">List of Examples</div><ul><li><span class="example"><a href="#dat-pam-sshd"><span class="number">3.1 </span><span class="name">PAM configuration for sshd (<code class="filename">/etc/pam.d/sshd</code>)</span></a></span></li><li><span class="example"><a href="#dat-pam-common-auth"><span class="number">3.2 </span><span class="name">Default configuration for the <code class="literal">auth</code> section (<code class="filename">common-auth</code>)</span></a></span></li><li><span class="example"><a href="#dat-pam-common-account"><span class="number">3.3 </span><span class="name">Default configuration for the <code class="literal">account</code> section (<code class="filename">common-account</code>)</span></a></span></li><li><span class="example"><a href="#dat-pam-common-password-slemicro"><span class="number">3.4 </span><span class="name">Default configuration for the <code class="literal">password</code> section (<code class="filename">common-password</code>)</span></a></span></li><li><span class="example"><a href="#dat-pam-common-session-slemicro"><span class="number">3.5 </span><span class="name">Default configuration for the <code class="literal">session</code> section (<code class="filename">common-session</code>)</span></a></span></li><li><span class="example"><a href="#dat-pam-pamenv"><span class="number">3.6 </span><span class="name">pam_env.conf</span></a></span></li></ul></div><div><div xml:lang="en" class="legalnotice" id="id-1.7.1.7"><p>
+  Copyright © 2006–2024
+
+  SUSE LLC and contributors. All rights reserved.
+ </p><p>
+  Permission is granted to copy, distribute and/or modify this document under
+  the terms of the GNU Free Documentation License, Version 1.2 or (at your
+  option) version 1.3; with the Invariant Section being this copyright notice
+  and license. A copy of the license version 1.2 is included in the section
+  entitled <span class="quote">“<span class="quote">GNU Free Documentation License</span>”</span>.
+ </p><p>
+  For SUSE trademarks, see
+  <a class="link" href="https://www.suse.com/company/legal/" target="_blank">https://www.suse.com/company/legal/</a>. All
+  third-party trademarks are the property of their respective owners. Trademark
+  symbols (®, ™ etc.) denote trademarks of SUSE and its affiliates.
+  Asterisks (*) denote third-party trademarks.
+ </p><p>
+  All information found in this book has been compiled with utmost attention to
+  detail. However, this does not guarantee complete accuracy. Neither
+  SUSE LLC, its affiliates, the authors nor the translators shall be
+  held liable for possible errors or the consequences thereof.
+ </p></div></div><section class="preface" id="preface-security" data-id-title="Preface"><div class="titlepage"><div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number"> </span><span class="title-name">Preface</span></span> <a title="Permalink" class="permalink" href="#preface-security">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_intro.xml" title="Edit source document"> </a></div></div></div></div></div><section xml:lang="en" class="sect1" id="id-1.7.2.3" data-id-title="Available documentation"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1 </span><span class="title-name">Available documentation</span></span> <a title="Permalink" class="permalink" href="#id-1.7.2.3">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_intro_available_doc.xml" title="Edit source document"> </a></div></div></div></div></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.2.3.3.1"><span class="term">Online documentation</span></dt><dd><p>
+     Our documentation is available online at <a class="link" href="https://documentation.suse.com" target="_blank">https://documentation.suse.com</a>.
+     Browse or download the documentation in various formats.
+    </p><div id="id-1.7.2.3.3.1.2.2" data-id-title="Latest updates" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Latest updates</div><p>
+      The latest updates are usually available in the English-language version of this documentation.
+     </p></div></dd><dt id="id-1.7.2.3.3.2"><span class="term">SUSE Knowledgebase</span></dt><dd><p>
+     If you run into an issue, check out the Technical Information
+     Documents (TIDs) that are available online at <a class="link" href="https://www.suse.com/support/kb/" target="_blank">https://www.suse.com/support/kb/</a>.
+     Search the SUSE Knowledgebase for known solutions driven by customer need.
+     </p></dd><dt id="id-1.7.2.3.3.3"><span class="term">Release notes</span></dt><dd><p>
+     For release notes, see
+     <a class="link" href="https://www.suse.com/releasenotes/" target="_blank">https://www.suse.com/releasenotes/</a>.
+    </p></dd><dt id="id-1.7.2.3.3.4"><span class="term">In your system</span></dt><dd><p>
+      For offline use, the release notes are also available under
+      <code class="filename">/usr/share/doc/release-notes</code> on your system.
+      The documentation for individual packages is available at
+      <code class="filename">/usr/share/doc/packages</code>.
+    </p><p>
+      Many commands are also described in their <span class="emphasis"><em>manual
+      pages</em></span>. To view them, run <code class="command">man</code>, followed
+      by a specific command name. If the <code class="command">man</code> command is
+      not installed on your system, install it with <code class="command">sudo zypper
+      install man</code>.
+    </p></dd></dl></div></section><section xml:lang="en" class="sect1" id="id-1.7.2.4" data-id-title="Improving the documentation"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2 </span><span class="title-name">Improving the documentation</span></span> <a title="Permalink" class="permalink" href="#id-1.7.2.4">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_intro_feedback.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Your feedback and contributions to this documentation are welcome.
+  The following channels for giving feedback are available:
+ </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.2.4.4.1"><span class="term">Service requests and support</span></dt><dd><p>
+     For services and support options available for your product, see
+     <a class="link" href="https://www.suse.com/support/" target="_blank">https://www.suse.com/support/</a>.
+    </p><p>
+     To open a service request, you need a SUSE subscription registered at
+     SUSE Customer Center.
+     Go to <a class="link" href="https://scc.suse.com/support/requests" target="_blank">https://scc.suse.com/support/requests</a>, log
+     in, and click <span class="guimenu">Create New</span>.
+    </p></dd><dt id="id-1.7.2.4.4.2"><span class="term">Bug reports</span></dt><dd><p>
+     Report issues with the documentation at <a class="link" href="https://bugzilla.suse.com/" target="_blank">https://bugzilla.suse.com/</a>.
+    </p><p>
+     To simplify this process, click the <span class="guimenu">Report
+     an issue</span> icon next to a headline in the HTML
+     version of this document. This preselects the right product and
+     category in Bugzilla and adds a link to the current section.
+     You can start typing your bug report right away.
+    </p><p>
+     A Bugzilla account is required.
+    </p></dd><dt id="id-1.7.2.4.4.3"><span class="term">Contributions</span></dt><dd><p>
+     To contribute to this documentation, click the <span class="guimenu">Edit source
+     document</span> icon next to a headline in the HTML version of
+     this document. This will take you to the source code on GitHub, where you
+     can open a pull request.</p><p>
+     A GitHub account is required.
+    </p><div id="id-1.7.2.4.4.3.2.3" data-id-title="Edit source document only available for English" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: <span class="guimenu">Edit source document</span> only available for English</div><p>
+      The <span class="guimenu">Edit source document</span> icons are only available for the
+      English version of each document. For all other languages, use the
+      <span class="guimenu">Report an issue</span> icons instead.
+     </p></div><p>
+     For more information about the documentation environment used for this
+     documentation, see the repository's README.
+    </p></dd><dt id="id-1.7.2.4.4.4"><span class="term">Mail</span></dt><dd><p>
+     You can also report errors and send feedback concerning the
+     documentation to &lt;<a class="email" href="mailto:doc-team@suse.com">doc-team@suse.com</a>&gt;. Include the
+     document title, the product version, and the publication date of the
+     document. Additionally, include the relevant section number and title (or
+     provide the URL) and provide a concise description of the problem.
+    </p></dd></dl></div></section><section xml:lang="en" class="sect1" id="id-1.7.2.5" data-id-title="Documentation conventions"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">Documentation conventions</span></span> <a title="Permalink" class="permalink" href="#id-1.7.2.5">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_intro_convention.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  The following notices and typographic conventions are used in this
+  document:
+ </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+    <code class="filename">/etc/passwd</code>: Directory names and file names
+   </p></li><li class="listitem"><p>
+    <em class="replaceable">PLACEHOLDER</em>: Replace
+    <em class="replaceable">PLACEHOLDER</em> with the actual value
+   </p></li><li class="listitem"><p>
+    <code class="envar">PATH</code>: An environment variable
+   </p></li><li class="listitem"><p>
+    <code class="command">ls</code>, <code class="option">--help</code>: Commands, options, and
+    parameters
+   </p></li><li class="listitem"><p>
+    <code class="systemitem">user</code>: The name of a user or group
+   </p></li><li class="listitem"><p>
+    <span class="package">package_name</span>: The name of a software package
+   </p></li><li class="listitem"><p>
+    <span class="keycap">Alt</span>, <span class="keycap">Alt</span><span class="key-connector">–</span><span class="keycap">F1</span>: A key to press or a key combination. Keys
+    are shown in uppercase as on a keyboard.
+   </p></li><li class="listitem"><p>
+    <span class="guimenu">File</span>, <span class="guimenu">File</span> › <span class="guimenu">Save
+    As</span>: menu items, buttons
+   </p></li><li class="listitem"><p><strong class="arch-arrow-start">AMD/Intel</strong>
+    This paragraph is only relevant for the AMD64/Intel 64 architectures. The
+    arrows mark the beginning and the end of the text block.
+   <strong class="arch-arrow-end"> </strong></p><p><strong class="arch-arrow-start">IBM Z, POWER</strong>
+    This paragraph is only relevant for the architectures
+    <code class="literal">IBM Z</code> and <code class="literal">POWER</code>. The arrows
+    mark the beginning and the end of the text block.
+   <strong class="arch-arrow-end"> </strong></p></li><li class="listitem"><p>
+    <em class="citetitle">Chapter 1, <span class="quote">“<span class="quote">Example chapter</span>”</span></em>:
+    A cross-reference to another chapter in this guide.
+   </p></li><li class="listitem"><p>
+    Commands that must be run with <code class="systemitem">root</code> privileges. You can also
+    prefix these commands with the <code class="command">sudo</code> command to run them
+    as a non-privileged user:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">command</code>
+<code class="prompt user">&gt; </code><code class="command">sudo</code> <code class="command">command</code></pre></div></li><li class="listitem"><p>
+    Commands that can be run by non-privileged users:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">command</code></pre></div></li><li class="listitem"><p>
+    Commands can be split into two or multiple lines by a backslash character
+    (<code class="literal">\</code>) at the end of a line. The backslash informs the shell that
+    the command invocation will continue after the end of the line:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">echo</code> a b \
+c d</pre></div></li><li class="listitem"><p>
+     A code block that shows both the command (preceded by a prompt)
+     and the respective output returned by the shell:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">command</code>
+output</pre></div></li><li class="listitem"><p>
+    Notices
+   </p><div id="id-1.7.2.5.4.15.2" data-id-title="Warning notice" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Warning notice</div><p>
+     Vital information you must be aware of before proceeding. Warns you about
+     security issues, potential loss of data, damage to hardware, or physical
+     hazards.
+    </p></div><div id="id-1.7.2.5.4.15.3" data-id-title="Important notice" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Important notice</div><p>
+     Important information you should be aware of before proceeding.
+    </p></div><div id="id-1.7.2.5.4.15.4" data-id-title="Note notice" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Note notice</div><p>
+     Additional information, for example about differences in software
+     versions.
+    </p></div><div id="id-1.7.2.5.4.15.5" data-id-title="Tip notice" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Tip notice</div><p>
+     Helpful information, like a guideline or a piece of practical advice.
+    </p></div></li><li class="listitem"><p>
+    Compact Notices
+   </p><div id="id-1.7.2.5.4.16.2" class="admonition note compact"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><p>
+     Additional information, for example about differences in software
+     versions.
+    </p></div><div id="id-1.7.2.5.4.16.3" class="admonition tip compact"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><p>
+     Helpful information, like a guideline or a piece of practical advice.
+    </p></div></li></ul></div></section><section xml:lang="en" class="sect1" id="id-1.7.2.6" data-id-title="Support"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4 </span><span class="title-name">Support</span></span> <a title="Permalink" class="permalink" href="#id-1.7.2.6">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_intro_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Find the support statement for <span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span> and general information about
+  technology previews below.
+  For details about the product lifecycle, see
+  <a class="link" href="https://www.suse.com/lifecycle" target="_blank">https://www.suse.com/lifecycle</a>.
+  
+  
+ </p><p>
+  If you are entitled to support, find details on how to collect information
+  for a support ticket at
+  <a class="link" href="https://documentation.suse.com/sles-15/html/SLES-all/cha-adm-support.html" target="_blank">https://documentation.suse.com/sles-15/html/SLES-all/cha-adm-support.html</a>.
+ </p><section class="sect2" id="id-1.7.2.6.5" data-id-title="Support statement for SUSE Linux Enterprise Micro"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.1 </span><span class="title-name">Support statement for <span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span></span></span> <a title="Permalink" class="permalink" href="#id-1.7.2.6.5">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_intro_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To receive support, you need an appropriate subscription with SUSE.
+   To view the specific support offers available to you, go to
+   <a class="link" href="https://www.suse.com/support/" target="_blank">https://www.suse.com/support/</a> and select your product.
+  </p><p>
+   The support levels are defined as follows:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.2.6.5.4.1"><span class="term">L1</span></dt><dd><p>
+      Problem determination, which means technical support designed to provide
+      compatibility information, usage support, ongoing maintenance,
+      information gathering and basic troubleshooting using available
+      documentation.
+     </p></dd><dt id="id-1.7.2.6.5.4.2"><span class="term">L2</span></dt><dd><p>
+      Problem isolation, which means technical support designed to analyze
+      data, reproduce customer problems, isolate a problem area and provide a
+      resolution for problems not resolved by Level 1 or prepare for
+      Level 3.
+     </p></dd><dt id="id-1.7.2.6.5.4.3"><span class="term">L3</span></dt><dd><p>
+      Problem resolution, which means technical support designed to resolve
+      problems by engaging engineering to resolve product defects which have
+      been identified by Level 2 Support.
+     </p></dd></dl></div><p>
+   For contracted customers and partners, <span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span> is delivered with L3
+   support for all packages, except for the following:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Technology previews.
+    </p></li><li class="listitem"><p>
+     Sound, graphics, fonts, and artwork.
+    </p></li><li class="listitem"><p>
+     Packages that require an additional customer contract.
+    </p></li><li class="listitem"><p>
+     Packages with names ending in <span class="package">-devel</span> (containing header
+     files and similar developer resources) will only be supported together
+     with their main packages.
+    </p></li></ul></div><p>
+   SUSE will only support the usage of original packages.
+   That is, packages that are unchanged and not recompiled.
+  </p></section><section class="sect2" id="id-1.7.2.6.6" data-id-title="Technology previews"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.2 </span><span class="title-name">Technology previews</span></span> <a title="Permalink" class="permalink" href="#id-1.7.2.6.6">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/common_intro_support.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Technology previews are packages, stacks, or features delivered by SUSE
+   to provide glimpses into upcoming innovations.
+   Technology previews are included for your convenience to give you a chance
+   to test new technologies within your environment.
+   We would appreciate your feedback.
+   If you test a technology preview, please contact your SUSE representative
+   and let them know about your experience and use cases.
+   Your input is helpful for future development.
+  </p><p>
+   Technology previews have the following limitations:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Technology previews are still in development.
+     Therefore, they may be functionally incomplete, unstable, or otherwise
+     <span class="emphasis"><em>not</em></span> suitable for production use.
+    </p></li><li class="listitem"><p>
+     Technology previews are <span class="emphasis"><em>not</em></span> supported.
+    </p></li><li class="listitem"><p>
+     Technology previews may only be available for specific hardware
+     architectures.
+    </p></li><li class="listitem"><p>
+     Details and functionality of technology previews are subject to change.
+     As a result, upgrading to subsequent releases of a technology preview may
+     be impossible and require a fresh installation.
+    </p></li><li class="listitem"><p>
+     SUSE may discover that a preview does not meet customer or market needs,
+     or does not comply with enterprise standards.
+     Technology previews can be removed from a product at any time.
+     SUSE does not commit to providing a supported version of such
+     technologies in the future.
+    </p></li></ul></div><p>
+   For an overview of technology previews shipped with your product, see the
+   release notes at <a class="link" href="https://www.suse.com/releasenotes" target="_blank">https://www.suse.com/releasenotes</a>.
+  </p></section></section></section><section class="chapter" id="cha-selinux-slemicro" data-id-title="SELinux"><div class="titlepage"><div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">1 </span><span class="title-name">SELinux</span></span> <a title="Permalink" class="permalink" href="#cha-selinux-slemicro">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This chapter gives a brief overview of SELinux implementation on SLE Micro.
+   </p></div></div></div></div><p>
+  SELinux was developed as an additional Linux security solution that uses the
+  security framework in the Linux kernel. The purpose was to allow for a more
+  granular security policy that goes beyond the standard Discretionary Access
+  Controls (DAC), the traditional file permissions of owner/group/world, and
+  read/write/execute.
+ </p><p>
+  SELinux uses labels attached to objects (for example, files and network
+  sockets) and uses them for access decisions.
+ </p><p>
+  The default action of SELinux is to deny any access. SELinux allows only
+  actions that were specifically allowed in the SELinux policy. Another feature
+  of SELinux that increases security is that SELinux allows strict confinement
+  of processes up to the point where the processes cannot access files of other
+  processes on the same system.
+ </p><p>
+  SELinux was designed to enhance existing security solutions, not to replace
+  them. For example, discretionary access control (DAC) is still applied even
+  if the system is using SELinux. If DAC denies access first, SELinux is then
+  not used as the access was already blocked by another mechanism.
+ </p><section class="sect1" id="sec-getting-selinux" data-id-title="Getting SELinux"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.1 </span><span class="title-name">Getting SELinux</span></span> <a title="Permalink" class="permalink" href="#sec-getting-selinux">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SELinux is installed by default when installing SLE Micro by YaST or is part
+   of the pre-built images. The default mode is set to enforced on all
+   deployment types, and the file system is labelled.
+  </p><p>
+   If in any case SELinux is not set up on your system, run the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update setup-selinux</pre></div><p>
+   Reboot your system after the command has finished. The command installs the
+   SELinux policy if it is not installed, sets the <code class="literal">enforcing</code>
+   SELinux mode and rebuilds <code class="literal">initramfs</code>.
+  </p></section><section class="sect1" id="sec-switching-modes" data-id-title="SELinux modes"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.2 </span><span class="title-name">SELinux modes</span></span> <a title="Permalink" class="permalink" href="#sec-switching-modes">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SELinux can run in one of three modes: <code class="literal">disabled</code>,
+   <code class="literal">permissive</code>, or <code class="literal">enforcing</code>.
+  </p><p>
+   Using the <code class="literal">disabled</code> mode means that no rules from the
+   SELinux policy are applied and your system is not protected. Therefore, the
+   <code class="literal">disabled</code> mode is not recommended.
+  </p><p>
+   In the <code class="literal">permissive</code> mode, SELinux is active, the security
+   policy is loaded, the file system is labeled and access denial entries are
+   logged. However, the policy is not enforced and thus no access is actually
+   denied.
+  </p><p>
+   In the <code class="literal">enforced</code> mode, the security policy is applied.
+   Each access that is not explicitly allowed by the policy is denied.
+  </p><p>
+   You can switch between the <code class="literal">enforcing</code> and
+   <code class="literal">permissive</code> modes by using the
+   <code class="command">setenforce</code> command. Alternatively, you can switch between
+   all SELinux modes by editing the <code class="filename">/etc/selinux/config</code>
+   configuration file. Changes performed by the <code class="command">setenforce</code>
+   command are valid only until the next reboot. For persistent changes of the
+   SELinux mode, edit the <code class="filename">/etc/selinux/config</code>
+   configuration file.
+  </p><p>
+   The <code class="command">setenforce</code> command has the following syntax:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>setenforce <em class="replaceable">MODE_ID</em></pre></div><p>
+   where <em class="replaceable">MODE_ID</em> is <em class="replaceable">0</em> for
+   the <code class="literal">permissive</code> mode or <em class="replaceable">1</em> for
+   the <code class="literal">enforced</code> mode.
+  </p><p>
+   To verify the mode, run the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>getenforce</pre></div><p>
+   The command should return <code class="literal">permissive</code> or
+   <code class="literal">enforced</code>, depending on the provided
+   <em class="replaceable">MODE_ID</em>.
+  </p><p>
+   To change the SELinux mode permanently, in the file
+   <code class="filename">/etc/selinux/config</code>, change the value of
+   <code class="literal">SELINUX</code> to <code class="literal">disabled</code>, or
+   <code class="literal">permissive</code>, or <code class="literal">enforced</code> as follows:
+  </p><div class="verbatim-wrap"><pre class="screen">SELINUX=disabled</pre></div><p>
+   The changes in the file are applied after the next reboot.
+  </p><div id="id-1.7.3.7.16" data-id-title="Relabeling your system after switching from the disabled mode" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Relabeling your system after switching from the <code class="literal">disabled</code> mode</div><p>
+    If you disable SELinux on your system and then enable it later, make sure
+    that you relabel your system. When SELinux is disabled, and you perform
+    changes to your file system, the changes are not reflected in the context
+    anymore (for example, new files do not have any context). Therefore, you
+    need to relabel your system by using the <code class="command">restorecon</code>
+    command, using the <code class="literal">autorelabel</code> boot parameter, or by
+    creating a file that triggers relabeling on the next boot. To create
+    the file, run the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>touch /etc/selinux/.autorelabel</pre></div><p>
+    After reboot, the file <code class="filename">/etc/selinux/.autorelabel</code> is
+    replaced with another flag file:
+    <code class="filename">/etc/selinux/.relabelled</code> to prevent relabeling on
+    subsequent reboots.
+   </p></div></section><section class="sect1" id="sec-policy-overview" data-id-title="SELinux policy overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.3 </span><span class="title-name">SELinux policy overview</span></span> <a title="Permalink" class="permalink" href="#sec-policy-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The policy is the key component in SELinux. Your SELinux policy defines
+   rules that specify which objects can access which files, directories, ports,
+   and processes on a system. To do this, a security context is defined for all
+   of these.
+  </p><p>
+   An SELinux policy contains a huge number of rules. To make it more
+   manageable, policies are often split into modules. This allows the
+   administrator to switch protection on or off for different parts of the
+   system.
+  </p><p>
+   When compiling the policy for your system, you have a choice to either
+   work with a modular policy, or a monolithic policy, where one huge policy is
+   used to protect everything on your system. It is strongly recommended to use
+   a modular policy and not a monolithic policy. Modular policies are much
+   easier to manage.
+  </p><p>
+   SLE Micro is shipped with the <code class="literal">targeted</code> SELinux policy.
+  </p><section class="sect2" id="sec-policy-containers" data-id-title="Creating policies for containers"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">1.3.1 </span><span class="title-name">Creating policies for containers</span></span> <a title="Permalink" class="permalink" href="#sec-policy-containers">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <span class="productname"><span class="phrase">SLE Micro</span></span> is delivered with a policy that by default does not
+    allow containers to access files outside the container data. On the
+    other hand, all network access is allowed. Typically, containers are
+    created with bind mounts and should be able to access other directories
+    like <code class="filename">/home</code> or <code class="filename">/var</code>.
+    You may want a possibility to allow access to these directories or, on the
+    contrary, restrict some ports to the container even if SELinux is used
+    on your system. In this case, you need to create new policy rules that
+    enable or disable the access. <span class="productname"><span class="phrase">SLE Micro</span></span> provides the Udica tool for
+    this purpose.
+   </p><p>
+    The following procedure describes how to create a custom policy for your
+    containers:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Make sure that SELinux is in the enforcing mode. For details, refer to
+      <a class="xref" href="#sec-switching-modes" title="1.2. SELinux modes">Section 1.2, “SELinux modes”</a>.
+     </p></li><li class="step"><p>
+      Start a container using the following parameters:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>podman run -v /home:/home:rw -v /var/:/var/:rw -p 21:21 -it sle15 bash</pre></div><p>
+      The container runs with the default policy that does not allow access to
+      the mount points but does not restrict other ports.
+     </p></li><li class="step"><p>
+      You can exit the container.
+     </p></li><li class="step"><p>
+      Obtain the container ID:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>podman ps -a
+
+CONTAINER ID  IMAGE                                                                              COMMAND     CREATED        STATUS            PORTS               NAMES
+e59f9d0f86f2  registry.opensuse.org/devel/bci/tumbleweed/containerfile/opensuse/bci/ruby:latest  /bin/bash   8 minutes ago  Up 8 seconds ago  0.0.0.0:21-&gt;21/tcp  zen_ramanujan</pre></div></li><li class="step"><p>
+      Create a JSON file that Udica will use to create a custom policy for the
+      container:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>podman inspect e59f9d0f86f2 &gt; <em class="replaceable">OUTPUT_JSON_FILE</em></pre></div><p>
+      For example, substitute <em class="replaceable">OUTPUT_JSON_FILE</em> with
+      <code class="filename">container.json</code>
+     </p></li><li class="step"><p>
+      Run Udica to generate a policy according to the container parameters:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>udica -j <em class="replaceable">OUTPUT_JSON_FILE</em>  <em class="replaceable">CUSTOM_CONTAINER_POLICY</em></pre></div><p>
+      For example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>udica -j container.json custom_policy</pre></div></li><li class="step"><p>
+      According to the provided instructions, load the policy modules by
+      running:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>semodule -i custom_policy.cil /usr/share/udica/templates/{base_container.cil,net_container.cil,home_container.cil}</pre></div></li><li class="step"><p>
+      Run a container with the new policy module by using the
+      <code class="option">--security-opt</code> option as follows:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>podman run --security-opt label=type:custom_policy.process -v /home:/home:rw -v /var/:/var/:rw -p 21:21 -it sle15 bash</pre></div></li></ol></div></div></section></section><section class="sect1" id="sec-security-context" data-id-title="SELinux security context"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.4 </span><span class="title-name">SELinux security context</span></span> <a title="Permalink" class="permalink" href="#sec-security-context">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The security context is a set of information assigned to a file or a
+   process. It consists of SELinux user, role, type, level and category. This
+   information is used to make access control decisions.
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">SELinux context fields </span></span><a title="Permalink" class="permalink" href="#id-1.7.3.9.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.7.3.9.3.2"><span class="term">SELinux user</span></dt><dd><p>
+      is an identity defined in the policy that is authorized for a specific
+      set of roles and for a specific <span class="emphasis"><em>level</em></span> range. Each
+      Linux user is mapped to an SELinux user. SELinux does not use the list of
+      user accounts maintained by Linux in <code class="filename">/etc/passwd</code>,
+      but uses its own database and mapping. By convention, the identity name
+      is suffixed with <code class="literal">_u</code>, for example:
+      <code class="literal">user_u</code>.
+     </p></dd><dt id="id-1.7.3.9.3.3"><span class="term">role</span></dt><dd><p>
+      defines a set of permissions that a user can be granted. A role defines
+      which <span class="emphasis"><em>types</em></span> a user assigned to this role can access.
+      By convention, the role name is suffixed with <code class="literal">_r</code>, for
+      example: <code class="literal">system_r</code>.
+     </p></dd><dt id="id-1.7.3.9.3.4"><span class="term">type</span></dt><dd><p>
+      conveys information on how particular files and processes can interact. A
+      process consists of files with a concrete SELinux type, and it cannot
+      access files outside of this type. By convention, the type name is
+      suffixed with <code class="literal">_t</code>, for example:
+      <code class="literal">var_t</code>.
+     </p></dd><dt id="id-1.7.3.9.3.5"><span class="term">level</span></dt><dd><p>
+      is an optional attribute that specifies the range of levels of clearance
+      in the multilevel security.
+     </p></dd><dt id="id-1.7.3.9.3.6"><span class="term">category</span></dt><dd><p>
+      is an optional attribute that allows you to add categories to processes,
+      files, and users. A user can then access files that have the same
+      category.
+     </p></dd></dl></div></section><section class="sect1" id="sec-managing-modes" data-id-title="Tools for managing SELinux"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">1.5 </span><span class="title-name">Tools for managing SELinux</span></span> <a title="Permalink" class="permalink" href="#sec-managing-modes">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SLE Micro provides you with tools to manage SELinux on your system. If, in any
+   case, the below described tools are not installed on your system, install
+   the tools by running:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update pkg install policycoreutils-python-utils</pre></div><p>
+   After successful installation, reboot the system.
+  </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">SELinux commands </span></span><a title="Permalink" class="permalink" href="#id-1.7.3.10.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_selinux.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.7.3.10.5.2"><span class="term"><code class="command">chcon</code></span></dt><dd><p>
+      changes the security context of provided files to the context provided to
+      the command
+     </p></dd><dt id="id-1.7.3.10.5.3"><span class="term"><code class="command">getenforce</code></span></dt><dd><p>
+      displays the current SELinux mode
+     </p></dd><dt id="id-1.7.3.10.5.4"><span class="term"><code class="command">fixfiles</code></span></dt><dd><p>
+      enables you to check for issues with a mismatched security context and
+      then fix them
+     </p></dd><dt id="id-1.7.3.10.5.5"><span class="term"><code class="command">ls -Z <em class="replaceable">PATH</em></code></span></dt><dd><p>
+      shows security context of all files/directories in the specified
+      <em class="replaceable">PATH</em>, for example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ls -Z /
+system_u:object_r:bin_t:s0 bin
+system_u:object_r:boot_t:s0 boot
+system_u:object_r:device_t:s0 dev
+system_u:object_r:etc_t:s0  etc
+system_u:object_r:home_root_t:s0 home
+system_u:object_r:lib_t:s0 lib
+system_u:object_r:lib_t:s0 lib64
+system_u:object_r:mnt_t:s0 mnt
+system_u:object_r:usr_t:s0 opt
+system_u:object_r:proc_t:s0 proc
+system_u:object_r:default_t:s0 root
+system_u:object_r:var_run_t:s0 run
+system_u:object_r:bin_t:s0 sbin
+system_u:object_r:var_t:s0 srv
+system_u:object_r:sysfs_t:s0 sys
+system_u:object_r:tmp_t:s0 tmp
+system_u:object_r:usr_t:s0 usr
+system_u:object_r:var_t:s0 var</pre></div></dd><dt id="id-1.7.3.10.5.6"><span class="term"><code class="command">restorecon</code></span></dt><dd><p>
+      restores a file context to the default value (as stored in the SELinux
+      policy)
+     </p></dd><dt id="id-1.7.3.10.5.7"><span class="term"><code class="command">semanage</code></span></dt><dd><p>
+      enables you to adjust context and configure certain elements of SELinux
+      policy. The command provides several subcommands. For details, use:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>semanage --help</pre></div></dd><dt id="id-1.7.3.10.5.8"><span class="term"><code class="command">setenforce</code></span></dt><dd><p>
+      enables you to temporarily set a SELinux mode to
+      <code class="literal">permissive</code> or <code class="literal">enforcing</code>
+     </p></dd><dt id="id-1.7.3.10.5.9"><span class="term"><code class="command">sestatus</code></span></dt><dd><p>
+      displays the current status of SELinux, for example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>sestatus
+
+SELinux status:               enabled
+SElinuxfs mount:              /sys/fs/selinux
+SELinux root directory:       /etc/selinux
+Loaded policy name:           targeted
+Current mode:                 enforcing
+Mode from config file:        enforcing
+Policy MLS status:            enabled
+Policy deny_unknown status:   allowed
+Memory protection checking:   requested (insecure)
+Max kernel policy version:    31</pre></div></dd></dl></div><div id="id-1.7.3.10.6" data-id-title="The Z option available to other commands" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: The <code class="literal">Z</code> option available to other commands</div><p>
+    You can also use the <code class="literal">Z</code> option with other commands, for
+    example: <code class="command">cp, ps</code>, and <code class="command">id</code>.
+   </p></div></section></section><section class="chapter" id="cha-security-attestation" data-id-title="Remote attestation using Keylime"><div class="titlepage"><div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">2 </span><span class="title-name">Remote attestation using Keylime</span></span> <a title="Permalink" class="permalink" href="#cha-security-attestation">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    This chapter focuses on the remote attestation of SLE Micro using the
+    <span class="emphasis"><em>Keylime</em></span> agent.
+   </p></div></div></div></div><p>
+  With the growing demand on securing devices against unauthorized changes, the
+  use of the security mechanism called <span class="emphasis"><em>remote attestation
+  (RA)</em></span> has been experiencing significant growth. Using RA, a host
+  (client) can authenticate its boot chain status and running software on a
+  remote host (verifier). <span class="emphasis"><em>Remote attestation</em></span> is usually
+  combined with public-key encryption (by using TPM2), thus the sent
+  information can only be read by the services that requested the attestation,
+  and the validity of the data can be verified.
+ </p><p>
+  Throughout this document, the following terms are used:
+ </p><div class="variablelist"><div class="title-container"><div class="variablelist-title-wrap"><div class="variablelist-title"><span class="title-number-name"><span class="title-name">Terminology </span></span><a title="Permalink" class="permalink" href="#id-1.7.4.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div><dl class="variablelist"><dt id="id-1.7.4.4.2"><span class="term">Attestation key (AK)</span></dt><dd><p>
+     is a data signing key that proves that the data comes from a real TPM and
+     has not been tampered with.
+    </p></dd><dt id="id-1.7.4.4.3"><span class="term">Core root of trust for measurement</span></dt><dd><p>
+     is a starting point of the boot process that cannot be altered and
+     calculates the first hash of the layer above.
+    </p></dd><dt id="id-1.7.4.4.4"><span class="term">Endorsement key (EK)</span></dt><dd><p>
+     is an encryption key that is permanently embedded in the TPM when it is
+     manufactured. The public part of the key is used to recognize a genuine
+     TPM.
+    </p></dd><dt id="id-1.7.4.4.5"><span class="term">Integrity management architecture (IMA)</span></dt><dd><p>
+     the kernel integrity subsystem that provides a means of detecting
+     malicious changes to files.
+    </p></dd><dt id="id-1.7.4.4.6"><span class="term">Measured boot</span></dt><dd><p>
+     in this method, each component in the booting sequence calculates a hash
+     of the next one before delegating the execution of the next component. The
+     hash extends one or several PCRs of the TPM. An event is created with the
+     information about where the measurement took place and what was measured.
+     Such events are collected in an event log, and, along with the extended
+     PCR values, the events can be compared with the expected values
+     representing a healthy system.
+    </p></dd><dt id="id-1.7.4.4.7"><span class="term">Platform Configuration Register (PCR)</span></dt><dd><p>
+     is a memory location in TPM that, for example, stores hashes of booting
+     layers. PCR can be updated only by using the non-reversible
+     operation—<code class="literal">extend</code>. A signed list of current PCR
+     values can be obtained by the <code class="command">quote</code> command on TPM, and
+     this quote can be verified by a third party during the attestation
+     process.
+    </p></dd><dt id="id-1.7.4.4.8"><span class="term">Secure boot</span></dt><dd><p>
+     each step of the booting process checks a cryptographic signature on the
+     executable of the next step before launching it.
+    </p></dd><dt id="id-1.7.4.4.9"><span class="term">Trusted Platform Module (TPM)</span></dt><dd><p>
+     is a self-contained security cryptographic processor present in the system
+     as hardware or implemented in the firmware that serves as a root of trust.
+     TPM provides a PCR for storing the hashes of booting layers. A typical TPM
+     provides several functions, like a random number generator, counters, or a
+     local clock. It also stores 24 PCRs, grouped by banks per each supported
+     cryptographic hash function (SHA1, SHA256, SHA384, or SHA512).
+    </p></dd></dl></div><p>
+  Usually, by default, TPM usage is disabled. Therefore, the measured boot does
+  not take place. To enable the remote attestation, enable TPM in the EFI/BIOS
+  menu.
+ </p><section class="sect1" id="sec-keylime-about" data-id-title="About Keylime"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.1 </span><span class="title-name">About <span class="emphasis"><em>Keylime</em></span></span></span> <a title="Permalink" class="permalink" href="#sec-keylime-about">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <span class="emphasis"><em>Keylime</em></span> is a remote attestation solution that enables
+   you to monitor the health of remote nodes using a TPM as a root of trust for
+   measurement. With <span class="emphasis"><em>Keylime</em></span>, you can perform several
+   tasks like validation of the PCRs extended during the measured boot,
+   analysis and assertions of the event log, assertion of the value of any PCR
+   in the remote system, and also monitoring the validity of open or executed
+   files.
+  </p><p>
+   <span class="emphasis"><em>Keylime</em></span> also provides a framework for delivering
+   encrypted data to verified nodes. This data is the so-called payload. The
+   framework can also execute custom scripts that are triggered when a machine
+   fails the attested measurements.
+  </p><p>
+   <span class="emphasis"><em>Keylime</em></span> consists of an agent, a verifier, a registrar,
+   and a command-line tool (tenant). Agents are on those systems that need to
+   be attested. The verifier and registrar are on remote systems that perform
+   the registration and attestation of agents. Keep in mind that only the agent
+   role is available on SLE Micro. For details about each component, refer to the
+   following sections.
+  </p><section class="sect2" id="sec-keylime-agent" data-id-title="Keylime agent"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.1.1 </span><span class="title-name"><span class="emphasis"><em>Keylime</em></span> agent</span></span> <a title="Permalink" class="permalink" href="#sec-keylime-agent">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The agent is a service that runs on the system that needs to be attested.
+    The agent sends the event log, IMA hashes, and information about the
+    measured boot to the verifier, using the local TPM as a certifier of the
+    data validity.
+   </p><p>
+    When a new agent is started, the agent needs to register itself in the
+    registrar first. To do so, the agent needs a TLS certificate to establish
+    the connection. The TLS certificate is generated by the registrar, but it
+    needs to be installed manually to the agent. After the registration, the
+    agent sends its attestation key and the public part of the endorsement key
+    to the registrar. The registrar responds to the agent with a challenge in a
+    process called credential activation, which will validate the TPM of the
+    agent. Once the agent has been registered, it is ready to be enrolled for
+    attestation.
+   </p></section><section class="sect2" id="sec-keylime-registrar" data-id-title="Keylime registrar"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.1.2 </span><span class="title-name"><span class="emphasis"><em>Keylime</em></span> registrar</span></span> <a title="Permalink" class="permalink" href="#sec-keylime-registrar">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The registrar is used to register agents that should be attested. The
+    registrar collects the agent's attestation key, the public part of the
+    endorsement key and the endorsement key certification, and verifies that
+    the agent attestation key belongs to the endorsement key.
+   </p></section><section class="sect2" id="sec-keylime-verifier" data-id-title="Keylime verifier"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">2.1.3 </span><span class="title-name"><span class="emphasis"><em>Keylime</em></span> verifier</span></span> <a title="Permalink" class="permalink" href="#sec-keylime-verifier">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The verifier performs the actual attestation of agents and continuously
+    pulls the required attestation data from agents (amongst others, the PCR
+    values, IMA logs, and UEFI event logs).
+   </p></section></section><section class="sect1" id="sec-setup-verifier" data-id-title="Setting up the verifier and registrar"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.2 </span><span class="title-name">Setting up the verifier and registrar</span></span> <a title="Permalink" class="permalink" href="#sec-setup-verifier">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Before you start installing and registering agents, prepare the verifier and
+   the registrar on remote hosts as described in the following procedure.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Check the content of configuration files in
+     <code class="filename">/usr/etc/keylime/*.conf</code>. The defaults are usually
+     sufficient without any changes, but if you need to adjust the
+     configuration, add the changes to either
+     <code class="filename">/etc/keylime/verifier.conf.d/</code> or
+     <code class="filename">/etc/keylime/registrar.conf.d/</code>. Set the ownership to
+     <code class="literal">keylime:tss</code> and change the permissions as follows (for
+     the verifier node):
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>chown -R keylime:tss /etc/keylime/verifier.conf.d/
+
+<code class="prompt root"># </code>chmod -R 600 /etc/keylime/verifier.conf.d/</pre></div></li><li class="step"><p>
+     Start and enable the verifier service:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>systemctl enable --now keylime_verifier.service</pre></div><p>
+     Starting the service generates certificates that are further required by
+     the registrar.
+    </p></li><li class="step"><p>
+     If the previous command completes successfully, you can start and enable
+     the registrar service:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>systemctl enable --now keylime_registrar.service</pre></div></li></ol></div></div></section><section class="sect1" id="sec-install-keylime" data-id-title="Installing the Keylime agent"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.3 </span><span class="title-name">Installing the <span class="emphasis"><em>Keylime</em></span> agent</span></span> <a title="Permalink" class="permalink" href="#sec-install-keylime">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <span class="emphasis"><em>Keylime</em></span> agent is not present on SLE Micro by default,
+   you need to install it manually. To install the agent, proceed as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Install the <code class="literal">rust-keylime</code> package as follows:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update pkg in rust-keylime</pre></div></li><li class="step"><p>
+     Reboot your system.
+    </p></li><li class="step"><p>
+     Adjust the default agent's configuration.
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Create a directory to store a new configuration file for your changes in
+       <code class="filename">/etc/keylime/agent.conf.d/</code>. The default
+       configuration is stored in
+       <code class="filename">/usr/etc/keylime/agent.conf</code>, but we do not
+       recommend editing this file, because it might get overwritten with next
+       system updates.
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>mkdir -p /etc/keylime/agent.conf.d</pre></div></li><li class="step"><p>
+       Create a new file
+       <code class="filename">/etc/keylime/agent.conf.d/agent.conf</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>cat &lt;&lt; EOF &gt; /etc/keylime/agent.conf.d/agent.conf
+ [agent]
+ 
+ uuid = "d111ec46-34d8-41af-ad56-d560bc97b2e8"
+ registrar_ip = "<em class="replaceable">&lt;REMOTE_IP&gt;</em>"
+ revocation_notification_ip = "<em class="replaceable">&lt;REMOTE_IP&gt;</em>"
+ EOF</pre></div><p>
+       where:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         <code class="literal">uuid</code> is generated each time the agent is run.
+         However, you can define a specific value by this option.
+        </p></li><li class="listitem"><p>
+         <em class="replaceable">&lt;REMOTE_IP&gt;</em> is an IP address of the
+         registrar.
+        </p></li><li class="listitem"><p>
+         <em class="replaceable">&lt;REMOTE_IP&gt;</em> is an IP address of the
+         verifier.
+        </p></li></ul></div></li><li class="step"><p>
+       Change the owner of the <code class="filename">/etc/keylime/</code> directory to
+       <code class="literal">keylime:tss</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>chown -R keylime:tss /etc/keylime</pre></div></li><li class="step"><p>
+       Change permissions on the <code class="filename">/etc/keylime/</code> directory:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>chmod -R 600 /etc/keylime</pre></div></li></ol></li><li class="step"><p>
+     Copy the certificates generated by the CA to the agent node. On the agent
+     node, run:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Prepare a directory for the certificate:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>mkdir -p /var/lib/keylime/cv_ca</pre></div></li><li class="step"><p>
+       Copy the certificate to the agent:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>scp <em class="replaceable">CERT_SERVER_ADDRESS</em>:/var/lib/keylime/cv_ca/cacert.crt /var/lib/keylime/cv_ca</pre></div></li><li class="step"><p>
+       Change the owner of the certificate to <code class="literal">keylime</code>:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>chown -R keylime:tss /var/lib/keylime/cv_ca</pre></div></li></ol></li><li class="step"><p>
+     Start and enable the <code class="literal">keylime_agent.service</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>systemctl enable --now keylime_agent.service</pre></div></li></ol></div></div></section><section class="sect1" id="sec-keyline-registration" data-id-title="Registering agents"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.4 </span><span class="title-name">Registering agents</span></span> <a title="Permalink" class="permalink" href="#sec-keyline-registration">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.7.4.9.2" data-id-title="SLE Micro does not provide the tenant, registrar or verifier" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: SLE Micro does not provide the tenant, registrar or verifier</div><p>
+    SLE Micro provides only the <span class="emphasis"><em>Keylime</em></span> agent capability,
+    therefore, the tasks performed in this chapter cannot be performed from
+    your SLE Micro.
+   </p></div><p>
+   You can register a new agent either by using the CLI tenant or by editing
+   the configuration of the verifier. Using the tenant on the verifier host,
+   run the following:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>keylime_tenant -v 127.0.0.1 \
+                -t <em class="replaceable">AGENT</em> \
+                -u <em class="replaceable">UUID</em> \
+                --cert default \
+                -c add
+                [--include <em class="replaceable">PATH_TO_ZIP_FILE</em>]</pre></div><p>
+   Where:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <em class="replaceable">AGENT</em> is an IP address of the agent to be
+     registered.
+    </p></li><li class="listitem"><p>
+     <em class="replaceable">UUID</em> is the agent's UUID.
+    </p></li><li class="listitem"><p>
+     the file passed by the <code class="option">include</code> option is used to deliver
+     secret payload data to the agent. For details, refer to
+     <a class="xref" href="#keylime-payload" title="2.5. Secure payloads">Section 2.5, “Secure payloads”</a>.
+    </p></li></ul></div><p>
+   You can list registered agents by using the <code class="command">reglist</code>
+   command on the verifier host as follows:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>keylime_tenant -v 127.0.0.1 \
+                --cert default \
+                -c reglist</pre></div><p>
+   To remove a registered agent, specify the agent using the
+   <code class="option">-t</code> and <code class="option">-u</code> options and the <code class="option">-c
+   delete</code> command as follows:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>keylime_tenant -v 127.0.0.1 \
+              -t <em class="replaceable">AGENT</em> \
+              -u <em class="replaceable">UUID</em> \
+              -c delete</pre></div></section><section class="sect1" id="keylime-payload" data-id-title="Secure payloads"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.5 </span><span class="title-name">Secure payloads</span></span> <a title="Permalink" class="permalink" href="#keylime-payload">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   A secure payload enables you to deliver encrypted data to healthy agents.
+   Typically, these payloads are used to provide keys, passwords, certificates,
+   configurations, or scripts that are further used by the agent.
+  </p><p>
+   The secure payload is delivered to the agent in a <code class="filename">zip</code>
+   file that must contain a shell script—<code class="filename">autorun.sh</code>.
+   The script will be executed only if the agent has been properly registered
+   and verified. To deliver the <code class="filename">zip</code> file, use the
+   <code class="option">--include</code> option of the <code class="command">keylime_tenant</code>
+   command.
+  </p><p>
+   The script <code class="filename">autorun.sh</code> contains steps that will enable
+   the use of passwords, certificates and so on. For example, the script can
+   create a directory structure and copy SSH keys there:
+  </p><div class="verbatim-wrap"><pre class="screen">#!/bin/bash
+ 
+ mkdir -p /root/.ssh/
+ cp id_rsa* /root/.ssh/
+ chmod 600 /root/.ssh/id_rsa*
+ cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys</pre></div><p>
+   In this case, do not forget to include the SSH keys in the
+   <code class="filename">zip</code> file.
+  </p></section><section class="sect1" id="enable-ima-tracking" data-id-title="Enabling IMA tracking"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">2.6 </span><span class="title-name">Enabling IMA tracking</span></span> <a title="Permalink" class="permalink" href="#enable-ima-tracking">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_security_attestation.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   When using IMA, the kernel calculates a hash of accessed files. The hash is
+   then used to extend the PCR 10 in the TPM and also log a list of
+   accessed files. The verifier can request a signed quote to the agent for PCR
+   10 to get the logs of all accessed files including the file hashes.
+   Verifiers then compare the accessed files with a local allowlist of approved
+   files. If any of the hashes are not recognized, the system is considered
+   unsafe, and a revocation event is triggered.
+  </p><p>
+   For a high-level overview of IMA/EVM, refer to
+   <a class="link" href="https://en.opensuse.org/SDB:Ima_evm#Introduction" target="_blank">IMA/EVM
+   introduction</a>.
+  </p><p>
+   Before <span class="emphasis"><em>Keylime</em></span> can collect information, IMA/EVM needs
+   to be enabled. To enable the process, boot a kernel of the agent with the
+   parameters: <code class="literal">ima_appraise=log</code> and
+   <code class="literal">ima_policy=tcb</code>. To use the boot parameters on boot,
+   proceed as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Update the <code class="option">GRUB_CMDLINE_LINUX_DEFAULT</code> option with the
+     parameters in <code class="filename">/etc/default/grub</code>:
+    </p><div class="verbatim-wrap"><pre class="screen">GRUB_CMDLINE_LINUX_DEFAULT="ima_appraise=log ima_policy=tcb"</pre></div></li><li class="step"><p>
+     Regenerate <code class="filename">grub.cfg</code> by running:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update grub.cfg</pre></div></li><li class="step"><p>
+     Reboot your system.
+    </p></li></ol></div></div><p>
+   The procedure above uses the default kernel IMA policy, but we recommend
+   creating a new policy to avoid monitoring too many files and therefore
+   creating long logs. For details, refer to the
+   <a class="link" href="https://keylime-docs.readthedocs.io/en/latest/user_guide/runtime_ima.html" target="_blank"><span class="emphasis"><em>Keylime</em></span>
+   documentation</a>.
+  </p><p>
+   To indicate the expected hashes, use the <code class="option">--allowlist</code>option
+   of the <code class="command">keylime_tenant</code> command when registering the agent.
+   To view the excluded or ignored files, use the <code class="option">--exclude</code>
+   option of the <code class="command">keylime_tenant</code> command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>keylime_tenant --allowlist
+    -v 127.0.0.1 \
+    -u <em class="replaceable">UUID</em></pre></div></section></section><section class="chapter" id="cha-pam" data-id-title="Authentication with PAM"><div class="titlepage"><div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">Authentication with PAM</span></span> <a title="Permalink" class="permalink" href="#cha-pam">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Linux uses PAM (pluggable authentication modules) in the authentication
+    process as a layer that mediates between user and application. PAM
+    modules are available on a system-wide basis, so they can be requested by
+    any application. This chapter describes how the modular authentication
+    mechanism works and how it is configured.
+   </p></div></div></div></div><section class="sect1" id="sec-security-pam-whatis" data-id-title="What is PAM?"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.1 </span><span class="title-name">What is PAM?</span></span> <a title="Permalink" class="permalink" href="#sec-security-pam-whatis">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   System administrators and programmers often want to restrict access to
+   certain parts of the system or to limit the use of certain functions of
+   an application. Without PAM, applications must be adapted every time a
+   new authentication mechanism, such as LDAP, Samba, or Kerberos, is
+   introduced. However, this process is time-consuming and
+   error-prone. One way to avoid these drawbacks is to separate applications
+   from the authentication mechanism and delegate authentication to
+   centrally managed modules. Whenever a newly required authentication
+   scheme is needed, it is sufficient to adapt or write a suitable
+   <span class="emphasis"><em>PAM module</em></span> for use by the program in question.
+  </p><p>
+   The PAM concept consists of:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <span class="emphasis"><em>PAM modules</em></span>, which are a set of shared libraries
+     for a specific authentication mechanism.
+    </p></li><li class="listitem"><p>
+     A <span class="emphasis"><em>module stack</em></span> with of one or more PAM modules.
+    </p></li><li class="listitem"><p>
+     A PAM-aware <span class="emphasis"><em>service</em></span> which needs authentication by
+     using a module stack or PAM modules. Usually a service is a familiar
+     name of the corresponding application, like <code class="command">login</code> or
+     <code class="command">su</code>. The service name <code class="literal">other</code> is a
+     reserved word for default rules.
+    </p></li><li class="listitem"><p>
+     <span class="emphasis"><em>Module arguments</em></span>, with which the execution of a
+     single PAM module can be influenced.
+    </p></li><li class="listitem"><p>
+     A mechanism evaluating each <span class="emphasis"><em>result</em></span> of a single PAM
+     module execution. A positive value executes the next PAM module. The
+     way a negative value is dealt with depends on the configuration:
+     <span class="quote">“<span class="quote">no influence, proceed</span>”</span> up to <span class="quote">“<span class="quote">terminate
+     immediately</span>”</span> and anything in between are valid options.
+    </p></li></ul></div></section><section class="sect1" id="sec-pam-struc-files" data-id-title="Structure of a PAM configuration file"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.2 </span><span class="title-name">Structure of a PAM configuration file</span></span> <a title="Permalink" class="permalink" href="#sec-pam-struc-files">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    PAM on SLE Micro comes with a set of configuration files stored in <code class="filename">/etc/pam.d</code>. Every service (or program) that relies on the PAM mechanism has its
+      own configuration file in this directory. For example, the service for
+      <code class="systemitem">sshd</code> can be found in the
+      <code class="filename">/etc/pam.d/sshd</code> file.
+  </p><p>
+   The files under <code class="filename">/etc/pam.d/</code> define the PAM modules
+   used for authentication. Each file consists of lines, which define a
+   service, and each line consists of a maximum of four components:
+  </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">TYPE</em>  <em class="replaceable">CONTROL</em>
+ <em class="replaceable">MODULE_PATH</em>  <em class="replaceable">MODULE_ARGS</em></pre></div><p>
+   The components have the following meaning:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.6.1"><span class="term"><em class="replaceable">TYPE</em>
+    </span></dt><dd><p>
+      Declares the type of the service. PAM modules are processed as stacks.
+      Different types of modules have different purposes. For example, one
+      module checks the password, another verifies the location from which
+      the system is accessed, and yet another reads user-specific settings.
+      PAM knows about four different types of modules:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.6.1.2.2.1"><span class="term"><code class="literal">auth</code>
+       </span></dt><dd><p>
+         Check the user's authenticity, traditionally by querying a
+         password. However, this can also be achieved with a
+         chip card or through biometrics (for example, fingerprints or iris
+         scan).
+        </p></dd><dt id="id-1.7.5.4.6.1.2.2.2"><span class="term"><code class="literal">account</code>
+       </span></dt><dd><p>
+         Modules of this type check if the user has general permission to
+         use the requested service. As an example, such a check should be
+         performed to ensure that no one can log in with the user name of an
+         expired account.
+        </p></dd><dt id="id-1.7.5.4.6.1.2.2.3"><span class="term"><code class="literal">password</code>
+       </span></dt><dd><p>
+         The purpose of this type of module is to enable the change of an
+         authentication token. Usually this is a password.
+        </p></dd><dt id="id-1.7.5.4.6.1.2.2.4"><span class="term"><code class="literal">session</code>
+       </span></dt><dd><p>
+         Modules of this type are responsible for managing and configuring
+         user sessions. They are started before and after authentication to
+         log login attempts and configure the user's specific environment
+         .
+        </p></dd></dl></div></dd><dt id="id-1.7.5.4.6.2"><span class="term"><em class="replaceable">CONTROL</em>
+    </span></dt><dd><p>
+      Indicates the behavior of a PAM module. Each module can have the
+      following control flags:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.6.2.2.2.1"><span class="term"><code class="literal">required</code>
+       </span></dt><dd><p>
+         A module with this flag must be successfully processed before the
+         authentication may proceed. After the failure of a module with the
+         <code class="literal">required</code> flag, all other modules with the same
+         flag are processed before the user receives a message about the
+         failure of the authentication attempt.
+        </p></dd><dt id="id-1.7.5.4.6.2.2.2.2"><span class="term"><code class="literal">requisite</code>
+       </span></dt><dd><p>
+         Modules having this flag must also be processed successfully, in
+         much the same way as a module with the <code class="literal">required</code>
+         flag. However, in case of failure a module with this flag gives
+         immediate feedback to the user and no further modules are
+         processed. In case of success, other modules are subsequently
+         processed, like any modules with the <code class="literal">required</code>
+         flag. The <code class="literal">requisite</code> flag can be used as a basic
+         filter checking for the existence of certain conditions that are
+         essential for a correct authentication.
+        </p></dd><dt id="id-1.7.5.4.6.2.2.2.3"><span class="term"><code class="literal">sufficient</code>
+       </span></dt><dd><p>
+         After a module with this flag has been successfully processed, the
+         requesting application receives an immediate message about the
+         success and no further modules are processed, provided there was no
+         preceding failure of a module with the <code class="literal">required</code>
+         flag. The failure of a module with the
+         <code class="literal">sufficient</code> flag has no direct consequences, in
+         the sense that any subsequent modules are processed in their
+         respective order.
+        </p></dd><dt id="id-1.7.5.4.6.2.2.2.4"><span class="term"><code class="literal">optional</code>
+       </span></dt><dd><p>
+         The failure or success of a module with this flag does not have any
+         direct consequences. This can be useful for modules that are only
+         intended to display a message (for example, to tell the user that
+         mail has arrived) without taking any further action.
+        </p></dd><dt id="id-1.7.5.4.6.2.2.2.5"><span class="term"><code class="literal">include</code>
+       </span></dt><dd><p>
+         If this flag is given, the file specified as argument is inserted
+         at this place.
+        </p></dd></dl></div></dd><dt id="id-1.7.5.4.6.3"><span class="term"><em class="replaceable">MODULE_PATH</em>
+    </span></dt><dd><p>
+      Contains a full file name of a PAM module. It does not need to be
+      specified explicitly, if the module is located in the default
+      directory <code class="filename">/lib/security</code> (for all 64-bit platforms
+      supported by <span class="productname"><span class="phrase">SUSE® Linux Enterprise Micro</span></span>, the directory is
+      <code class="filename">/lib64/security</code>).
+     </p></dd><dt id="id-1.7.5.4.6.4"><span class="term"><em class="replaceable">MODULE_ARGS</em>
+    </span></dt><dd><p>
+      Contains a space-separated list of options to influence the behavior
+      of a PAM module, such as <code class="option">debug</code> (enables debugging) or
+      <code class="option">nullok</code> (allows the use of empty passwords).
+     </p></dd></dl></div><p>
+   In addition, there are global configuration files for PAM modules under
+   <code class="filename">/etc/security</code>, which define the exact behavior of
+   these modules (examples include <code class="filename">pam_env.conf</code> and
+   <code class="filename">time.conf</code>). Every application that uses a PAM module
+   calls a set of PAM functions, which then process the information
+   in the configuration files and return the result to the
+   requesting application.
+  </p><p>
+   To simplify the creation and maintenance of PAM modules, common default
+   configuration files for the types <code class="literal">auth</code>,
+   <code class="literal">account</code>, <code class="literal">password</code>, and
+   <code class="literal">session</code> modules have been introduced. These are
+   retrieved from every application's PAM configuration. Updates to the
+   global PAM configuration modules in <code class="filename">common-*</code> are
+   thus propagated across all PAM configuration files without requiring the
+   administrator to update every single PAM configuration file.
+  </p><p>
+   The global PAM configuration files are maintained using the
+   <code class="command">pam-config</code> tool. This tool automatically adds new
+   modules to the configuration, changes the configuration of existing ones
+   or deletes modules (or options) from the configurations. Manual
+   intervention in maintaining PAM configurations is minimized or no longer
+   required.
+  </p></section><section class="sect1" id="sec-pam-struc-format" data-id-title="The PAM configuration of sshd"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.3 </span><span class="title-name">The PAM configuration of sshd</span></span> <a title="Permalink" class="permalink" href="#sec-pam-struc-format">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Consider the PAM configuration of sshd as an example:
+  </p><div class="example" id="dat-pam-sshd" data-id-title="PAM configuration for sshd (/etc/pam.d/sshd)"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.1: </span><span class="title-name">PAM configuration for sshd (<code class="filename">/etc/pam.d/sshd</code>) </span></span><a title="Permalink" class="permalink" href="#dat-pam-sshd">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#%PAM-1.0 <span class="callout" id="co-security-pam-sshd-pam-line">1</span>
+  
+
+auth     requisite      pam_nologin.so                              <span class="callout" id="co-security-pam-sshd-pam-nologin">2</span>
+auth     include        common-auth                                 <span class="callout" id="co-security-pam-sshd-common-auth">3</span>
+account  requisite      pam_nologin.so                              <a class="xref" href="#co-security-pam-sshd-pam-nologin"><span class="callout">2</span></a>
+account  include        common-account                              <a class="xref" href="#co-security-pam-sshd-common-auth"><span class="callout">3</span></a>
+password include        common-password                             <a class="xref" href="#co-security-pam-sshd-common-auth"><span class="callout">3</span></a>
+session  required       pam_loginuid.so                             <span class="callout" id="co-security-pam-sshd-pam-loginuid">4</span>
+session  include        common-session                              <a class="xref" href="#co-security-pam-sshd-common-auth"><span class="callout">3</span></a>
+session  optional       pam_lastlog.so   silent noupdate showfailed <span class="callout" id="co-security-pam-sshd-lastlog">5</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-pam-line"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Declares the version of this configuration file for PAM 1.0. This is
+      merely a convention, but could be used in the future to check the
+      version.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-pam-nologin"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Checks, if <code class="filename">/etc/nologin</code> exists. If it does, no
+      user other than <code class="systemitem">root</code> may log
+      in.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-common-auth"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Refers to the configuration files of four module types:
+      <code class="filename">common-auth</code>, <code class="filename">common-account</code>,
+      <code class="filename">common-password</code>, and
+      <code class="filename">common-session</code>. These four files hold the default
+      configuration for each module type.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-pam-loginuid"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Sets the login UID process attribute for the process that was
+      authenticated.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-lastlog"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Displays information about the last login of a user.
+     </p></td></tr></table></div></div></div><p>
+   By including the configuration files instead of adding each module
+   separately to the respective PAM configuration, you automatically get an
+   updated PAM configuration when an administrator changes the defaults.
+   Formerly, you needed to adjust all configuration files manually for all
+   applications when changes to PAM occurred or a new application was
+   installed. Now the PAM configuration is made with central configuration
+   files and all changes are automatically inherited by the PAM
+   configuration of each service.
+  </p><p>
+   The first include file (<code class="filename">common-auth</code>) calls three
+   modules of the <code class="literal">auth</code> type:
+   <code class="systemitem">pam_env.so</code>,
+   <code class="systemitem">pam_gnome_keyring.so</code> and
+   <code class="systemitem">pam_unix.so</code>. See
+   <a class="xref" href="#dat-pam-common-auth" title="Default configuration for the auth section (common-auth)">Example 3.2, “Default configuration for the <code class="literal">auth</code> section (<code class="filename">common-auth</code>)”</a>.
+  </p><div class="example" id="dat-pam-common-auth" data-id-title="Default configuration for the auth section (common-auth)"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.2: </span><span class="title-name">Default configuration for the <code class="literal">auth</code> section (<code class="filename">common-auth</code>) </span></span><a title="Permalink" class="permalink" href="#dat-pam-common-auth">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">auth  required  pam_env.so                   <span class="callout" id="co-security-pam-sshd-pam-env">1</span>
+auth  optional  pam_gnome_keyring.so         <span class="callout" id="co-security-pam-sshd-gnome">2</span>
+auth  required  pam_unix.so  try_first_pass <span class="callout" id="co-security-pam-sshd-pam-unix">3</span></pre></div></div></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-pam-env"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     <code class="systemitem">pam_env.so</code> loads
+     <code class="filename">/etc/security/pam_env.conf</code> to set the environment
+     variables as specified in this file. It can be used to set the
+     <code class="envar">DISPLAY</code> variable to the correct value, because the
+     <code class="systemitem">pam_env</code> module knows about the
+     location from which the login is taking place.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-gnome"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     <code class="systemitem">pam_gnome_keyring.so</code> checks
+     the user's login and password against the GNOME key ring
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-security-pam-sshd-pam-unix"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     <code class="systemitem">pam_unix</code> checks the user's
+     login and password against <code class="filename">/etc/passwd</code> and
+     <code class="filename">/etc/shadow</code>.
+    </p></td></tr></table></div><p>
+   The whole stack of <code class="literal">auth</code> modules is processed before
+   <code class="systemitem">sshd</code> gets any feedback about
+   whether the login has succeeded. All modules of the stack having the
+   <code class="literal">required</code> control flag must be processed successfully
+   before <code class="systemitem">sshd</code> receives a message
+   about the positive result. If one of the modules is not successful, the
+   entire module stack is still processed and only then is
+   <code class="systemitem">sshd</code> notified about the negative
+   result.
+  </p><p>
+   When all modules of the <code class="literal">auth</code> type have been
+   successfully processed, another include statement is processed, in this
+   case, that in <a class="xref" href="#dat-pam-common-account" title="Default configuration for the account section (common-account)">Example 3.3, “Default configuration for the <code class="literal">account</code> section (<code class="filename">common-account</code>)”</a>.
+   <code class="filename">common-account</code> contains only one module,
+   <code class="literal">pam_unix</code>. If <code class="literal">pam_unix</code> returns the
+   result that the user exists, sshd receives a message announcing this
+   success and the next stack of modules (<code class="literal">password</code>) is
+   processed, shown in <a class="xref" href="#dat-pam-common-password-slemicro" title="Default configuration for the password section (common-password)">Example 3.4, “Default configuration for the <code class="literal">password</code> section (<code class="filename">common-password</code>)”</a>.
+  </p><div class="example" id="dat-pam-common-account" data-id-title="Default configuration for the account section (common-account)"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.3: </span><span class="title-name">Default configuration for the <code class="literal">account</code> section (<code class="filename">common-account</code>) </span></span><a title="Permalink" class="permalink" href="#dat-pam-common-account">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">account  required  pam_unix.so  try_first_pass</pre></div></div></div><div class="example" id="dat-pam-common-password-slemicro" data-id-title="Default configuration for the password section (common-password)"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.4: </span><span class="title-name">Default configuration for the <code class="literal">password</code> section (<code class="filename">common-password</code>) </span></span><a title="Permalink" class="permalink" href="#dat-pam-common-password-slemicro">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">password  requisite  pam_cracklib.so
+password  requisite   pam_cracklib.so
+password  required   pam_unix.so  use_authtok nullok shadow try_first_pass</pre></div></div></div><p>
+   Again, the PAM configuration of
+   <code class="systemitem">sshd</code> involves only an include
+   statement referring to the default configuration for
+   <code class="literal">password</code> modules located in
+   <code class="filename">common-password</code>. These modules must successfully be
+   completed (control flags <code class="literal">requisite</code> and
+   <code class="literal">required</code>) whenever the application requests the change
+   of an authentication token.
+  </p><p>
+   Changing a password or another authentication token requires a security
+   check. This is achieved with the <code class="filename">pam_cracklib</code>
+   module. The <code class="filename">pam_unix</code> module used afterward carries
+   over any old and new passwords from <code class="filename">pam_cracklib</code>, so
+   the user does not need to authenticate again after changing the password.
+   This procedure makes it impossible to circumvent the checks carried out
+   by <code class="filename">pam_cracklib</code>. Whenever the
+   <code class="literal">account</code> or the <code class="literal">auth</code> type are
+   configured to complain about expired passwords, the
+   <code class="literal">password</code> modules should also be used.
+  </p><div class="example" id="dat-pam-common-session-slemicro" data-id-title="Default configuration for the session section (common-session)"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.5: </span><span class="title-name">Default configuration for the <code class="literal">session</code> section (<code class="filename">common-session</code>) </span></span><a title="Permalink" class="permalink" href="#dat-pam-common-session-slemicro">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">session  required  pam_selinux.so  close
+session  optional  pam_systemd.so
+session  required  pam_limits.so
+session  required  pam_unix.so  try_first_pass
+session  optional  pam_umask.so
+session  required  pam_selinux.so  open
+session  optional  pam_env.so</pre></div></div></div><p>
+   As the final step, the modules of the <code class="literal">session</code> type
+   (bundled in the <code class="filename">common-session</code> file) are called to
+   configure the session according to the settings for the user in question.
+   The <code class="filename">pam_limits</code> module loads the file
+   <code class="filename">/etc/security/limits.conf</code>, which may define limits
+   on the use of certain system resources. The <code class="filename">pam_unix</code>
+   module is processed again. The <code class="filename">pam_umask</code> module can
+   be used to set the file mode creation mask. Since this module carries the
+   <code class="literal">optional</code> flag, a failure of this module would not
+   affect the successful completion of the entire session module stack. The
+   <code class="literal">session</code> modules are called a second time when the user
+   logs out.
+  </p></section><section class="sect1" id="sec-pam-struc-conf" data-id-title="Configuration of PAM modules"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.4 </span><span class="title-name">Configuration of PAM modules</span></span> <a title="Permalink" class="permalink" href="#sec-pam-struc-conf">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Some PAM modules are configurable. The configuration files are
+   located in <code class="filename">/etc/security</code>. This section briefly
+   describes the configuration files relevant to the sshd
+   example—<code class="filename">pam_env.conf</code> and
+   <code class="filename">limits.conf</code>.
+  </p><section class="sect2" id="sec-pam-struc-conf-pamenv" data-id-title="pam_env.conf"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.4.1 </span><span class="title-name">pam_env.conf</span></span> <a title="Permalink" class="permalink" href="#sec-pam-struc-conf-pamenv">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    <code class="filename">pam_env.conf</code> can be used to define a standardized
+    environment for users that is set whenever the
+    <code class="systemitem">pam_env</code> module is called. With it, preset
+    environment variables using the following syntax:
+   </p><div class="verbatim-wrap"><pre class="screen"><em class="replaceable">VARIABLE</em>  [DEFAULT=<em class="replaceable">VALUE</em>]  [OVERRIDE=<em class="replaceable">VALUE</em>]</pre></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.6.3.4.1"><span class="term"><em class="replaceable">VARIABLE</em>
+     </span></dt><dd><p>
+       Name of the environment variable to set.
+      </p></dd><dt id="id-1.7.5.6.3.4.2"><span class="term"><code class="systemitem">[DEFAULT=&lt;value&gt;]</code>
+     </span></dt><dd><p>
+       Default <em class="replaceable">VALUE</em> the administrator wants to
+       set.
+      </p></dd><dt id="id-1.7.5.6.3.4.3"><span class="term"><code class="systemitem">[OVERRIDE=&lt;value&gt;]</code>
+     </span></dt><dd><p>
+       Values that may be queried and set by
+       <code class="systemitem">pam_env</code>, overriding the default value.
+      </p></dd></dl></div><p>
+    A typical example of how <code class="systemitem">pam_env</code> can be used is
+    the adaptation of the <code class="envar">DISPLAY</code> variable, which is changed
+    whenever a remote login takes place. This is shown in
+    <a class="xref" href="#dat-pam-pamenv" title="pam_env.conf">Example 3.6, “pam_env.conf”</a>.
+   </p><div class="example" id="dat-pam-pamenv" data-id-title="pam_env.conf"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 3.6: </span><span class="title-name">pam_env.conf </span></span><a title="Permalink" class="permalink" href="#dat-pam-pamenv">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">REMOTEHOST  DEFAULT=localhost          OVERRIDE=@{PAM_RHOST}
+DISPLAY     DEFAULT=${REMOTEHOST}:0.0  OVERRIDE=${DISPLAY}</pre></div></div></div><p>
+    The first line sets the value of the <code class="envar">REMOTEHOST</code> variable
+    to <code class="literal">localhost</code>, which is used whenever
+    <code class="filename">pam_env</code> cannot determine any other value. The
+    <code class="envar">DISPLAY</code> variable in turn contains the value of
+    <code class="envar">REMOTEHOST</code>. Find more information in the comments in
+    <code class="filename">/etc/security/pam_env.conf</code>.
+   </p></section><section class="sect2" id="sec-pam-struc-pamlimits" data-id-title="limits.conf"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.4.2 </span><span class="title-name">limits.conf</span></span> <a title="Permalink" class="permalink" href="#sec-pam-struc-pamlimits">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    System limits can be set on a user or group basis in
+    <code class="filename">limits.conf</code>, which is read by the
+    <code class="systemitem">pam_limits</code> module. The file allows you to set
+    hard limits, which may not be exceeded, and soft limits, which
+    may be exceeded temporarily. For more information about the syntax and
+    the options, see the comments in
+    <code class="filename">/etc/security/limits.conf</code>.
+   </p></section></section><section class="sect1" id="sec-pam-pam-config" data-id-title="Configuring PAM using pam-config"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.5 </span><span class="title-name">Configuring PAM using pam-config</span></span> <a title="Permalink" class="permalink" href="#sec-pam-pam-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The <code class="command">pam-config</code> tool helps you configure the global PAM
+   configuration files (<code class="filename">/etc/pam.d/common-*</code>) and
+   several selected application configurations. For a list of supported
+   modules, use the <code class="command">pam-config --list-modules</code> command.
+   Use the <code class="command">pam-config</code> command to maintain your PAM
+   configuration files. Add new modules to your PAM configurations, delete
+   other modules or modify options to these modules. When changing global
+   PAM configuration files, no manual tweaking of the PAM setup for
+   individual applications is required.
+  </p><p>
+   A simple use case for <code class="command">pam-config</code> involves the
+   following:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p><span class="formalpara-title">Auto-generate a fresh unix-style PAM configuration.</span>
+      Let pam-config create the simplest possible setup which you can extend
+      later on. The <code class="command">pam-config --create</code> command creates a
+      simple Unix authentication configuration. Pre-existing configuration
+      files not maintained by pam-config are overwritten, but backup copies
+      are kept as <code class="literal">*.pam-config-backup</code>.
+     </p></li><li class="step"><p><span class="formalpara-title">Add a new authentication method.</span>
+      Adding a new authentication method (for example, SSSD) to your stack
+      of PAM modules comes down to a simple <code class="command">pam-config --add
+      --sss</code> command. SSSD is added wherever appropriate across
+      all <code class="filename">common-*-pc</code> PAM configuration files.
+     </p></li><li class="step"><p><span class="formalpara-title">Add debugging for test purposes.</span>
+      To make sure the new authentication procedure works as planned, turn
+      on debugging for all PAM-related operations. The <code class="command">pam-config
+      --add --sss-debug</code> command turns on debugging for SSSD-related PAM
+      operations.
+      
+     </p></li><li class="step"><p><span class="formalpara-title">Query your setup.</span>
+      Before you finally apply your new PAM setup, check if it contains all
+      the options you wanted to add. The <code class="command">pam-config --query
+      --</code><em class="replaceable">MODULE</em> command lists both the type and
+      the options for the queried PAM module.
+     </p></li><li class="step"><p><span class="formalpara-title">Remove the debug options.</span>
+      Finally, remove the debug option from your setup when you are entirely
+      satisfied with its performance. The <code class="command">pam-config --delete
+      --sss-debug</code> command turns off debugging for the <code class="literal">pam_ssh.so</code> module.
+      In case you had debugging options added for other
+      modules, use similar commands to turn these off.
+     </p></li></ol></div></div><p>
+   For more information on the <code class="command">pam-config</code> command and the
+   options available, refer to the manual page of
+   <code class="command">pam-config(8)</code>.
+  </p></section><section class="sect1" id="sec-pam-manual-config" data-id-title="Manually configuring PAM"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.6 </span><span class="title-name">Manually configuring PAM</span></span> <a title="Permalink" class="permalink" href="#sec-pam-manual-config">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_pam.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If you prefer to manually create or maintain your PAM configuration
+   files, make sure to disable <code class="command">pam-config</code> for these
+   files.
+  </p><p>
+   When you create your PAM configuration files from scratch using the
+   <code class="command">pam-config --create</code> command, it creates symbolic links
+   from the <code class="filename">common-<em class="replaceable">*</em></code> to the
+   <code class="filename">common-<em class="replaceable">*</em>-pc</code> files.
+   <code class="command">pam-config</code> only modifies the
+   <code class="filename">common-<em class="replaceable">*</em>-pc</code> configuration
+   files. Removing these symbolic links effectively disables pam-config,
+   because pam-config only operates on the
+   <code class="filename">common-<em class="replaceable">*</em>-pc</code> files and
+   these files are not put into effect without the symbolic links.
+  </p><div id="id-1.7.5.8.4" data-id-title="Include pam_systemd.so in configuration" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Include <code class="filename">pam_systemd.so</code> in configuration</div><p>
+    If you are creating your own PAM configuration, make sure to include
+    <code class="literal">pam_systemd.so</code> configured as <code class="literal">session
+    optional</code>. Not including the <code class="literal">pam_systemd.so</code> can
+    cause problems with <code class="systemitem">systemd</code> task limits. For details, refer to the man
+    page of <code class="literal">pam_systemd.so</code>.
+   </p></div></section><section class="sect1" id="sec-pam-login" data-id-title="Configuring SLE Micro to require U2F keys for local login"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.7 </span><span class="title-name">Configuring <span class="phrase">SLE Micro to require</span> U2F keys for local login</span></span> <a title="Permalink" class="permalink" href="#sec-pam-login">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_pam_login.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  To provide more security during local login<span class="phrase"> to SLE Micro</span>, you can configure
+  two-factor authentication using the <code class="literal">pam-u2f</code> framework and
+  the U2F feature on YubiKeys and Security Keys.
+ </p><p>
+  To set up U2F on your<span class="phrase"> SLE Micro</span> system, you need to associate your key with your
+  account<span class="phrase"> on SLE Micro</span>. After that, configure your system to use the key. The
+  procedure is described in the following sections.
+ </p><section class="sect2" id="sec-attach-account" data-id-title="Associating the U2F key with your account"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.7.1 </span><span class="title-name">Associating the U2F key with your account</span></span> <a title="Permalink" class="permalink" href="#sec-attach-account">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_pam_login.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To associate your U2F key with your account, proceed as follows:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Log in to your machine.
+    </p></li><li class="step"><p>
+     Insert your U2F key.
+    </p></li><li class="step"><p>
+     Create a directory for the U2F key configuration:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir -p ~/.config/Yubico</pre></div></li><li class="step"><p>
+     Run the <code class="command">pamu2fcfg</code> command that outputs configuration
+     lines:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> pamu2fcfg &gt; ~/.config/Yubico/u2f_keys</pre></div></li><li class="step"><p>
+     When your device begins flashing, touch the metal contact to confirm the
+     association.
+    </p></li></ol></div></div><p>
+   We recommend using a backup U2F device, which you can set up by running the
+   following commands:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Run:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> pamu2fcfg -n &gt;&gt; ~/.config/Yubico/u2f_keys</pre></div></li><li class="step"><p>
+     When your device begins flashing, touch the metal contact to confirm the
+     association.
+    </p></li></ol></div></div><p>
+   You can move the output file from the default location to a directory that
+   requires the <code class="literal">sudo</code> permission to modify the file to
+   increase security. For example, move it to the <code class="filename">/etc</code>
+   directory.
+   To do so, follow the steps:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Create a directory in <code class="filename">/etc</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mkdir /etc/Yubico</pre></div></li><li class="step"><p>
+     Move the created file:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mv ~/.config/Yubico/u2f_keys /etc/Yubico/u2f_keys</pre></div></li></ol></div></div><div id="id-1.7.5.9.5.8" data-id-title="Placing the u2f_keys in a non-default location" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Placing the <code class="filename">u2f_keys</code> in a non-default location</div><p>
+    If you move the output file to a different directory than is the default
+    (<code class="filename">$HOME/.config/Yubico/u2f_keys</code>), you need to add the
+    path to the <code class="filename">/etc/pam.d/login</code> file as described in
+    <a class="xref" href="#sec-reconfiguring-pam" title="3.7.2. Updating the PAM configuration">Section 3.7.2, “Updating the PAM configuration”</a>.
+   </p></div></section><section class="sect2" id="sec-reconfiguring-pam" data-id-title="Updating the PAM configuration"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.7.2 </span><span class="title-name">Updating the PAM configuration</span></span> <a title="Permalink" class="permalink" href="#sec-reconfiguring-pam">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/slemicro_pam_login.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   After you have created the U2F keys configuration, you need to adjust the
+   PAM configuration on your system.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Open the file <code class="filename">/etc/pam.d/login</code>.
+    </p></li><li class="step"><p>
+     Add the line <code class="literal">auth required pam_u2f.so</code> to the file as
+     follows:
+    </p><div class="verbatim-wrap"><pre class="screen">#%PAM-1.0
+auth      include    common-auth
+<span class="bold"><strong>auth      required   pam_u2f.so</strong></span>
+account   include    common-account
+password  include    common-password
+session   optional   pam_keyinit.so revoke
+session   include    common-session
+#session  optional   pam_xauth.so</pre></div></li><li class="step"><p>
+     If you placed the <code class="filename">u2f_keys</code> file in a different
+     location than <code class="filename">$HOME/.config/Yubico/u2f_keys</code>, you need
+     to use the <code class="literal">authfile</code> option in the
+     <code class="filename">/etc/pam.d/login</code> PAM file as follows:
+    </p><div class="verbatim-wrap"><pre class="screen">#%PAM-1.0
+auth     requisite pam_nologin.so
+auth     include   common-auth
+<span class="bold"><strong>auth  required pam_u2f.so authfile=<em class="replaceable">&lt;PATH_TO_u2f_keys&gt;</em></strong></span>
+...</pre></div><p>
+     where <em class="replaceable">&lt;PATH_TO_u2f_keys&gt;</em> is the absolute
+     path to the <code class="filename">u2f_keys</code> file.
+    </p></li></ol></div></div></section></section></section><section class="chapter" id="cha-security-fips" data-id-title="Enabling compliance with FIPS 140-3"><div class="titlepage"><div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">4 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></span> <a title="Permalink" class="permalink" href="#cha-security-fips">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+        FIPS 140-3 is a security accreditation program for validating cryptographic modules
+        produced by private companies. The Federal Information Processing Standards (FIPS) Publication 140
+        is a series of computer security standards developed by the National Institute of Standards and Technology (NIST)
+        to ensure the quality of cryptographic modules.</p><p>
+        If your organization does any work for the United States federal
+        government, your cryptography applications (such as
+        openSSL, GnuTLS and OpenJDK) may be required to comply with
+        Federal Information Processing Standards (FIPS) 140-3. If your organization is not required by
+        compliance rules to run SUSE Linux Enterprise in FIPS mode, it is best to
+        not do it. This chapter provides guidance on enabling FIPS mode, and
+        links to resources with detailed information.
+      </p></div></div></div></div><div id="id-1.7.6.3" data-id-title="SUSE Linux Enterprise Micro 15 SP6 and FIPS 140-3" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: <span class="productname"><span class="phrase">SUSE Linux Enterprise Micro</span></span> 15 SP6 and FIPS 140-3</div><p>
+      The relevant binaries are currently undergoing FIPS 140-3 certification.
+      Until the certification has been achieved, full FIPS 140-3 compliance cannot be guaranteed.</p></div><section class="sect1" id="sec-fips-concept" data-id-title="FIPS overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.1 </span><span class="title-name">FIPS overview</span></span> <a title="Permalink" class="permalink" href="#sec-fips-concept">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Every vendor that develops and maintains cryptographic applications and
+      wants them to be tested for FIPS compliance must submit them to the
+      Cryptographic Module Validation Program (CMVP) (see
+      <a class="link" href="https://csrc.nist.gov/projects/cryptographic-module-validation-program" target="_blank">https://csrc.nist.gov/projects/cryptographic-module-validation-program</a>).
+    </p><p>
+      The latest FIPS 140-3 standard was approved in March 2019 and
+      replaces 140-2.
+    </p></section><section class="sect1" id="sec-fips-use-case" data-id-title="When to enable FIPS mode"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.2 </span><span class="title-name">When to enable FIPS mode</span></span> <a title="Permalink" class="permalink" href="#sec-fips-use-case">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.7.6.5.2" data-id-title="FIPS requires expertise" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: FIPS requires expertise</div><p>
+        Administering FIPS is complex and requires significant expertise.
+        Implementing it correctly, testing and troubleshooting all require a
+        high degree of knowledge.
+      </p></div><p>
+      Only run your <span class="productname"><span class="phrase">SLE Micro</span></span> in FIPS mode when it is required to meet
+      compliance rules. Otherwise, we do not recommend running your systems in
+      FIPS mode.
+    </p><p>
+      Below are some reasons to <span class="emphasis"><em>not</em></span> use FIPS mode (if not
+      required explicitly):
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          FIPS is restrictive. It enforces the use of specific validated
+          cryptographic algorithms and specific certified binaries that
+          implement these validated algorithms. You must use only the certified
+          binaries.
+        </p></li><li class="listitem"><p>
+          Upgrades may break functionality.
+        </p></li><li class="listitem"><p>
+          The approval process is very long, so certified binaries are always
+          several releases behind the newest release.
+        </p></li><li class="listitem"><p>
+          Certified binaries, such as ssh, sshd and sftp-server, run their own
+          self-checks at start-up and run only when these checks succeed. This
+          creates a small performance degradation.
+        </p></li><li class="listitem"><p>
+          Administering FIPS is complex and requires significant expertise.
+        </p></li></ul></div></section><section class="sect1" id="sec-fips-slemicro-install" data-id-title="Installing FIPS"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.3 </span><span class="title-name">Installing FIPS</span></span> <a title="Permalink" class="permalink" href="#sec-fips-slemicro-install">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      To install the FIPS pattern on a running system, proceed as follows:
+    </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+          Install the <code class="literal">patterns-microos-fips</code> pattern:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update pkg install -t pattern microos-fips</pre></div></li><li class="step"><p>
+          Reboot your system.
+        </p></li><li class="step"><p>
+          Add the kernel command line parameter <code class="literal">fips=1</code> to
+          the boot loader configuration. To do so, edit the file
+          <code class="filename">/etc/default/grub</code> as follows:
+        </p><div class="verbatim-wrap"><pre class="screen">GRUB_CMDLINE_LINUX_DEFAULT="... <span class="bold"><strong>fips=1</strong></span>...</pre></div></li><li class="step"><p>
+          After logging in to the system, run
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>transactional-update grub.cfg</pre></div></li><li class="step"><p>
+          Reboot your system.
+        </p></li></ol></div></div><p>
+      Alternatively, you can install the pattern during the manual installation
+      under <span class="guimenu">Software</span> as described in
+      <span class="intraxref">Book “Deployment Guide”, Chapter 12 “Installation steps”, Section 12.9 “Installation Settings”</span>. Then adjust the boot loader configuration
+      as described in the procedure above.
+    </p><div id="id-1.7.6.6.5" data-id-title="Undergoing FIPS 140-3 certification" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Undergoing FIPS 140-3 certification</div><p>
+        The relevant binaries are currently undergoing FIPS 140-3 certification. Until the certification has been achieved, full FIPS 140-3 compliance cannot be guaranteed
+      </p></div><div id="id-1.7.6.6.6" data-id-title="Installing and enabling FIPS on a running system" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Installing and enabling FIPS on a running system</div><p>
+        If you install and enable the FIPS mode on a running system, you might
+        need to make adjustments, such as regenerating keys and auditing your
+        setup to ensure it is set up correctly.
+      </p></div></section><section class="sect1" id="ssec-fips-containers" data-id-title="Running containers on SLE Micro"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.4 </span><span class="title-name">Running containers on <span class="productname"><span class="phrase">SLE Micro</span></span></span></span> <a title="Permalink" class="permalink" href="#ssec-fips-containers">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      If you run <span class="productname"><span class="phrase">SLE Micro</span></span> in the FIPS mode and you use only the
+      SLE 15 SP4 BCI-based containers, then such a setup can serve as a
+      FIPS-compliant platform. If you intend to run a third party container on
+      <span class="productname"><span class="phrase">SLE Micro</span></span>, check the container's FIPS compatibility before
+      deploying it.
+    </p></section><section class="sect1" id="sec-fips-samba-cifs" data-id-title="MD5 not supported in Samba/CIFS"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.5 </span><span class="title-name">MD5 not supported in Samba/CIFS</span></span> <a title="Permalink" class="permalink" href="#sec-fips-samba-cifs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      According to the FIPS standards, MD5 is not a secure hashing algorithm,
+      and it must not be used for authentication. If you run a FIPS-compliant
+      network environment, and you have clients or servers that run in
+      FIPS-compliant mode, you must use a Kerberos service for authenticating
+      Samba/CIFS users. This is necessary as all other Samba authentication
+      modes include MD5.
+    </p></section><section class="sect1" id="sec-fips-more" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.6 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="#sec-fips-more">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_fips.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     For more information, refer to:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+       Man 8 <code class="literal">fips-mode-setup</code>
+      </p></li><li class="listitem"><p>
+        Man 8 <code class="literal">fips-finish-install</code>
+      </p></li><li class="listitem"><p>
+        Man 7 <code class="literal">crypto-policies</code>
+      </p></li><li class="listitem"><p>
+        Man 8 <code class="literal">update-crypto-policies</code>
+      </p></li></ul></div></section></section></section></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>
