@@ -270,7 +270,25 @@ hljs.configure({
      </p></li><li class="step"><p>
       Continue with
       <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-raid" title="11.1.2. Increasing the Size of the RAID Array">Section 11.1.2, “Increasing the Size of the RAID Array”</a>.
-     </p></li></ol></div></div></section><section class="sect2" id="sec-raid-resize-incr-raid" data-id-title="Increasing the Size of the RAID Array"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.2 </span><span class="title-name">Increasing the Size of the RAID Array</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-incr-raid">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     </p></li></ol></div></div><p>
+    Alternatively, if you are replacing the disks and can install the new disks
+    temporarily alongside the existing array, you can hot-replace the
+    partitions. This will keep them in service until a new partition has been
+    rebuilt as a spare, so the array does not enter a degraded state and
+    remains fault-tolerant during the process. The following steps replace
+    steps 3–5 in the above procedure.
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Mark a component partition for replacement. For example, to replace
+      <code class="filename">/dev/sda1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm /dev/md0 --replace /dev/sda1</pre></div></li><li class="step"><p>
+      Add a replacement partition to the RAID array. For example, to add
+      <code class="filename">/dev/sdd1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm -a /dev/md0 /dev/sdd1</pre></div></li><li class="step"><p>
+      Once the new partition has been added and has finished rebuilding, the
+      partition marked for replacement will be automatically marked as faulty,
+      and can be removed from the array. For example, to remove
+      <code class="filename">/dev/sda1</code>, enter
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> mdadm /dev/md0 --remove /dev/sda1</pre></div></li></ol></div></div></section><section class="sect2" id="sec-raid-resize-incr-raid" data-id-title="Increasing the Size of the RAID Array"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.1.2 </span><span class="title-name">Increasing the Size of the RAID Array</span></span> <a title="Permalink" class="permalink" href="cha-raid-resize.html#sec-raid-resize-incr-raid">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE15SP2/xml/storage_mdadm-resize.xml" title="Edit source document"> </a></div></div></div></div></div><p>
     After you have resized each of the component partitions in the RAID (see
     <a class="xref" href="cha-raid-resize.html#sec-raid-resize-incr-partitions" title="11.1.1. Increasing the Size of Component Partitions">Section 11.1.1, “Increasing the Size of Component Partitions”</a>),
     the RAID array configuration continues to use the original array size until
