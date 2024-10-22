@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Security and Hardening Guide | Using NIS</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Using NIS | SLES 15 SP6"/>
+<meta name="description" content="When multiple Unix systems in a network access common resources, it becomes imperative that all user and group identities are the same for all machin…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 3. Using NIS"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Using NIS",
+  
+    "description": "When multiple Unix systems in a network access common resources, it becomes imperative that all user and group identities are the same for all machin…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-pam.html" title="Chapter 2. Authentication with PAM"/><link rel="next" href="cha-security-auth.html" title="Chapter 4. Setting up authentication clients using YaST"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-auth.html">Authentication</a><span> / </span><a class="crumb" href="cha-nis.html">Using NIS</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li class="active"><a href="part-auth.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" you-are-here"><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li><li><a href="cha-security-pci-dss.html" class=" "><span class="title-number">29 </span><span class="title-name">Payment Card Industry Data Security Standard (PCI DSS)</span></a></li><li><a href="cha-security-stig.html" class=" "><span class="title-number">30 </span><span class="title-name">Hardening SUSE Linux Enterprise with STIG</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">31 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">32 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">33 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">34 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">35 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">36 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">37 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">38 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">39 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">40 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">41 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">42 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-selinux.html" class="has-children "><span class="title-number">VI </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">43 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VII </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">44 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">45 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">46 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">47 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-nis" data-id-title="Using NIS"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">3 </span><span class="title-name">Using NIS</span></span> <a title="Permalink" class="permalink" href="cha-nis.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    When multiple Unix systems in a network access common resources,
+    it becomes imperative that all user and group identities are the same
+    for all machines in that network. The network should be transparent to
+    users: their environments should not vary, regardless of which machine
+    they are using. This can be done by NIS and NFS
+    services. <span class="phrase">NFS distributes file systems over a network and is discussed
+    in <span class="intraxref">Book “Storage Administration Guide”, Chapter 19 “Sharing file systems with NFS”</span>.</span>
+   </p><p>
+    NIS (Network Information Service) can be described as a database-like
+    service that provides access to the contents of
+    <code class="filename">/etc/passwd</code>, <code class="filename">/etc/shadow</code>, and
+    <code class="filename">/etc/group</code> across networks. NIS can also be used
+    for other purposes (making the contents of files like
+    <code class="filename">/etc/hosts</code> or <code class="filename">/etc/services</code>
+    available, for example), but this is beyond the scope of this
+    introduction. People often refer to NIS as <span class="emphasis"><em>YP</em></span>,
+    because it works like the network's <span class="quote">“<span class="quote">yellow pages.</span>”</span>
+        </p></div></div></div></div><section class="sect1" id="sec-nis-server" data-id-title="Configuring NIS servers"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.1 </span><span class="title-name">Configuring NIS servers</span></span> <a title="Permalink" class="permalink" href="cha-nis.html#sec-nis-server">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To distribute NIS information across networks, either install one single
+   server (a <span class="emphasis"><em>master</em></span>) that serves all clients, or NIS
+   slave servers requesting this information from the master and relaying it
+   to their respective clients.
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     To configure just one NIS server for your network, proceed with
+     <a class="xref" href="cha-nis.html#sec-nis-server-master" title="3.1.1. Configuring a NIS master server">Section 3.1.1, “Configuring a NIS master server”</a>.
+    </p></li><li class="listitem"><p>
+     If your NIS master server needs to export its data to slave servers,
+     set up the master server as described in
+     <a class="xref" href="cha-nis.html#sec-nis-server-master" title="3.1.1. Configuring a NIS master server">Section 3.1.1, “Configuring a NIS master server”</a> and set up slave servers in the
+     subnets as described in <a class="xref" href="cha-nis.html#sec-nis-server-slave" title="3.1.2. Configuring a NIS slave server">Section 3.1.2, “Configuring a NIS slave server”</a>.
+    </p></li></ul></div><section class="sect2" id="sec-nis-server-master" data-id-title="Configuring a NIS master server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.1.1 </span><span class="title-name">Configuring a NIS master server</span></span> <a title="Permalink" class="permalink" href="cha-nis.html#sec-nis-server-master">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To manage the NIS Server functionality with YaST, install the <code class="systemitem">yast2-nis-server</code> package by running the <code class="command">zypper in yast2-nis-server</code> command as root. To configure a NIS master server for your network, proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start <span class="guimenu">YaST</span> › <span class="guimenu">Network
+      Services</span> › <span class="guimenu">NIS Server</span>.
+     </p></li><li class="step"><p>
+      If you need just one NIS server in your network or if this server is
+      to act as the master for further NIS slave servers, select
+      <span class="guimenu">Install and Set Up NIS Master Server</span>. YaST
+      installs the required packages.
+     </p><div id="id-1.8.4.3.3.4.3.2.2" data-id-title="Already installed NIS server software" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Already installed NIS server software</div><p>
+       If NIS server software is already installed on your machine, initiate
+       the creation of a NIS master server by clicking <span class="guimenu">Create NIS
+       Master Server</span>.
+      </p></div><div class="figure" id="fig-inst-nisserver1"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_nis1_no_nis_installed.png"><img src="images/yast2_nis1_no_nis_installed.png" width="75%" alt="NIS server setup" title="NIS server setup"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 3.1: </span><span class="title-name">NIS server setup </span></span><a title="Permalink" class="permalink" href="cha-nis.html#fig-inst-nisserver1">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+      Determine basic NIS setup options:
+     </p><ol type="a" class="substeps"><li class="step"><p>
+        Enter the NIS domain name.
+       </p></li><li class="step"><p>
+        Define whether the host should also be a NIS client (enabling users
+        to log in and access data from the NIS server) by selecting
+        <span class="guimenu">This Host is also a NIS Client</span>.
+       </p></li><li class="step"><p>
+        If your NIS server needs to act as a master server to NIS slave
+        servers in other subnets, select <span class="guimenu">Active Slave NIS Server
+        Exists</span>.
+       </p><p>
+        The option <span class="guimenu">Fast Map Distribution</span> is only useful
+        with <span class="guimenu">Active Slave NIS Servers
+        Exist</span>. It speeds up the transfer of maps to the slaves.
+       </p></li><li class="step"><p>
+        Select <span class="guimenu">Allow Changes to Passwords</span> to allow users
+        in your network (both local users and those managed through the NIS
+        server) to change their passwords on the NIS server (with the
+        command <code class="command">yppasswd</code>). This makes the options
+        <span class="guimenu">Allow Changes to GECOS Field</span> and <span class="guimenu">Allow
+        Changes to Login Shell</span> available. <span class="quote">“<span class="quote">GECOS</span>”</span>
+        means that the users can also change their names and address
+        settings with the command <code class="command">ypchfn</code>.
+        <span class="quote">“<span class="quote">Shell</span>”</span> allows users to change their default shell with
+        the command <code class="command">ypchsh</code> (for example, to switch from
+        Bash to sh). The new shell must be one of the predefined entries in
+        <code class="filename">/etc/shells</code>.
+       </p></li><li class="step"><p>
+        Select <span class="guimenu">Open Port in Firewall</span> to have YaST
+        adapt the firewall settings for the NIS server.
+       </p><div class="figure" id="fig-yast-nis-master"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_nis_master.png"><img src="images/yast2_nis_master.png" width="75%" alt="Master server setup" title="Master server setup"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 3.2: </span><span class="title-name">Master server setup </span></span><a title="Permalink" class="permalink" href="cha-nis.html#fig-yast-nis-master">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+        Leave this dialog with <span class="guimenu">Next</span> or click
+        <span class="guimenu">Other Global Settings</span> to make additional
+        settings.
+       </p><p>
+        <span class="guimenu">Other Global Settings</span> include changing the source
+        directory of the NIS server (<code class="filename">/etc</code> by default).
+        In addition, passwords can be merged here. The setting should be
+        <span class="guimenu">Yes</span> to create the user database from the system
+        authentication files <code class="filename">/etc/passwd</code>,
+        <code class="filename">/etc/shadow</code> and
+        <code class="filename">/etc/group</code>. Also, determine the smallest user
+        and group ID that should be offered by NIS. Click
+        <span class="guimenu">OK</span> to confirm your settings and return to the
+        previous screen.
+       </p><div class="figure" id="fig-inst-nisserver2"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_inst_nisserver2.png"><img src="images/yast2_inst_nisserver2.png" width="75%" alt="Changing the directory and synchronizing files for a NIS server" title="Changing the directory and synchronizing files for a NIS server"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 3.3: </span><span class="title-name">Changing the directory and synchronizing files for a NIS server </span></span><a title="Permalink" class="permalink" href="cha-nis.html#fig-inst-nisserver2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></li></ol></li><li class="step"><p>
+      If you previously enabled <span class="guimenu">Active Slave NIS Server
+      Exists</span>, enter the host names used as slaves and click
+      <span class="guimenu">Next</span>. If no slave servers exist, this configuration
+      step is skipped.
+     </p></li><li class="step"><p>
+      Continue to the dialog for the database configuration. Specify the
+      <span class="emphasis"><em>NIS Server Maps</em></span>, the partial databases to
+      transfer from the NIS server to the client. The default settings are
+      adequate. Leave this dialog with <span class="guimenu">Next</span>.
+     </p></li><li class="step"><p>
+      Check which maps should be available and click <span class="guimenu">Next</span>
+      to continue.
+     </p><div class="figure" id="fig-yast-nis-maps"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_nis_maps.png"><img src="images/yast2_nis_maps.png" width="75%" alt="NIS server maps setup" title="NIS server maps setup"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 3.4: </span><span class="title-name">NIS server maps setup </span></span><a title="Permalink" class="permalink" href="cha-nis.html#fig-yast-nis-maps">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+      Determine which hosts are allowed to query the NIS server. You can
+      add, edit, or delete hosts by clicking the appropriate button. Specify
+      from which networks requests can be sent to the NIS server. Normally,
+      this is your internal network. In this case, there should be the
+      following two entries:
+     </p><div class="verbatim-wrap"><pre class="screen">255.0.0.0     127.0.0.0
+0.0.0.0       0.0.0.0</pre></div><p>
+      The first entry enables connections from your own host, which is the
+      NIS server. The second one allows all hosts to send requests to the
+      server.
+     </p><div class="figure" id="fig-inst-nisserver3"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_nis_hosts.png"><img src="images/yast2_nis_hosts.png" width="75%" alt="Setting request permissions for a NIS server" title="Setting request permissions for a NIS server"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 3.5: </span><span class="title-name">Setting request permissions for a NIS server </span></span><a title="Permalink" class="permalink" href="cha-nis.html#fig-inst-nisserver3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+      Click <span class="guimenu">Finish</span> to save your changes and exit the
+      setup.
+     </p></li></ol></div></div></section><section class="sect2" id="sec-nis-server-slave" data-id-title="Configuring a NIS slave server"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">3.1.2 </span><span class="title-name">Configuring a NIS slave server</span></span> <a title="Permalink" class="permalink" href="cha-nis.html#sec-nis-server-slave">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To configure additional NIS <span class="emphasis"><em>slave servers</em></span> in your
+    network, proceed as follows:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Start <span class="guimenu">YaST</span> › <span class="guimenu">Network
+      Services</span> › <span class="guimenu">NIS Server</span>.
+     </p></li><li class="step"><p>
+      Select <span class="guimenu">Install and Set Up NIS Slave Server</span> and
+      click <span class="guimenu">Next</span>.
+     </p><div id="id-1.8.4.3.3.5.3.2.2" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+       If NIS server software is already installed on your machine, initiate
+       the creation of a NIS slave server by clicking <span class="guimenu">Create NIS
+       Slave Server</span>.
+      </p></div></li><li class="step"><p>
+      Complete the basic setup of your NIS slave server:
+     </p><ol type="a" class="substeps"><li class="step"><p>
+        Enter the NIS domain.
+       </p></li><li class="step"><p>
+        Enter host name or IP address of the master server.
+       </p></li><li class="step"><p>
+        Set <span class="guimenu">This Host is also a NIS Client</span> to
+        enable user logins on this server.
+       </p></li><li class="step"><p>
+        Adapt the firewall settings with <span class="guimenu">Open Ports in
+        Firewall</span>.
+       </p></li><li class="step"><p>
+        Click <span class="guimenu">Next</span>.
+       </p></li></ol></li><li class="step"><p>
+      Enter the hosts that are allowed to query the NIS server. You can add,
+      edit, or delete hosts by clicking the appropriate button. Specify all
+      networks from which requests can be sent to the NIS server. If it
+      applies to all networks, use the following configuration:
+     </p><div class="verbatim-wrap"><pre class="screen">255.0.0.0     127.0.0.0
+0.0.0.0       0.0.0.0</pre></div><p>
+      The first entry enables connections from your own host, which is the
+      NIS server. The second one allows all hosts with access to the same
+      network to send requests to the server.
+     </p></li><li class="step"><p>
+      Click <span class="guimenu">Finish</span> to save changes and exit the setup.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-nis-client" data-id-title="Configuring NIS clients"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">3.2 </span><span class="title-name">Configuring NIS clients</span></span> <a title="Permalink" class="permalink" href="cha-nis.html#sec-nis-client">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To use NIS on a workstation, do the following:
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Start <span class="guimenu">YaST</span> › <span class="guimenu">Network
+     Services</span> › <span class="guimenu">NIS Client</span>.
+    </p></li><li class="step"><p>
+     Activate the <span class="guimenu">Use NIS</span> button.
+    </p></li><li class="step"><p>
+     Enter the NIS domain. This is a domain name given by your
+     administrator or a static external IP address received by DHCP.
+     <span class="phrase">For information about DHCP, see
+     <span class="intraxref">Book “Administration Guide”, Chapter 40 “DHCP”</span>.</span>
+    </p><div class="figure" id="fig-inst-nisclient"><div class="figure-contents"><div class="mediaobject"><a href="images/yast2_inst_nisclient.png"><img src="images/yast2_inst_nisclient.png" width="75%" alt="Setting domain and address of a NIS server" title="Setting domain and address of a NIS server"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 3.6: </span><span class="title-name">Setting domain and address of a NIS server </span></span><a title="Permalink" class="permalink" href="cha-nis.html#fig-inst-nisclient">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/security_nis.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+     Enter your NIS servers and separate their addresses by spaces. If you
+     do not know your NIS server, click <span class="guimenu">Find</span> to let
+     YaST search for any NIS servers in your domain. Depending on the
+     size of your local network, this may be a time-consuming process.
+     <span class="guimenu">Broadcast</span> asks for a NIS server in the local network
+     after the specified servers fail to respond.
+    </p></li><li class="step"><p>
+     Depending on your local installation, you may also want to activate the
+     automounter. This option also installs additional software if required.
+    </p></li><li class="step"><p>
+     If you do not want other hosts to be able to query which server your
+     client is using, go to the <span class="guimenu">Expert</span> settings and
+     disable <span class="guimenu">Answer Remote Hosts</span>. By checking
+     <span class="guimenu">Broken Server</span>, the client is enabled to receive
+     replies from a server communicating through an unprivileged port. For
+     further information, see
+     <code class="command">man</code> <code class="option">ypbind</code>.
+    </p></li><li class="step"><p>
+     Click <span class="guimenu">Finish</span> to save them and return to the
+     YaST control center. Your client is now configured with NIS.
+    </p></li></ol></div></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-pam.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 2 </span>Authentication with PAM</span></a> </div><div><a class="pagination-link next" href="cha-security-auth.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 4 </span>Setting up authentication clients using YaST</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-nis.html#sec-nis-server"><span class="title-number">3.1 </span><span class="title-name">Configuring NIS servers</span></a></span></li><li><span class="sect1"><a href="cha-nis.html#sec-nis-client"><span class="title-number">3.2 </span><span class="title-name">Configuring NIS clients</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

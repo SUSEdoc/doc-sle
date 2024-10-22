@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | System Analysis and Tuning Guide | SystemTap—filtering and analyzing system data</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="SystemTap—filtering and analyzing system data | SLED 1…"/>
+<meta name="description" content="SystemTap provides a command line interface and a scripting language to examine the activities of a running Linux system, particularly the kernel, in…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 4. SystemTap—filtering and analyzing system data"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLED systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLED systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "SystemTap—filtering and analyzing system data",
+  
+    "description": "SystemTap—filtering and analyzing system data",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="part-tuning-kerneltrace.html" title="Part III. Kernel monitoring"/><link rel="next" href="cha-tuning-kprobes.html" title="Chapter 5. Kernel probes"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-kerneltrace.html">Kernel monitoring</a><span> / </span><a class="crumb" href="cha-tuning-systemtap.html">SystemTap—filtering and analyzing system data</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General notes on system tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System monitoring utilities</span></a></li><li><a href="cha-tuning-syslog.html" class=" "><span class="title-number">3 </span><span class="title-name">System log files</span></a></li></ol></li><li class="active"><a href="part-tuning-kerneltrace.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Kernel monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" you-are-here"><span class="title-number">4 </span><span class="title-name">SystemTap—filtering and analyzing system data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-based performance monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—system-wide profiler</span></a></li><li><a href="cha-tuning-dynamic-debug.html" class=" "><span class="title-number">8 </span><span class="title-name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li><a href="part-tuning-resources.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Resource management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">9 </span><span class="title-name">General system resource management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">10 </span><span class="title-name">Kernel control groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">11 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">12 </span><span class="title-name">Power management</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">13 </span><span class="title-name">Tuning I/O performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning the task scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the memory management subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">16 </span><span class="title-name">Tuning the network</span></a></li></ol></li><li><a href="part-tuning-dumps.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Handling system dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">17 </span><span class="title-name">Tracing tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">18 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">19 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to debug application crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">20 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-systemtap" data-id-title="SystemTap—filtering and analyzing system data"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">4 </span><span class="title-name">SystemTap—filtering and analyzing system data</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  SystemTap provides a command line interface and a scripting language to
+  examine the activities of a running Linux system, particularly the kernel,
+  in fine detail. SystemTap scripts are written in the SystemTap scripting
+  language, are then compiled to C-code kernel modules and inserted into the
+  kernel. The scripts can be designed to extract, filter and summarize data,
+  thus allowing the diagnosis of complex performance problems or functional
+  problems. SystemTap provides information similar to the output of tools
+  like <code class="command">netstat</code>, <code class="command">ps</code>,
+  <code class="command">top</code>, and <code class="command">iostat</code>. However, more
+  filtering and analysis options can be used for the collected information.
+ </p><section class="sect1" id="sec-tuning-systemtap-concept" data-id-title="Conceptual overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.1 </span><span class="title-name">Conceptual overview</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-concept">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Each time you run a SystemTap script, a SystemTap session is started.
+   Several passes are done on the script before it is allowed to run.
+   Then, the script is compiled into a kernel module and loaded. If the
+   script has been executed before and no system components have changed
+   (for example, different compiler or kernel versions, library paths, or
+   script contents), SystemTap does not compile the script again. Instead,
+   it uses the <code class="filename">*.c</code> and <code class="filename">*.ko</code> data
+   stored in the SystemTap cache (<code class="filename">~/.systemtap</code>).
+  </p><p>
+   The module is unloaded when the tap has finished running. For an example, see
+   the test run in <a class="xref" href="cha-tuning-systemtap.html#sec-tuning-systemtap-setup" title="4.2. Installation and setup">Section 4.2, “Installation and setup”</a> and the
+   respective explanation.
+
+  </p><section class="sect2" id="sec-tuning-systemtap-concept-scripts" data-id-title="SystemTap scripts"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.1.1 </span><span class="title-name">SystemTap scripts</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-concept-scripts">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    SystemTap usage is based on SystemTap scripts
+    (<code class="filename">*.stp</code>). They tell SystemTap which type of
+    information to collect, and what to do once that information is
+    collected. The scripts are written in the SystemTap scripting language
+    that is similar to AWK and C. For the language definition, see
+    <a class="link" href="https://sourceware.org/systemtap/langref.pdf" target="_blank">https://sourceware.org/systemtap/langref.pdf</a>. A lot of
+    useful example scripts are available from
+    <a class="link" href="https://www.sourceware.org/systemtap/examples/" target="_blank">https://www.sourceware.org/systemtap/examples/</a>.
+   </p><p>
+    The essential idea behind a SystemTap script is to name
+    <code class="literal">events</code>, and to give them <code class="literal">handlers</code>.
+    When SystemTap runs the script, it monitors for certain events. When an
+    event occurs, the Linux kernel runs the handler as a sub-routine, then
+    resumes. Thus, events serve as the triggers for handlers to run.
+    Handlers can record specified data and print it in a certain manner.
+   </p><p>
+    The SystemTap language only uses a few data types (integers, strings,
+    and associative arrays of these), and full control structures (blocks,
+    conditionals, loops, functions). It has a lightweight punctuation
+    (semicolons are optional) and does not need detailed declarations (types
+    are inferred and checked automatically).
+   </p><p>
+    For more information about SystemTap scripts and their syntax, refer to
+    <a class="xref" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax" title="4.3. Script syntax">Section 4.3, “Script syntax”</a> and to the
+    <code class="command">stapprobes</code> and <code class="command">stapfuncs</code> man
+    pages, that are available with the
+    <code class="systemitem">systemtap-docs</code> package.
+   </p></section><section class="sect2" id="sec-tuning-systemtap-concept-tapsets" data-id-title="Tapsets"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.1.2 </span><span class="title-name">Tapsets</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-concept-tapsets">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    
+    Tapsets are a library of pre-written probes and functions that can be
+    used in SystemTap scripts. When a user runs a SystemTap script,
+    SystemTap checks the script's probe events and handlers against the
+    tapset library. SystemTap then loads the corresponding probes and
+    functions before translating the script to C. Like SystemTap scripts
+    themselves, tapsets use the file name extension
+    <code class="filename">*.stp</code>.
+
+   </p><p>
+    However, unlike SystemTap scripts, tapsets are not meant for direct
+    execution. They constitute the library from which other scripts can pull
+    definitions. Thus, the tapset library is an abstraction layer designed
+    to make it easier for users to define events and functions. Tapsets
+    provide aliases for functions that users could want to specify as an
+    event. Knowing the proper alias is often easier than remembering
+    specific kernel functions that may vary between kernel versions.
+   </p></section><section class="sect2" id="sec-tuning-systemtap-concept-cmd" data-id-title="Commands and privileges"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.1.3 </span><span class="title-name">Commands and privileges</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-concept-cmd">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The main commands associated with SystemTap are <code class="command">stap</code>
+    and <code class="command">staprun</code>. To execute them, you either need
+    <code class="systemitem">root</code> privileges or must be a member of the
+    <code class="systemitem">stapdev</code> or
+    <code class="systemitem">stapusr</code> group.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.4.6.3.1"><span class="term"><code class="command">stap</code>
+     </span></dt><dd><p>
+       SystemTap front-end. Runs a SystemTap script (either from file, or
+       from standard input). It translates the script into C code, compiles
+       it, and loads the resulting kernel module into a running Linux
+       kernel. Then, the requested system trace or probe functions are
+       performed.
+      </p></dd><dt id="id-1.8.5.2.4.6.3.2"><span class="term"><code class="command">staprun</code>
+     </span></dt><dd><p>
+       SystemTap back-end. Loads and unloads kernel modules produced by the
+       SystemTap front-end.
+
+      </p></dd></dl></div><p>
+    For a list of options for each command, use <code class="option">--help</code>. For
+    details, refer to the <code class="command">stap</code> and the
+    <code class="command">staprun</code> man pages.
+   </p><p>
+ 
+    To avoid giving <code class="systemitem">root</code> access to users solely to enable them to work
+    with SystemTap, use one of the following SystemTap groups. They are not available
+    by default on <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span>, but you can create the groups and modify the
+    access rights accordingly. Also, adjust the permissions of the
+    <code class="command">staprun</code> command if the security implications are
+    appropriate for your environment.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.4.6.6.1"><span class="term"><code class="systemitem">stapdev</code>
+     </span></dt><dd><p>
+       Members of this group can run SystemTap scripts with
+       <code class="command">stap</code>, or run SystemTap instrumentation modules
+       with <code class="command">staprun</code>. As running <code class="command">stap</code>
+       involves compiling scripts into kernel modules and loading them into
+       the kernel, members of this group still have effective <code class="systemitem">root</code>
+       access.
+      </p></dd><dt id="id-1.8.5.2.4.6.6.2"><span class="term"><code class="systemitem">stapusr</code>
+     </span></dt><dd><p>
+       Members of this group are only allowed to run SystemTap
+       instrumentation modules with <code class="command">staprun</code>. In addition,
+       they can only run those modules from
+       <code class="filename">/lib/modules/<em class="replaceable">KERNEL_VERSION</em>/systemtap/</code>.
+       This directory must be owned by <code class="systemitem">root</code> and must only be
+       writable for the <code class="systemitem">root</code> user.
+      </p></dd></dl></div></section><section class="sect2" id="sec-tuning-systemtap-concept-dir" data-id-title="Important files and directories"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.1.4 </span><span class="title-name">Important files and directories</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-concept-dir">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following list gives an overview of the SystemTap main files and
+    directories.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.4.7.3.1"><span class="term"><code class="filename">/lib/modules/<em class="replaceable">KERNEL_VERSION</em>/systemtap/</code>
+     </span></dt><dd><p>
+       Holds the SystemTap instrumentation modules.
+      </p></dd><dt id="id-1.8.5.2.4.7.3.2"><span class="term"><code class="filename">/usr/share/systemtap/tapset/</code>
+     </span></dt><dd><p>
+       Holds the standard library of tapsets.
+      </p></dd><dt id="id-1.8.5.2.4.7.3.3"><span class="term"><code class="filename">/usr/share/doc/packages/systemtap/examples</code>
+     </span></dt><dd><p>
+       Holds several example SystemTap scripts for different purposes.
+       Only available if the
+       <code class="systemitem">systemtap-docs</code> package is
+       installed.
+      </p></dd><dt id="id-1.8.5.2.4.7.3.4"><span class="term"><code class="filename">~/.systemtap/cache</code>
+     </span></dt><dd><p>
+       Data directory for cached SystemTap files.
+      </p></dd><dt id="id-1.8.5.2.4.7.3.5"><span class="term"><code class="filename">/tmp/stap*</code>
+     </span></dt><dd><p>
+       Temporary directory for SystemTap files, including translated C code
+       and kernel object.
+      </p></dd></dl></div></section></section><section class="sect1" id="sec-tuning-systemtap-setup" data-id-title="Installation and setup"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.2 </span><span class="title-name">Installation and setup</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-setup">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+
+
+   As SystemTap needs information about the kernel, some additional
+   kernel-related packages must be installed. For each kernel you want to
+   probe with SystemTap, you need to install a set of the following
+   packages. This set should exactly match the kernel version and flavor
+   (indicated by <code class="literal">*</code> in the overview below).
+  </p><div id="id-1.8.5.2.5.3" data-id-title="Repository for packages with debugging information" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Repository for packages with debugging information</div><p>
+    If you subscribed your system for online updates, you can find
+    <span class="quote">“<span class="quote">debuginfo</span>”</span> packages in the
+    <code class="literal">*-Debuginfo-Updates</code> online installation repository
+    relevant for <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> <span class="productnumber"><span class="phrase">15 SP6</span></span>. Use YaST to
+    enable the repository.
+   </p></div><p>
+
+   For the classic SystemTap setup, install the following packages (using
+   either YaST or <code class="command">zypper</code>).
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     <code class="systemitem">systemtap</code>
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">systemtap-server</code>
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">systemtap-docs</code> (optional)
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">kernel-*-base</code>
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">kernel-*-debuginfo</code>
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">kernel-*-devel</code>
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">kernel-source-*</code>
+    </p></li><li class="listitem"><p>
+     <code class="systemitem">gcc</code>
+    </p></li></ul></div><p>
+   To get access to the man pages and to a helpful collection of example
+   SystemTap scripts for different purposes, additionally install the
+   <code class="systemitem">systemtap-docs</code> package.
+  </p><p>
+   To check if all packages are correctly installed on the machine and if
+   SystemTap is ready to use, execute the following command as
+   <code class="systemitem">root</code>.
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>stap -v -e 'probe vfs.read {printf("read performed\n"); exit()}'</pre></div><p>
+   It probes the currently used kernel by running a script and returning an
+   output. If the output is similar to the following, SystemTap is
+   successfully deployed and ready to use:
+  </p><div class="verbatim-wrap"><pre class="screen">Pass <span class="callout" id="co-tuning-stap-pass1">1</span>: parsed user script and 59 library script(s) in 80usr/0sys/214real ms.
+Pass <span class="callout" id="co-tuning-stap-pass2">2</span>: analyzed script: 1 probe(s), 11 function(s), 2 embed(s), 1 global(s) in
+ 140usr/20sys/412real ms.
+Pass <span class="callout" id="co-tuning-stap-pass3">3</span>: translated to C into
+ "/tmp/stapDwEk76/stap_1856e21ea1c246da85ad8c66b4338349_4970.c" in 160usr/0sys/408real ms.
+Pass <span class="callout" id="co-tuning-stap-pass4">4</span>: compiled C into "stap_1856e21ea1c246da85ad8c66b4338349_4970.ko" in
+ 2030usr/360sys/10182real ms.
+Pass <span class="callout" id="co-tuning-stap-pass5">5</span>: starting run.
+ read performed
+Pass <a class="xref" href="cha-tuning-systemtap.html#co-tuning-stap-pass5"><span class="callout">5</span></a>: run completed in 10usr/20sys/257real ms.</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-pass1"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Checks the script against the existing tapset library in
+     <code class="filename">/usr/share/systemtap/tapset/</code> for any tapsets used.
+     Tapsets are scripts that form a library of pre-written probes and
+     functions that can be used in SystemTap scripts.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-pass2"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Examines the script for its components.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-pass3"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Translates the script to C. Runs the system C compiler to create a
+     kernel module from it. Both the resulting C code
+     (<code class="filename">*.c</code>) and the kernel module
+     (<code class="filename">*.ko</code>) are stored in the SystemTap cache,
+     <code class="filename">~/.systemtap</code>.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-pass4"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     Loads the module and enables all the probes (events and handlers) in
+     the script by hooking into the kernel. The event being probed is a
+     Virtual File System (VFS) read. As the event occurs on any processor, a
+     valid handler is executed (prints the text <code class="literal">read
+     performed</code>) and closed with no errors.
+    </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-pass5"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+     After the SystemTap session is terminated, the probes are disabled, and
+     the kernel module is unloaded.
+    </p></td></tr></table></div><p>
+   In case any error messages appear during the test, check the output for
+   hints about any missing packages and make sure they are installed
+   correctly. Rebooting and loading the appropriate kernel may also be
+   needed.
+   
+  </p></section><section class="sect1" id="sec-tuning-systemtap-syntax" data-id-title="Script syntax"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.3 </span><span class="title-name">Script syntax</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SystemTap scripts consist of the following two components:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.6.3.1"><span class="term"><a class="xref" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-events" title="4.3.2. SystemTap events (probe points)">SystemTap events (probe points)</a>
+    </span></dt><dd><p>
+      Name the kernel events at the associated handler should be executed.
+      Examples for events are entering or exiting a certain function, a
+      timer expiring, or starting or terminating a session.
+     </p></dd><dt id="id-1.8.5.2.6.3.2"><span class="term"><a class="xref" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-handlers" title="4.3.3. SystemTap handlers (probe body)">SystemTap handlers (probe body)</a>
+    </span></dt><dd><p>
+      Series of script language statements that specify the work to be done
+      whenever a certain event occurs. This normally includes extracting
+      data from the event context, storing them into internal variables, or
+      printing results.
+     </p></dd></dl></div><p>
+   An event and its corresponding handler is collectively called a
+   <code class="literal">probe</code>. SystemTap events are also called <code class="literal">probe
+   points</code>. A probe's handler is also called a <code class="literal">probe
+   body</code>.
+  </p><p>
+   Comments can be inserted anywhere in the SystemTap script in different
+   styles: using either <code class="literal">#</code>, <code class="literal">/* */</code>, or
+   <code class="literal">//</code> as marker.
+  </p><section class="sect2" id="sec-tuning-systemtap-syntax-probe" data-id-title="Probe format"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.3.1 </span><span class="title-name">Probe format</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-probe">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    A SystemTap script can have multiple probes. They must be written in the
+    following format:
+   </p><div class="verbatim-wrap"><pre class="screen">probe <em class="replaceable">EVENT</em> {<em class="replaceable">STATEMENTS</em>}</pre></div><p>
+    Each probe has a corresponding statement block. This statement block
+    must be enclosed in <code class="literal">{ }</code> and contains the statements
+    to be executed per event.
+   </p><div class="complex-example"><div class="example" id="ex-tuning-stap-simple" data-id-title="Simple SystemTap script"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 4.1: </span><span class="title-name">Simple SystemTap script </span></span><a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#ex-tuning-stap-simple">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+     The following example shows a simple SystemTap script.
+    </p><div class="verbatim-wrap"><pre class="screen">probe<span class="callout" id="co-tuning-stap-probe">1</span> begin<span class="callout" id="co-tuning-stap-event-begin">2</span>
+{<span class="callout" id="co-tuning-stap-handler-start">3</span>
+   printf<span class="callout" id="co-tuning-stap-handler-function-printf">4</span> ("hello world\n")<span class="callout" id="co-tuning-stap-handler-string">5</span>
+   exit ()<span class="callout" id="co-tuning-stap-handler-function-exit">6</span>
+}<span class="callout" id="co-tuning-stap-handler-end">7</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-probe"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Start of the probe.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-event-begin"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Event <code class="literal">begin</code> (the start of the SystemTap session).
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-handler-start"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Start of the handler definition, indicated by <code class="literal">{</code>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-handler-function-printf"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       First function defined in the handler: the <code class="literal">printf</code>
+       function.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-handler-string"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       String to be printed by the <code class="literal">printf</code> function,
+       followed by a line break (<code class="literal">/n</code>).
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-handler-function-exit"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       Second function defined in the handler: the <code class="literal">exit()</code>
+       function. Note that the SystemTap script will continue to run until
+       the <code class="literal">exit()</code> function executes. If you want to stop
+       the execution of the script before, stop it manually by pressing
+       <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">C</span>.
+      </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-handler-end"><span class="callout">7</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+       End of the handler definition, indicated by <code class="literal">}</code>.
+      </p></td></tr></table></div><p>
+     The event <code class="literal">begin</code>
+     <a class="xref" href="cha-tuning-systemtap.html#co-tuning-stap-event-begin"><span class="callout">2</span></a>
+     (the start of the SystemTap session) triggers the handler enclosed in
+     <code class="literal">{ }</code>. Here, that is the <code class="literal">printf</code>
+     function
+     <a class="xref" href="cha-tuning-systemtap.html#co-tuning-stap-handler-function-printf"><span class="callout">4</span></a>.
+     In this case, it prints <code class="literal">hello world</code> followed by a
+     new line
+     <a class="xref" href="cha-tuning-systemtap.html#co-tuning-stap-handler-string"><span class="callout">5</span></a>.
+     Then, the script exits.
+    </p></div></div></div><p>
+    If your statement block holds several statements, SystemTap executes
+    these statements in sequence—you do not need to insert special
+    separators or terminators between multiple statements. A statement block
+    can also be nested within another statement blocks. Generally, statement
+    blocks in SystemTap scripts use the same syntax and semantics as in the
+    C programming language.
+   </p></section><section class="sect2" id="sec-tuning-systemtap-syntax-events" data-id-title="SystemTap events (probe points)"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.3.2 </span><span class="title-name">SystemTap events (probe points)</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-events">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    SystemTap supports several built-in events.
+   </p><p>
+    The general event syntax is a dotted-symbol sequence. This allows a
+    breakdown of the event namespace into parts. Each component identifier
+    may be parameterized by a string or number literal, with a syntax like a
+    function call. A component may include a <code class="literal">*</code> character,
+    to expand to other matching probe points. A probe point may be followed
+    by a <code class="literal">?</code> character, to indicate that it is optional,
+    and that no error should result if it fails to expand.
+    
+    Alternately, a probe point may be followed by a <code class="literal">!</code>
+    character to indicate that it is both optional and sufficient.
+   </p><p>
+    SystemTap supports multiple events per probe—they need to be
+    separated by a comma (<code class="literal">,</code>). If multiple events are
+    specified in a single probe, SystemTap will execute the handler when any
+    of the specified events occur.
+   </p><p>
+    The events can be classified into the following categories:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      Synchronous events: Occur when any process executes an instruction at
+      a particular location in kernel code. This gives other events a
+      reference point (instruction address) from which more contextual data
+      may be available.
+     </p><p>
+      An example for a synchronous event is
+      <code class="literal">vfs.<em class="replaceable">FILE_OPERATION</em></code>: The
+      entry to the <em class="replaceable">FILE_OPERATION</em> event for
+      Virtual File System (VFS). For example, in
+      <a class="xref" href="cha-tuning-systemtap.html#sec-tuning-systemtap-setup" title="4.2. Installation and setup">Section 4.2, “Installation and setup”</a>, <code class="literal">read</code>
+      is the <em class="replaceable">FILE_OPERATION</em> event used for VFS.
+
+
+
+     </p></li><li class="listitem"><p>
+      Asynchronous events: Not tied to a particular instruction or location
+      in code. This family of probe points consists mainly of counters,
+      timers, and similar constructs.
+     </p><p>
+      Examples for asynchronous events are: <code class="literal">begin</code> (start
+      of a SystemTap session—when a SystemTap script is run,
+      <code class="literal">end</code> (end of a SystemTap session), or timer events.
+      Timer events specify a handler to be executed periodically, like
+      <code class="literal">example
+      timer.s(<em class="replaceable">SECONDS</em>)</code>, or
+      <code class="literal">timer.ms(<em class="replaceable">MILLISECONDS</em>)</code>.
+     </p><p>
+      When used together with other probes that collect information,
+      timer events allow you to print periodic updates and see how that
+      information changes over time.
+     </p></li></ul></div><div class="complex-example"><div class="example" id="ex-tuning-stap-async" data-id-title="Probe with timer event"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 4.2: </span><span class="title-name">Probe with timer event </span></span><a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#ex-tuning-stap-async">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+     For example, the following probe would print the text <span class="quote">“<span class="quote">hello
+     world</span>”</span> every 4 seconds:
+    </p><div class="verbatim-wrap"><pre class="screen">probe timer.s(4)
+{
+   printf("hello world\n")
+}</pre></div></div></div></div><p>
+    For detailed information about supported events, refer to the
+    <code class="command">stapprobes</code> man page. The <em class="citetitle">See
+    Also</em> section of the man page also contains links to other
+    man pages that discuss supported events for specific subsystems and
+    components.
+   </p></section><section class="sect2" id="sec-tuning-systemtap-syntax-handlers" data-id-title="SystemTap handlers (probe body)"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">4.3.3 </span><span class="title-name">SystemTap handlers (probe body)</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-handlers">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Each SystemTap event is accompanied by a corresponding handler defined
+    for that event, consisting of a statement block.
+   </p><section class="sect3" id="sec-tuning-systemtap-syntax-handlers-functions" data-id-title="Functions"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">4.3.3.1 </span><span class="title-name">Functions</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-handlers-functions">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     If you need the same set of statements in multiple probes, you can
+     place them in a function for easy reuse. Functions are defined by the
+     keyword <code class="literal">function</code> followed by a name. They take any
+     number of string or numeric arguments (by value) and may return a
+     single string or number.
+    </p><div class="verbatim-wrap"><pre class="screen">function <em class="replaceable">FUNCTION_NAME</em>(<em class="replaceable">ARGUMENTS</em>) {<em class="replaceable">STATEMENTS</em>}
+probe <em class="replaceable">EVENT</em> {<em class="replaceable">FUNCTION_NAME</em>(<em class="replaceable">ARGUMENTS</em>)}</pre></div><p>
+     The statements in <em class="replaceable">FUNCTION_NAME</em> are executed
+     when the probe for <em class="replaceable">EVENT</em> executes. The
+     <em class="replaceable">ARGUMENTS</em> are optional values passed into
+     the function.
+    </p><p>
+     Functions can be defined anywhere in the script. They may take any
+    </p><p>
+     One of the functions frequently needed is already introduced in
+     <a class="xref" href="cha-tuning-systemtap.html#ex-tuning-stap-simple" title="Simple SystemTap script">Example 4.1, “Simple SystemTap script”</a>: the <code class="literal">printf</code>
+     function for printing data in a formatted way. When using the
+     <code class="literal">printf</code> function, you can specify how arguments
+     should be printed by using a format string. The format string is
+     included in quotation marks and can contain further format specifiers,
+     introduced by a <code class="literal">%</code> character.
+    </p><p>
+     Which format strings to use depends on your list of arguments. Format
+     strings can have multiple format specifiers—each matching a
+     corresponding argument. Multiple arguments can be separated by a comma.
+    </p><div class="example" id="ex-tuning-stap-printf-formatspec" data-id-title="printf Function with format specifiers"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 4.3: </span><span class="title-name"><code class="literal">printf</code> Function with format specifiers </span></span><a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#ex-tuning-stap-printf-formatspec">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">printf ("<span class="callout" id="co-tuning-stap-formatstring-start">1</span>%s<span class="callout" id="co-tuning-stap-string-spec">2</span>(%d<span class="callout" id="co-tuning-stap-int-spec">3</span>) open\n<span class="callout" id="co-tuning-stap-formatstring-end">4</span>", execname(), pid())</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-formatstring-start"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Start of the format string, indicated by <code class="literal">"</code>.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-string-spec"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        String format specifier.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-int-spec"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        Integer format specifier.
+       </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-tuning-stap-formatstring-end"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+        End of the format string, indicated by <code class="literal">"</code>.
+       </p></td></tr></table></div></div></div><p>
+     The example above prints the current executable name
+     (<code class="literal">execname()</code>) as a string and the process ID
+     (<code class="literal">pid()</code>) as an integer in brackets. Then, a space,
+     the word <code class="literal">open</code> and a line break follow:
+    </p><div class="verbatim-wrap"><pre class="screen">[...]
+vmware-guestd(2206) open
+held(2360) open
+[...]</pre></div><p>
+     Apart from the two functions <code class="literal">execname()</code>and
+     <code class="literal">pid()</code>) used in
+     <a class="xref" href="cha-tuning-systemtap.html#ex-tuning-stap-printf-formatspec" title="printf Function with format specifiers">Example 4.3, “<code class="literal">printf</code> Function with format specifiers”</a>, a variety of other
+     functions can be used as <code class="literal">printf</code> arguments.
+    </p><p>
+     Among the most commonly used SystemTap functions are the following:
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.6.8.3.13.1"><span class="term">tid()</span></dt><dd><p>
+        ID of the current thread.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.2"><span class="term">pid()</span></dt><dd><p>
+        Process ID of the current thread.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.3"><span class="term">uid()</span></dt><dd><p>
+        ID of the current user.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.4"><span class="term">cpu()</span></dt><dd><p>
+        Current CPU number.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.5"><span class="term">execname()</span></dt><dd><p>
+        Name of the current process.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.6"><span class="term">gettimeofday_s()</span></dt><dd><p>
+        Number of seconds since Unix epoch (January 1, 1970).
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.7"><span class="term">ctime()</span></dt><dd><p>
+        Convert time into a string.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.8"><span class="term">pp()</span></dt><dd><p>
+        String describing the probe point currently being handled.
+       </p></dd><dt id="id-1.8.5.2.6.8.3.13.9"><span class="term">thread_indent()</span></dt><dd><p>
+        Useful function for organizing print results. It (internally) stores
+        an indentation counter for each thread (<code class="literal">tid()</code>).
+        The function takes one argument, an indentation delta, indicating
+        how many spaces to add or remove from the thread's indentation
+        counter. It returns a string with some generic trace data along with
+        an appropriate number of indentation spaces. The generic data
+        returned includes a time stamp (number of microseconds since the
+        initial indentation for the thread), a process name, and the thread
+        ID itself. This allows you to identify what functions were called,
+        who called them, and how long they took.
+       </p><p>
+        Call entries and exits often do not immediately precede each other
+        (otherwise it would be easy to match them). In between a first call
+        entry and its exit, usually other call entries and exits
+        are made. The indentation counter helps you match an entry with its
+        corresponding exit as it indents the next function call in case it
+        is <span class="emphasis"><em>not</em></span> the exit of the previous one.
+       </p></dd></dl></div><p>
+     For more information about supported SystemTap functions, refer to the
+     <code class="command">stapfuncs</code> man page.
+    </p></section><section class="sect3" id="sec-tuning-systemtap-syntax-handlers-others" data-id-title="Other basic constructs"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">4.3.3.2 </span><span class="title-name">Other basic constructs</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-handlers-others">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Apart from functions, you can use other common constructs in
+     SystemTap handlers, including variables, conditional statements (like
+     <code class="literal">if</code>/<code class="literal">else</code>, <code class="literal">while</code>
+     loops, <code class="literal">for</code> loops, arrays or command line arguments.
+    </p><section class="sect4" id="sec-tuning-systemtap-syntax-handlers-others-variables" data-id-title="Variables"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">4.3.3.2.1 </span><span class="title-name">Variables</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-handlers-others-variables">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Variables may be defined anywhere in the script. To define one, simply
+      choose a name and assign a value from a function or expression to it:
+     </p><div class="verbatim-wrap"><pre class="screen">foo = gettimeofday( )</pre></div><p>
+      Then you can use the variable in an expression. From the type of
+      values assigned to the variable, SystemTap automatically infers the
+      type of each identifier (string or number). Any inconsistencies will
+      be reported as errors. In the example above, <code class="literal">foo</code>
+      would automatically be classified as a number and could be printed via
+      <code class="literal">printf()</code> with the integer format specifier
+      (<code class="literal">%d</code>).
+     </p><p>
+      However, by default the variables are local to the probe containing them. They are initialized, used and disposed of at each handler
+      evocation. To share variables between probes, declare them global
+      anywhere in the script. To do so, use the <code class="literal">global</code>
+      keyword outside of the probes:
+     </p><div class="complex-example"><div class="example" id="id-1.8.5.2.6.8.4.3.6" data-id-title="Using global variables"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 4.4: </span><span class="title-name">Using global variables </span></span><a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#id-1.8.5.2.6.8.4.3.6">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">global count_jiffies, count_ms
+probe timer.jiffies(100) { count_jiffies ++ }
+probe timer.ms(100) { count_ms ++ }
+probe timer.ms(12345)
+{
+  hz=(1000*count_jiffies) / count_ms
+  printf ("jiffies:ms ratio %d:%d =&gt; CONFIG_HZ=%d\n",
+    count_jiffies, count_ms, hz)
+  exit ()
+  }</pre></div><p>
+       This example script computes the CONFIG_HZ setting of the kernel by
+       using timers that count jiffies and milliseconds, then computing
+       accordingly. (A jiffy is the duration of one tick of the system timer
+       interrupt. It is not an absolute time interval unit, since its
+       duration depends on the clock interrupt frequency of the particular
+       hardware platform). With the <code class="literal">global</code> statement it
+       is possible to use the variables <code class="literal">count_jiffies</code> and
+       <code class="literal">count_ms</code> also in the probe
+       <code class="literal">timer.ms(12345)</code>. With <code class="literal">++</code> the
+       value of a variable is incremented by <code class="literal">1</code>.
+      </p></div></div></div></section><section class="sect4" id="sec-tuning-systemtap-syntax-handlers-others-conditional" data-id-title="Conditional statements"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">4.3.3.2.2 </span><span class="title-name">Conditional statements</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax-handlers-others-conditional">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      There are several conditional statements that you can use in
+      SystemTap scripts. The most common conditional statements are the following:
+     </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.6.8.4.4.3.1"><span class="term">If/else statements</span></dt><dd><p>
+         They are expressed in the following format:
+        </p><div class="verbatim-wrap"><pre class="screen">if (<em class="replaceable">CONDITION</em>)<span class="callout" id="co-tuning-systemtap-cond-if">1</span><em class="replaceable">STATEMENT1</em><span class="callout" id="co-tuning-systemtap-cond-if-statement1">2</span>
+else<span class="callout" id="co-tuning-systemtap-cond-else">3</span><em class="replaceable">STATEMENT2</em><span class="callout" id="co-tuning-systemtap-cond-if-statement2">4</span></pre></div><p>
+         The <code class="literal">if</code> statement compares an integer-valued
+         expression to zero. If the condition expression
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-if"><span class="callout">1</span></a>
+         is non-zero, the first statement
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-if-statement1"><span class="callout">2</span></a>
+         is executed. If the condition expression is zero, the second
+         statement
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-if-statement2"><span class="callout">4</span></a>
+         is executed. The else clause
+         (<a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-else"><span class="callout">3</span></a>
+         and
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-if-statement2"><span class="callout">4</span></a>)
+         is optional. Both
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-if-statement1"><span class="callout">2</span></a>
+         and
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-if-statement2"><span class="callout">4</span></a>
+         can also be statement blocks.
+        </p></dd><dt id="id-1.8.5.2.6.8.4.4.3.2"><span class="term">While loops</span></dt><dd><p>
+         They are expressed in the following format:
+        </p><div class="verbatim-wrap"><pre class="screen">while (<em class="replaceable">CONDITION</em>)<span class="callout" id="co-tuning-systemtap-cond-while">1</span><em class="replaceable">STATEMENT</em><span class="callout" id="co-tuning-systemtap-cond-while-statement">2</span></pre></div><p>
+         While <code class="literal">condition</code> is non-zero, the statement
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-while-statement"><span class="callout">2</span></a>
+         is executed.
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-while-statement"><span class="callout">2</span></a>
+         can also be a statement block. It must change a value so
+         <code class="literal">condition</code> will eventually be zero.
+        </p></dd><dt id="id-1.8.5.2.6.8.4.4.3.3"><span class="term">For loops</span></dt><dd><p>
+         They are a shortcut for <code class="literal">while</code> loops and are
+         expressed in the following format:
+        </p><div class="verbatim-wrap"><pre class="screen">for (<em class="replaceable">INITIALIZATION</em><span class="callout" id="co-tuning-systemtap-cond-for-init">1</span>; <em class="replaceable">CONDITIONAL</em><span class="callout" id="co-tuning-systemtap-cond-for-cond">2</span>; <em class="replaceable">INCREMENT</em><span class="callout" id="co-tuning-systemtap-cond-for-increment">3</span>) statement</pre></div><p>
+         The expression specified in
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-for-init"><span class="callout">1</span></a>
+         is used to initialize a counter for the number of loop iterations
+         and is executed before execution of the loop starts. The execution
+         of the loop continues until the loop condition
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-for-cond"><span class="callout">2</span></a>
+         is false. (This expression is checked at the beginning of each loop
+         iteration). The expression specified in
+         <a class="xref" href="cha-tuning-systemtap.html#co-tuning-systemtap-cond-for-increment"><span class="callout">3</span></a>
+         is used to increment the loop counter. It is executed at the end of
+         each loop iteration.
+        </p></dd><dt id="id-1.8.5.2.6.8.4.4.3.4"><span class="term">Conditional operators</span></dt><dd><p>
+         The following operators can be used in conditional statements:
+        </p><p><span class="formalpara-title">==:</span>
+          Is equal to
+         </p><p><span class="formalpara-title">!=:</span>
+          Is not equal to
+         </p><p><span class="formalpara-title">&gt;=:</span>
+          Is greater than or equal to
+         </p><p><span class="formalpara-title">&lt;=:</span>
+          Is less than or equal to
+         </p></dd></dl></div></section></section></section></section><section class="sect1" id="sec-tuning-systemtap-example" data-id-title="Example script"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.4 </span><span class="title-name">Example script</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-example">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   If you have installed the
+   <code class="systemitem">systemtap-docs</code> package, you can
+   find several useful SystemTap example scripts in
+   <code class="filename">/usr/share/doc/packages/systemtap/examples</code>.
+  </p><p>
+   This section describes a rather simple example script in more detail:
+   <code class="filename">/usr/share/doc/packages/systemtap/examples/network/tcp_connections.stp</code>.
+  </p><div class="example" id="id-1.8.5.2.7.4" data-id-title="Monitoring incoming TCP connections with tcp_connections.stp"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 4.5: </span><span class="title-name">Monitoring incoming TCP connections with <code class="literal">tcp_connections.stp</code> </span></span><a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#id-1.8.5.2.7.4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div><div class="example-contents"><div class="verbatim-wrap"><pre class="screen">#! /usr/bin/env stap
+
+probe begin {
+  printf("%6s %16s %6s %6s %16s\n",
+         "UID", "CMD", "PID", "PORT", "IP_SOURCE")
+}
+
+probe kernel.function("tcp_accept").return?,
+      kernel.function("inet_csk_accept").return? {
+  sock = $return
+  if (sock != 0)
+    printf("%6d %16s %6d %6d %16s\n", uid(), execname(), pid(),
+           inet_get_local_port(sock), inet_get_ip_source(sock))
+}</pre></div></div></div><p>
+   This SystemTap script monitors the incoming TCP connections and helps to
+   identify unauthorized or unwanted network access requests in real time.
+   It shows the following information for each new incoming TCP connection
+   accepted by the computer:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     User ID (<code class="literal">UID</code>)
+    </p></li><li class="listitem"><p>
+     Command accepting the connection (<code class="literal">CMD</code>)
+    </p></li><li class="listitem"><p>
+     Process ID of the command (<code class="literal">PID</code>)
+    </p></li><li class="listitem"><p>
+     Port used by the connection (<code class="literal">PORT</code>)
+    </p></li><li class="listitem"><p>
+     IP address from which the TCP connection originated
+     (<code class="literal">IP_SOURCE</code>)
+    </p></li></ul></div><p>
+   To run the script, execute
+  </p><div class="verbatim-wrap"><pre class="screen">stap /usr/share/doc/packages/systemtap/examples/network/tcp_connections.stp</pre></div><p>
+   and follow the output on the screen. To manually stop the script, press
+   <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">C</span>.
+  </p></section><section class="sect1" id="sec-tuning-systemtap-userspace" data-id-title="User space probing"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.5 </span><span class="title-name">User space probing</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-userspace">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   
+   For debugging user space applications (like DTrace can do),
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> <span class="productnumber"><span class="phrase">15 SP6</span></span> supports user space probing with
+   SystemTap. Custom probe points can be inserted in any user space
+   application. Thus, SystemTap lets you use both kernel space and user space
+   probes to debug the behavior of the whole system.
+  </p><p>
+   To get the required utrace infrastructure and the uprobes kernel module
+   for user space probing, you need to install the
+   <code class="systemitem">kernel-trace</code> package in
+   addition to the packages listed in
+   <a class="xref" href="cha-tuning-systemtap.html#sec-tuning-systemtap-setup" title="4.2. Installation and setup">Section 4.2, “Installation and setup”</a>.
+  </p><p>
+   <code class="command">utrace</code> implements a framework for controlling
+   user space tasks. It provides an interface that can be used by various
+   tracing <span class="quote">“<span class="quote">engines</span>”</span>, implemented as loadable kernel modules.
+   The engines register callback functions for specific events, then attach
+   to whichever thread they want to trace. As the callbacks are made from
+   <span class="quote">“<span class="quote">safe</span>”</span> places in the kernel, this allows for great leeway in
+   the kinds of processing the functions can do. Several events can be
+   watched via utrace. For example, you can observe events such as system call entry and exit,
+   fork(), and
+   signals being sent to the task. More details about the utrace
+   infrastructure are available at
+   <a class="link" href="https://sourceware.org/systemtap/wiki/utrace" target="_blank">https://sourceware.org/systemtap/wiki/utrace</a>.
+  </p><p>
+   SystemTap includes support for probing the entry into and return from a
+   function in user space processes, probing predefined markers in
+   user space code, and monitoring user-process events.
+  </p><p>
+   To check if the currently running kernel provides the needed utrace
+   support, use the following command:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> grep CONFIG_UTRACE /boot/config-`uname -r`</pre></div><p>
+   For more details about user space probing, refer to
+   <a class="link" href="https://sourceware.org/systemtap/SystemTap_Beginners_Guide/userspace-probing.html" target="_blank">https://sourceware.org/systemtap/SystemTap_Beginners_Guide/userspace-probing.html</a>.
+  </p></section><section class="sect1" id="sec-tuning-systemtap-more" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">4.6 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-systemtap.html#sec-tuning-systemtap-more">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_systemtap.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This chapter only provides a short SystemTap overview. Refer to the
+   following links for more information about SystemTap:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.2.9.3.1"><span class="term"><a class="link" href="https://sourceware.org/systemtap/" target="_blank">https://sourceware.org/systemtap/</a>
+    </span></dt><dd><p>
+      SystemTap project home page.
+     </p></dd><dt id="id-1.8.5.2.9.3.2"><span class="term"><a class="link" href="https://sourceware.org/systemtap/wiki/" target="_blank">https://sourceware.org/systemtap/wiki/</a>
+    </span></dt><dd><p>
+      A large collection of useful information about SystemTap, ranging from
+      detailed user and developer documentation to reviews and comparisons
+      with other tools, or Frequently Asked Questions and tips. Also
+      contains collections of SystemTap scripts, examples and usage stories
+      and lists recent talks and papers about SystemTap.
+     </p></dd><dt id="id-1.8.5.2.9.3.3"><span class="term"><a class="link" href="https://sourceware.org/systemtap/documentation.html" target="_blank">https://sourceware.org/systemtap/documentation.html</a>
+    </span></dt><dd><p>
+      Features a <em class="citetitle">SystemTap Tutorial</em>, a
+      <em class="citetitle">SystemTap Beginner's Guide</em>, a <em class="citetitle">Tapset
+      Developer's Guide</em>, and a <em class="citetitle">SystemTap Language
+      Reference</em> in PDF and HTML format. Also lists the relevant
+      man pages.
+     </p></dd></dl></div><p>
+   You can also find the SystemTap language reference and SystemTap tutorial
+   in your installed system under
+   <code class="filename">/usr/share/doc/packages/systemtap</code>. Example SystemTap
+   scripts are available from the <code class="filename">example</code> subdirectory.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="part-tuning-kerneltrace.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Part III </span>Kernel monitoring</span></a> </div><div><a class="pagination-link next" href="cha-tuning-kprobes.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 5 </span>Kernel probes</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-systemtap.html#sec-tuning-systemtap-concept"><span class="title-number">4.1 </span><span class="title-name">Conceptual overview</span></a></span></li><li><span class="sect1"><a href="cha-tuning-systemtap.html#sec-tuning-systemtap-setup"><span class="title-number">4.2 </span><span class="title-name">Installation and setup</span></a></span></li><li><span class="sect1"><a href="cha-tuning-systemtap.html#sec-tuning-systemtap-syntax"><span class="title-number">4.3 </span><span class="title-name">Script syntax</span></a></span></li><li><span class="sect1"><a href="cha-tuning-systemtap.html#sec-tuning-systemtap-example"><span class="title-number">4.4 </span><span class="title-name">Example script</span></a></span></li><li><span class="sect1"><a href="cha-tuning-systemtap.html#sec-tuning-systemtap-userspace"><span class="title-number">4.5 </span><span class="title-name">User space probing</span></a></span></li><li><span class="sect1"><a href="cha-tuning-systemtap.html#sec-tuning-systemtap-more"><span class="title-number">4.6 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

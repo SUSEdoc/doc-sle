@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | System Analysis and Tuning Guide | Hardware-based performance monitoring with Perf</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Hardware-based performance monitoring with Perf | SLED…"/>
+<meta name="description" content="Perf is an interface to access the performance monitoring unit (PMU) of a processor and to record and display software events such as page faults. It…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 6. Hardware-based performance monitoring with Perf"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="System Analysis and Tuning Guide"/>
+<meta property="og:description" content="Analyze and tune SLED systems"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="System Analysis and Tuning Guide"/>
+<meta name="twitter:description" content="Analyze and tune SLED systems"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Hardware-based performance monitoring with Perf",
+  
+    "description": "Perf is an interface to access the performance monitoring unit (PMU) of a processor and to record and display software events such as page faults. It…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-tuning-kprobes.html" title="Chapter 5. Kernel probes"/><link rel="next" href="cha-tuning-oprofile.html" title="Chapter 7. OProfile—system-wide profiler"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-kerneltrace.html">Kernel monitoring</a><span> / </span><a class="crumb" href="cha-perf.html">Hardware-based performance monitoring with Perf</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General notes on system tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System monitoring utilities</span></a></li><li><a href="cha-tuning-syslog.html" class=" "><span class="title-number">3 </span><span class="title-name">System log files</span></a></li></ol></li><li class="active"><a href="part-tuning-kerneltrace.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Kernel monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—filtering and analyzing system data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel probes</span></a></li><li><a href="cha-perf.html" class=" you-are-here"><span class="title-number">6 </span><span class="title-name">Hardware-based performance monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—system-wide profiler</span></a></li><li><a href="cha-tuning-dynamic-debug.html" class=" "><span class="title-number">8 </span><span class="title-name">Dynamic debug—kernel debugging messages</span></a></li></ol></li><li><a href="part-tuning-resources.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Resource management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">9 </span><span class="title-name">General system resource management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" "><span class="title-number">10 </span><span class="title-name">Kernel control groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">11 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">12 </span><span class="title-name">Power management</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">13 </span><span class="title-name">Tuning I/O performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning the task scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the memory management subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">16 </span><span class="title-name">Tuning the network</span></a></li></ol></li><li><a href="part-tuning-dumps.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Handling system dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">17 </span><span class="title-name">Tracing tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">18 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">19 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to debug application crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">20 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="bk06apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-perf" data-id-title="Hardware-based performance monitoring with Perf"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">6 </span><span class="title-name">Hardware-based performance monitoring with Perf</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Perf is an interface to access the performance monitoring unit (PMU) of a
+    processor and to record and display software events such as page faults.
+    It supports system-wide, per-thread, and KVM virtualization guest
+    monitoring.
+   </p></div></div></div></div><p>
+  You can store resulting information in a report.
+  This report contains information about, for example, instruction pointers or
+  what code a thread was executing.
+ </p><p>
+  Perf consists of two parts:
+ </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+    Code integrated into the Linux kernel that instructs
+    the hardware.
+   </p></li><li class="listitem"><p>
+    The <code class="command">perf</code> user space utility that allows you to use the
+    kernel code and helps you analyze gathered data.
+   </p></li></ul></div><section class="sect1" id="sec-perf-concept" data-id-title="Hardware-based monitoring"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.1 </span><span class="title-name">Hardware-based monitoring</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-concept">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Performance monitoring means collecting information related to how an
+   application or system performs.
+   This information can be obtained either through software-based means or from
+   the CPU or chipset.
+   Perf integrates both of these methods.
+  </p><p>
+   Many modern processors contain a performance monitoring unit (PMU).
+   The design and functionality of a PMU is CPU-specific.
+   For example, the number of registers, counters and features supported varies by CPU implementation.
+  </p><p>
+   Each PMU model consists of a set of registers: the performance monitor
+   configuration (PMC) and the performance monitor data (PMD).
+   Both can be read, but only PMCs are writable.
+   These registers store configuration information and data.
+  </p></section><section class="sect1" id="sec-perf-sample-count" data-id-title="Sampling and counting"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.2 </span><span class="title-name">Sampling and counting</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-sample-count">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Perf supports several profiling modes:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p><span class="formalpara-title">Counting. </span>
+      Count the number of occurrences of an event.
+     </p></li><li class="listitem"><p><span class="formalpara-title">Event-based sampling. </span>
+      A less exact way of counting: A sample is recorded whenever a certain
+      threshold number of events has occurred.
+     </p></li><li class="listitem"><p><span class="formalpara-title">Time-based sampling. </span>
+      A less exact way of counting: A sample is recorded in a defined frequency.
+     </p></li><li class="listitem"><p><span class="formalpara-title">Instruction-based sampling (AMD64 only). </span>
+      The processor follows instructions appearing in a given interval and
+      samples which events they produce.
+      This allows following up on individual instructions and seeing which of
+      them is critical to performance.
+     </p></li></ul></div></section><section class="sect1" id="sec-perf-install" data-id-title="Installing Perf"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.3 </span><span class="title-name">Installing Perf</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-install">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Perf kernel code is already included with the default kernel.
+   To be able to use the user space utility, install the package
+   <span class="package">perf</span>.
+  </p></section><section class="sect1" id="sec-perf-subcommand" data-id-title="Perf subcommands"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.4 </span><span class="title-name">Perf subcommands</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-subcommand">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To gather the required information, the <code class="command">perf</code> tool has
+   several subcommands. This section gives an overview of the most often used
+   commands.
+  </p><p>
+   To see help in the form of a man page for any of the subcommands, use either
+   <code class="command">perf help</code><em class="replaceable">SUBCOMMAND</em>
+   or
+   <code class="command">man perf-</code><em class="replaceable">SUBCOMMAND</em>.
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.4.10.4.1"><span class="term"><code class="command">perf stat</code></span></dt><dd><p>
+      Start a program and create a statistical overview that is displayed after
+      the program quits.
+      <code class="command">perf stat</code> is used to count events.
+     </p></dd><dt id="id-1.8.5.4.10.4.2"><span class="term"><code class="command">perf record</code></span></dt><dd><p>
+      Start a program and create a report with performance counter information.
+      The report is stored as <code class="filename">perf.data</code> in the current
+      directory.
+      <code class="command">perf record</code> is used to sample events.
+     </p></dd><dt id="id-1.8.5.4.10.4.3"><span class="term"><code class="command">perf report</code></span></dt><dd><p>
+      Display a report that was previously created with
+      <code class="command">perf record</code>.
+     </p></dd><dt id="id-1.8.5.4.10.4.4"><span class="term"><code class="command">perf annotate</code></span></dt><dd><p>
+      Display a report file and an annotated version of the executed
+      code.
+      If debug symbols are installed, the source code is also displayed.
+     </p></dd><dt id="id-1.8.5.4.10.4.5"><span class="term"><code class="command">perf list</code></span></dt><dd><p>
+      List event types that Perf can report with the current kernel and with
+      your CPU.
+      You can filter event types by category. For example, to see hardware
+      events only, use <code class="command">perf list hw</code>.
+     </p><p>
+      The man page for <code class="command">perf_event_open</code> has short descriptions
+      for the most important events.
+      For example, to find a description of the event
+      <code class="systemitem">branch-misses</code>, search for
+      <code class="literal">BRANCH_MISSES</code> (note the spelling differences):
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">man</code> perf_event_open | <code class="command">grep</code> -A5 <em class="replaceable">BRANCH_MISSES</em></pre></div><p>
+      Sometimes, events may be ambiguous.
+      The lowercase hardware event names are not the names of raw
+      hardware events but instead the names of aliases created by Perf.
+      These aliases map to differently named but similarly defined hardware
+      events on each supported processor.
+     </p><p>
+      For example, the <code class="systemitem">cpu-cycles</code> event is mapped to
+      the hardware event <code class="systemitem">UNHALTED_CORE_CYCLES</code> on
+      Intel processors.
+      On AMD processors, however, it is mapped to the hardware event
+      <code class="systemitem">CPU_CLK_UNHALTED</code>.
+     </p><p>
+      Perf also allows measuring raw events specific to your hardware.
+      To look up their descriptions, see the
+      Architecture Software Developer's Manual of your CPU vendor.
+      The relevant documents for AMD64/Intel 64 processors are linked to in
+      <a class="xref" href="cha-perf.html#sec-perf-more" title="6.7. More information">Section 6.7, “More information”</a>.
+     </p></dd><dt id="id-1.8.5.4.10.4.6"><span class="term"><code class="command">perf top</code></span></dt><dd><p>
+      Display system activity as it happens.
+     </p></dd><dt id="id-1.8.5.4.10.4.7"><span class="term"><code class="command">perf trace</code></span></dt><dd><p>
+      This command behaves similarly to <code class="command">strace</code>.
+      With this subcommand, you can see which system calls are executed by a
+      particular thread or process and which signals it receives.
+     </p></dd></dl></div></section><section class="sect1" id="sec-perf-event" data-id-title="Counting particular types of event"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.5 </span><span class="title-name">Counting particular types of event</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-event">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   To count the number of occurrences of an event, such as those displayed by
+   <code class="command">perf list</code>, use:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">perf</code> stat -e <em class="replaceable">EVENT</em> -a</pre></div><p>
+   To count multiple types of events at once, list them separated by commas.
+   For example, to count <code class="systemitem">cpu-cycles</code> and
+   <code class="systemitem">instructions</code>, use:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">perf</code> stat -e cpu-cycles,instructions -a</pre></div><p>
+   To stop the session, press
+   <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">C</span>.
+  </p><p>
+   You can also count the number of occurrences of an event within a particular
+   time:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">perf</code> stat -e <em class="replaceable">EVENT</em> -a -- sleep <em class="replaceable">TIME</em></pre></div><p>
+   Replace <em class="replaceable">TIME</em> by a value in seconds.
+  </p></section><section class="sect1" id="sec-perf-command" data-id-title="Recording events specific to particular commands"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.6 </span><span class="title-name">Recording events specific to particular commands</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-command">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   There are several ways to sample events specific to a particular command:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      To create a report for a newly invoked command, use:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">perf</code> record <em class="replaceable">COMMAND</em></pre></div><p>
+      Then, use the started process normally.
+      When you quit the process, the Perf session also stops.
+     </p></li><li class="listitem"><p>
+      To create a report for the entire system while a newly invoked command is
+      running, use:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">perf</code> record -a <em class="replaceable">COMMAND</em></pre></div><p>
+      Then, use the started process normally.
+      When you quit the process, the Perf session also stops.
+     </p></li><li class="listitem"><p>
+      To create a report for an already running process, use:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code><code class="command">perf</code> record -p <em class="replaceable">PID</em></pre></div><p>
+      Replace <em class="replaceable">PID</em> with a process ID.
+      To stop the session, press
+      <span class="keycap">Ctrl</span><span class="key-connector">–</span><span class="keycap">C</span>.
+     </p></li></ul></div><p>
+   Now you can view the gathered data (<code class="filename">perf.data</code>)
+   using:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">perf</code> report</pre></div><p>
+   This opens a pseudo-graphical interface.
+   
+   To receive help, press <span class="keycap">H</span>.
+   To quit, press <span class="keycap">Q</span>.
+  </p><p>
+   If you prefer a graphical interface, try the GTK+ interface of Perf:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">perf</code> report --gtk</pre></div><p>
+    However, the GTK+ interface is limited in functionality.
+    
+  </p></section><section class="sect1" id="sec-perf-more" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">6.7 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-perf.html#sec-perf-more">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/tuning_perf.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This chapter only provides a short overview. Refer to the following links
+   for more information:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.5.4.13.3.1"><span class="term"><a class="link" href="https://perf.wiki.kernel.org/index.php/Main_Page" target="_blank">https://perf.wiki.kernel.org/index.php/Main_Page</a>
+    </span></dt><dd><p>
+      The project home page.
+      It also features a tutorial on using <code class="command">perf</code>.
+     </p></dd><dt id="id-1.8.5.4.13.3.2"><span class="term"><a class="link" href="https://www.brendangregg.com/perf.html" target="_blank">https://www.brendangregg.com/perf.html</a>
+    </span></dt><dd><p>
+      Unofficial page with many one-line examples of how to use
+      <code class="command">perf</code>.
+     </p></dd><dt id="id-1.8.5.4.13.3.3"><span class="term"><a class="link" href="https://web.eece.maine.edu/~vweaver/projects/perf_events/" target="_blank">https://web.eece.maine.edu/~vweaver/projects/perf_events/</a>
+    </span></dt><dd><p>
+      Unofficial page with several resources, primarily relating to the Linux
+      kernel code of Perf and its API.
+      This page includes, for example, a CPU compatibility table and a
+      programming guide.
+     </p></dd><dt id="id-1.8.5.4.13.3.4"><span class="term"><a class="link" href="https://www-ssl.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf" target="_blank">https://www-ssl.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3b-part-2-manual.pdf</a>
+    </span></dt><dd><p>
+      The <em class="citetitle">Intel Architectures Software Developer's Manual,
+      Volume 3B</em>.
+     </p></dd><dt id="id-1.8.5.4.13.3.5"><span class="term"><a class="link" href="https://support.amd.com/TechDocs/24593.pdf" target="_blank">https://support.amd.com/TechDocs/24593.pdf</a>
+    </span></dt><dd><p>
+      The <em class="citetitle">AMD Architecture Programmer's Manual, Volume 2</em>.
+     </p></dd><dt id="id-1.8.5.4.13.3.6"><span class="term"><a class="xref" href="cha-tuning-oprofile.html" title="Chapter 7. OProfile—system-wide profiler">Chapter 7, <em>OProfile—system-wide profiler</em></a>
+    </span></dt><dd><p>
+      Consult this chapter for other performance optimizations.
+     </p></dd></dl></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-tuning-kprobes.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 5 </span>Kernel probes</span></a> </div><div><a class="pagination-link next" href="cha-tuning-oprofile.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 7 </span>OProfile—system-wide profiler</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-perf.html#sec-perf-concept"><span class="title-number">6.1 </span><span class="title-name">Hardware-based monitoring</span></a></span></li><li><span class="sect1"><a href="cha-perf.html#sec-perf-sample-count"><span class="title-number">6.2 </span><span class="title-name">Sampling and counting</span></a></span></li><li><span class="sect1"><a href="cha-perf.html#sec-perf-install"><span class="title-number">6.3 </span><span class="title-name">Installing Perf</span></a></span></li><li><span class="sect1"><a href="cha-perf.html#sec-perf-subcommand"><span class="title-number">6.4 </span><span class="title-name">Perf subcommands</span></a></span></li><li><span class="sect1"><a href="cha-perf.html#sec-perf-event"><span class="title-number">6.5 </span><span class="title-name">Counting particular types of event</span></a></span></li><li><span class="sect1"><a href="cha-perf.html#sec-perf-command"><span class="title-number">6.6 </span><span class="title-name">Recording events specific to particular commands</span></a></span></li><li><span class="sect1"><a href="cha-perf.html#sec-perf-more"><span class="title-number">6.7 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

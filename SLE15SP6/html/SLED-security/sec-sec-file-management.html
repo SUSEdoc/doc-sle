@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | Security and Hardening Guide | File management</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="File management | SLED 15 SP6"/>
+<meta name="description" content="Servers should have separate file systems for at least /, /boot, /var, /tmp, and /home. This prevents, for example, logging space and temporary space…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 11. File management"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "File management",
+  
+    "description": "File management",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="sec-sec-software-management.html" title="Chapter 10. Software management"/><link rel="next" href="cha-security-cryptofs.html" title="Chapter 12. Encrypting partitions and files"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-local-security.html">Local security</a><span> / </span><a class="crumb" href="sec-sec-file-management.html">File management</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li class="active"><a href="part-local-security.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" you-are-here"><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">29 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">30 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">31 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">32 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">33 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">34 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">35 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">36 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">37 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">38 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">39 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">40 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">42 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">43 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">44 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk05apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="sec-sec-file-management" data-id-title="File management"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">11 </span><span class="title-name">File management</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect1" id="sec-sec-prot-general-partitions" data-id-title="Disk partitions"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.1 </span><span class="title-name">Disk partitions</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-partitions">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Servers should have separate file systems for at least
+    <code class="filename">/</code>, <code class="filename">/boot</code>,
+    <code class="filename">/var</code>,
+    <code class="filename">/tmp</code>, and <code class="filename">/home</code>. This prevents,
+    for example, logging space and temporary space under
+    <code class="filename">/var</code> and <code class="filename">/tmp</code> from filling up
+    the root partition. Third-party applications should be on separate file
+    systems as well, for example under <code class="filename">/opt</code>.
+   </p><p>
+    Another advantage of separate file systems is the possibility of choosing
+    special mount options that are suitable for certain regions in the
+    file system hierarchy. The mount options are:
+   </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+      <code class="literal">noexec</code>: prevents execution of files.
+     </p></li><li class="listitem"><p>
+      <code class="literal">nodev</code>: prevents character or block special devices
+      from being usable.
+     </p></li><li class="listitem"><p>
+      <code class="literal">nosuid</code>: prevents the <code class="literal">set-user-ID</code>
+      or <code class="literal">set-group-ID</code> bits from being effective.
+     </p></li><li class="listitem"><p>
+      <code class="literal">ro</code>: mounts the file system
+      <code class="literal">read-only</code>.
+     </p></li></ul></div><p>
+    Each of these options needs to be carefully considered before applying
+    it to a partition mount. Applications may stop working, or the support
+    status may be violated. When applied correctly, mount options can help
+    against certain types of security attacks or misconfigurations. For
+    example, there should be no need for <code class="literal">set-user-ID</code>
+    binaries to be placed in <code class="filename">/tmp</code>.
+   </p><p>
+    <span class="phrase">You are advised to review <a class="xref" href="cha-common-criteria.html" title="Chapter 27. Common Criteria">Chapter 27, <em>Common Criteria</em></a>. </span>It is important to understand the
+    need to separate the partitions that could impact a running system (for
+    example, log files filling up <code class="filename">/var/log</code> are a good
+    reason to separate <code class="filename">/var</code> from the
+    <code class="filename">/</code> partition).  Another thing to keep in mind is that
+    you need to use LVM or another volume manager or at the least the extended
+    partition type to work around the limit of four primary partitions on PC
+    class systems.
+   </p><p>
+    Another capability in <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> is encrypting a partition or even a
+    single directory or file as a container. Refer to
+    <a class="xref" href="cha-security-cryptofs.html" title="Chapter 12. Encrypting partitions and files">Chapter 12, <em>Encrypting partitions and files</em></a> for details.
+   </p></section><section class="sect1" id="sec-sec-prot-general-file-permissions" data-id-title="Modifying permissions of certain system files"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.2 </span><span class="title-name">Modifying permissions of certain system files</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-file-permissions">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Many files—especially in the <code class="filename">/etc</code>
+   directory—are world-readable, which means that unprivileged users can
+   read their contents. Normally this is not a problem, but to take
+   extra care, you can remove the world-readable or group-readable bits for
+   sensitive files.
+  </p><p>
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> provides the <span class="package">permissions</span> package to easily apply
+   file permissions. The package comes with three pre-defined system profiles:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.5.4.4.4.1"><span class="term">easy</span></dt><dd><p>
+      Profile for systems that require user-friendly graphical user interaction.
+      This is the default profile.
+     </p></dd><dt id="id-1.7.5.4.4.4.2"><span class="term">secure</span></dt><dd><p>
+      Profile for server systems without fully fledged graphical user
+      interfaces.
+     </p></dd><dt id="id-1.7.5.4.4.4.3"><span class="term">paranoid</span></dt><dd><p>
+      Profile for maximum security. In addition to the <code class="literal">secure</code>
+      profile, it removes <span class="emphasis"><em>all</em></span> special permissions like
+      setuid/setgid and capability bits.
+     </p><div id="id-1.7.5.4.4.4.3.2.2" data-id-title="Unusable system for non-privileged users" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Unusable system for non-privileged users</div><p>
+       Except for simple tasks like changing passwords, a system without special
+       permissions may be unusable for non-privileged users.
+      </p><p>
+       Do not use the <code class="literal">paranoid</code> profile is as-is, but as a
+       template for custom permissions. More information can be found in the
+       <code class="filename">permissions.paranoid</code> file.
+      </p></div></dd></dl></div><p>
+   To define custom file permissions, edit
+   <code class="filename">/etc/permissions.local</code> or create a drop-in file in the
+   <code class="filename">/etc/permissions.d/</code> directory.
+  </p><div class="verbatim-wrap"><pre class="screen"># Additional custom hardening
+/etc/security/access.conf       root:root       0400
+/etc/sysctl.conf                root:root       0400
+/root/                          root:root       0700</pre></div><p>
+   The first column specifies the file name. The directory names must end with a
+   slash. The second column specifies the owner and group, and the third column
+   specifies the mode.
+   For more information about the configuration file format, refer to
+   <code class="command">man permissions</code>.
+  </p><p>
+   Select the profile in <code class="filename">/etc/sysconfig/security</code>. To use
+   the <code class="literal">easy</code> profile and custom permissions from
+   <code class="filename">/etc/permissions.local</code>, set:
+  </p><div class="verbatim-wrap"><pre class="screen">PERMISSION_SECURITY="<em class="replaceable">easy local</em>"</pre></div><p>
+   To apply the setting, run <code class="command">chkstat --system --set</code>.
+  </p><p>
+   The permissions are also applied during package updates via
+   <code class="command">zypper</code>. You could also call <code class="command">chkstat</code>
+   regularly via <code class="systemitem">cron</code> or a <code class="systemitem">systemd</code>
+   timer.
+  </p><div id="id-1.7.5.4.4.12" data-id-title="Custom file permissions" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Custom file permissions</div><p>
+    While the system profiles are well tested, custom permissions can break
+    standard applications. SUSE cannot provide support for such scenarios.
+   </p><p>
+    Always test custom file permissions before applying them with
+    <code class="command">chkstat</code> to make sure everything works as desired.
+   </p></div></section><section class="sect1" id="sec-sec-prot-general-home-permissions" data-id-title="Changing home directory permissions from 755 to 700"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.3 </span><span class="title-name">Changing home directory permissions from 755 to 700</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-home-permissions">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   By default, home directories of users are accessible (read, execute) by all
+   users on the system. As this is a potential information leak, home
+   directories should be accessible by their owners.
+  </p><p>
+   The following commands set the permissions to <code class="literal">700</code>
+   (directory accessible for the owner) for all existing home directories
+   in <code class="filename">/home</code>:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> chmod 755 /home
+<code class="prompt user">&gt; </code><code class="command">sudo</code> bash -c 'for dir in /home/*; do \
+echo "Changing permissions of directory $dir"; chmod 700 "$dir"; done'</pre></div><p>
+   To ensure newly created home directories are created with secure
+   permissions, edit <code class="filename">/etc/login.defs</code> and set
+   <code class="varname">HOME_MODE</code> to <code class="literal">700</code>.
+  </p><div class="verbatim-wrap"><pre class="screen"># HOME_MODE is used by useradd(8) and newusers(8) to set the mode for new
+# home directories.
+# If HOME_MODE is not set, the value of UMASK is used to create the mode.
+HOME_MODE      0700</pre></div><p>
+   If you do not set <code class="varname">HOME_MODE</code>, permissions are calculated
+   from the default umask. <code class="varname">HOME_MODE</code>
+   specifies the permissions used, not a mask used to remove access like umask.
+   For more information about umask, refer to <a class="xref" href="sec-sec-file-management.html#sec-sec-prot-general-umask" title="11.4. Default umask">Section 11.4, “Default umask”</a>.
+  </p><p>
+   You can verify the configuration change by creating a new user with
+   <code class="command">useradd -m testuser</code>. Check the permissions of the
+   directories with <code class="command">ls -l /home</code>. Afterwards, remove the user
+   created for this test.
+  </p><div id="id-1.7.5.4.5.9" data-id-title="Test permission changes" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Test permission changes</div><p>
+    Users are no longer allowed to access other users' home directories. This
+    may be unexpected for users and software.
+   </p><p>
+    Test this change before using it in production and notify users affected by
+    the change.
+   </p></div></section><section class="sect1" id="sec-sec-prot-general-umask" data-id-title="Default umask"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.4 </span><span class="title-name">Default umask</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-umask">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The <code class="command">umask</code> (user file-creation mode mask) command is a
+    shell built-in command that determines the default file permissions for
+    newly created files and directories. This can be overwritten by system calls
+    but many programs and utilities use <code class="command">umask</code>.
+   </p><p>
+    By default, <code class="command">umask</code> is set to <code class="literal">022</code>.
+    This umask is subtracted from the access mode <code class="literal">777</code> if at
+    least one bit is set.
+   </p><p>
+    To determine the active umask, use the <code class="command">umask</code>
+    command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>umask
+022</pre></div><p>
+    With the default umask, you see the behavior most users expect to see on a
+    Linux system.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>touch a
+<code class="prompt user">&gt; </code>mkdir b
+<code class="prompt user">&gt; </code>ls -on
+total 16
+-rw-r--r--. 1 17086    0 Nov 29 15:05 a
+drwxr-xr-x. 2 17086 4096 Nov 29 15:05 b</pre></div><p>
+    You can specify arbitrary umask values, depending on your needs.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>umask 111
+<code class="prompt user">&gt; </code>touch c
+<code class="prompt user">&gt; </code>mkdir d
+<code class="prompt user">&gt; </code>ls -on
+total 16
+-rw-rw-rw-. 1 17086    0 Nov 29 15:05 c
+drw-rw-rw-. 2 17086 4096 Nov 29 15:05 d</pre></div><p>
+    Based on your threat model, you can use a stricter umask such as
+    <code class="literal">037</code> to prevent accidental data leakage.
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>umask 037
+<code class="prompt user">&gt; </code>touch e
+<code class="prompt user">&gt; </code>mkdir f
+<code class="prompt user">&gt; </code>ls -on
+total 16
+-rw-r-----. 1 17086    0 Nov 29 15:06 e
+drwxr-----. 2 17086 4096 Nov 29 15:06 f</pre></div><div id="id-1.7.5.4.6.12" data-id-title="Maximum security" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Maximum security</div><p>
+     For maximum security, use a umask of <code class="literal">077</code>. This
+     forces newly created files and directories to be created with no
+     permissions for the group and other users.
+    </p><p>
+     This can be unexpected for users and software and may
+     cause additional load for your support team.
+    </p></div><section class="sect2" id="sec-sec-prot-general-umask-adjust" data-id-title="Adjusting the default umask"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">11.4.1 </span><span class="title-name">Adjusting the default umask</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-umask-adjust">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     You can modify the umask globally for all users by changing the
+     <code class="varname">UMASK</code> value in <code class="filename">/etc/login.defs</code>.
+    </p><div class="verbatim-wrap"><pre class="screen"># Default initial "umask" value used by login(1) on non-PAM enabled systems.
+# Default "umask" value for pam_umask(8) on PAM enabled systems.
+# UMASK is also used by useradd(8) and newusers(8) to set the mode for new
+# home directories.
+# 022 is the default value, but 027, or even 077, could be considered
+# for increased privacy. There is no One True Answer here: each sysadmin
+# must make up their mind.
+UMASK           022</pre></div><p>
+     For individual users, add the umask to the 'gecos' field in
+     <code class="filename">/etc/passwd</code> like this:
+    </p><div class="verbatim-wrap"><pre class="screen">tux:x:1000:100:Tux Linux,UMASK=<em class="replaceable">022</em>:/home/tux:/bin/bash</pre></div><p>
+     You can do the same with <code class="command">yast users</code> by adding
+     <code class="literal">UMASK=<em class="replaceable">022</em></code> to a user's
+     <span class="guimenu">Details</span> › <span class="guimenu">Additional User
+     Information</span>.
+    </p><p>
+     The settings made in <code class="filename">/etc/login.defs</code> and
+     <code class="filename">/etc/passwd</code> are applied by the PAM module
+     <code class="filename">pam_umask.so</code>. For additional configuration options,
+     refer to <code class="command">man pam_umask</code>.
+    </p><p>
+     For the changes to take effect, users need to log out and back in
+     again. Afterwards, use the <code class="command">umask</code> command to verify the
+     umask is set correctly.
+    </p></section></section><section class="sect1" id="sec-sec-prot-general-s-bit" data-id-title="SUID/SGID files"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.5 </span><span class="title-name">SUID/SGID files</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-s-bit">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    When the SUID (set user ID) or SGID (set group ID) bits are set on an
+    executable, it executes with the UID or GID of the owner of the executable
+    rather than that of the person executing it. This means that, for example,
+    all executables that have the SUID bit set and are owned by <code class="systemitem">root</code> are
+    executed with the UID of <code class="systemitem">root</code>. A good example is the <code class="command">passwd</code> command that
+    allows ordinary users to update the password field in the <code class="filename">/etc/shadow</code> file,
+    which is owned by <code class="systemitem">root</code>.
+   </p><p>
+    SUID/SGID bits can be misused when the executable has a
+    security hole. Therefore, you should search the entire system for
+    SUID/SGID executables and document them. To search the entire system for SUID or SGID files, you can run the
+    following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>find /bin /boot /etc /home /lib /lib64 /opt /root /sbin \
+  /srv /tmp /usr /var -type f -perm '/6000' -ls</pre></div><p>
+    You may need to extend the list of directories that are searched if you
+    have a different file system structure.
+   </p><p>
+    SUSE sets the SUID/SGID bit on binary if it is really necessary.
+    Ensure that code
+    developers do not set SUID/SGID bits on their programs if it is not an
+    absolute requirement. You can often use workarounds like removing the
+    executable bit for world/others. However, a better approach is to change
+    the design of the software or use capabilities.
+   </p><p>
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> supports file capabilities to allow more fine-grained
+    privileges to be given to programs rather than the full power of <code class="systemitem">root</code>:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>getcap -v /usr/bin/ping
+/usr/bin/ping = cap_new_raw+eip</pre></div><p>
+    The previous command grants the <code class="literal">CAP_NET_RAW</code> capability
+    to whoever executes <code class="command">ping</code>. In case of vulnerabilities
+    inside <code class="command">ping</code>, an attacker can gain, at most, this
+    capability in contrast with full <code class="systemitem">root</code>.  Whenever possible, file
+    capabilities should be chosen in favor of the SUID bit. But this
+    applies when the binary is SUID to <code class="systemitem">root</code>, not to other users such as
+    <code class="literal">news</code>, <code class="literal">lp</code> and similar.
+   </p></section><section class="sect1" id="sec-sec-prot-general-world-writable-files" data-id-title="World-writable files"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.6 </span><span class="title-name">World-writable files</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-world-writable-files">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    World-writable files are a security risk since they can be modified by any
+    user on the system. Additionally, world-writable directories allow anyone to add or
+    delete files. To locate world-writable files and directories, you can use
+    the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>find /bin /boot /etc /home /lib /lib64 /opt /root /sbin \
+  /srv /tmp /usr /var -type f -perm -2 ! -type l -ls</pre></div><p>
+   You may need to extend the list of directories that are searched if you
+   have a different file system structure.
+   </p><p>
+    The <code class="option">! -type l</code> parameter skips all symbolic links since
+    symbolic links are always world-writable. However, this is not a problem
+    if the target of the link is not world-writable, which is checked
+    by the above find command.
+   </p><p>
+    World-writable directories with the sticky bit such as the <code class="filename">/tmp</code>
+    directory do not allow anyone except the owner of a file to delete or rename it in
+    this directory.
+    The sticky bit makes files stick to the user who created them, and
+    prevents other users from deleting or renaming the files. Therefore,
+    depending on the purpose of the directory, world-writable directories with
+    the sticky bit are not an issue. An example is the
+    <code class="filename">/tmp</code> directory:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ls -ld /tmp
+drwxrwxrwt 18 root root 16384 Dec 23 22:20 /tmp</pre></div><p>
+    The <code class="literal">t</code> mode bit in the output denotes the sticky bit.
+   </p></section><section class="sect1" id="sec-sec-prot-general-orphaned" data-id-title="Orphaned or unowned files"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">11.7 </span><span class="title-name">Orphaned or unowned files</span></span> <a title="Permalink" class="permalink" href="sec-sec-file-management.html#sec-sec-prot-general-orphaned">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/file_management.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Files not owned by any user or group may not necessarily be a security
+    problem in itself. However, unowned files could pose a security problem in
+    the future. For example, if a new user is created and the new user
+    happens to get the same UID as the unowned files have, then this new user
+    automatically becomes the owner of these files.
+   </p><p>
+    To locate files not owned by any user or group, use the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>find /bin /boot /etc /home /lib /lib64 /opt /root /sbin /srv /tmp /usr /var -nouser -o -nogroup</pre></div><p>
+   You may need to extend the list of directories that are searched if you
+   have a different file system structure.
+   </p><p>
+    A different problem is files that were not installed via the packaging
+    system and therefore do not receive updates. You can check for such files
+    with the following command:
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>find /bin /lib /lib64 /usr -path /usr/local -prune -o -type f -a -exec /bin/sh -c "rpm -qf {} &amp;&gt; /dev/null || echo {}" \;</pre></div><p>
+    Run this command as an untrusted user (for example, nobody) since crafted
+    file names may lead to command
+    execution. This should not be a problem since these directories should be writeable by <code class="systemitem">root</code>, but
+    it is still a good security precaution.
+   </p><p>
+    This shows you all files under <code class="filename">/bin</code>,
+    <code class="filename">/lib</code>, <code class="filename">/lib64</code> and
+    <code class="filename">/usr</code> (with the
+    exception of files in <code class="filename">/usr/local</code>) that are not tracked
+    by the package manager. These files may not represent a security issue, but
+    you should be aware of what is not tracked and take the necessary precautions to
+    keep these files up to date.
+   </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="sec-sec-software-management.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 10 </span>Software management</span></a> </div><div><a class="pagination-link next" href="cha-security-cryptofs.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 12 </span>Encrypting partitions and files</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-partitions"><span class="title-number">11.1 </span><span class="title-name">Disk partitions</span></a></span></li><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-file-permissions"><span class="title-number">11.2 </span><span class="title-name">Modifying permissions of certain system files</span></a></span></li><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-home-permissions"><span class="title-number">11.3 </span><span class="title-name">Changing home directory permissions from 755 to 700</span></a></span></li><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-umask"><span class="title-number">11.4 </span><span class="title-name">Default umask</span></a></span></li><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-s-bit"><span class="title-number">11.5 </span><span class="title-name">SUID/SGID files</span></a></span></li><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-world-writable-files"><span class="title-number">11.6 </span><span class="title-name">World-writable files</span></a></span></li><li><span class="sect1"><a href="sec-sec-file-management.html#sec-sec-prot-general-orphaned"><span class="title-number">11.7 </span><span class="title-name">Orphaned or unowned files</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

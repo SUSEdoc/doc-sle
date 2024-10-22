@@ -1,0 +1,1154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Virtualization Guide | Preparing the VM Host Server</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Preparing the VM Host Server | SLES 15 SP6"/>
+<meta name="description" content="Before you can install guest virtual machines, you need to prepare the VM Host Server to provide the guests with the resources that they need for the…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 9. Preparing the VM Host Server"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtualization Guide"/>
+<meta property="og:description" content="Learn all about virtualization and VM management"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtualization Guide"/>
+<meta name="twitter:description" content="Learn all about virtualization and VM management"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "Preparing the VM Host Server",
+  
+    "description": "Preparing the VM Host Server",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-libvirt-overview.html" title="Chapter 8. libvirt daemons"/><link rel="next" href="cha-kvm-inst.html" title="Chapter 10. Guest installation"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-libvirt.html">Managing virtual machines with libvirt</a><span> / </span><a class="crumb" href="cha-libvirt-host.html">Preparing the VM Host Server</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization technology</span></a></li><li><a href="cha-virtualization-scenarios.html" class=" "><span class="title-number">2 </span><span class="title-name">Virtualization scenarios</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to Xen virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to KVM virtualization</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of virtualization components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Virtualization limits and support</span></a></li></ol></li><li class="active"><a href="part-virt-libvirt.html" class="has-children you-are-here"><span class="title-number">II </span><span class="title-name">Managing virtual machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name"><code class="systemitem">libvirt</code> daemons</span></a></li><li><a href="cha-libvirt-host.html" class=" you-are-here"><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">10 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">11 </span><span class="title-name">Basic VM Guest management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">12 </span><span class="title-name">Connecting and authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">13 </span><span class="title-name">Advanced storage topics</span></a></li><li><a href="cha-libvirt-config-gui.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring virtual machines with Virtual Machine Manager</span></a></li><li><a href="cha-libvirt-config-virsh.html" class=" "><span class="title-number">15 </span><span class="title-name">Configuring virtual machines with <code class="command">virsh</code></span></a></li><li><a href="cha-vm-security.html" class=" "><span class="title-number">16 </span><span class="title-name">Enhancing virtual machine security with AMD SEV-SNP</span></a></li><li><a href="sec-libvirt-admin-migrate.html" class=" "><span class="title-number">17 </span><span class="title-name">Migrating VM Guests</span></a></li><li><a href="xen2kvm-migration.html" class=" "><span class="title-number">18 </span><span class="title-name">Xen to KVM migration guide</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-independent features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">19 </span><span class="title-name">Disk cache modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">20 </span><span class="title-name">VM Guest clock settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">21 </span><span class="title-name">libguestfs</span></a></li><li><a href="cha-qemu-ga.html" class=" "><span class="title-number">22 </span><span class="title-name">QEMU guest agent</span></a></li><li><a href="tpm.html" class=" "><span class="title-number">23 </span><span class="title-name">Software TPM emulator</span></a></li><li><a href="virt-crash-dump.html" class=" "><span class="title-number">24 </span><span class="title-name">Creating crash dumps of a VM Guest</span></a></li></ol></li><li><a href="part-virt-xen.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Managing virtual machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">25 </span><span class="title-name">Setting up a virtual machine host</span></a></li><li><a href="cha-xen-network.html" class=" "><span class="title-number">26 </span><span class="title-name">Virtual networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">27 </span><span class="title-name">Managing a virtualization environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">28 </span><span class="title-name">Block devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">29 </span><span class="title-name">Virtualization: configuration options and settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">30 </span><span class="title-name">Administrative tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">31 </span><span class="title-name">XenStore: configuration database shared between domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">32 </span><span class="title-name">Xen as a high-availability virtualization host</span></a></li><li><a href="pv-to-fv.html" class=" "><span class="title-number">33 </span><span class="title-name">Xen: converting a paravirtual (PV) guest into a fully virtual (FV/HVM) guest</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing virtual machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">34 </span><span class="title-name">QEMU overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">35 </span><span class="title-name">Setting up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">36 </span><span class="title-name">Guest installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">37 </span><span class="title-name">Running virtual machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">38 </span><span class="title-name">Virtual machine administration using QEMU monitor</span></a></li></ol></li><li><a href="part-virt-troubleshoot.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-virt-help.html" class=" "><span class="title-number">39 </span><span class="title-name">Integrated help and package documentation</span></a></li><li><a href="cha-virt-logs.html" class=" "><span class="title-number">40 </span><span class="title-name">Gathering system information and logs</span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual machine drivers</span></a></li><li><a href="app-gpu-passthru.html" class=" "><span class="title-number">B </span><span class="title-name">Configuring GPU Pass-Through for NVIDIA cards</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL toolstacks, and the <code class="systemitem">libvirt</code> framework</span></a></li><li><a href="bk10apd.html" class=" "><span class="title-number">D </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-libvirt-host" data-id-title="Preparing the VM Host Server"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">9 </span><span class="title-name">Preparing the VM Host Server</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    Before you can install guest virtual machines, you need to prepare the
+    VM Host Server to provide the guests with the resources that they need for their
+    operation. Specifically, you need to configure:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+        <span class="emphasis"><em>Networking</em></span> so that guests can make use of the
+        network connection provided the host.
+      </p></li><li class="listitem"><p>
+        A <span class="emphasis"><em>storage pool</em></span> reachable from the host so that the
+        guests can store their disk images.
+      </p></li></ul></div><section class="sect1" id="libvirt-host-network" data-id-title="Configuring networks"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.1 </span><span class="title-name">Configuring networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-host-network">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      There are two common network configurations to provide a VM Guest with a
+      network connection:
+    </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+          A <span class="emphasis"><em>network bridge</em></span>. This is the default and
+          recommended way of providing the guests with network connection.
+        </p></li><li class="listitem"><p>
+          A <span class="emphasis"><em>virtual network</em></span> with forwarding enabled.
+        </p></li></ul></div><section class="sect2" id="libvirt-networks-bridged" data-id-title="Network bridge"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.1.1 </span><span class="title-name">Network bridge</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The network bridge configuration provides a Layer 2 switch for
+        VM Guests, switching Layer 2 Ethernet packets between ports on the
+        bridge based on MAC addresses associated with the ports. This gives the
+        VM Guest Layer 2 access to the VM Host Server's network. This configuration
+        is analogous to connecting the VM Guest's virtual Ethernet cable into
+        a hub that is shared with the host and other VM Guests running on the
+        host. The configuration is often referred to as <span class="emphasis"><em>shared
+        physical device</em></span>.
+      </p><p>
+        The network bridge configuration is the default configuration of
+        <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> when configured as a KVM or Xen hypervisor. It is the
+        preferred configuration when you simply want to connect VM Guests to
+        the VM Host Server's LAN.
+      </p><p>
+        Which tool to use to create the network bridge depends on the service
+        you use to manage the network connection on the VM Host Server:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            If a network connection is managed by
+            <code class="systemitem">wicked</code>, use either YaST or the command
+            line to create the network bridge. <code class="systemitem">wicked</code>
+            is the default on server hosts.
+          </p></li><li class="listitem"><p>
+            If a network connection is managed by NetworkManager, use the NetworkManager command
+            line tool <code class="command">nmcli</code> to create the network bridge.
+            NetworkManager is the default on desktop and laptops.
+          </p></li></ul></div><section class="sect3" id="libvirt-networks-bridged-yast" data-id-title="Managing network bridges with YaST"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.1.1.1 </span><span class="title-name">Managing network bridges with YaST</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-yast">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          This section includes procedures to add or remove network bridges
+          with YaST.
+        </p><section class="sect4" id="libvirt-networks-bridged-yast-add" data-id-title="Adding a network bridge"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.1.1.1 </span><span class="title-name">Adding a network bridge</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-yast-add">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To add a network bridge on VM Host Server, follow these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Start
+                <span class="guimenu">YaST</span> › <span class="guimenu">System</span> › <span class="guimenu">Network
+                Settings</span>.
+              </p></li><li class="step"><p>
+                Activate the <span class="guimenu">Overview</span> tab and click
+                <span class="guimenu">Add</span>.
+              </p></li><li class="step"><p>
+                Select <span class="guimenu">Bridge</span> from the <span class="guimenu">Device
+                Type</span> list and enter the bridge device interface name
+                in the <span class="guimenu">Configuration Name</span> entry. Click the
+                <span class="guimenu">Next</span> button to proceed.
+              </p></li><li class="step"><p>
+                In the <span class="guimenu">Address</span> tab, specify networking
+                details such as DHCP/static IP address, subnet mask or host
+                name.
+              </p><p>
+                Using <span class="guimenu">Dynamic Address</span> is only useful when
+                also assigning a device to a bridge that is connected to a DHCP
+                server.
+              </p><p>
+                If you intend to create a virtual bridge that has no connection
+                to a real network device, use <span class="guimenu">Statically assigned IP
+                Address</span>. In this case, it is a good idea to use
+                addresses from the private IP address ranges, for example,
+                <code class="literal">192.168.0.0/16</code>,
+                <code class="literal">172.16.0.0/12</code>, or
+                <code class="literal">10.0.0.0/8</code>.
+              </p><p>
+                To create a bridge that should only serve as a connection
+                between the different guests without connection to the host
+                system, set the IP address to <code class="literal">0.0.0.0</code> and
+                the subnet mask to <code class="literal">255.255.255.255</code>. The
+                network scripts handle this special address as an unset IP
+                address.
+              </p></li><li class="step"><p>
+                Activate the <span class="guimenu">Bridged Devices</span> tab and
+                activate the network devices you want to include in the network
+                bridge.
+              </p></li><li class="step"><p>
+                Click <span class="guimenu">Next</span> to return to the
+                <span class="guimenu">Overview</span> tab and confirm with
+                <span class="guimenu">OK</span>. The new network bridge should now be
+                active on VM Host Server.
+              </p></li></ol></div></div></section><section class="sect4" id="libvirt-networks-bridged-yast-rm" data-id-title="Deleting a network bridge"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.1.1.2 </span><span class="title-name">Deleting a network bridge</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-yast-rm">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To delete an existing network bridge, follow these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Start
+                <span class="guimenu">YaST</span> › <span class="guimenu">System</span> › <span class="guimenu">Network
+                Settings</span>.
+              </p></li><li class="step"><p>
+                Select the bridge device you want to delete from the list in
+                the <span class="guimenu">Overview</span> tab.
+              </p></li><li class="step"><p>
+                Delete the bridge with <span class="guimenu">Delete</span> and confirm
+                with <span class="guimenu">OK</span>.
+              </p></li></ol></div></div></section></section><section class="sect3" id="libvirt-networks-bridged-add-brctl" data-id-title="Managing network bridges from the command line"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.1.1.2 </span><span class="title-name">Managing network bridges from the command line</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-add-brctl">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          This section includes procedures to add or remove network bridges
+          using the command line.
+        </p><section class="sect4" id="libvirt-networks-bridged-add-brctl-add" data-id-title="Adding a network bridge"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.1.2.1 </span><span class="title-name">Adding a network bridge</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-add-brctl-add">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To add a new network bridge device on VM Host Server, follow these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Log in as <code class="systemitem">root</code> on the VM Host Server where you want to create a
+                new network bridge.
+              </p></li><li class="step"><p>
+                Choose a name for the new
+                bridge—<em class="replaceable">virbr_test</em> in our
+                example—and run
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ip link add name <em class="replaceable">VIRBR_TEST</em> type bridge</pre></div></li><li class="step"><p>
+                Check if the bridge was created on VM Host Server:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>bridge vlan
+[...]
+virbr_test  1 PVID Egress Untagged</pre></div><p>
+                <code class="literal">virbr_test</code> is present, but is not associated
+                with any physical network interface.
+              </p></li><li class="step"><p>
+                Bring the network bridge up and add a network interface to the
+                bridge:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ip link set virbr_test up
+<code class="prompt root"># </code>ip link set eth1 master virbr_test</pre></div><div id="id-1.12.4.3.4.4.7.3.3.4.3" data-id-title="Network interface must be unused" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Network interface must be unused</div><p>
+                  You can only assign a network interface that is not yet used
+                  by another network bridge.
+                </p></div></li><li class="step"><p>
+                Optionally, enable STP (see
+                <a class="link" href="https://en.wikipedia.org/wiki/Spanning_Tree_Protocol" target="_blank">Spanning
+                Tree Protocol</a>):
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>bridge link set dev virbr_test cost 4</pre></div></li></ol></div></div></section><section class="sect4" id="libvirt-networks-bridged-add-brctl-del" data-id-title="Deleting a network bridge"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.1.2.2 </span><span class="title-name">Deleting a network bridge</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-add-brctl-del">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To delete an existing network bridge device on VM Host Server from the
+            command line, follow these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Log in as <code class="systemitem">root</code> on the VM Host Server where you want to delete
+                an existing network bridge.
+              </p></li><li class="step"><p>
+                List existing network bridges to identify the name of the
+                bridge to remove:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>bridge vlan
+[...]
+virbr_test  1 PVID Egress Untagged</pre></div></li><li class="step"><p>
+                Delete the bridge:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>ip link delete dev virbr_test</pre></div></li></ol></div></div></section></section><section class="sect3" id="libvirt-networks-bridged-add-nm" data-id-title="Adding a network bridge with nmcli"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.1.1.3 </span><span class="title-name">Adding a network bridge with <code class="command">nmcli</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-bridged-add-nm">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          This section includes procedures to add a network bridge with NetworkManager's
+          command line tool <code class="command">nmcli</code>.
+        </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+              List active network connections:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli connection show --active
+NAME                   UUID                                  TYPE      DEVICE
+Ethernet connection 1  84ba4c22-0cfe-46b6-87bb-909be6cb1214  ethernet  eth0</pre></div></li><li class="step"><p>
+              Add a new bridge device named <code class="literal">br0</code> and verify
+              its creation:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli connection add type bridge ifname br0
+Connection 'bridge-br0' (36e11b95-8d5d-4a8f-9ca3-ff4180eb89f7) \
+successfully added.
+<code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli connection show --active
+NAME                   UUID                                  TYPE      DEVICE
+bridge-br0             36e11b95-8d5d-4a8f-9ca3-ff4180eb89f7  bridge    br0
+Ethernet connection 1  84ba4c22-0cfe-46b6-87bb-909be6cb1214  ethernet  eth0</pre></div></li><li class="step"><p>
+              Optionally, you can view the bridge settings:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli -f bridge connection show bridge-br0
+bridge.mac-address:                     --
+bridge.stp:                             yes
+bridge.priority:                        32768
+bridge.forward-delay:                   15
+bridge.hello-time:                      2
+bridge.max-age:                         20
+bridge.ageing-time:                     300
+bridge.group-forward-mask:              0
+bridge.multicast-snooping:              yes
+bridge.vlan-filtering:                  no
+bridge.vlan-default-pvid:               1
+bridge.vlans:                           --</pre></div></li><li class="step"><p>
+              Link the bridge device to the physical Ethernet device
+              <code class="literal">eth0</code>:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli connection add type bridge-slave ifname eth0 master br0</pre></div></li><li class="step"><p>
+              Disable the <code class="literal">eth0</code> interface and enable the new
+              bridge:
+            </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli connection down "Ethernet connection 1"
+<code class="prompt user">&gt; </code><code class="command">sudo</code> nmcli connection up bridge-br0
+Connection successfully activated (master waiting for slaves) \
+(D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/9)</pre></div></li></ol></div></div></section><section class="sect3" id="sec-xen-net-vlan" data-id-title="Using VLAN interfaces"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.1.1.4 </span><span class="title-name">Using VLAN interfaces</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-xen-net-vlan">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Sometimes it is necessary to create a private connection either
+          between two VM Host Servers or between VM Guest systems. For example, to
+          migrate a VM Guest to hosts in a different network segment. Or to
+          create a private bridge that only VM Guest systems may connect to
+          (even when running on different VM Host Server systems). An easy way to
+          build such connections is to set up VLAN networks.
+        </p><p>
+          VLAN interfaces are commonly set up on the VM Host Server. They either
+          interconnect the different VM Host Server systems, or they may be set up as
+          a physical interface to an otherwise virtual-only bridge. It is even
+          possible to create a bridge with a VLAN as a physical interface that
+          has no IP address in the VM Host Server. That way, the guest systems have
+          no possibility to access the host over this network.
+        </p><p>
+          Run the YaST module
+          <span class="guimenu">System</span> › <span class="guimenu">Network
+          Settings</span>. Follow this procedure to set up the
+          VLAN device:
+        </p><div class="procedure" id="id-1.12.4.3.4.4.9.5" data-id-title="Setting up VLAN interfaces with YaST"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 9.1: </span><span class="title-name">Setting up VLAN interfaces with YaST </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.4.4.9.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+              Click <span class="guimenu">Add</span> to create a new network interface.
+            </p></li><li class="step"><p>
+              In the <span class="guimenu">Hardware Dialog</span>, select <span class="guimenu">Device
+              Type</span> <span class="guimenu">VLAN</span>.
+            </p></li><li class="step"><p>
+              Change the value of <span class="guimenu">Configuration Name</span> to the
+              ID of your VLAN. Be aware VLAN ID <code class="literal">1</code> is
+              commonly used for management purposes.
+            </p></li><li class="step"><p>
+              Click <span class="guimenu">Next</span>.
+            </p></li><li class="step"><p>
+              Select the interface that the VLAN device should connect to below
+              <span class="guimenu">Real Interface for VLAN</span>. If the desired
+              interface does not appear in the list, first set up this
+              interface without an IP address.
+            </p></li><li class="step"><p>
+              Select the desired method for assigning an IP address to the VLAN
+              device.
+            </p></li><li class="step"><p>
+              Click <span class="guimenu">Next</span> to finish the configuration.
+            </p></li></ol></div></div><p>
+          It is also possible to use the VLAN interface as a physical interface
+          of a bridge. This makes it possible to connect several VM Host Server-only
+          networks and allows live migration of VM Guest systems that are
+          connected to such a network.
+        </p><p>
+          YaST does not always allow setting no IP address. However, this may
+          be a desired feature, especially if VM Host Server-only networks should be
+          connected. In this case, use the special address
+          <code class="literal">0.0.0.0</code> with netmask
+          <code class="literal">255.255.255.255</code>. The system scripts handle this
+          address as no IP address set.
+        </p></section></section><section class="sect2" id="libvirt-networks-virtual" data-id-title="Virtual networks"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.1.2 </span><span class="title-name">Virtual networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        <code class="systemitem">libvirt</code>-managed virtual networks are similar to bridged networks, but
+        typically have no Layer 2 connection to the VM Host Server. Connectivity to
+        the VM Host Server's physical network is accomplished with Layer 3
+        forwarding, which introduces additional packet processing on the
+        VM Host Server as compared to a Layer 2 bridged network. Virtual networks
+        also provide DHCP and DNS services for VM Guests. For more information
+        on <code class="systemitem">libvirt</code> virtual networks, see the <em class="citetitle">Network XML
+        format</em> documentation at
+        <a class="link" href="https://libvirt.org/formatnetwork.html" target="_blank">https://libvirt.org/formatnetwork.html</a>.
+      </p><p>
+        A standard <code class="systemitem">libvirt</code> installation on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> already comes with a
+        predefined virtual network named <code class="literal">default</code>. It
+        provides DHCP and DNS services for the network, along with connectivity
+        to the VM Host Server's physical network using the network address
+        translation (NAT) forwarding mode. Although it is predefined, the
+        <code class="literal">default</code> virtual network needs to be explicitly
+        enabled by the administrator. For more information on the forwarding
+        modes supported by <code class="systemitem">libvirt</code>, see the
+        <em class="citetitle">Connectivity</em> section of the <em class="citetitle">Network
+        XML format</em> documentation at
+        <a class="link" href="https://libvirt.org/formatnetwork.html#elementsConnect" target="_blank">https://libvirt.org/formatnetwork.html#elementsConnect</a>.
+      </p><p>
+        <code class="systemitem">libvirt</code>-managed virtual networks can be used to satisfy a wide range
+        of use cases, but are commonly used on VM Host Servers that have a wireless
+        connection or dynamic/sporadic network connectivity, such as laptops.
+        Virtual networks are also useful when the VM Host Server's network has
+        limited IP addresses, allowing forwarding of packets between the
+        virtual network and the VM Host Server's network. However, most server use
+        cases are better suited for the network bridge configuration, where
+        VM Guests are connected to the VM Host Server's LAN.
+      </p><div id="id-1.12.4.3.4.5.5" data-id-title="Enabling forwarding mode" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Enabling forwarding mode</div><p>
+          Enabling forwarding mode in a <code class="systemitem">libvirt</code> virtual network enables
+          forwarding in the VM Host Server by setting
+          <code class="filename">/proc/sys/net/ipv4/ip_forward</code> and
+          <code class="filename">/proc/sys/net/ipv6/conf/all/forwarding</code> to 1,
+          which turns the VM Host Server into a router. Restarting the VM Host Server's
+          network may reset the values and disable forwarding. To avoid this
+          behavior, explicitly enable forwarding in the VM Host Server by editing the
+          <code class="filename">/etc/sysctl.conf</code> file and adding:
+        </p><div class="verbatim-wrap"><pre class="screen">net.ipv4.ip_forward = 1</pre></div><div class="verbatim-wrap"><pre class="screen">net.ipv6.conf.all.forwarding = 1</pre></div></div><section class="sect3" id="libvirt-networks-virtual-vmm" data-id-title="Managing virtual networks with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.1.2.1 </span><span class="title-name">Managing virtual networks with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-vmm">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          You can define, configure and operate virtual networks with Virtual Machine Manager.
+        </p><section class="sect4" id="libvirt-networks-virtual-vmm-define" data-id-title="Defining virtual networks"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.1.1 </span><span class="title-name">Defining virtual networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-vmm-define">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Start Virtual Machine Manager. In the list of available connections, right-click
+                the name of the connection for which you need to configure the
+                virtual network, and then select <span class="guimenu">Details</span>.
+              </p></li><li class="step"><p>
+                In the <span class="guimenu">Connection Details</span> window, click the
+                <span class="guimenu">Virtual Networks</span> tab. You can see the list
+                of all virtual networks available for the current connection.
+                On the right, there are details of the selected virtual
+                network.
+              </p><div class="figure" id="id-1.12.4.3.4.5.6.3.2.2.2"><div class="figure-contents"><div class="mediaobject"><a href="images/libvirt_vmm_conndetails.png"><img src="images/libvirt_vmm_conndetails.png" width="45%" alt="Connection details" title="Connection details"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 9.1: </span><span class="title-name">Connection details </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.4.5.6.3.2.2.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+                To add a new virtual network, click <span class="guimenu">Add</span>.
+              </p></li><li class="step"><p>
+                Specify a name for the new virtual network.
+              </p><div class="figure" id="id-1.12.4.3.4.5.6.3.2.4.2"><div class="figure-contents"><div class="mediaobject"><a href="images/libvirt_vmm_vnet_ipv4.png"><img src="images/libvirt_vmm_vnet_ipv4.png" width="45%" alt="Create virtual network" title="Create virtual network"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 9.2: </span><span class="title-name">Create virtual network </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.4.5.6.3.2.4.2">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></li><li class="step"><p>
+                Specify the networking mode. For the <span class="guimenu">NAT</span> and
+                <span class="guimenu">Routed</span> types, you can specify to which
+                device to forward network communications. While
+                <span class="guimenu">NAT</span> (network address translation) remaps the
+                virtual network address space and allows sharing a single IP
+                address, <span class="guimenu">Routed</span> forwards packets from the
+                virtual network to the VM Host Server's physical network with no
+                translation.
+              </p></li><li class="step"><p>
+                If you need IPv4 networking, activate <span class="guimenu">Enable
+                IPv4</span> and specify the IPv4 network address. If you
+                need a DHCP server, activate <span class="guimenu">Enable DHCPv4</span>
+                and specify the assignable IP address range.
+              </p></li><li class="step"><p>
+                If you need IPv6 networking, activate <span class="guimenu">Enable
+                IPv6</span> and specify the IPv6 network address. If you
+                need a DHCP server, activate <span class="guimenu">Enable DHCPv6</span>
+                and specify the assignable IP address range.
+              </p></li><li class="step"><p>
+                To specify a different domain name than the name of the virtual
+                network, select <span class="guimenu">Custom</span> under <span class="guimenu">DNS
+                domain name</span> and enter it here.
+              </p></li><li class="step"><p>
+                Click <span class="guimenu">Finish</span> to create the new virtual
+                network. On the VM Host Server, a new virtual network bridge
+                <code class="literal">virbr<em class="replaceable">X</em></code> is
+                available, which corresponds to the newly created virtual
+                network. You can check with <code class="command">bridge link</code>.
+                <code class="systemitem">libvirt</code> automatically adds iptables rules to allow traffic
+                to/from guests attached to the new
+                <span class="emphasis"><em>virbr<em class="replaceable">X</em></em></span> device.
+              </p></li></ol></div></div></section><section class="sect4" id="libvirt-networks-virtual-vmm-start" data-id-title="Starting virtual networks"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.1.2 </span><span class="title-name">Starting virtual networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-vmm-start">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To start a virtual network that is temporarily stopped, follow
+            these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Start Virtual Machine Manager. In the list of available connections, right-click
+                the name of the connection for which you need to configure the
+                virtual network, and then select <span class="guimenu">Details</span>.
+              </p></li><li class="step"><p>
+                In the <span class="guimenu">Connection Details</span> window, click the
+                <span class="guimenu">Virtual Networks</span> tab. You can see the list
+                of all virtual networks available for the current connection.
+              </p></li><li class="step"><p>
+                To start the virtual network, click <span class="guimenu">Start</span>.
+              </p></li></ol></div></div></section><section class="sect4" id="libvirt-networks-virtual-vmm-stop" data-id-title="Stopping virtual networks"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.1.3 </span><span class="title-name">Stopping virtual networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-vmm-stop">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To stop an active virtual network, follow these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Start Virtual Machine Manager. In the list of available connections, right-click
+                the name of the connection for which you need to configure the
+                virtual network, and then select <span class="guimenu">Details</span>.
+              </p></li><li class="step"><p>
+                In the <span class="guimenu">Connection Details</span> window, click the
+                <span class="guimenu">Virtual Networks</span> tab. You can see the list
+                of all virtual networks available for the current connection.
+              </p></li><li class="step"><p>
+                Select the virtual network to be stopped, then click
+                <span class="guimenu">Stop</span>.
+              </p></li></ol></div></div></section><section class="sect4" id="libvirt-networks-virtual-vmm-delete" data-id-title="Deleting virtual networks"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.1.4 </span><span class="title-name">Deleting virtual networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-vmm-delete">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To delete a virtual network from VM Host Server, follow these steps:
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                Start Virtual Machine Manager. In the list of available connections, right-click
+                the name of the connection for which you need to configure the
+                virtual network, and then select <span class="guimenu">Details</span>.
+              </p></li><li class="step"><p>
+                In the <span class="guimenu">Connection Details</span> window, click the
+                <span class="guimenu">Virtual Networks</span> tab. You can see the list
+                of all virtual networks available for the current connection.
+              </p></li><li class="step"><p>
+                Select the virtual network to be deleted, then click
+                <span class="guimenu">Delete</span>.
+              </p></li></ol></div></div></section><section class="sect4" id="libvirt-networks-virtual-vmm-nsswitch" data-id-title="Obtaining IP addresses with nsswitch for NAT networks (in KVM)"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.1.5 </span><span class="title-name">Obtaining IP addresses with <code class="command">nsswitch</code> for NAT networks (in KVM)</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-vmm-nsswitch">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                On VM Host Server, install libvirt-nss, which provides NSS support
+                for libvirt:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper in libvirt-nss</pre></div></li><li class="listitem"><p>
+                Add <code class="literal">libvirt</code> to
+                <code class="filename">/etc/nsswitch.conf</code>:
+              </p><div class="verbatim-wrap"><pre class="screen">...
+hosts:  files libvirt mdns_minimal [NOTFOUND=return] dns
+...</pre></div></li><li class="listitem"><p>
+                If NSCD is running, restart it:
+              </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart nscd</pre></div></li></ul></div><p>
+            Now you can reach the guest system by name from the host.
+          </p><p>
+            The NSS module has limited functionality. It reads
+            <code class="filename">/var/lib/libvirt/dnsmasq/*.status</code> files to
+            find the host name and corresponding IP addresses in a JSON record
+            describing each lease provided by <code class="command">dnsmasq</code>. Host
+            name translation can only be done on those VM Host Servers using a
+            libvirt-managed bridged network backed by
+            <code class="command">dnsmasq</code>.
+          </p></section></section><section class="sect3" id="libvirt-networks-virtual-virsh" data-id-title="Managing virtual networks with virsh"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2 </span><span class="title-name">Managing virtual networks with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          You can manage <code class="systemitem">libvirt</code>-provided virtual networks with the
+          <code class="command">virsh</code> command line tool. To view all network
+          related <code class="command">virsh</code> commands, run
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh help network
+Networking (help keyword 'network'):
+ net-autostart                  autostart a network
+        net-create                     create a network from an XML file
+        net-define                     define (but don't start) a network from an XML file
+        net-destroy                    destroy (stop) a network
+        net-dumpxml                    network information in XML
+        net-edit                       edit XML configuration for a network
+        net-event                      Network Events
+        net-info                       network information
+        net-list                       list networks
+        net-name                       convert a network UUID to network name
+        net-start                      start a (previously defined) inactive network
+        net-undefine                   undefine an inactive network
+        net-update                     update parts of an existing network's configuration
+ net-uuid                       convert a network name to network UUID</pre></div><p>
+          To view brief help information for a specific
+          <code class="command">virsh</code> command, run <code class="command">virsh help
+          <em class="replaceable">VIRSH_COMMAND</em></code>:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh help net-create
+  NAME
+    net-create - create a network from an XML file
+
+  SYNOPSIS
+    net-create &lt;file&gt;
+
+  DESCRIPTION
+    Create a network.
+
+  OPTIONS
+    [--file] &lt;string&gt;  file containing an XML network description</pre></div><section class="sect4" id="libvirt-networks-virtual-virsh-create" data-id-title="Creating a network"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2.1 </span><span class="title-name">Creating a network</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh-create">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To create a new <span class="emphasis"><em>running</em></span> virtual network, run
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-create <em class="replaceable">VNET_DEFINITION.xml</em></pre></div><p>
+            The <em class="replaceable">VNET_DEFINITION.xml</em> XML file
+            includes the definition of the virtual network that <code class="systemitem">libvirt</code>
+            accepts.
+          </p><p>
+            To define a new virtual network without activating it, run
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-define <em class="replaceable">VNET_DEFINITION.xml</em></pre></div><p>
+            The following examples illustrate definitions of different types of
+            virtual networks.
+          </p><div class="complex-example"><div class="example" id="ex-libvirt-net-nat" data-id-title="NAT-based network"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 9.1: </span><span class="title-name">NAT-based network </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#ex-libvirt-net-nat">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+              The following configuration allows VM Guests outgoing
+              connectivity if it is available on the VM Host Server. Without VM Host Server
+              networking, it allows guests to talk directly to each other.
+            </p><div class="verbatim-wrap"><pre class="screen">&lt;network&gt;
+&lt;name&gt;vnet_nated&lt;/name&gt;<span class="callout" id="vnet-xml-name">1</span>
+&lt;bridge name="virbr1"/&gt;<span class="callout" id="vnet-xml-bridge">2</span>
+ &lt;forward mode="nat"/&gt;<span class="callout" id="vnet-xml-forward">3</span>
+ &lt;ip address="192.168.122.1" netmask="255.255.255.0"&gt;<span class="callout" id="vnet-xml-ip">4</span>
+  &lt;dhcp&gt;
+   &lt;range start="192.168.122.2" end="192.168.122.254"/&gt;<span class="callout" id="vnet-xml-dhcp">5</span>
+   &lt;host mac="52:54:00:c7:92:da" name="host1.testing.com" \
+    ip="192.168.1.101"/&gt;<span class="callout" id="vnet-xml-dhcp-host">6</span>
+   &lt;host mac="52:54:00:c7:92:db" name="host2.testing.com" \
+    ip="192.168.1.102"/&gt;
+   &lt;host mac="52:54:00:c7:92:dc" name="host3.testing.com" \
+    ip="192.168.1.103"/&gt;
+  &lt;/dhcp&gt;
+ &lt;/ip&gt;
+&lt;/network&gt;</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-name"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The name of the new virtual network.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-bridge"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The name of the bridge device used to construct the virtual
+                  network. When defining a new network with a &lt;forward&gt;
+                  mode of <code class="literal">"nat"</code> or
+                  <code class="literal">"route"</code> (or an isolated network with no
+                  &lt;forward&gt; element), <code class="systemitem">libvirt</code> automatically generates a
+                  unique name for the bridge device if none is given.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-forward"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Inclusion of the &lt;forward&gt; element indicates that the
+                  virtual network is connected to the physical LAN. The
+                  <code class="literal">mode</code> attribute specifies the forwarding
+                  method. The most common modes are <code class="literal">"nat"</code>
+                  (Network Address Translation, the default),
+                  <code class="literal">"route"</code> (direct forwarding to the physical
+                  network, no address translation), and
+                  <code class="literal">"bridge"</code> (network bridge configured
+                  outside of <code class="systemitem">libvirt</code>). If the &lt;forward&gt; element is not
+                  specified, the virtual network is isolated from other
+                  networks. For a complete list of forwarding modes, see
+                  <a class="link" href="https://libvirt.org/formatnetwork.html#elementsConnect" target="_blank">https://libvirt.org/formatnetwork.html#elementsConnect</a>.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-ip"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The IP address and netmask for the network bridge.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-dhcp"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  Enable DHCP server for the virtual network, offering IP
+                  addresses ranging from the specified <code class="literal">start</code>
+                  and <code class="literal">end</code> attributes.
+                </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-dhcp-host"><span class="callout">6</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The optional &lt;host&gt; elements specify hosts that are
+                  given names and predefined IP addresses by the built-in DHCP
+                  server. Any IPv4 host element must specify the following: the
+                  MAC address of the host to be assigned a given name, the IP
+                  to be assigned to that host, and the name to be given to that
+                  host by the DHCP server. An IPv6 host element differs
+                  slightly from that for IPv4: there is no
+                  <code class="literal">mac</code> attribute since a MAC address has no
+                  defined meaning in IPv6. Instead, the <code class="literal">name</code>
+                  attribute is used to identify the host to be assigned the
+                  IPv6 address. For DHCPv6, the <code class="literal">name</code> is the
+                  plain name of the client host sent by the client to the
+                  server. This method of assigning a specific IP address can
+                  also be used instead of the <code class="literal">mac</code> attribute
+                  for IPv4.
+                </p></td></tr></table></div></div></div></div><div class="complex-example"><div class="example" id="id-1.12.4.3.4.5.7.6.9" data-id-title="Routed network"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 9.2: </span><span class="title-name">Routed network </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.4.5.7.6.9">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+              The following configuration routes traffic from the virtual
+              network to the LAN without applying any NAT. The IP address range
+              must be preconfigured in the routing tables of the router on the
+              VM Host Server network.
+            </p><div class="verbatim-wrap"><pre class="screen">&lt;network&gt;
+ &lt;name&gt;vnet_routed&lt;/name&gt;
+ &lt;bridge name="virbr1"/&gt;
+ &lt;forward mode="route" dev="eth1"/&gt;<span class="callout" id="vnet-xml-route">1</span>
+ &lt;ip address="192.168.122.1" netmask="255.255.255.0"&gt;
+  &lt;dhcp&gt;
+   &lt;range start="192.168.122.2" end="192.168.122.254"/&gt;
+  &lt;/dhcp&gt;
+ &lt;/ip&gt;
+&lt;/network&gt;</pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#vnet-xml-route"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                  The guest traffic may only go out via the
+                  <code class="systemitem">eth1</code> network device on the VM Host Server.
+                </p></td></tr></table></div></div></div></div><div class="complex-example"><div class="example" id="id-1.12.4.3.4.5.7.6.10" data-id-title="Isolated network"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 9.3: </span><span class="title-name">Isolated network </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.4.5.7.6.10">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+              This configuration provides an isolated private network. The
+              guests can talk to each other, and to VM Host Server, but cannot reach
+              any other machines on the LAN, as the &lt;forward&gt; element is
+              missing in the XML description.
+            </p><div class="verbatim-wrap"><pre class="screen">&lt;network&gt;
+ &lt;name&gt;vnet_isolated&lt;/name&gt;
+ &lt;bridge name="virbr3"/&gt;
+ &lt;ip address="192.168.152.1" netmask="255.255.255.0"&gt;
+  &lt;dhcp&gt;
+   &lt;range start="192.168.152.2" end="192.168.152.254"/&gt;
+  &lt;/dhcp&gt;
+ &lt;/ip&gt;
+ &lt;/network&gt;</pre></div></div></div></div><div class="complex-example"><div class="example" id="id-1.12.4.3.4.5.7.6.11" data-id-title="Using an existing bridge on VM Host Server"><div class="title-container"><div class="example-title-wrap"><div class="example-title"><span class="title-number-name"><span class="title-number">Example 9.4: </span><span class="title-name">Using an existing bridge on VM Host Server </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.4.5.7.6.11">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div><div class="example-contents"><p>
+              This configuration shows how to use an existing VM Host Server's
+              network bridge <code class="literal">br0</code>. VM Guests are directly
+              connected to the physical network. Their IP addresses are all on
+              the subnet of the physical network, and there are no restrictions
+              on incoming or outgoing connections.
+            </p><div class="verbatim-wrap"><pre class="screen">&lt;network&gt;
+        &lt;name&gt;host-bridge&lt;/name&gt;
+        &lt;forward mode="bridge"/&gt;
+        &lt;bridge name="br0"/&gt;
+&lt;/network&gt;</pre></div></div></div></div></section><section class="sect4" id="libvirt-networks-virtual-virsh-list" data-id-title="Listing networks"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2.2 </span><span class="title-name">Listing networks</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh-list">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To list all virtual networks available to <code class="systemitem">libvirt</code>, run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-list --all
+
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ crowbar              active     yes           yes
+ vnet_nated           active     yes           yes
+ vnet_routed          active     yes           yes
+ vnet_isolated        inactive   yes           yes</pre></div><p>
+            To list available domains, run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh list
+ Id    Name                           State
+----------------------------------------------------
+ 1     nated_sles12sp3                running
+ ...</pre></div><p>
+            To get a list of interfaces of a running domain, run
+            <code class="option">domifaddr <em class="replaceable">DOMAIN</em></code>, or
+            optionally specify the interface to limit the output to this
+            interface. By default, it additionally outputs their IP and MAC
+            addresses:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh domifaddr nated_sles12sp3 --interface vnet0 --source lease
+ Name       MAC address          Protocol     Address
+-------------------------------------------------------------------------------
+ vnet0      52:54:00:9e:0d:2b    ipv6         fd00:dead:beef:55::140/64
+ -          -                    ipv4         192.168.100.168/24</pre></div><p>
+            To print brief information of all virtual interfaces associated
+            with the specified domain, run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh domiflist nated_sles12sp3
+Interface  Type       Source       Model       MAC
+---------------------------------------------------------
+vnet0      network    vnet_nated   virtio      52:54:00:9e:0d:2b</pre></div></section><section class="sect4" id="libvirt-networks-virtual-virsh-info" data-id-title="Getting details about a network"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2.3 </span><span class="title-name">Getting details about a network</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh-info">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To get detailed information about a network, run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-info vnet_routed
+Name:           vnet_routed
+UUID:           756b48ff-d0c6-4c0a-804c-86c4c832a498
+Active:         yes
+Persistent:     yes
+Autostart:      yes
+Bridge:         virbr5</pre></div></section><section class="sect4" id="libvirt-networks-virtual-virsh-start" data-id-title="Starting a network"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2.4 </span><span class="title-name">Starting a network</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh-start">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To start an inactive network that was already defined, find its
+            name (or unique identifier, UUID) with:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-list --inactive
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ vnet_isolated        inactive   yes           yes</pre></div><p>
+            Then run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-start vnet_isolated
+Network vnet_isolated started</pre></div></section><section class="sect4" id="libvirt-networks-virtual-virsh-stop" data-id-title="Stopping a network"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2.5 </span><span class="title-name">Stopping a network</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh-stop">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To stop an active network, find its name (or unique identifier,
+            UUID) with:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-list --inactive
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ vnet_isolated        active     yes           yes</pre></div><p>
+            Then run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-destroy vnet_isolated
+Network vnet_isolated destroyed</pre></div></section><section class="sect4" id="libvirt-networks-virtual-virsh-undefine" data-id-title="Removing a network"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.1.2.2.6 </span><span class="title-name">Removing a network</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-networks-virtual-virsh-undefine">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            To remove the definition of an inactive network from VM Host Server
+            permanently, run:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> virsh net-undefine vnet_isolated
+Network vnet_isolated has been undefined</pre></div></section></section></section></section><section class="sect1" id="libvirt-host-storage" data-id-title="Configuring a storage pool"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.2 </span><span class="title-name">Configuring a storage pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-host-storage">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      When managing a VM Guest on the VM Host Server itself, you can access the
+      complete file system of the VM Host Server to attach or create virtual hard
+      disks or to attach existing images to the VM Guest. However, this is not
+      possible when managing VM Guests from a remote host. For this reason,
+      <code class="systemitem">libvirt</code> supports so called <span class="quote">“<span class="quote">Storage Pools</span>”</span>, which can be
+      accessed from remote machines.
+    </p><div id="id-1.12.4.3.5.3" data-id-title="CD/DVD ISO images" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: CD/DVD ISO images</div><p>
+        To be able to access CD/DVD ISO images on the VM Host Server from remote
+        clients, they also need to be placed in a storage pool.
+      </p></div><p>
+      <code class="systemitem">libvirt</code> knows two different types of storage: volumes and pools.
+    </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.5.5.1"><span class="term">Storage volume</span></dt><dd><p>
+            A storage volume is a storage device that can be assigned to a
+            guest—a virtual disk or a CD/DVD/floppy image. Physically, it
+            can be a block device, for example, a partition or a logical
+            volume, or a file on the VM Host Server.
+          </p></dd><dt id="id-1.12.4.3.5.5.2"><span class="term">Storage pool</span></dt><dd><p>
+            A storage pool is a storage resource on the VM Host Server that can be
+            used for storing volumes, similar to network storage for a desktop
+            machine. Physically it can be one of the following types:
+          </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.5.5.2.2.2.1"><span class="term">File system directory (<span class="guimenu">dir</span>)</span></dt><dd><p>
+                  A directory for hosting image files. The files can be either
+                  one of the supported disk formats (raw or qcow2), or ISO
+                  images.
+                </p></dd><dt id="id-1.12.4.3.5.5.2.2.2.2"><span class="term">Physical disk device (<span class="guimenu">disk</span>)</span></dt><dd><p>
+                  Use a complete physical disk as storage. A partition is
+                  created for each volume that is added to the pool.
+                </p></dd><dt id="id-1.12.4.3.5.5.2.2.2.3"><span class="term">Pre-formatted block device (<span class="guimenu">fs</span>)</span></dt><dd><p>
+                  Specify a partition to be used in the same way as a file
+                  system directory pool (a directory for hosting image files).
+                  The only difference to using a file system directory is that
+                  <code class="systemitem">libvirt</code> takes care of mounting the device.
+                </p></dd><dt id="id-1.12.4.3.5.5.2.2.2.4"><span class="term">iSCSI target (iscsi)</span></dt><dd><p>
+                  Set up a pool on an iSCSI target. You need to have been
+                  logged in to the volume once before to use it with <code class="systemitem">libvirt</code>.
+                  Use the YaST <span class="guimenu">iSCSI Initiator</span> to detect
+                  and log in to a volume<span class="phrase">, see
+                  <span class="intraxref">Book “Storage Administration Guide”</span> for details</span>. Volume
+                  creation on iSCSI pools is not supported; instead, each
+                  existing Logical Unit Number (LUN) represents a volume. Each
+                  volume/LUN also needs a valid (empty) partition table or disk
+                  label before you can use it. If missing, use
+                  <code class="command">fdisk</code> to add it:
+                </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> fdisk -cu /dev/disk/by-path/ip-192.168.2.100:3260-iscsi-iqn.2010-10.com.example:[...]-lun-2
+Device contains neither a valid DOS partition table, nor Sun, SGI
+or OSF disklabel
+Building a new DOS disklabel with disk identifier 0xc15cdc4e.
+Changes will remain in memory only, until you decide to write them.
+After that, of course, the previous content won't be recoverable.
+
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.</pre></div></dd><dt id="id-1.12.4.3.5.5.2.2.2.5"><span class="term">LVM volume group (logical)</span></dt><dd><p>
+                  Use an LVM volume group as a pool. You can either use a
+                  predefined volume group, or create a group by specifying the
+                  devices to use. Storage volumes are created as partitions on
+                  the volume.
+                </p><div id="id-1.12.4.3.5.5.2.2.2.5.2.2" data-id-title="Deleting the LVM-based pool" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Deleting the LVM-based pool</div><p>
+                    When the LVM-based pool is deleted in the Storage Manager,
+                    the volume group is deleted as well. This results in a
+                    non-recoverable loss of all data stored on the pool.
+                  </p></div></dd><dt id="id-1.12.4.3.5.5.2.2.2.6"><span class="term">Multipath devices (<span class="guimenu">mpath</span>)</span></dt><dd><p>
+                  At the moment, multipathing support is limited to assigning
+                  existing devices to the guests. Volume creation or
+                  configuring multipathing from within <code class="systemitem">libvirt</code> is not
+                  supported.
+                </p></dd><dt id="id-1.12.4.3.5.5.2.2.2.7"><span class="term">Network exported directory (<span class="guimenu">netfs</span>)</span></dt><dd><p>
+                  Specify a network directory to be used in the same way as a
+                  file system directory pool (a directory for hosting image
+                  files). The only difference to using a file system directory
+                  is that <code class="systemitem">libvirt</code> takes care of mounting the directory. The
+                  supported protocol is NFS.
+                </p></dd><dt id="id-1.12.4.3.5.5.2.2.2.8"><span class="term">SCSI host adapter (<span class="guimenu">scsi</span>)</span></dt><dd><p>
+                  Use an SCSI host adapter in almost the same way as an iSCSI
+                  target. We recommend to use a device name from
+                  <code class="filename">/dev/disk/by-*</code> rather than
+                  <code class="filename">/dev/sd<em class="replaceable">X</em></code>. The
+                  latter can change, for example, when adding or removing hard
+                  disks. Volume creation on iSCSI pools is not supported.
+                  Instead, each existing LUN (Logical Unit Number) represents a
+                  volume.
+                </p></dd></dl></div></dd></dl></div><div id="id-1.12.4.3.5.6" data-id-title="Security considerations" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Security considerations</div><p>
+        To avoid data loss or data corruption, do not attempt to use resources
+        such as LVM volume groups, iSCSI targets, etc., that are also used to
+        build storage pools on the VM Host Server. There is no need to connect to
+        these resources from the VM Host Server or to mount them on the
+        VM Host Server—<code class="systemitem">libvirt</code> takes care of this.
+      </p><p>
+        Do not mount partitions on the VM Host Server by label. Under certain
+        circumstances it is possible that a partition is labeled from within a
+        VM Guest with a name existing on the VM Host Server.
+      </p></div><section class="sect2" id="sec-libvirt-storage-virsh" data-id-title="Managing storage with virsh"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.2.1 </span><span class="title-name">Managing storage with <code class="command">virsh</code></span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-virsh">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Managing storage from the command line is also possible by using
+        <code class="command">virsh</code>. However, creating storage pools is currently
+        not supported by SUSE. Therefore, this section is restricted to
+        documenting functions such as starting, stopping and deleting pools,
+        and volume management.
+      </p><p>
+        A list of all <code class="command">virsh</code> subcommands for managing pools
+        and volumes is available by running <code class="command">virsh help pool</code>
+        and <code class="command">virsh help volume</code>, respectively.
+      </p><section class="sect3" id="sec-libvirt-storage-virsh-list-pools" data-id-title="Listing pools and volumes"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.1.1 </span><span class="title-name">Listing pools and volumes</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-virsh-list-pools">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          List all pools currently active by executing the following command.
+          To also list inactive pools, add the option <code class="option">--all</code>:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-list --details</pre></div><p>
+          Details about a specific pool can be obtained with the
+          <code class="literal">pool-info</code> subcommand:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-info <em class="replaceable">POOL</em></pre></div><p>
+          By default, volumes can only be listed per pool. To list all volumes
+          from a pool, enter the following command.
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh vol-list --details <em class="replaceable">POOL</em></pre></div><p>
+          At the moment <code class="command">virsh</code> offers no tools to show
+          whether a volume is used by a guest or not. The following procedure
+          describes a way to list volumes from all pools that are currently
+          used by a VM Guest.
+        </p><div class="procedure" id="pro-libvirt-storage-virsh-list-vols" data-id-title="Listing all storage volumes currently used on a VM Host Server"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 9.2: </span><span class="title-name">Listing all storage volumes currently used on a VM Host Server </span></span><a title="Permalink" class="permalink" href="cha-libvirt-host.html#pro-libvirt-storage-virsh-list-vols">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+              Create an XSLT stylesheet by saving the following content to a
+              file, for example, ~/libvirt/guest_storage_list.xsl:
+            </p><div class="verbatim-wrap"><pre class="screen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;xsl:output method="text"/&gt;
+  &lt;xsl:template match="text()"/&gt;
+  &lt;xsl:strip-space elements="*"/&gt;
+  &lt;xsl:template match="disk"&gt;
+    &lt;xsl:text&gt;  &lt;/xsl:text&gt;
+    &lt;xsl:value-of select="(source/@file|source/@dev|source/@dir)[1]"/&gt;
+    &lt;xsl:text&gt;&amp;#10;&lt;/xsl:text&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</pre></div></li><li class="step"><p>
+              Run the following commands in a shell. It is assumed that the
+              guest's XML definitions are all stored in the default location
+              (<code class="filename">/etc/libvirt/qemu</code>).
+              <code class="command">xsltproc</code> is provided by the package
+              <code class="systemitem">libxslt</code>.
+            </p><div class="verbatim-wrap"><pre class="screen">SSHEET="$HOME/libvirt/guest_storage_list.xsl"
+cd /etc/libvirt/qemu
+for FILE in *.xml; do
+  basename $FILE .xml
+  xsltproc $SSHEET $FILE
+done</pre></div></li></ol></div></div></section><section class="sect3" id="sec-libvirt-storage-virsh-start-pools" data-id-title="Starting, stopping, and deleting pools"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.1.2 </span><span class="title-name">Starting, stopping, and deleting pools</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-virsh-start-pools">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Use the <code class="command">virsh</code> pool subcommands to start, stop or
+          delete a pool. Replace <em class="replaceable">POOL</em> with the
+          pool's name or its UUID in the following examples:
+        </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.5.7.5.3.1"><span class="term">Stopping a pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-destroy <em class="replaceable">POOL</em></pre></div><div id="id-1.12.4.3.5.7.5.3.1.2.2" data-id-title="A pools state does not affect attached volumes" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: A pool's state does not affect attached volumes</div><p>
+                  Volumes from a pool attached to VM Guests are always
+                  available, regardless of the pool's state
+                  (<span class="guimenu">Active</span> (stopped) or
+                  <span class="guimenu">Inactive</span> (started)). The state of the pool
+                  solely affects the ability to attach volumes to a VM Guest
+                  via remote management.
+                </p></div></dd><dt id="id-1.12.4.3.5.7.5.3.2"><span class="term">Deleting a pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-delete <em class="replaceable">POOL</em></pre></div><div id="id-1.12.4.3.5.7.5.3.2.2.2" data-id-title="Deleting storage pools" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Deleting storage pools</div><p>
+                  See <a class="xref" href="cha-libvirt-host.html#deleting-storage-pools" title="Warning: Deleting storage pools">Warning: Deleting storage pools</a>
+                </p></div></dd><dt id="id-1.12.4.3.5.7.5.3.3"><span class="term">Starting a pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-start <em class="replaceable">POOL</em></pre></div></dd><dt id="id-1.12.4.3.5.7.5.3.4"><span class="term">Enable autostarting a pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-autostart <em class="replaceable">POOL</em></pre></div><p>
+                Only pools that are marked to autostart are automatically
+                started if the VM Host Server reboots.
+              </p></dd><dt id="id-1.12.4.3.5.7.5.3.5"><span class="term">Disable autostarting a pool</span></dt><dd><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh pool-autostart <em class="replaceable">POOL</em> --disable</pre></div></dd></dl></div></section><section class="sect3" id="sec-libvirt-storage-virsh-add-volumes" data-id-title="Adding volumes to a storage pool"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.1.3 </span><span class="title-name">Adding volumes to a storage pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-virsh-add-volumes">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          <code class="command">virsh</code> offers two ways to add volumes to storage
+          pools: either from an XML definition with
+          <code class="literal">vol-create</code> and <code class="literal">vol-create-from</code>
+          or via command line arguments with <code class="literal">vol-create-as</code>.
+          The first two methods are currently not supported by SUSE,
+          therefore this section focuses on the subcommand
+          <code class="literal">vol-create-as</code>.
+        </p><p>
+          To add a volume to an existing pool, enter the following command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh vol-create-as <em class="replaceable">POOL</em><span class="callout" id="co-vol-create-as-pool">1</span><em class="replaceable">NAME</em><span class="callout" id="co-vol-create-as-name">2</span> 12G --format<span class="callout" id="co-vol-create-as-capacity">3</span><em class="replaceable">raw|qcow2</em><span class="callout" id="co-vol-create-as-format">4</span> --allocation 4G<span class="callout" id="co-vol-create-as-alloc">5</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-pool"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+              Name of the pool to which the volume should be added
+            </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-name"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+              Name of the volume
+            </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-capacity"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+              Size of the image, in this example 12 gigabytes. Use the suffixes
+              k, M, G, T for kilobyte, megabyte, gigabyte, and terabyte,
+              respectively.
+            </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-format"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+              Format of the volume. SUSE currently supports
+              <code class="literal">raw</code> and <code class="literal">qcow2</code>.
+            </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-create-as-alloc"><span class="callout">5</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+              Optional parameter. By default, <code class="command">virsh</code> creates
+              a sparse image file that grows on demand. Specify the amount of
+              space that should be allocated with this parameter (4 gigabytes
+              in this example). Use the suffixes k, M, G, T for kilobyte,
+              megabyte, gigabyte, and terabyte, respectively.
+            </p><p>
+              When not specifying this parameter, a sparse image file with no
+              allocation is generated. To create a non-sparse volume, specify
+              the whole image size with this parameter (would be
+              <code class="literal">12G</code> in this example).
+            </p></td></tr></table></div><section class="sect4" id="sec-libvirt-storage-virsh-add-volumes-clone" data-id-title="Cloning existing volumes"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.2.1.3.1 </span><span class="title-name">Cloning existing volumes</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-virsh-add-volumes-clone">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            Another way to add volumes to a pool is to clone an existing
+            volume. The new instance is always created in the same pool as the
+            original.
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh vol-clone <em class="replaceable">NAME_EXISTING_VOLUME</em><span class="callout" id="co-vol-clone-existing">1</span><em class="replaceable">NAME_NEW_VOLUME</em><span class="callout" id="co-vol-clone-new">2</span> --pool <em class="replaceable">POOL</em><span class="callout" id="co-vol-clone-pool">3</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-clone-existing"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                Name of the existing volume that should be cloned
+              </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-clone-new"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                Name of the new volume
+              </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-vol-clone-pool"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+                Optional parameter. <code class="systemitem">libvirt</code> tries to locate the existing
+                volume automatically. If that fails, specify this parameter.
+              </p></td></tr></table></div></section></section><section class="sect3" id="sec-libvirt-storage-virsh-del-volumes" data-id-title="Deleting volumes from a storage pool"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.1.4 </span><span class="title-name">Deleting volumes from a storage pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-virsh-del-volumes">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          To permanently delete a volume from a pool, use the subcommand
+          <code class="literal">vol-delete</code>:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh vol-delete <em class="replaceable">NAME</em> --pool <em class="replaceable">POOL</em></pre></div><p>
+          <code class="option">--pool</code> is optional. <code class="systemitem">libvirt</code> tries to locate the
+          volume automatically. If that fails, specify this parameter.
+        </p><div id="id-1.12.4.3.5.7.7.5" data-id-title="No checks upon volume deletion" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: No checks upon volume deletion</div><p>
+            A volume is deleted in any case, regardless of whether it is
+            currently used in an active or inactive VM Guest. There is no way
+            to recover a deleted volume.
+          </p><p>
+            Whether a volume is used by a VM Guest can only be detected by
+            using by the method described in
+            <a class="xref" href="cha-libvirt-host.html#pro-libvirt-storage-virsh-list-vols" title="Listing all storage volumes currently used on a VM Host Server">Procedure 9.2, “Listing all storage volumes currently used on a VM Host Server”</a>.
+          </p></div></section><section class="sect3" id="libvirt-storage-virsh-attach-volumes" data-id-title="Attaching volumes to a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.1.5 </span><span class="title-name">Attaching volumes to a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-storage-virsh-attach-volumes">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          After you create a volume as described in
+          <a class="xref" href="cha-libvirt-host.html#sec-libvirt-storage-virsh-add-volumes" title="9.2.1.3. Adding volumes to a storage pool">Section 9.2.1.3, “Adding volumes to a storage pool”</a>, you can
+          attach it to a virtual machine and use it as a hard disk:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh attach-disk <em class="replaceable">DOMAIN</em> <em class="replaceable">SOURCE_IMAGE_FILE</em> <em class="replaceable">TARGET_DISK_DEVICE</em></pre></div><p>
+          For example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>virsh attach-disk sles12sp3 /virt/images/example_disk.qcow2 sda2</pre></div><p>
+          To check if the new disk is attached, inspect the result of the
+          <code class="command">virsh dumpxml</code> command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh dumpxml sles12sp3
+[...]
+&lt;disk type='file' device='disk'&gt;
+ &lt;driver name='qemu' type='raw'/&gt;
+ &lt;source file='/virt/images/example_disk.qcow2'/&gt;
+ &lt;backingStore/&gt;
+ &lt;target dev='sda2' bus='scsi'/&gt;
+ &lt;alias name='scsi0-0-0'/&gt;
+ &lt;address type='drive' controller='0' bus='0' target='0' unit='0'/&gt;
+&lt;/disk&gt;
+[...]</pre></div><section class="sect4" id="id-1.12.4.3.5.7.8.8" data-id-title="Hotplug or persistent change"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.2.1.5.1 </span><span class="title-name">Hotplug or persistent change</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#id-1.12.4.3.5.7.8.8">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            You can attach disks to both active and inactive domains. The
+            attachment is controlled by the <code class="option">--live</code> and
+            <code class="option">--config</code> options:
+          </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.5.7.8.8.3.1"><span class="term"><code class="option">--live</code></span></dt><dd><p>
+                  Hotplugs the disk to an active domain. The attachment is not
+                  saved in the domain configuration. Using
+                  <code class="option">--live</code> on an inactive domain is an error.
+                </p></dd><dt id="id-1.12.4.3.5.7.8.8.3.2"><span class="term"><code class="option">--config</code></span></dt><dd><p>
+                  Changes the domain configuration persistently. The attached
+                  disk is then available after the next domain start.
+                </p></dd><dt id="id-1.12.4.3.5.7.8.8.3.3"><span class="term"><code class="option">--live</code><code class="option">--config</code></span></dt><dd><p>
+                  Hotplugs the disk and adds it to the persistent domain
+                  configuration.
+                </p></dd></dl></div><div id="id-1.12.4.3.5.7.8.8.4" data-id-title="virsh attach-device" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: <code class="command">virsh attach-device</code></div><p>
+              <code class="command">virsh attach-device</code> is the more generic form
+              of <code class="command">virsh attach-disk</code>. You can use it to attach
+              other types of devices to a domain.
+            </p></div></section></section><section class="sect3" id="libvirt-storage-virsh-detach-volumes" data-id-title="Detaching volumes from a VM Guest"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.1.6 </span><span class="title-name">Detaching volumes from a VM Guest</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#libvirt-storage-virsh-detach-volumes">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          To detach a disk from a domain, use <code class="command">virsh
+          detach-disk</code>:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh detach-disk <em class="replaceable">DOMAIN</em> <em class="replaceable">TARGET_DISK_DEVICE</em></pre></div><p>
+          For example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root"># </code>virsh detach-disk sles12sp3 sda2</pre></div><p>
+          You can control the attachment with the <code class="option">--live</code> and
+          <code class="option">--config</code> options as described in
+          <a class="xref" href="cha-libvirt-host.html#libvirt-storage-virsh-attach-volumes" title="9.2.1.5. Attaching volumes to a VM Guest">Section 9.2.1.5, “Attaching volumes to a VM Guest”</a>.
+        </p></section></section><section class="sect2" id="sec-libvirt-storage-vmm" data-id-title="Managing storage with Virtual Machine Manager"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">9.2.2 </span><span class="title-name">Managing storage with Virtual Machine Manager</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-vmm">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        The Virtual Machine Manager provides a graphical interface—the Storage
+        Manager—to manage storage volumes and pools. To access it, either
+        right-click a connection and choose <span class="guimenu">Details</span>, or
+        highlight a connection and choose <span class="guimenu">Edit</span> › <span class="guimenu">Connection Details</span>. Select the
+        <span class="guimenu">Storage</span> tab.
+      </p><div class="informalfigure"><div class="mediaobject"><a href="images/virt_virt-manager_storage.png"><img src="images/virt_virt-manager_storage.png" width="60%" alt="Image" title="Image"/></a></div></div><section class="sect3" id="sec-libvirt-storage-vmm-addpool" data-id-title="Adding a storage pool"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.2.1 </span><span class="title-name">Adding a storage pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-vmm-addpool">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          To add a storage pool, proceed as follows:
+        </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+              Click <span class="guimenu">Add</span> in the bottom left corner. The
+              dialog <span class="guimenu">Add a New Storage Pool</span> appears.
+            </p></li><li class="step"><p>
+              Provide a <span class="guimenu">Name</span> for the pool (consisting of
+              only alphanumeric characters and <code class="literal">_</code>,
+              <code class="literal">-</code> or <code class="literal">.</code>) and select a
+              <span class="guimenu">Type</span>.
+            </p><div class="informalfigure"><div class="mediaobject"><a href="images/virt_virt-manager_storage_add.png"><img src="images/virt_virt-manager_storage_add.png" width="60%" alt="Image" title="Image"/></a></div></div></li><li class="step"><p>
+              Specify the required details below. They depend on the type of
+              pool you are creating.
+            </p><div id="id-1.12.4.3.5.8.4.3.3.2" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important</div><p>
+                ZFS pools are not supported.
+              </p></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.12.4.3.5.8.4.3.3.3.1"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">dir</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Target Path</span>: specify an existing
+                        directory.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.2"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">disk</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Format</span>: format of the device's
+                        partition table. Using <span class="guimenu">auto</span> should
+                        normally work. If not, get the required format by
+                        running the command <code class="command">parted</code>
+                        <code class="option">-l</code> on the VM Host Server.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Source Path</span>: path to the device. It
+                        is recommended to use a device name from
+                        <code class="filename">/dev/disk/by-*</code> rather than the
+                        simple
+                        <code class="filename">/dev/sd<em class="replaceable">X</em></code>,
+                        since the latter can change, for example, when adding
+                        or removing hard disks. You need to specify the path
+                        that resembles the whole disk, not a partition on the
+                        disk (if existing).
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.3"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">fs</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Target Path</span>: mount point on the
+                        VM Host Server file system.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Format: </span> file system format of the
+                        device. The default value <code class="literal">auto</code>
+                        should work.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Source Path</span>: path to the device
+                        file. It is recommended to use a device name from
+                        <code class="filename">/dev/disk/by-*</code> rather than
+                        <code class="filename">/dev/sd<em class="replaceable">X</em></code>,
+                        because the latter can change, for example, when adding
+                        or removing hard disks.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.4"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">iscsi</span></span></dt><dd><p>
+                    Get the necessary data by running the following command on
+                    the VM Host Server:
+                  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> iscsiadm --mode node</pre></div><p>
+                    It returns a list of iSCSI volumes with the following
+                    format. The elements in bold text are required:
+                  </p><div class="verbatim-wrap"><pre class="screen"><span class="bold"><strong>IP_ADDRESS</strong></span>:PORT,TPGT <span class="bold"><strong>TARGET_NAME_(IQN)</strong></span></pre></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Target Path</span>: the directory
+                        containing the device file. Use
+                        <code class="literal">/dev/disk/by-path</code> (default) or
+                        <code class="literal">/dev/disk/by-id</code>.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Host Name</span>: host name or IP address
+                        of the iSCSI server.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Source IQN</span>: the iSCSI target name
+                        (iSCSI Qualified Name).
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Initiator IQN</span>: the iSCSI initiator
+                        name.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.5"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">logical</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Volgroup Name</span>: specify the device
+                        path of an existing volume group.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.6"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">mpath</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Target Path</span>: support for
+                        multipathing is currently limited to making all
+                        multipath devices available. Therefore, specify an
+                        arbitrary string here. The path is required, otherwise
+                        the XML parser fails.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.7"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">netfs</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Target Path</span>: mount point on the
+                        VM Host Server file system.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Host Name</span>: IP address or host name
+                        of the server exporting the network file system.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Source Path</span>: directory on the server
+                        that is being exported.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.8"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">rbd</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Host Name</span>: host name of the server
+                        with an exported RADOS block device.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Source Name</span>: name of the RADOS block
+                        device on the server.
+                      </p></li></ul></div></dd><dt id="id-1.12.4.3.5.8.4.3.3.3.9"><span class="term"><span class="bold"><strong>Type</strong></span> <span class="guimenu">scsi</span></span></dt><dd><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+                        <span class="guimenu">Target Path</span>: directory containing
+                        the device file. Use
+                        <code class="literal">/dev/disk/by-path</code> (default) or
+                        <code class="literal">/dev/disk/by-id</code>.
+                      </p></li><li class="listitem"><p>
+                        <span class="guimenu">Source Path</span>: name of the SCSI
+                        adapter.
+                      </p></li></ul></div></dd></dl></div><div id="id-1.12.4.3.5.8.4.3.3.4" data-id-title="File browsing" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: File browsing</div><p>
+                Using the file browser by clicking <span class="guimenu">Browse</span> is
+                not possible when operating remotely.
+              </p></div></li><li class="step"><p>
+              Click <span class="guimenu">Finish</span> to add the storage pool.
+            </p></li></ol></div></div></section><section class="sect3" id="sec-libvirt-storage-vmm-manage" data-id-title="Managing storage pools"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">9.2.2.2 </span><span class="title-name">Managing storage pools</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-vmm-manage">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Virtual Machine Manager's Storage Manager lets you create or delete volumes in a pool.
+          You may also temporarily deactivate or permanently delete existing
+          storage pools. Changing the basic configuration of a pool is
+          currently not supported by SUSE.
+        </p><section class="sect4" id="sec-libvirt-storage-vmm-manage-pool" data-id-title="Starting, stopping, and deleting pools"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.2.2.2.1 </span><span class="title-name">Starting, stopping, and deleting pools</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-vmm-manage-pool">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            The purpose of storage pools is to provide block devices located on
+            the VM Host Server that can be added to a VM Guest when managing it from
+            remote. To make a pool temporarily inaccessible from remote, click
+            <span class="guimenu">Stop</span> in the bottom left corner of the Storage
+            Manager. Stopped pools are marked with <span class="guimenu">State:
+            Inactive</span> and are grayed out in the list pane. By default,
+            a newly created pool is automatically started <span class="guimenu">On
+            Boot</span> of the VM Host Server.
+          </p><p>
+            To start an inactive pool and make it available from remote again,
+            click <span class="guimenu">Start</span> in the bottom left corner of the
+            Storage Manager.
+          </p><div id="id-1.12.4.3.5.8.5.3.4" data-id-title="A pools state does not affect attached volumes" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: A pool's state does not affect attached volumes</div><p>
+              Volumes from a pool attached to VM Guests are always available,
+              regardless of the pool's state (<span class="guimenu">Active</span>
+              (stopped) or <span class="guimenu">Inactive</span> (started)). The state of
+              the pool solely affects the ability to attach volumes to a
+              VM Guest via remote management.
+            </p></div><p>
+            To permanently make a pool inaccessible, click
+            <span class="guimenu">Delete</span> in the bottom left corner of the Storage
+            Manager. You can only delete inactive pools. Deleting a pool does
+            not physically erase its contents on VM Host Server—it only deletes
+            the pool configuration. However, you need to be extra careful when
+            deleting pools, especially when deleting LVM volume group-based
+            tools:
+          </p><div id="deleting-storage-pools" data-id-title="Deleting storage pools" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Deleting storage pools</div><p>
+              Deleting storage pools based on <span class="emphasis"><em>local</em></span> file
+              system directories, local partitions or disks has no effect on
+              the availability of volumes from these pools currently attached
+              to VM Guests.
+            </p><p>
+              Volumes located in pools of type iSCSI, SCSI, LVM group or
+              Network Exported Directory become inaccessible from the VM Guest
+              if the pool is deleted. Although the volumes themselves are not
+              deleted, the VM Host Server can no longer access the resources.
+            </p><p>
+              Volumes on iSCSI/SCSI targets or Network Exported Directory
+              become accessible again when creating an adequate new pool or
+              when mounting/accessing these resources directly from the host
+              system.
+            </p><p>
+              When deleting an LVM group-based storage pool, the LVM group
+              definition is erased and the LVM group no longer exists on the
+              host system. The configuration is not recoverable and all volumes
+              from this pool are lost.
+            </p></div></section><section class="sect4" id="sec-libvirt-storage-vmm-manage-volume-add" data-id-title="Adding volumes to a storage pool"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.2.2.2.2 </span><span class="title-name">Adding volumes to a storage pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-vmm-manage-volume-add">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            Virtual Machine Manager lets you create volumes in all storage pools, except in pools
+            of types Multipath, iSCSI or SCSI. A volume in these pools is
+            equivalent to a LUN and cannot be changed from within <code class="systemitem">libvirt</code>.
+          </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+                A new volume can either be created using the Storage Manager or
+                while adding a new storage device to a VM Guest. In either
+                case, select a storage pool from the left panel, then click
+                <span class="guimenu">Create new volume</span>.
+              </p></li><li class="step"><p>
+                Specify a <span class="guimenu">Name</span> for the image and choose an
+                image format.
+              </p><p>
+                SUSE currently only supports <code class="literal">raw</code> or
+                <code class="literal">qcow2</code> images. The latter option is not
+                available on LVM group-based pools.
+              </p><p>
+                Next to <span class="guimenu">Max Capacity</span>, specify the maximum
+                size that the disk image is allowed to reach. Unless you are
+                working with a <code class="literal">qcow2</code> image, you can also set
+                an amount for <span class="guimenu">Allocation</span> that should be
+                allocated initially. If the two values differ, a sparse image
+                file is created, which grows on demand.
+              </p><p>
+                For <code class="literal">qcow2</code> images, you can use a
+                <span class="guimenu">Backing Store</span> (also called <span class="quote">“<span class="quote">backing
+                file</span>”</span>), which constitutes a base image. The newly
+                created <code class="literal">qcow2</code> image then only records the
+                changes that are made to the base image.
+              </p></li><li class="step"><p>
+                Start the volume creation by clicking
+                <span class="guimenu">Finish</span>.
+              </p></li></ol></div></div></section><section class="sect4" id="sec-libvirt-storage-vmm-manage-volume-delete" data-id-title="Deleting volumes from a storage pool"><div class="titlepage"><div><div><div class="title-container"><h5 class="title"><span class="title-number-name"><span class="title-number">9.2.2.2.3 </span><span class="title-name">Deleting volumes from a storage pool</span></span> <a title="Permalink" class="permalink" href="cha-libvirt-host.html#sec-libvirt-storage-vmm-manage-volume-delete">#</a></h5><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/libvirt_host.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+            Deleting a volume can only be done from the Storage Manager, by
+            selecting a volume and clicking <span class="guimenu">Delete Volume</span>.
+            Confirm with <span class="guimenu">Yes</span>.
+          </p><div id="id-1.12.4.3.5.8.5.5.3" data-id-title="Volumes can be deleted even while in use" class="admonition warning normal"><img class="symbol" alt="Warning" title="Warning" src="static/images/icon-warning.svg"/><div class="admon-title">Warning: Volumes can be deleted even while in use</div><p>
+              Volumes can be deleted even if they are currently used in an
+              active or inactive VM Guest. There is no way to recover a
+              deleted volume.
+            </p><p>
+              Whether a volume is used by a VM Guest is indicated in the
+              <span class="guimenu">Used By</span> column in the Storage Manager.
+            </p></div></section></section></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-libvirt-overview.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 8 </span><code class="systemitem">libvirt</code> daemons</span></a> </div><div><a class="pagination-link next" href="cha-kvm-inst.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 10 </span>Guest installation</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-libvirt-host.html#libvirt-host-network"><span class="title-number">9.1 </span><span class="title-name">Configuring networks</span></a></span></li><li><span class="sect1"><a href="cha-libvirt-host.html#libvirt-host-storage"><span class="title-number">9.2 </span><span class="title-name">Configuring a storage pool</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

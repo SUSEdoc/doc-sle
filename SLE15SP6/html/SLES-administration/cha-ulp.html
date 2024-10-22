@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Administration Guide | User space live patching</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="User space live patching | SLES 15 SP6"/>
+<meta name="description" content="This chapter describes the basic principles and usage of user space live patching."/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Administration Guide"/>
+<meta name="chapter-title" content="Chapter 12. User space live patching"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Administration Guide"/>
+<meta property="og:description" content="Maintain, monitor and customize SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Administration Guide"/>
+<meta name="twitter:description" content="Maintain, monitor and customize SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "User space live patching",
+  
+    "description": "This chapter describes the basic principles and usage of user space live patching.",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-klp.html" title="Chapter 11. Live kernel patching with KLP"/><link rel="next" href="cha-transactional-updates.html" title="Chapter 13. Transactional updates"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Administration Guide</a><span> / </span><a class="crumb" href="part-administration.html">Common tasks</a><span> / </span><a class="crumb" href="cha-ulp.html">User space live patching</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Administration Guide</div><ol><li><a href="preface-administration.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li class="active"><a href="part-administration.html" class="has-children you-are-here"><span class="title-number">I </span><span class="title-name">Common tasks</span></a><ol><li><a href="cha-adm-shell.html" class=" "><span class="title-number">1 </span><span class="title-name">Bash and Bash scripts</span></a></li><li><a href="cha-adm-sudo.html" class=" "><span class="title-number">2 </span><span class="title-name"><code class="command">sudo</code> basics</span></a></li><li><a href="cha-yast-gui.html" class=" "><span class="title-number">3 </span><span class="title-name">Using YaST</span></a></li><li><a href="cha-yast-text.html" class=" "><span class="title-number">4 </span><span class="title-name">YaST in text mode</span></a></li><li><a href="cha-yast-lang.html" class=" "><span class="title-number">5 </span><span class="title-name">Changing language and country settings with YaST</span></a></li><li><a href="cha-yast-userman.html" class=" "><span class="title-number">6 </span><span class="title-name">Managing users with YaST</span></a></li><li><a href="cha-onlineupdate-you.html" class=" "><span class="title-number">7 </span><span class="title-name">YaST online update</span></a></li><li><a href="cha-yast-software.html" class=" "><span class="title-number">8 </span><span class="title-name">Installing or removing software</span></a></li><li><a href="cha-sw-cl.html" class=" "><span class="title-number">9 </span><span class="title-name">Managing software with command line tools</span></a></li><li><a href="cha-snapper.html" class=" "><span class="title-number">10 </span><span class="title-name">System recovery and snapshot management with Snapper</span></a></li><li><a href="cha-klp.html" class=" "><span class="title-number">11 </span><span class="title-name">Live kernel patching with KLP</span></a></li><li><a href="cha-ulp.html" class=" you-are-here"><span class="title-number">12 </span><span class="title-name">User space live patching</span></a></li><li><a href="cha-transactional-updates.html" class=" "><span class="title-number">13 </span><span class="title-name">Transactional updates</span></a></li><li><a href="cha-vnc.html" class=" "><span class="title-number">14 </span><span class="title-name">Remote graphical sessions with VNC</span></a></li><li><a href="cha-net-rsync.html" class=" "><span class="title-number">15 </span><span class="title-name">File copying with RSync</span></a></li></ol></li><li><a href="part-boot.html" class="has-children "><span class="title-number">II </span><span class="title-name">Booting a Linux system</span></a><ol><li><a href="cha-boot.html" class=" "><span class="title-number">16 </span><span class="title-name">Introduction to the boot process</span></a></li><li><a href="cha-uefi.html" class=" "><span class="title-number">17 </span><span class="title-name">UEFI (Unified Extensible Firmware Interface)</span></a></li><li><a href="cha-grub2.html" class=" "><span class="title-number">18 </span><span class="title-name">The boot loader GRUB 2</span></a></li><li><a href="cha-systemd.html" class=" "><span class="title-number">19 </span><span class="title-name">The <code class="systemitem">systemd</code> daemon</span></a></li></ol></li><li><a href="part-system.html" class="has-children "><span class="title-number">III </span><span class="title-name">System</span></a><ol><li><a href="cha-64bit.html" class=" "><span class="title-number">20 </span><span class="title-name">32-bit and 64-bit applications in a 64-bit system environment</span></a></li><li><a href="cha-journalctl.html" class=" "><span class="title-number">21 </span><span class="title-name"><code class="command">journalctl</code>: query the <code class="systemitem">systemd</code> journal</span></a></li><li><a href="cha-update-alternative.html" class=" "><span class="title-number">22 </span><span class="title-name"><code class="command">update-alternatives</code>: managing multiple versions of commands and files</span></a></li><li><a href="cha-network.html" class=" "><span class="title-number">23 </span><span class="title-name">Basic networking</span></a></li><li><a href="cha-print.html" class=" "><span class="title-number">24 </span><span class="title-name">Printer operation</span></a></li><li><a href="cha-gui-desktop.html" class=" "><span class="title-number">25 </span><span class="title-name">Graphical user interface</span></a></li><li><a href="cha-fuse.html" class=" "><span class="title-number">26 </span><span class="title-name">Accessing file systems with FUSE</span></a></li><li><a href="cha-tuning-multikernel.html" class=" "><span class="title-number">27 </span><span class="title-name">Installing multiple kernel versions</span></a></li><li><a href="cha-mod.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing kernel modules</span></a></li><li><a href="cha-udev.html" class=" "><span class="title-number">29 </span><span class="title-name">Dynamic kernel device management with <code class="systemitem">udev</code></span></a></li><li><a href="cha-suse.html" class=" "><span class="title-number">30 </span><span class="title-name">Special system features</span></a></li><li><a href="cha-nm.html" class=" "><span class="title-number">31 </span><span class="title-name">Using NetworkManager</span></a></li></ol></li><li><a href="part-hardware.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Hardware configuration</span></a><ol><li><a href="sec-yast-hw-keym.html" class=" "><span class="title-number">32 </span><span class="title-name">Setting up your system keyboard layout</span></a></li><li><a href="sec-yast-hw-sound.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting up sound cards</span></a></li><li><a href="sec-yast-hw-print.html" class=" "><span class="title-number">34 </span><span class="title-name">Setting up a printer</span></a></li><li><a href="cha-power-mgmt.html" class=" "><span class="title-number">35 </span><span class="title-name">Power management</span></a></li><li><a href="cha-nvdimm.html" class=" "><span class="title-number">36 </span><span class="title-name">Persistent memory</span></a></li></ol></li><li><a href="part-services.html" class="has-children "><span class="title-number">V </span><span class="title-name">Services</span></a><ol><li><a href="cha-yast-serviceman.html" class=" "><span class="title-number">37 </span><span class="title-name">Service management with YaST</span></a></li><li><a href="cha-ntp.html" class=" "><span class="title-number">38 </span><span class="title-name">Time synchronization with NTP</span></a></li><li><a href="cha-dns.html" class=" "><span class="title-number">39 </span><span class="title-name">The domain name system</span></a></li><li><a href="cha-dhcp.html" class=" "><span class="title-number">40 </span><span class="title-name">DHCP</span></a></li><li><a href="cha-slp.html" class=" "><span class="title-number">41 </span><span class="title-name">SLP</span></a></li><li><a href="cha-apache2.html" class=" "><span class="title-number">42 </span><span class="title-name">The Apache HTTP server</span></a></li><li><a href="cha-ftp.html" class=" "><span class="title-number">43 </span><span class="title-name">Setting up an FTP server with YaST</span></a></li><li><a href="cha-squid.html" class=" "><span class="title-number">44 </span><span class="title-name">Squid caching proxy server</span></a></li><li><a href="cha-wbem.html" class=" "><span class="title-number">45 </span><span class="title-name">Web Based Enterprise Management using SFCB</span></a></li></ol></li><li><a href="part-trouble.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Troubleshooting</span></a><ol><li><a href="cha-adminhelp.html" class=" "><span class="title-number">46 </span><span class="title-name">Help and documentation</span></a></li><li><a href="cha-adm-support.html" class=" "><span class="title-number">47 </span><span class="title-name">Gathering system information for support</span></a></li><li><a href="cha-trouble.html" class=" "><span class="title-number">48 </span><span class="title-name">Common problems and their solutions</span></a></li></ol></li><li><a href="app-nwscheme.html" class=" "><span class="title-number">A </span><span class="title-name">An example network</span></a></li><li><a href="bk01apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section xml:lang="en" class="chapter" id="cha-ulp" data-id-title="User space live patching"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">12 </span><span class="title-name">User space live patching</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+        This chapter describes the basic principles and usage of user space
+        live patching.
+      </p></div></div></div></div><section class="sect1" id="sec-ulp" data-id-title="About user space live patching"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.1 </span><span class="title-name">About user space live patching</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      User space live patching (ULP) refers to the process of applying
+      patches to the libraries used by a running process without interrupting
+      them. Every time a security fix is available as a live patch, customer
+      services will be secured after applying the live patch without restarting
+      the processes.
+    </p><p>
+      Live patching operations are performed using the
+      <code class="systemitem">ulp</code> tool that is part of
+      <code class="systemitem">libpulp</code>. <code class="systemitem">libpulp</code> is a
+      framework that consists of the <code class="systemitem">libpulp.so</code>
+      library and the <code class="command">ulp</code> binary that makes libraries live
+      patchable and applies live patches.
+    </p><div id="id-1.3.3.13.3.4" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip</div><p>
+        You can run the <code class="command">ulp</code> command either as a normal user
+        or a privileged user via the <code class="command">sudo</code> mechanism. The difference is that
+        running <code class="command">ulp</code> via <code class="command">sudo</code> lets you view information of
+        processes or patch processes that are running by <code class="systemitem">root</code>.
+      </p></div><div id="id-1.3.3.13.3.5" data-id-title="Install libpulp-load-default" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Install <span class="package">libpulp-load-default</span></div><p>
+        Since SUSE Linux Enterprise Server SP6, the <span class="package">libpulp-load-default</span> is
+        available that automates the requirements and manual steps mentioned in
+        <a class="xref" href="cha-ulp.html#sec-ulp-prereqs" title="12.1.1. Prerequisites">Section 12.1.1, “Prerequisites”</a> and <a class="xref" href="cha-ulp.html#sec-ulp-libpulp" title="12.1.3. Using libpulp">Section 12.1.3, “Using <code class="systemitem">libpulp</code>”</a>.
+        If you install the package, you can skip those sections.
+      </p></div><section class="sect2" id="sec-ulp-prereqs" data-id-title="Prerequisites"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.1 </span><span class="title-name">Prerequisites</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-prereqs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        For ULP to work, two requirements must be met.
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+            Install the ULP on your system by running:
+          </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper in libpulp0 libpulp-tools</pre></div></li><li class="listitem"><p>
+            Applications with desired live patch support must be launched
+            preloading the <code class="systemitem">libpulp.so.0</code> library. See
+            <a class="xref" href="cha-ulp.html#sec-ulp-libpulp" title="12.1.3. Using libpulp">Section 12.1.3, “Using <code class="systemitem">libpulp</code>”</a> for more details.
+          </p></li></ul></div></section><section class="sect2" id="sec-ulp-supported-libs" data-id-title="Supported libraries"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.2 </span><span class="title-name">Supported libraries</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-supported-libs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        Currently, only <code class="systemitem">glibc</code> and
+        <code class="systemitem">openssl</code> (<code class="systemitem">openssl1_1</code> and <code class="systemitem">openssl-3</code>)
+        are supported. Additional packages will be available after they are
+        prepared for live patching. To receive <code class="systemitem">glibc</code>
+        and <code class="systemitem">openssl</code> live patches, install both
+        <span class="package">glibc-livepatches</span> and
+        <span class="package">openssl-livepatches</span> packages:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>zypper install glibc-livepatches openssl-livepatches</pre></div></section><section class="sect2" id="sec-ulp-libpulp" data-id-title="Using libpulp"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">12.1.3 </span><span class="title-name">Using <code class="systemitem">libpulp</code></span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-libpulp">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+        To enable live patching on an application, you need to preload the
+        <code class="systemitem">libpulp.so.0</code> library when starting the
+        application:
+      </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>LD_PRELOAD=/usr/lib64/libpulp.so.0 <em class="replaceable">APPLICATION_CMD</em></pre></div><section class="sect3" id="sec-ulp-livepatch-check" data-id-title="Checking if a library is live patchable"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.3.1 </span><span class="title-name">Checking if a library is live patchable</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-livepatch-check">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          To check whether a library is live patchable, use the following
+          command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp livepatchable <em class="replaceable">PATH_TO_LIBRARY</em></pre></div></section><section class="sect3" id="sec-ulp-livepatch-container-check" data-id-title="Checking if a .so file is a live patch container"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.3.2 </span><span class="title-name">Checking if a <code class="filename">.so</code> file is a live patch container</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-livepatch-container-check">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          A shared object (<code class="filename">.so</code>) is a live patch container
+          if it contains the ULP patch description embedded into it. You can
+          verify it with the following command:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>readelf -S <em class="replaceable">SHARED_OBJECT</em> | grep .ulp</pre></div><p>
+          If the output shows that there are both <code class="literal">.ulp</code> and
+          <code class="literal">.ulp.rev</code> sections in the shared object, then it is
+          a live patch container.
+        </p></section><section class="sect3" id="sec-ulp-apply-livepatch" data-id-title="Applying live patches"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.3.3 </span><span class="title-name">Applying live patches</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-apply-livepatch">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Live patches are applied using the <code class="command">ulp trigger</code>
+          command, for example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp trigger -p <em class="replaceable">PID</em> <em class="replaceable">LIVEPATCH</em>.so</pre></div><p>
+          Replace <code class="literal">PID</code> with the process ID of the running
+          process that uses the library to be patched and
+          <code class="literal">LIVEPATCH.so</code> with the actual live patch file. The
+          command returns one of the following status messages:
+        </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.3.3.13.3.8.6.5.1"><span class="term">SUCCESS</span></dt><dd><p>
+                The live patching operation was successful.
+              </p></dd><dt id="id-1.3.3.13.3.8.6.5.2"><span class="term">SKIPPED</span></dt><dd><p>
+                The patch was skipped because it was not designed for any
+                library that is loaded in the process.
+              </p></dd><dt id="id-1.3.3.13.3.8.6.5.3"><span class="term">ERROR</span></dt><dd><p>
+                An error occurred, and you can retrieve more information by
+                inspecting the <code class="systemitem">libpulp</code> internal
+                message buffer. See <a class="xref" href="cha-ulp.html#sec-ulp-internal-messages" title="12.1.3.6. View internal message queue">Section 12.1.3.6, “View internal message queue”</a>
+                for more information.
+              </p></dd></dl></div><p>
+          It is also possible to apply multiple live patches by using
+          wildcards, for example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp trigger '*.so'</pre></div><p>
+          The command tries to apply every patch in the current folder to every
+          process that have the <code class="systemitem">libpulp</code> library
+          loaded. If the patch is not suitable for the process, it is
+          automatically skipped. In the end, the tool shows how many patches it
+          successfully applied to how many processes.
+        </p></section><section class="sect3" id="sec-ulp-revert-livepatch" data-id-title="Reverting live patches"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.3.4 </span><span class="title-name">Reverting live patches</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-revert-livepatch">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          You can use the <code class="command">ulp trigger</code> command to revert live
+          patches. There are two ways to revert live patches. You can revert a
+          live patch by using the <code class="option">--revert</code> switch and passing
+          the live patch container:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp trigger -p <em class="replaceable">PID</em> --revert <em class="replaceable">LIVEPATCH</em>.so</pre></div><p>
+          Alternatively, it is possible to remove all patches associated with a
+          particular library, for example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp trigger -p <em class="replaceable">PID</em> --revert-all=<em class="replaceable">LIBRARY</em></pre></div><p>
+          In the example, <em class="replaceable">LIBRARY</em> refers to the
+          actual library, such as <code class="systemitem">libcrypto.so.1.1</code>.
+        </p><p>
+          The latter approach can be useful when the source code of the
+          original live patch is not available. Or you want to remove a
+          specific old patch and apply a new one while the target application
+          is still running a secure code, for example:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp trigger -p <em class="replaceable">PID</em>  --revert-all=libcrypto.so.1.1 new_livepatch2.so</pre></div></section><section class="sect3" id="sec-ulp-verify-patches" data-id-title="View applied patches"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.3.5 </span><span class="title-name">View applied patches</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-verify-patches">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          It is possible to verify which applications have live patches applied
+          by running:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp patches</pre></div><p>
+          The output shows which libraries are live patchable and patches
+          loaded in programs, as well which bugs the patch addresses:
+        </p><div class="verbatim-wrap"><pre class="screen">PID: 10636, name: test
+  Livepatchable libraries:
+    in /lib64/libc.so.6:
+      livepatch: libc_livepatch1.so
+        bug labels: jsc#SLE-0000
+    in /usr/lib64/libpulp.so.0:</pre></div><p>
+          It is also possible to see which functions are patched by the live
+          patch:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp dump <em class="replaceable">LIVEPATCH.so</em></pre></div></section><section class="sect3" id="sec-ulp-internal-messages" data-id-title="View internal message queue"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">12.1.3.6 </span><span class="title-name">View internal message queue</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-internal-messages">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+          Log messages from <code class="systemitem">libpulp.so</code> are stored in a
+          buffer inside the library and are not displayed unless requested by
+          the user. To show these messages, run:
+        </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code>ulp messages -p <em class="replaceable">PID</em></pre></div></section></section></section><section class="sect1" id="sec-ulp-info" data-id-title="More information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">12.2 </span><span class="title-name">More information</span></span> <a title="Permalink" class="permalink" href="cha-ulp.html#sec-ulp-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/ulp.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+      Further information about <code class="systemitem">libpulp</code> is available
+      in the project's <a class="link" href="https://github.com/SUSE/libpulp" target="_blank">Git
+      repository</a>.
+    </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-klp.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 11 </span>Live kernel patching with KLP</span></a> </div><div><a class="pagination-link next" href="cha-transactional-updates.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 13 </span>Transactional updates</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-ulp.html#sec-ulp"><span class="title-number">12.1 </span><span class="title-name">About user space live patching</span></a></span></li><li><span class="sect1"><a href="cha-ulp.html#sec-ulp-info"><span class="title-number">12.2 </span><span class="title-name">More information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 15 SP6 | Storage Administration Guide | On-demand mounting with autofs</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="On-demand mounting with autofs | SLES 15 SP6"/>
+<meta name="description" content="autofs is a program that automatically mounts specified directories on an on-demand basis. It is based on a kernel module for high efficiency, and ca…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Storage Administration Guide"/>
+<meta name="chapter-title" content="Chapter 21. On-demand mounting with autofs"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Server 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Storage Administration Guide"/>
+<meta property="og:description" content="Administer storage devices on SLES"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storage Administration Guide"/>
+<meta name="twitter:description" content="Administer storage devices on SLES"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "On-demand mounting with autofs",
+  
+    "description": "autofs is a program that automatically mounts specified directories on an on-demand basis. It is based on a kernel module for high efficiency, and ca…",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-samba.html" title="Chapter 20. Samba"/><link rel="next" href="bk09apa.html" title="Appendix A. GNU licenses"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Storage Administration Guide</a><span> / </span><a class="crumb" href="part-net-storage.html">Network storage</a><span> / </span><a class="crumb" href="cha-autofs.html">On-demand mounting with autofs</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Storage Administration Guide</div><ol><li><a href="storage-preface.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="part-filesystems.html" class="has-children "><span class="title-number">I </span><span class="title-name">File systems and mounting</span></a><ol><li><a href="cha-filesystems.html" class=" "><span class="title-number">1 </span><span class="title-name">Overview of file systems in Linux</span></a></li><li><a href="cha-resize-fs.html" class=" "><span class="title-number">2 </span><span class="title-name">Resizing file systems</span></a></li><li><a href="cha-uuid.html" class=" "><span class="title-number">3 </span><span class="title-name">Mounting storage devices</span></a></li><li><a href="cha-multitiercache.html" class=" "><span class="title-number">4 </span><span class="title-name">Multi-tier caching for block device operations</span></a></li></ol></li><li><a href="part-lvm.html" class="has-children "><span class="title-number">II </span><span class="title-name">Logical volumes (LVM)</span></a><ol><li><a href="cha-lvm.html" class=" "><span class="title-number">5 </span><span class="title-name">LVM configuration</span></a></li><li><a href="cha-lvm-snapshots.html" class=" "><span class="title-number">6 </span><span class="title-name">LVM volume snapshots</span></a></li></ol></li><li><a href="part-software-raid.html" class="has-children "><span class="title-number">III </span><span class="title-name">Software RAID</span></a><ol><li><a href="cha-raid.html" class=" "><span class="title-number">7 </span><span class="title-name">Software RAID configuration</span></a></li><li><a href="cha-raidroot.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring software RAID for the root partition</span></a></li><li><a href="cha-raid10.html" class=" "><span class="title-number">9 </span><span class="title-name">Creating software RAID 10 devices</span></a></li><li><a href="cha-raid-degraded.html" class=" "><span class="title-number">10 </span><span class="title-name">Creating a degraded RAID array</span></a></li><li><a href="cha-raid-resize.html" class=" "><span class="title-number">11 </span><span class="title-name">Resizing software RAID arrays with mdadm</span></a></li><li><a href="cha-raid-leds.html" class=" "><span class="title-number">12 </span><span class="title-name">Storage enclosure LED utilities for MD software RAIDs</span></a></li><li><a href="cha-raidtroubleshooting.html" class=" "><span class="title-number">13 </span><span class="title-name">Troubleshooting software RAIDs</span></a></li></ol></li><li class="active"><a href="part-net-storage.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Network storage</span></a><ol><li><a href="cha-isns.html" class=" "><span class="title-number">14 </span><span class="title-name">iSNS for Linux</span></a></li><li><a href="cha-iscsi.html" class=" "><span class="title-number">15 </span><span class="title-name">Mass storage over IP networks: iSCSI</span></a></li><li><a href="cha-fcoe.html" class=" "><span class="title-number">16 </span><span class="title-name">Fibre Channel storage over Ethernet networks: FCoE</span></a></li><li><a href="cha-nvmeof.html" class=" "><span class="title-number">17 </span><span class="title-name">NVMe-oF</span></a></li><li><a href="cha-multipath.html" class=" "><span class="title-number">18 </span><span class="title-name">Managing multipath I/O for devices</span></a></li><li><a href="cha-nfs.html" class=" "><span class="title-number">19 </span><span class="title-name">Sharing file systems with NFS</span></a></li><li><a href="cha-samba.html" class=" "><span class="title-number">20 </span><span class="title-name">Samba</span></a></li><li><a href="cha-autofs.html" class=" you-are-here"><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></a></li></ol></li><li><a href="bk09apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-autofs" data-id-title="On-demand mounting with autofs"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">21 </span><span class="title-name">On-demand mounting with autofs</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    <code class="systemitem">autofs</code> is a program that automatically mounts
+    specified directories on an on-demand basis. It is based on a kernel module
+    for high efficiency, and can manage both local directories and network
+    shares. These automatic mount points are mounted only when they are
+    accessed, and unmounted after a certain period of inactivity. This
+    on-demand behavior saves bandwidth and results in better performance than
+    static mounts managed by <code class="filename">/etc/fstab</code>. While
+    <code class="systemitem">autofs</code> is a control script,
+    <code class="command">automount</code> is the command (daemon) that does the actual
+    auto-mounting.
+   </p></div></div></div></div><section class="sect1" id="sec-autofs-installation" data-id-title="Installation"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">21.1 </span><span class="title-name">Installation</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-installation">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <code class="systemitem">autofs</code> is not installed on <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> by
+   default. To use its auto-mounting capabilities, first install it with
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> zypper install autofs</pre></div></section><section class="sect1" id="sec-autofs-configuration" data-id-title="Configuration"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">21.2 </span><span class="title-name">Configuration</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-configuration">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   You need to configure <code class="systemitem">autofs</code> manually by editing
+   its configuration files with a text editor, such as <code class="command">vim</code>.
+   There are two basic steps to configure
+   <code class="systemitem">autofs</code>—the <span class="emphasis"><em>master</em></span> map
+   file, and specific map files.
+  </p><section class="sect2" id="sec-autofs-configuration-master-map" data-id-title="The master map file"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.2.1 </span><span class="title-name">The master map file</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-configuration-master-map">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The default master configuration file for <code class="systemitem">autofs</code>
+    is <code class="filename">/etc/auto.master</code>. You can change its location by
+    changing the value of the <code class="option">DEFAULT_MASTER_MAP_NAME</code> option
+    in <code class="filename">/etc/sysconfig/autofs</code>. Here is the content of the
+    default one for <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>:
+   </p><div class="verbatim-wrap"><pre class="screen">#
+# Sample auto.master file
+# This is an automounter map and it has the following format
+# key [ -mount-options-separated-by-comma ] location
+# For details of the format look at autofs(5).<span class="callout" id="co-autofs-manpage">1</span>
+#
+#/misc  /etc/auto.misc<span class="callout" id="co-autofs-map">2</span>
+#/net -hosts
+#
+# Include /etc/auto.master.d/*.autofs<span class="callout" id="co-autofs-include">3</span>
+#
+#+dir:/etc/auto.master.d
+#
+# Include central master map if it can be found using
+# nsswitch sources.
+#
+# Note that if there are entries for /net or /misc (as
+# above) in the included master map any keys that are the
+# same will not be seen as the first read key seen takes
+# precedence.
+#
++auto.master<span class="callout" id="co-autofs-plus">4</span></pre></div><div class="calloutlist"><table style="border: 0; "><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-autofs-manpage"><span class="callout">1</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      The <code class="systemitem">autofs</code> manual page (<code class="command">man 5
+      autofs</code>) offers a lot of valuable information on the format of
+      the automounter maps.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-autofs-map"><span class="callout">2</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      Although commented out (#) by default, this is an example of a simple
+      automounter mapping syntax.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-autofs-include"><span class="callout">3</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      In case you need to split the master map into several files, uncomment
+      the line, and put the mappings (suffixed with <code class="literal">.autofs</code>)
+      in the <code class="filename">/etc/auto.master.d/</code> directory.
+     </p></td></tr><tr><td style="width: 5%; vertical-align: top; text-align: left; "><p><a href="#co-autofs-plus"><span class="callout">4</span></a> </p></td><td style="vertical-align: top; text-align: left; "><p>
+      <code class="literal">+auto.master</code> ensures that those using NIS
+      <span class="phrase">(see <span class="intraxref">Book “Security and Hardening Guide”, Chapter 3 “Using NIS”, Section 3.1 “Configuring NIS servers”</span> for more
+      information on NIS)</span> will still find their master map.
+     </p></td></tr></table></div><p>
+    Entries in <code class="filename">auto.master</code> have three fields with the
+    following syntax:
+   </p><div class="verbatim-wrap"><pre class="screen">mount point      map name      options</pre></div><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.9.4.3.7.1"><span class="term">mount point</span></dt><dd><p>
+       The base location where to mount the <code class="systemitem">autofs</code>
+       file system, such as <code class="literal">/home</code>.
+      </p></dd><dt id="id-1.11.6.9.4.3.7.2"><span class="term">map name</span></dt><dd><p>
+       The name of a map source to use for mounting. For the syntax of the map
+       files, see <a class="xref" href="cha-autofs.html#sec-autofs-mapfiles" title="21.2.2. Map files">Section 21.2.2, “Map files”</a>.
+      </p></dd><dt id="id-1.11.6.9.4.3.7.3"><span class="term">options</span></dt><dd><p>
+       These options (if specified) will apply as defaults to all entries in
+       the given map.
+      </p></dd></dl></div><div id="id-1.11.6.9.4.3.8" data-id-title="More information" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: More information</div><p>
+     For more detailed information on the specific values of the optional
+     <code class="literal">map-type</code>, <code class="literal">format</code>, and
+     <code class="literal">options</code>, see the <span class="guimenu">auto.master</span> manual
+     page (<code class="command">man 5 auto.master</code>).
+    </p></div><p>
+    The following entry in <code class="filename">auto.master</code> tells
+    <code class="systemitem">autofs</code> to look in
+    <code class="filename">/etc/auto.smb</code>, and create mount points in the
+    <code class="filename">/smb</code> directory:
+   </p><div class="verbatim-wrap"><pre class="screen">/smb   /etc/auto.smb</pre></div><section class="sect3" id="sec-autofs-directmount" data-id-title="Direct mounts"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">21.2.1.1 </span><span class="title-name">Direct mounts</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-directmount">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     Direct mounts create a mount point at the path specified inside the
+     relevant map file. Instead of specifying the mount point in
+     <code class="filename">auto.master</code>, replace the mount point field with
+     <code class="literal">/-</code>. For example, the following line tells
+     <code class="systemitem">autofs</code> to create a mount point in the place
+     specified in <code class="filename">auto.smb</code>:
+    </p><div class="verbatim-wrap"><pre class="screen">/-        /etc/auto.smb</pre></div><div id="id-1.11.6.9.4.3.11.4" data-id-title="Maps without full path" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Maps without full path</div><p>
+      If the map file is not specified with its full local or network path, it
+      is located using the Name Service Switch (NSS) configuration:
+     </p><div class="verbatim-wrap"><pre class="screen">/-        auto.smb</pre></div></div></section></section><section class="sect2" id="sec-autofs-mapfiles" data-id-title="Map files"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.2.2 </span><span class="title-name">Map files</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-mapfiles">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.11.6.9.4.4.2" data-id-title="Other types of maps" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Other types of maps</div><p>
+     Although <span class="emphasis"><em>files</em></span> are the most common types of maps for
+     auto-mounting with <code class="systemitem">autofs</code>, there are other types
+     as well. A map specification can be the output of a command, or a result
+     of a query in LDAP or a database. For more detailed information on map
+     types, see the manual page <code class="command">man 5 auto.master</code>.
+    </p></div><p>
+    Map files specify the (local or network) source location, and the mount
+    point where to mount the source locally. The general format of maps is
+    similar to the master map. The difference is that the
+    <span class="emphasis"><em>options</em></span> appear between the mount point and the
+    location instead of at the end of the entry:
+   </p><div class="verbatim-wrap"><pre class="screen">mount point      options      location</pre></div><p>
+    Make sure that map files are not marked as executable. You can remove
+    the executable bits by executing <code class="command">chmod -x <em class="replaceable">MAP_FILE</em></code>.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.9.4.4.6.1"><span class="term">mount point</span></dt><dd><p>
+       Specifies where to mount the source location. This can be either a
+       single directory name (so-called <span class="emphasis"><em>indirect</em></span> mount) to
+       be added to the base mount point specified in
+       <code class="filename">auto.master</code>, or the full path of the mount point
+       (direct mount, see <a class="xref" href="cha-autofs.html#sec-autofs-directmount" title="21.2.1.1. Direct mounts">Section 21.2.1.1, “Direct mounts”</a>).
+      </p></dd><dt id="id-1.11.6.9.4.4.6.2"><span class="term">options</span></dt><dd><p>
+       Specifies an optional comma-separated list of mount options for the
+       relevant entries. If <code class="filename">auto.master</code> contains options
+       for this map file as well, these are appended.
+      </p></dd><dt id="id-1.11.6.9.4.4.6.3"><span class="term">location</span></dt><dd><p>
+       Specifies from where the file system is to be mounted. It is usually an
+       NFS or SMB volume in the usual notation
+       <code class="literal">host_name:path_name</code>. If the file system to be mounted
+       begins with a '/' (such as local <code class="filename">/dev</code> entries or
+       smbfs shares), a colon symbol ':' needs to be prefixed, such as
+       <code class="literal">:/dev/sda1</code>.
+      </p></dd></dl></div></section></section><section class="sect1" id="sec-autofs-debugging" data-id-title="Operation and debugging"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">21.3 </span><span class="title-name">Operation and debugging</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-debugging">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section introduces information on how to control the
+   <code class="systemitem">autofs</code> service operation, and how to view more
+   debugging information when tuning the automounter operation.
+  </p><section class="sect2" id="sec-autofs-debugging-service" data-id-title="Controlling the autofs service"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.3.1 </span><span class="title-name">Controlling the <code class="systemitem">autofs</code> service</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-debugging-service">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The operation of the <code class="systemitem">autofs</code> service is controlled
+    by <code class="systemitem">systemd</code>. The general syntax of the <code class="command">systemctl</code>
+    command for <code class="systemitem">autofs</code> is
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl <em class="replaceable">SUB_COMMAND</em> autofs</pre></div><p>
+    where <em class="replaceable">SUB_COMMAND</em> is one of:
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.11.6.9.5.3.5.1"><span class="term">enable</span></dt><dd><p>
+       Starts the automounter daemon at boot.
+      </p></dd><dt id="id-1.11.6.9.5.3.5.2"><span class="term">start</span></dt><dd><p>
+       Starts the automounter daemon.
+      </p></dd><dt id="id-1.11.6.9.5.3.5.3"><span class="term">stop</span></dt><dd><p>
+       Stops the automounter daemon. Automatic mount points are not accessible.
+      </p></dd><dt id="id-1.11.6.9.5.3.5.4"><span class="term">status</span></dt><dd><p>
+       Prints the current status of the <code class="systemitem">autofs</code> service
+       together with a part of a relevant log file.
+      </p></dd><dt id="id-1.11.6.9.5.3.5.5"><span class="term">restart</span></dt><dd><p>
+       Stops and starts the automounter, terminating all running daemons and
+       starting new ones.
+      </p></dd><dt id="id-1.11.6.9.5.3.5.6"><span class="term">reload</span></dt><dd><p>
+       Checks the current <code class="filename">auto.master</code> map, restarts those
+       daemons whose entries have changed, and starts new ones for new entries.
+      </p></dd></dl></div></section><section class="sect2" id="sec-autofs-debugging-problems" data-id-title="Debugging automounter problems"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.3.2 </span><span class="title-name">Debugging automounter problems</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-debugging-problems">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you experience problems when mounting directories with
+    <code class="systemitem">autofs</code>, it is useful to run the
+    <code class="command">automount</code> daemon manually and watch its output messages:
+   </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+      Stop <code class="systemitem">autofs</code>.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl stop autofs</pre></div></li><li class="step"><p>
+      From one terminal, run <code class="command">automount</code> manually in the
+      foreground, producing verbose output.
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> automount -f -v</pre></div></li><li class="step"><p>
+      From another terminal, try to mount the auto-mounting file systems by
+      accessing the mount points (for example by <code class="command">cd</code> or
+      <code class="command">ls</code>).
+     </p></li><li class="step"><p>
+      Check the output of <code class="command">automount</code> from the first terminal
+      for more information on why the mount failed, or why it was not even
+      attempted.
+     </p></li></ol></div></div></section></section><section class="sect1" id="sec-autofs-nfs" data-id-title="Auto-mounting an NFS share"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">21.4 </span><span class="title-name">Auto-mounting an NFS share</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-nfs">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The following procedure illustrates how to configure
+   <code class="systemitem">autofs</code> to auto-mount an NFS share available on your
+   network. It uses the information mentioned above, and assumes you
+   are familiar with NFS exports. For more information on NFS, see
+   <a class="xref" href="cha-nfs.html" title="Chapter 19. Sharing file systems with NFS">Chapter 19, <em>Sharing file systems with NFS</em></a>.
+  </p><div class="procedure"><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Edit the master map file <code class="filename">/etc/auto.master</code>:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vim /etc/auto.master</pre></div><p>
+     Add a new entry for the new NFS mount at the end of
+     <code class="filename">/etc/auto.master</code>:
+    </p><div class="verbatim-wrap"><pre class="screen">/nfs      /etc/auto.nfs      --timeout=10</pre></div><p>
+     This tells <code class="systemitem">autofs</code> that the base mount point is
+     <code class="filename">/nfs</code>, the NFS shares are specified in the
+     <code class="filename">/etc/auto.nfs</code> map, and that all shares in this map
+     will be automatically unmounted after 10 seconds of inactivity.
+    </p></li><li class="step"><p>
+     Create a new map file for NFS shares:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> vim /etc/auto.nfs</pre></div><p>
+     <code class="filename">/etc/auto.nfs</code> normally contains a separate line for
+     each NFS share. Its format is described in
+     <a class="xref" href="cha-autofs.html#sec-autofs-mapfiles" title="21.2.2. Map files">Section 21.2.2, “Map files”</a>. Add the line describing the mount point
+     and the NFS share network address:
+    </p><div class="verbatim-wrap"><pre class="screen">export      jupiter.com:/home/geeko/doc/export</pre></div><p>
+     The above line means that the <code class="filename">/home/geeko/doc/export</code>
+     directory on the <code class="literal">jupiter.com</code> host will be auto-mounted
+     to the <code class="filename">/nfs/export</code> directory on the local host
+     (<code class="filename">/nfs</code> is taken from the
+     <code class="filename">auto.master</code> map) when requested. The
+     <code class="filename">/nfs/export</code> directory will be created automatically
+     by <code class="systemitem">autofs</code>.
+    </p></li><li class="step"><p>
+     Optionally comment out the related line in <code class="filename">/etc/fstab</code>
+     if you previously mounted the same NFS share statically. The line should
+     look similar to this:
+    </p><div class="verbatim-wrap"><pre class="screen">#jupiter.com:/home/geeko/doc/export /nfs/export nfs defaults 0 0</pre></div></li><li class="step"><p>
+     Reload <code class="systemitem">autofs</code> and check if it works:
+    </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart autofs</pre></div><div class="verbatim-wrap"><pre class="screen"># ls -l /nfs/export
+total 20
+drwxr-xr-x  5 1001 users 4096 Jan 14  2017 .images/
+drwxr-xr-x 10 1001 users 4096 Aug 16  2017 .profiled/
+drwxr-xr-x  3 1001 users 4096 Aug 30  2017 .tmp/
+drwxr-xr-x  4 1001 users 4096 Apr 25 08:56 manual/</pre></div><p>
+     If you can see the list of files on the remote share, then
+     <code class="systemitem">autofs</code> is functioning.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-autofs-advanced" data-id-title="Advanced topics"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">21.5 </span><span class="title-name">Advanced topics</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-advanced">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   This section describes topics that are beyond the basic introduction to
+   <code class="systemitem">autofs</code>—auto-mounting of NFS shares that are
+   available on your network, using wild cards in map files, and information
+   specific to the CIFS file system.
+  </p><section class="sect2" id="sec-autofs-advanced-net" data-id-title="/net mount point"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.5.1 </span><span class="title-name"><code class="filename">/net</code> mount point</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-advanced-net">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    This helper mount point is useful if you use a lot of NFS shares.
+    <code class="filename">/net</code> auto-mounts all NFS shares on your local network
+    on demand. The entry is already present in the
+    <code class="filename">auto.master</code> file, so all you need to do is uncomment
+    it and restart <code class="systemitem">autofs</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">/net      -hosts</pre></div><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> systemctl restart autofs</pre></div><p>
+    For example, if you have a server named <code class="literal">jupiter</code> with an
+    NFS share called <code class="filename">/export</code>, you can mount it by typing
+   </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt user">&gt; </code><code class="command">sudo</code> cd /net/jupiter/export</pre></div><p>
+    on the command line.
+   </p></section><section class="sect2" id="sec-autofs-advanced-wildcards" data-id-title="Using wild cards to auto-mount subdirectories"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.5.2 </span><span class="title-name">Using wild cards to auto-mount subdirectories</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-advanced-wildcards">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you have a directory with subdirectories that you need to auto-mount
+    individually—the typical case is the <code class="filename">/home</code>
+    directory with individual users' home directories
+    inside—<code class="systemitem">autofs</code> offers a clever solution.
+   </p><p>
+    In case of home directories, add the following line in
+    <code class="filename">auto.master</code>:
+   </p><div class="verbatim-wrap"><pre class="screen">/home      /etc/auto.home</pre></div><p>
+    Now you need to add the correct mapping to the
+    <code class="filename">/etc/auto.home</code> file, so that the users' home
+    directories are mounted automatically. One solution is to create separate
+    entries for each directory:
+   </p><div class="verbatim-wrap"><pre class="screen">wilber      jupiter.com:/home/wilber
+penguin      jupiter.com:/home/penguin
+tux      jupiter.com:/home/tux
+[...]</pre></div><p>
+    This is very awkward as you need to manage the list of users inside
+    <code class="filename">auto.home</code>. You can use the asterisk '*' instead of the
+    mount point, and the ampersand '&amp;' instead of the directory to be
+    mounted:
+   </p><div class="verbatim-wrap"><pre class="screen">*      jupiter:/home/&amp;</pre></div></section><section class="sect2" id="sec-autofs-advanced-cifs" data-id-title="Auto-mounting CIFS file system"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">21.5.3 </span><span class="title-name">Auto-mounting CIFS file system</span></span> <a title="Permalink" class="permalink" href="cha-autofs.html#sec-autofs-advanced-cifs">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/autofs.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    If you want to auto-mount an SMB/CIFS share (see
+    <a class="xref" href="cha-samba.html" title="Chapter 20. Samba">Chapter 20, <em>Samba</em></a> for more information on the SMB/CIFS protocol),
+    you need to modify the syntax of the map file. Add
+    <code class="option">-fstype=cifs</code> in the option field, and prefix the share
+    location with a colon ':'.
+   </p><div class="verbatim-wrap"><pre class="screen">mount point      -fstype=cifs      ://jupiter.com/export</pre></div></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-samba.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 20 </span>Samba</span></a> </div><div><a class="pagination-link next" href="bk09apa.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Appendix A </span>GNU licenses</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-autofs.html#sec-autofs-installation"><span class="title-number">21.1 </span><span class="title-name">Installation</span></a></span></li><li><span class="sect1"><a href="cha-autofs.html#sec-autofs-configuration"><span class="title-number">21.2 </span><span class="title-name">Configuration</span></a></span></li><li><span class="sect1"><a href="cha-autofs.html#sec-autofs-debugging"><span class="title-number">21.3 </span><span class="title-name">Operation and debugging</span></a></span></li><li><span class="sect1"><a href="cha-autofs.html#sec-autofs-nfs"><span class="title-number">21.4 </span><span class="title-name">Auto-mounting an NFS share</span></a></span></li><li><span class="sect1"><a href="cha-autofs.html#sec-autofs-advanced"><span class="title-number">21.5 </span><span class="title-name">Advanced topics</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

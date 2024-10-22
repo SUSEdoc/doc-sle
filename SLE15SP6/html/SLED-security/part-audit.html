@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLED 15 SP6 | Security and Hardening Guide | The Linux Audit Framework</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="The Linux Audit Framework | SLED 15 SP6"/>
+<meta name="description" content="The Linux audit framework as shipped with this version of SUSE Linux Enterprise Desktop provides a CAPP-compliant (Controlled Access Protection Profi…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Desktop"/>
+<meta name="product-number" content="15 SP6"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Part VI. The Linux Audit Framework"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="PUBLIC SUSE Linux Enterprise Desktop 15 SP6"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Security and Hardening Guide"/>
+<meta property="og:description" content="Implement system security and hardening for SLED"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Security and Hardening Guide"/>
+<meta name="twitter:description" content="Implement system security and hardening for SLED"/>
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@type": ["TechArticle"],
+    "image": "https://www.suse.com/assets/img/suse-white-logo-green.svg",
+    
+     "isPartOf": {
+      "@type": "CreativeWorkSeries",
+      "name": "Products &amp; Solutions"
+    },
+    
+    "inLanguage": "en",
+    
+
+    "headline": "The Linux Audit Framework",
+  
+    "description": "The Linux Audit Framework",
+      
+    "author": [
+      {
+        "@type": "Corporation",
+        "name": "SUSE Product &amp; Solution Documentation Team",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    ],
+      
+    "dateModified": "2024-06-26T00:00+02:00",
+      
+    "datePublished": "2024-06-26T00:00+02:00",
+      
+
+    "about": [
+      
+    ],
+  
+    "sameAs": [
+          "https://www.facebook.com/SUSEWorldwide/about",
+          "https://www.youtube.com/channel/UCHTfqIzPKz4f_dri36lAQGA",
+          "https://twitter.com/SUSE",
+          "https://www.linkedin.com/company/suse"
+    ],
+    "publisher": {
+      "@type": "Corporation",
+      "name": "SUSE",
+      "url": "https://documentation.suse.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.suse.com/assets/img/suse-white-logo-green.svg"
+      }
+    }
+  }</script>
+<link rel="prev" href="cha-apparmor-glossary.html" title="Chapter 40. AppArmor glossary"/><link rel="next" href="cha-audit-comp.html" title="Chapter 41. Understanding Linux audit"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/main/xml/book_security.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-audit.html">The Linux Audit Framework</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">Preface</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting up authentication clients using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP with 389 Directory Server</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory support</span></a></li><li><a href="cha-security-freeradius.html" class=" "><span class="title-number">8 </span><span class="title-name">Setting up a freeRADIUS server</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local security</span></a><ol><li><a href="cha-physical-security.html" class=" "><span class="title-number">9 </span><span class="title-name">Physical security</span></a></li><li><a href="sec-sec-software-management.html" class=" "><span class="title-number">10 </span><span class="title-name">Software management</span></a></li><li><a href="sec-sec-file-management.html" class=" "><span class="title-number">11 </span><span class="title-name">File management</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">12 </span><span class="title-name">Encrypting partitions and files</span></a></li><li><a href="cha-configure-cryptctl.html" class=" "><span class="title-number">13 </span><span class="title-name">Storage encryption for hosted applications with cryptctl</span></a></li><li><a href="sec-sec-user-management.html" class=" "><span class="title-number">14 </span><span class="title-name">User management</span></a></li><li><a href="cha-sec-cron-at.html" class=" "><span class="title-number">15 </span><span class="title-name">Restricting <code class="systemitem">cron</code> and <code class="systemitem">at</code></span></a></li><li><a href="cha-spectre.html" class=" "><span class="title-number">16 </span><span class="title-name">Spectre/Meltdown checker</span></a></li><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">17 </span><span class="title-name">Configuring security settings with YaST</span></a></li><li><a href="cha-security-polkit.html" class=" "><span class="title-number">18 </span><span class="title-name">The Polkit authentication framework</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">19 </span><span class="title-name">Access control lists in Linux</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">20 </span><span class="title-name">Intrusion detection with AIDE</span></a></li></ol></li><li><a href="part-network-security.html" class="has-children "><span class="title-number">III </span><span class="title-name">Network security</span></a><ol><li><a href="cha-xauth.html" class=" "><span class="title-number">21 </span><span class="title-name">X Window System and X authentication</span></a></li><li><a href="cha-ssh.html" class=" "><span class="title-number">22 </span><span class="title-name">Securing network operations with OpenSSH</span></a></li><li><a href="cha-security-firewall.html" class=" "><span class="title-number">23 </span><span class="title-name">Masquerading and firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">24 </span><span class="title-name">Configuring a VPN server</span></a></li><li><a href="cha-security-xca.html" class=" "><span class="title-number">25 </span><span class="title-name">Managing a PKI with XCA, X certificate and key manager</span></a></li><li><a href="cha-sec-sysctl.html" class=" "><span class="title-number">26 </span><span class="title-name">Improving network security with <code class="command">sysctl</code> variables</span></a></li></ol></li><li><a href="part-compliance.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Regulations and compliance</span></a><ol><li><a href="cha-common-criteria.html" class=" "><span class="title-number">27 </span><span class="title-name">Common Criteria</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">28 </span><span class="title-name">Enabling compliance with FIPS 140-3</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">V </span><span class="title-name">Confining privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">29 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">30 </span><span class="title-name">Getting started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">31 </span><span class="title-name">Immunizing programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">32 </span><span class="title-name">Profile components and syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">33 </span><span class="title-name"><span class="phrase">AppArmor</span> profile repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">34 </span><span class="title-name">Building and managing profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">35 </span><span class="title-name">Building profiles from the command line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">36 </span><span class="title-name">Profiling your Web applications using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">37 </span><span class="title-name">Confining users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">38 </span><span class="title-name">Managing profiled applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">39 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">40 </span><span class="title-name"><span class="phrase">AppArmor</span> glossary</span></a></li></ol></li><li class="active"><a href="part-audit.html" class="has-children you-are-here"><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">42 </span><span class="title-name">Setting up the Linux audit framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">43 </span><span class="title-name">Introducing an audit rule set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">44 </span><span class="title-name">Useful resources</span></a></li></ol></li><li><a href="bk05apa.html" class=" "><span class="title-number">A </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><div class="part" id="part-audit" data-id-title="The Linux Audit Framework"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">15 SP6</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">Part VI </span><span class="title-name">The Linux Audit Framework </span></span><a title="Permalink" class="permalink" href="part-audit.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/main/xml/book_security.xml" title="Edit source document"> </a></div></div></div></div></div><div class="toc"><ul><li><span class="chapter"><a href="cha-audit-comp.html"><span class="title-number">41 </span><span class="title-name">Understanding Linux audit</span></a></span></li><dd class="toc-abstract"><p>
+    The Linux audit framework as shipped with this version of
+    <span class="productname"><span class="phrase">SUSE Linux Enterprise Desktop</span></span> provides a CAPP-compliant (Controlled Access Protection
+    Profiles) auditing system that reliably collects information about any
+    security-relevant event. The audit records can be examined to determine
+    whether any violation of the security policies has been committed, and
+    by whom.
+   </p><p>
+    Providing an audit framework is an important requirement for a
+    CC-CAPP/EAL (Common Criteria-Controlled Access Protection
+    Profiles/Evaluation Assurance Level) certification. Common Criteria (CC)
+    for Information Technology Security Information is an international
+    standard for independent security evaluations. Common Criteria helps
+    customers judge the security level of any IT product they intend to
+    deploy in mission-critical setups.
+   </p><p>
+    Common Criteria security evaluations have two sets of evaluation
+    requirements, functional and assurance requirements. Functional
+    requirements describe the security attributes of the product under
+    evaluation and are summarized under the Controlled Access Protection
+    Profiles (CAPP). Assurance requirements are summarized under the
+    Evaluation Assurance Level (EAL). EAL describes any activities that must
+    take place for the evaluators to be confident that security attributes
+    are present, effective and implemented. Examples for activities of this
+    kind include documenting the developers' search for security
+    vulnerabilities, the patch process, and testing.
+   </p><p>
+    This guide provides a basic understanding of how audit works and how it
+    can be set up. For more information about Common Criteria itself, refer
+    to <a class="link" href="https://www.commoncriteriaportal.org/" target="_blank">the Common
+    Criteria Web site</a>.
+   </p></dd><li><span class="chapter"><a href="cha-audit-setup.html"><span class="title-number">42 </span><span class="title-name">Setting up the Linux audit framework</span></a></span></li><dd class="toc-abstract"><p>
+  This chapter shows how to set up a simple audit scenario. Every step
+  involved in configuring and enabling audit is explained in detail. After
+  you have learned to set up audit, consider a real-world example scenario
+  in <a class="xref" href="cha-audit-scenarios.html" title="Chapter 43. Introducing an audit rule set">Chapter 43, <em>Introducing an audit rule set</em></a>.
+ </p></dd><li><span class="chapter"><a href="cha-audit-scenarios.html"><span class="title-number">43 </span><span class="title-name">Introducing an audit rule set</span></a></span></li><dd class="toc-abstract"><p>
+  The following example configuration illustrates how audit can be used to
+  monitor your system. It highlights the most important items that need to
+  be audited to cover the list of auditable events specified by Controlled
+  Access Protection Profile (CAPP).
+ </p></dd><li><span class="chapter"><a href="cha-audit-moreinfo.html"><span class="title-number">44 </span><span class="title-name">Useful resources</span></a></span></li><dd class="toc-abstract"><p>
+  There are other resources available containing valuable information about
+  the Linux audit framework:
+ </p></dd></ul></div></div><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-apparmor-glossary.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 40 </span><span class="phrase">AppArmor</span> glossary</span></a> </div><div><a class="pagination-link next" href="cha-audit-comp.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 41 </span>Understanding Linux audit</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>
