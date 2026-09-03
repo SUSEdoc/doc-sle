@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP4 | Virtualization Guide | Virtual Networking</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Virtual Networking | SLES 12 SP4"/>
+<meta name="description" content="A VM Guest system needs some means to communicate eith…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP4"/>
+<meta name="book-title" content="Virtualization Guide"/>
+<meta name="chapter-title" content="Chapter 19. Virtual Networking"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Virtual Networking | SLES 12 SP4"/>
+<meta property="og:description" content="A VM Guest system needs some means to communicate either with other VM Guest systems or with a local network. The network in…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Virtual Networking | SLES 12 SP4"/>
+<meta name="twitter:description" content="A VM Guest system needs some means to communicate either with other VM Guest systems or with a local network. The network in…"/>
+<link rel="prev" href="cha-xen-vhost.html" title="Chapter 18. Setting Up a Virtual Machine Host"/><link rel="next" href="cha-xen-manage.html" title="Chapter 20. Managing a Virtualization Environment"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Virtualization Guide</a><span> / </span><a class="crumb" href="part-virt-xen.html">Managing Virtual Machines with Xen</a><span> / </span><a class="crumb" href="cha-xen-network.html">Virtual Networking</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Virtualization Guide</div><ol><li><a href="cha-kvm.html" class=" "><span class="title-number"> </span><span class="title-name">About This Manual</span></a></li><li><a href="part-virt-intro.html" class="has-children "><span class="title-number">I </span><span class="title-name">Introduction</span></a><ol><li><a href="chap-virtualization-introduction.html" class=" "><span class="title-number">1 </span><span class="title-name">Virtualization Technology</span></a></li><li><a href="cha-xen-basics.html" class=" "><span class="title-number">2 </span><span class="title-name">Introduction to Xen Virtualization</span></a></li><li><a href="cha-kvm-intro.html" class=" "><span class="title-number">3 </span><span class="title-name">Introduction to KVM Virtualization</span></a></li><li><a href="cha-containers-intro.html" class=" "><span class="title-number">4 </span><span class="title-name">Introduction to Linux Containers</span></a></li><li><a href="cha-tools-intro.html" class=" "><span class="title-number">5 </span><span class="title-name">Virtualization Tools</span></a></li><li><a href="cha-vt-installation.html" class=" "><span class="title-number">6 </span><span class="title-name">Installation of Virtualization Components</span></a></li><li><a href="cha-virt-support.html" class=" "><span class="title-number">7 </span><span class="title-name">Supported Guests, Hosts and Features</span></a></li></ol></li><li><a href="part-virt-libvirt.html" class="has-children "><span class="title-number">II </span><span class="title-name">Managing Virtual Machines with <code class="systemitem">libvirt</code></span></a><ol><li><a href="cha-libvirt-overview.html" class=" "><span class="title-number">8 </span><span class="title-name">Starting and Stopping <code class="systemitem">libvirtd</code></span></a></li><li><a href="cha-kvm-inst.html" class=" "><span class="title-number">9 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-libvirt-managing.html" class=" "><span class="title-number">10 </span><span class="title-name">Basic VM Guest Management</span></a></li><li><a href="cha-libvirt-connect.html" class=" "><span class="title-number">11 </span><span class="title-name">Connecting and Authorizing</span></a></li><li><a href="cha-libvirt-storage.html" class=" "><span class="title-number">12 </span><span class="title-name">Managing Storage</span></a></li><li><a href="cha-libvirt-networks.html" class=" "><span class="title-number">13 </span><span class="title-name">Managing Networks</span></a></li><li><a href="cha-libvirt-config.html" class=" "><span class="title-number">14 </span><span class="title-name">Configuring Virtual Machines</span></a></li></ol></li><li><a href="part-virt-common.html" class="has-children "><span class="title-number">III </span><span class="title-name">Hypervisor-Independent Features</span></a><ol><li><a href="cha-cachemodes.html" class=" "><span class="title-number">15 </span><span class="title-name">Disk Cache Modes</span></a></li><li><a href="sec-kvm-managing-clock.html" class=" "><span class="title-number">16 </span><span class="title-name">VM Guest Clock Settings</span></a></li><li><a href="chap-guestfs.html" class=" "><span class="title-number">17 </span><span class="title-name">libguestfs</span></a></li></ol></li><li class="active"><a href="part-virt-xen.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Managing Virtual Machines with Xen</span></a><ol><li><a href="cha-xen-vhost.html" class=" "><span class="title-number">18 </span><span class="title-name">Setting Up a Virtual Machine Host</span></a></li><li><a href="cha-xen-network.html" class=" you-are-here"><span class="title-number">19 </span><span class="title-name">Virtual Networking</span></a></li><li><a href="cha-xen-manage.html" class=" "><span class="title-number">20 </span><span class="title-name">Managing a Virtualization Environment</span></a></li><li><a href="cha-xen-vbd.html" class=" "><span class="title-number">21 </span><span class="title-name">Block Devices in Xen</span></a></li><li><a href="cha-xen-config.html" class=" "><span class="title-number">22 </span><span class="title-name">Virtualization: Configuration Options and Settings</span></a></li><li><a href="cha-xen-admin.html" class=" "><span class="title-number">23 </span><span class="title-name">Administrative Tasks</span></a></li><li><a href="cha-xen-xenstore.html" class=" "><span class="title-number">24 </span><span class="title-name">XenStore: Configuration Database Shared between Domains</span></a></li><li><a href="cha-xen-ha.html" class=" "><span class="title-number">25 </span><span class="title-name">Xen as a High-Availability Virtualization Host</span></a></li></ol></li><li><a href="part-virt-qemu.html" class="has-children "><span class="title-number">V </span><span class="title-name">Managing Virtual Machines with QEMU</span></a><ol><li><a href="cha-qemu-overview.html" class=" "><span class="title-number">26 </span><span class="title-name">QEMU Overview</span></a></li><li><a href="cha-qemu-host.html" class=" "><span class="title-number">27 </span><span class="title-name">Setting Up a KVM VM Host Server</span></a></li><li><a href="cha-qemu-guest-inst.html" class=" "><span class="title-number">28 </span><span class="title-name">Guest Installation</span></a></li><li><a href="cha-qemu-running.html" class=" "><span class="title-number">29 </span><span class="title-name">Running Virtual Machines with qemu-system-ARCH</span></a></li><li><a href="cha-qemu-monitor.html" class=" "><span class="title-number">30 </span><span class="title-name">Virtual Machine Administration Using QEMU Monitor</span></a></li></ol></li><li><a href="part-virt-lxc.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Managing Virtual Machines with LXC</span></a><ol><li><a href="cha-lxc.html" class=" "><span class="title-number">31 </span><span class="title-name">Linux Containers</span></a></li><li><a href="cha-lxc2libvirt.html" class=" "><span class="title-number">32 </span><span class="title-name">Migration from LXC to <code class="systemitem">libvirt-lxc</code></span></a></li></ol></li><li><a href="gloss-vt-glossary.html" class=" "><span class="title-number"> </span><span class="title-name">Glossary</span></a></li><li><a href="app-vmdp-driver.html" class=" "><span class="title-number">A </span><span class="title-name">Virtual Machine Drivers</span></a></li><li><a href="app-kvm.html" class=" "><span class="title-number">B </span><span class="title-name">Appendix</span></a></li><li><a href="cha-xmtoxl.html" class=" "><span class="title-number">C </span><span class="title-name">XM, XL Tool Stacks and Libvirt framework</span></a></li><li><a href="app-virt-docupdates.html" class=" "><span class="title-number">D </span><span class="title-name">Documentation Updates</span></a></li><li><a href="bk10ape.html" class=" "><span class="title-number">E </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-xen-network" data-id-title="Virtual Networking"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">12 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">19 </span><span class="title-name">Virtual Networking</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  A VM Guest system needs some means to communicate either with other
+  VM Guest systems or with a local network. The network interface to the
+  VM Guest system is made of a split device driver, which means that any
+  virtual Ethernet device has a corresponding network interface in
+  Dom0. This interface is set up to access a virtual network that is
+  run in Dom0. The bridged virtual network is fully integrated into the
+  system configuration of <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> and can be configured with
+  YaST.
+ </p><p>
+  When installing a Xen VM Host Server, a bridged network configuration
+  will be proposed during normal network configuration. The user can choose
+  to change the configuration during the installation and customize it to
+  the local needs.
+ </p><p>
+  If desired, Xen VM Host Server can be installed after performing a
+  default Physical Server installation using the <code class="systemitem">Install
+  Hypervisor and Tools</code> module in YaST. This module will
+  prepare the system for hosting virtual machines, including invocation of
+  the default bridge networking proposal.
+ </p><p>
+  In case the necessary packages for a Xen VM Host Server are installed
+  manually with <code class="systemitem">rpm</code> or
+  <code class="systemitem">zypper</code>, the remaining system configuration needs to
+  be done by the administrator manually or with YaST.
+ </p><p>
+  The network scripts that are provided by Xen are not used by default
+  in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. They are only delivered for reference but disabled.
+  The network configuration that is used in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span> is done by
+  means of the YaST system configuration similar to the configuration
+  of network interfaces in <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>.
+ </p><p>
+  For more general information about managing network bridges, see <a class="xref" href="cha-libvirt-networks.html#libvirt-networks-bridged" title="13.2. Bridged Networking">Section 13.2, “Bridged Networking”</a>.
+ </p><section class="sect1" id="sec-xen-vdevices" data-id-title="Network Devices for Guest Systems"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.1 </span><span class="title-name">Network Devices for Guest Systems</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#sec-xen-vdevices">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The Xen hypervisor can provide different types of network
+   interfaces to the VM Guest systems. The preferred network device
+   should be a paravirtualized network interface. This yields the highest
+   transfer rates with the lowest system requirements. Up to eight network
+   interfaces may be provided for each VM Guest.
+  </p><p>
+   Systems that are not aware of paravirtualized hardware may not have this
+   option. To connect systems to a network that can only run fully
+   virtualized, several emulated network interfaces are available. The
+   following emulations are at your disposal:
+  </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Realtek 8139 (PCI). This is the default emulated network card.
+    </p></li><li class="listitem"><p>
+     AMD PCnet32 (PCI)
+    </p></li><li class="listitem"><p>
+     NE2000 (PCI)
+    </p></li><li class="listitem"><p>
+     NE2000 (ISA)
+    </p></li><li class="listitem"><p>
+     Intel e100 (PCI)
+    </p></li><li class="listitem"><p>
+     Intel e1000 and its variants e1000-82540em, e1000-82544gc, e1000-82545em (PCI)
+    </p></li></ul></div><p>
+   All these network interfaces are software interfaces. Because every
+   network interface must have a unique MAC address, an address range has
+   been assigned to Xensource that can be used by these interfaces.
+  </p><div id="id-1.12.6.3.9.6" data-id-title="Virtual Network Interfaces and MAC Addresses" class="admonition tip normal"><img class="symbol" alt="Tip" title="Tip" src="static/images/icon-tip.svg"/><div class="admon-title">Tip: Virtual Network Interfaces and MAC Addresses</div><p>
+    The default configuration of MAC addresses in virtualized environments
+    creates a random MAC address that looks like 00:16:3E:xx:xx:xx.
+    Normally, the amount of available MAC addresses should be big enough to
+    get only unique addresses. However, if you have a very big installation,
+    or to make sure that no problems arise from random MAC
+    address assignment, you can also manually assign these addresses.
+   </p></div><p>
+   For debugging or system management purposes, it may be useful to know
+   which virtual interface in Dom0 is connected to which Ethernet
+   device in a running guest. This information may be read from the device
+   naming in Dom0. All virtual devices follow the rule
+   <code class="literal">vif&lt;domain
+   number&gt;.&lt;interface_number&gt;</code>.
+  </p><p>
+   For example, if you want to know the device name for the third interface
+   (eth2) of the VM Guest with id 5, the device in Dom0 would be
+   <code class="literal">vif5.2</code>. To obtain a list of all available interfaces,
+   run the command <code class="command">ip a</code>.
+  </p><p>
+   The device naming does not contain any information about which bridge
+   this interface is connected to. However, this information is available in
+   Dom0. To get an overview about which interface is connected to which
+   bridge, run the command <code class="command">brctl show</code>. The output may
+   look like the following:
+  </p><div class="verbatim-wrap"><pre class="screen"># brctl show
+bridge name     bridge id               STP enabled     interfaces
+br0             8000.001cc0309083       no              eth0
+                                                        vif2.1
+br1             8000.000476f060cc       no              eth1
+                                                        vif2.0
+br2             8000.000000000000       no</pre></div><p>
+   In this example, there are three configured bridges:
+   <code class="literal">br0</code>, <code class="literal">br1</code> and
+   <code class="literal">br2</code>. Currently, <code class="literal">br0</code> and
+   <code class="literal">br1</code> each have a real Ethernet device added:
+   <code class="literal">eth0</code> and <code class="literal">eth1</code>, respectively. There is
+   one VM Guest running with the ID 2 that has two Ethernet devices available.
+   <code class="literal">eth0</code> on the VM Guest is bridged with
+   <code class="literal">eth1</code> on the VM Host Server and eth1 on the VM Guest is
+   connected to <code class="literal">eth0</code> on the VM Host Server. The third bridge with
+   the name <code class="literal">br2</code> is not connected to any VM Guest nor any
+   real Ethernet device.
+  </p></section><section class="sect1" id="sec-xen-net-host-route" data-id-title="Host-Based Routing in Xen"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.2 </span><span class="title-name">Host-Based Routing in Xen</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#sec-xen-net-host-route">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Xen can be set up to use host-based routing in the controlling
+   Dom0. Unfortunately, this is not yet well supported from YaST
+   and requires quite an amount of manual editing of configuration files.
+   Thus, this is a task that requires an advanced administrator.
+  </p><p>
+   The following configuration will only work when using fixed IP addresses.
+   Using DHCP is not practicable with this procedure, because the IP address
+   must be known to both, the VM Guest and the VM Host Server system.
+  </p><p>
+   The easiest way to create a routed guest is to change the networking from
+   a bridged to a routed network. As a requirement to the following
+   procedures, a VM Guest with a bridged network setup must be
+   installed. For example, the VM Host Server is named earth with the IP
+   192.168.1.20, and the VM Guest has the name alice with the
+   IP 192.168.1.21.
+  </p><div class="procedure" id="proc-xen-network-route-ipv4" data-id-title="Configuring a routed IPv4 VM Guest"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 19.1: </span><span class="title-name">Configuring a routed IPv4 VM Guest </span></span><a title="Permalink" class="permalink" href="cha-xen-network.html#proc-xen-network-route-ipv4">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Make sure that alice is shut down. Use
+     <code class="systemitem">xl</code> commands to shut down and check.
+    </p></li><li class="step"><p>
+     Prepare the network configuration on the VM Host Server earth:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Create a hotplug interface that will be used to route the traffic. To
+       accomplish this, create a file named
+       <code class="filename">/etc/sysconfig/network/ifcfg-alice.0</code>
+       with the following content:
+      </p><div class="verbatim-wrap"><pre class="screen">NAME="Xen guest alice"
+BOOTPROTO="static"
+STARTMODE="hotplug"</pre></div></li><li class="step"><p>
+       Edit the file
+       <code class="filename">/etc/sysconfig/SuSEfirewall2</code> and add
+       the following configurations:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         Add alice.0 to the devices in FW_DEV_EXT:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_DEV_EXT="br0 alice.0"</pre></div></li><li class="listitem"><p>
+         Switch on the routing in the firewall:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_ROUTE="yes"</pre></div></li><li class="listitem"><p>
+         Tell the firewall which address should be forwarded:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_FORWARD="192.168.1.21/32,0/0"</pre></div></li><li class="listitem"><p>
+         Finally, restart the firewall with the command:
+        </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl restart SuSEfirewall2</pre></div></li></ul></div></li><li class="step"><p>
+       Add a static route to the interface of alice. To accomplish
+       this, add the following line to the end of
+       <code class="filename">/etc/sysconfig/network/routes</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">192.168.1.21  -  -  alice.0</pre></div></li><li class="step"><p>
+       To make sure that the switches and routers that the VM Host Server is
+       connected to know about the routed interface, activate
+       <code class="literal">proxy_arp</code> on earth. Add the following lines
+       to <code class="filename">/etc/sysctl.conf</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">net.ipv4.conf.default.proxy_arp = 1
+net.ipv4.conf.all.proxy_arp = 1</pre></div></li><li class="step"><p>
+       Activate all changes with the commands:
+      </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl restart systemd-sysctl wicked</pre></div></li></ol></li><li class="step"><p>
+     Proceed with configuring the Xen configuration of the VM Guest by
+     changing the vif interface configuration for alice as described in
+     <a class="xref" href="cha-xen-manage.html#sec-xen-manage-xl" title="20.1. XL—Xen Management Tool">Section 20.1, “XL—Xen Management Tool”</a>. Make the following changes to the
+     text file you generate during the process:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Remove the snippet
+      </p><div class="verbatim-wrap"><pre class="screen">bridge=br0</pre></div></li><li class="step"><p>
+       And add the following one:
+      </p><div class="verbatim-wrap"><pre class="screen">vifname=vifalice.0</pre></div><p>
+       or
+      </p><div class="verbatim-wrap"><pre class="screen">vifname=vifalice.0=emu</pre></div><p>
+       for a fully virtualized domain.
+      </p></li><li class="step"><p>
+       Change the script that is used to set up the interface to the
+       following:
+      </p><div class="verbatim-wrap"><pre class="screen">script=/etc/xen/scripts/vif-route-ifup</pre></div></li><li class="step"><p>
+       Activate the new configuration and start the VM Guest.
+      </p></li></ol></li><li class="step"><p>
+     The remaining configuration tasks must be accomplished from inside the
+     VM Guest.
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Open a console to the VM Guest with <code class="command">xl console</code>
+       <em class="replaceable">DOMAIN</em> and log in.
+      </p></li><li class="step"><p>
+       Check that the guest IP is set to 192.168.1.21.
+      </p></li><li class="step"><p>
+       Provide VM Guest with a host route and a default gateway to the
+       VM Host Server. Do this by adding the following lines to
+       <code class="filename">/etc/sysconfig/network/routes</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">192.168.1.20 - - eth0
+default 192.168.1.20 - -</pre></div></li></ol></li><li class="step"><p>
+     Finally, test the network connection from the VM Guest to the world
+     outside and from the network to your VM Guest.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-xen-net-masquerade" data-id-title="Creating a Masqueraded Network Setup"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.3 </span><span class="title-name">Creating a Masqueraded Network Setup</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#sec-xen-net-masquerade">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Creating a masqueraded network setup is quite similar to the routed
+   setup. However, there is no proxy_arp needed, and some firewall rules are
+   different. To create a masqueraded network to a guest dolly
+   with the IP address 192.168.100.1 where the host has its external
+   interface on <code class="literal">br0</code>, proceed as follows. For easier
+   configuration, only the already installed guest is modified to use a
+   masqueraded network:
+  </p><div class="procedure" id="id-1.12.6.3.11.3" data-id-title="Configuring a masqueraded IPv4 VM Guest"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 19.2: </span><span class="title-name">Configuring a masqueraded IPv4 VM Guest </span></span><a title="Permalink" class="permalink" href="cha-xen-network.html#id-1.12.6.3.11.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+     Shut down the VM Guest system with <code class="command">xl shutdown</code>
+     <em class="replaceable">DOMAIN</em>.
+    </p></li><li class="step"><p>
+     Prepare the network configuration on the VM Host Server:
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Create a hotplug interface that will be used to route the traffic. To
+       accomplish this, create a file named
+       <code class="filename">/etc/sysconfig/network/ifcfg-dolly.0</code>
+       with the following content:
+      </p><div class="verbatim-wrap"><pre class="screen">NAME="Xen guest dolly"
+BOOTPROTO="static"
+STARTMODE="hotplug"</pre></div></li><li class="step"><p>
+       Edit the file
+       <code class="filename">/etc/sysconfig/SuSEfirewall2</code> and add
+       the following configurations:
+      </p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+         Add dolly.0 to the devices in FW_DEV_DMZ:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_DEV_DMZ="dolly.0"</pre></div></li><li class="listitem"><p>
+         Switch on the routing in the firewall:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_ROUTE="yes"</pre></div></li><li class="listitem"><p>
+         Switch on masquerading in the firewall:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_MASQUERADE="yes"</pre></div></li><li class="listitem"><p>
+         Tell the firewall which network should be masqueraded:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_MASQ_NETS="192.168.100.1/32"</pre></div></li><li class="listitem"><p>
+         Remove the networks from the masquerading exceptions:
+        </p><div class="verbatim-wrap"><pre class="screen">FW_NOMASQ_NETS=""</pre></div></li><li class="listitem"><p>
+         Finally, restart the firewall with the command:
+        </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl restart SuSEfirewall2</pre></div></li></ul></div></li><li class="step"><p>
+       Add a static route to the interface of dolly. To
+       accomplish this, add the following line to the end of
+       <code class="filename">/etc/sysconfig/network/routes</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">192.168.100.1 - - dolly.0</pre></div></li><li class="step"><p>
+       Activate all changes with the command:
+      </p><div class="verbatim-wrap"><pre class="screen">sudo systemctl restart wicked</pre></div></li></ol></li><li class="step"><p>
+     Proceed with configuring the Xen configuration of the
+     VM Guest.
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Change the vif interface configuration for dolly as
+       described in <a class="xref" href="cha-xen-manage.html#sec-xen-manage-xl" title="20.1. XL—Xen Management Tool">Section 20.1, “XL—Xen Management Tool”</a>.
+      </p></li><li class="step"><p>
+       Remove the entry:
+      </p><div class="verbatim-wrap"><pre class="screen">bridge=br0</pre></div></li><li class="step"><p>
+       And add the following one:
+      </p><div class="verbatim-wrap"><pre class="screen">vifname=vifdolly.0</pre></div></li><li class="step"><p>
+       Change the script that is used to set up the interface to the
+       following:
+      </p><div class="verbatim-wrap"><pre class="screen">script=/etc/xen/scripts/vif-route-ifup</pre></div></li><li class="step"><p>
+       Activate the new configuration and start the VM Guest.
+      </p></li></ol></li><li class="step"><p>
+     The remaining configuration tasks need to be accomplished from inside
+     the VM Guest.
+    </p><ol type="a" class="substeps"><li class="step"><p>
+       Open a console to the VM Guest with <code class="command">xl console</code>
+       <em class="replaceable">DOMAIN</em> and log in.
+      </p></li><li class="step"><p>
+       Check whether the guest IP is set to 192.168.100.1.
+      </p></li><li class="step"><p>
+       Provide VM Guest with a host route and a default gateway to the
+       VM Host Server. Do this by adding the following lines to
+       <code class="filename">/etc/sysconfig/network/routes</code>:
+      </p><div class="verbatim-wrap"><pre class="screen">192.168.1.20 - - eth0
+default 192.168.1.20 - -</pre></div></li></ol></li><li class="step"><p>
+     Finally, test the network connection from the VM Guest to the
+     outside world.
+    </p></li></ol></div></div></section><section class="sect1" id="sec-xen-net-special" data-id-title="Special Configurations"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">19.4 </span><span class="title-name">Special Configurations</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#sec-xen-net-special">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   There are many network configuration possibilities available to Xen.
+   The following configurations are not activated by default:
+  </p><section class="sect2" id="sec-xen-net-throttle" data-id-title="Bandwidth Throttling in Virtual Networks"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.4.1 </span><span class="title-name">Bandwidth Throttling in Virtual Networks</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#sec-xen-net-throttle">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    With Xen, you may limit the network transfer rate a virtual guest
+    may use to access a bridge. To configure this, you need to modify
+    the VM Guest configuration as described in
+    <a class="xref" href="cha-xen-manage.html#sec-xen-manage-xl" title="20.1. XL—Xen Management Tool">Section 20.1, “XL—Xen Management Tool”</a>.
+   </p><p>
+    In the configuration file, first search for the device that is connected
+    to the virtual bridge. The configuration looks like the following:
+   </p><div class="verbatim-wrap"><pre class="screen">vif = [ 'mac=00:16:3e:4f:94:a9,bridge=br0' ]</pre></div><p>
+    To add a maximum transfer rate, add a parameter
+    <code class="systemitem">rate</code> to this configuration as in:
+   </p><div class="verbatim-wrap"><pre class="screen">vif = [ 'mac=00:16:3e:4f:94:a9,bridge=br0,rate=100Mb/s' ]</pre></div><p>
+    Note that the rate is either <code class="literal">Mb/s</code> (megabits per
+    second) or <code class="literal">MB/s</code> (megabytes per second). In the above
+    example, the maximum transfer rate of the virtual interface is 100
+    megabits. By default, there is no limitation to the bandwidth of a guest
+    to the virtual bridge.
+   </p><p>
+    It is even possible to fine-tune the behavior by specifying the time
+    window that is used to define the granularity of the credit
+    replenishment:
+   </p><div class="verbatim-wrap"><pre class="screen">vif = [ 'mac=00:16:3e:4f:94:a9,bridge=br0,rate=100Mb/s@20ms' ]</pre></div></section><section class="sect2" id="sec-xen-net-monitor" data-id-title="Monitoring the Network Traffic"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">19.4.2 </span><span class="title-name">Monitoring the Network Traffic</span></span> <a title="Permalink" class="permalink" href="cha-xen-network.html#sec-xen-net-monitor">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/xen_host_network.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    To monitor the traffic on a specific interface, the little application
+    <code class="systemitem">iftop</code> is a nice program that displays the
+    current network traffic in a terminal.
+   </p><p>
+    When running a Xen VM Host Server, you need to define the interface
+    that is monitored. The interface that Dom0 uses to get access to
+    the physical network is the bridge device, for example
+    <code class="systemitem">br0</code>. This, however, may vary on your system. To
+    monitor all traffic to the physical interface, run a terminal as
+    <code class="systemitem">root</code> and use the command:
+   </p><div class="verbatim-wrap"><pre class="screen">iftop -i br0</pre></div><p>
+    To monitor the network traffic of a special network interface of a
+    specific VM Guest, supply the correct virtual interface. For
+    example, to monitor the first Ethernet device of the domain with id 5,
+    use the command:
+   </p><div class="verbatim-wrap"><pre class="screen">ftop -i vif5.0</pre></div><p>
+    To quit <code class="command">iftop</code>, press the key <span class="keycap">Q</span>. More
+    options and possibilities are available in the manual page <code class="command">man
+    8 iftop</code>.
+   </p></section></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-xen-vhost.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 18 </span>Setting Up a Virtual Machine Host</span></a> </div><div><a class="pagination-link next" href="cha-xen-manage.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 20 </span>Managing a Virtualization Environment</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-xen-network.html#sec-xen-vdevices"><span class="title-number">19.1 </span><span class="title-name">Network Devices for Guest Systems</span></a></span></li><li><span class="sect1"><a href="cha-xen-network.html#sec-xen-net-host-route"><span class="title-number">19.2 </span><span class="title-name">Host-Based Routing in Xen</span></a></span></li><li><span class="sect1"><a href="cha-xen-network.html#sec-xen-net-masquerade"><span class="title-number">19.3 </span><span class="title-name">Creating a Masqueraded Network Setup</span></a></span></li><li><span class="sect1"><a href="cha-xen-network.html#sec-xen-net-special"><span class="title-number">19.4 </span><span class="title-name">Special Configurations</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>
