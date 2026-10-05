@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP4 | System Analysis and Tuning Guide | Kernel Control Groups</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Kernel Control Groups | SLES 12 SP4"/>
+<meta name="description" content="Kernel Control Groups (cgroups) are a kernel feature t…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP4"/>
+<meta name="book-title" content="System Analysis and Tuning Guide"/>
+<meta name="chapter-title" content="Chapter 9. Kernel Control Groups"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Kernel Control Groups | SLES 12 SP4"/>
+<meta property="og:description" content="Kernel Control Groups (cgroups) are a kernel feature that allows assigning and limiting hardware and system resources for pr…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Kernel Control Groups | SLES 12 SP4"/>
+<meta name="twitter:description" content="Kernel Control Groups (cgroups) are a kernel feature that allows assigning and limiting hardware and system resources for pr…"/>
+<link rel="prev" href="cha-tuning-resources.html" title="Chapter 8. General System Resource Management"/><link rel="next" href="cha-tuning-numactl.html" title="Chapter 10. Automatic Non-Uniform Memory Access (NUMA) Balancing"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/tuning_cgroups.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">System Analysis and Tuning Guide</a><span> / </span><a class="crumb" href="part-tuning-resources.html">Resource Management</a><span> / </span><a class="crumb" href="cha-tuning-cgroups.html">Kernel Control Groups</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">System Analysis and Tuning Guide</div><ol><li><a href="preface-tuning.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="part-tuning-basics.html" class="has-children "><span class="title-number">I </span><span class="title-name">Basics</span></a><ol><li><a href="cha-tuning-basics.html" class=" "><span class="title-number">1 </span><span class="title-name">General Notes on System Tuning</span></a></li></ol></li><li><a href="part-tuning-monitoring.html" class="has-children "><span class="title-number">II </span><span class="title-name">System Monitoring</span></a><ol><li><a href="cha-util.html" class=" "><span class="title-number">2 </span><span class="title-name">System Monitoring Utilities</span></a></li><li><a href="cha-tuning-logfiles.html" class=" "><span class="title-number">3 </span><span class="title-name">Analyzing and Managing System Log Files</span></a></li></ol></li><li><a href="part-tuning-kerneltrace.html" class="has-children "><span class="title-number">III </span><span class="title-name">Kernel Monitoring</span></a><ol><li><a href="cha-tuning-systemtap.html" class=" "><span class="title-number">4 </span><span class="title-name">SystemTap—Filtering and Analyzing System Data</span></a></li><li><a href="cha-tuning-kprobes.html" class=" "><span class="title-number">5 </span><span class="title-name">Kernel Probes</span></a></li><li><a href="cha-perf.html" class=" "><span class="title-number">6 </span><span class="title-name">Hardware-Based Performance Monitoring with Perf</span></a></li><li><a href="cha-tuning-oprofile.html" class=" "><span class="title-number">7 </span><span class="title-name">OProfile—System-Wide Profiler</span></a></li></ol></li><li class="active"><a href="part-tuning-resources.html" class="has-children you-are-here"><span class="title-number">IV </span><span class="title-name">Resource Management</span></a><ol><li><a href="cha-tuning-resources.html" class=" "><span class="title-number">8 </span><span class="title-name">General System Resource Management</span></a></li><li><a href="cha-tuning-cgroups.html" class=" you-are-here"><span class="title-number">9 </span><span class="title-name">Kernel Control Groups</span></a></li><li><a href="cha-tuning-numactl.html" class=" "><span class="title-number">10 </span><span class="title-name">Automatic Non-Uniform Memory Access (NUMA) Balancing</span></a></li><li><a href="cha-tuning-power.html" class=" "><span class="title-number">11 </span><span class="title-name">Power Management</span></a></li></ol></li><li><a href="part-tuning-kernel.html" class="has-children "><span class="title-number">V </span><span class="title-name">Kernel Tuning</span></a><ol><li><a href="cha-tuning-io.html" class=" "><span class="title-number">12 </span><span class="title-name">Tuning I/O Performance</span></a></li><li><a href="cha-tuning-taskscheduler.html" class=" "><span class="title-number">13 </span><span class="title-name">Tuning the Task Scheduler</span></a></li><li><a href="cha-tuning-memory.html" class=" "><span class="title-number">14 </span><span class="title-name">Tuning the Memory Management Subsystem</span></a></li><li><a href="cha-tuning-network.html" class=" "><span class="title-number">15 </span><span class="title-name">Tuning the Network</span></a></li></ol></li><li><a href="part-tuning-dumps.html" class="has-children "><span class="title-number">VI </span><span class="title-name">Handling System Dumps</span></a><ol><li><a href="cha-tuning-tracing.html" class=" "><span class="title-number">16 </span><span class="title-name">Tracing Tools</span></a></li><li><a href="cha-tuning-kexec.html" class=" "><span class="title-number">17 </span><span class="title-name">Kexec and Kdump</span></a></li><li><a href="cha-tuning-systemd-coredump.html" class=" "><span class="title-number">18 </span><span class="title-name">Using <code class="systemitem">systemd-coredump</code> to Debug Application Crashes</span></a></li></ol></li><li><a href="part-tuning-ptp.html" class="has-children "><span class="title-number">VII </span><span class="title-name">Synchronized Clocks with Precision Time Protocol</span></a><ol><li><a href="cha-tuning-ptp.html" class=" "><span class="title-number">19 </span><span class="title-name">Precision Time Protocol</span></a></li></ol></li><li><a href="app-tuning-docupdates.html" class=" "><span class="title-number">A </span><span class="title-name">Documentation Updates</span></a></li><li><a href="bk06apb.html" class=" "><span class="title-number">B </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-tuning-cgroups" data-id-title="Kernel Control Groups"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">12 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">9 </span><span class="title-name">Kernel Control Groups</span></span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/tuning_cgroups.xml" title="Edit source document"> </a></div></div></div><div><div class="abstract"><p>
+    Kernel Control Groups (<span class="quote">“<span class="quote">cgroups</span>”</span>) are a kernel feature
+    that allows assigning and limiting hardware and system resources for processes.
+    Processes can also be organized in a hierarchical tree structure.
+   </p></div></div></div></div><section class="sect1" id="sec-tuning-cgroups-overview" data-id-title="Overview"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.1 </span><span class="title-name">Overview</span></span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-overview">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/tuning_cgroups.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Every process is assigned exactly one administrative cgroup. cgroups are ordered
+   in a hierarchical tree structure. Resource limitations can be set
+   for single processes or for whole branches of the hierarchy tree.
+   Limitations for CPU, memory, disk I/O, or network bandwidth usage
+   can be set.
+  </p><p>
+   On <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>, <code class="systemitem">systemd</code> uses cgroups to organize all
+   processes in groups, which <code class="systemitem">systemd</code> calls slices. <code class="systemitem">systemd</code> also
+   provides an interface for setting cgroup properties.
+  </p><p>
+   The command <code class="command">systemd-cgls</code> displays the hierarchy
+   tree.
+  </p><p>
+   This chapter is an overview. For more details, refer to the listed
+   references.
+  </p></section><section class="sect1" id="sec-tuning-cgroups-usage" data-id-title="Setting Resource Limits"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.2 </span><span class="title-name">Setting Resource Limits</span></span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-usage">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/tuning_cgroups.xml" title="Edit source document"> </a></div></div></div></div></div><div id="id-1.8.6.3.4.2" data-id-title="Implicit Resource Consumption" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: Implicit Resource Consumption</div><p>
+      Be aware that resource consumption implicitly depends on the environment
+      where your workload executes (e.g. size of data structures in libraries/kernel,
+      forking behavior of utilities, computational efficiency),
+      hence it is recommended to (re)calibrate your limits should the environment change.
+    </p></div><p>
+   Limitations for <code class="literal">cgroups</code> can be set with the
+   <code class="command">systemctl set-property</code> command. The syntax is:
+  </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property [--runtime] <em class="replaceable">NAME</em> <em class="replaceable">PROPERTY1</em>=<em class="replaceable">VALUE</em> [<em class="replaceable">PROPERTY2</em>=<em class="replaceable">VALUE</em>]</code></pre></div><p>
+   Optionally, use the <code class="option">--runtime</code> option. With this
+   option, set limits do not persist after the next reboot.
+  </p><p>
+   Replace <em class="replaceable">NAME</em> with a <code class="systemitem">systemd</code> service
+   slice, scope, socket, mount, or swap name. Replace properties with
+   one or more of the following:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.8.6.3.4.7.1"><span class="term"><code class="literal">CPUAccounting=</code><code class="option">[yes|no]</code></span></dt><dd><p>
+      Turns on CPU usage accounting. This property takes
+      <code class="literal">yes</code> and <code class="literal">no</code> as arguments.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property user.slice CPUAccounting=yes</code></pre></div></dd><dt id="id-1.8.6.3.4.7.2"><span class="term"><code class="literal">CPUQuota=</code><em class="replaceable">PERCENTAGE</em></span></dt><dd><p>
+      Assigns a CPU time to processes. The value is a percentage
+      followed by a <code class="literal">%</code> as suffix. This requires
+      <code class="literal">CPUAccounting=yes</code>.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property user.slice CPUQuota=50%</code></pre></div></dd><dt id="id-1.8.6.3.4.7.3"><span class="term"><code class="literal">MemoryAccounting=</code><code class="option">[yes|no]</code></span></dt><dd><p>
+      Turns on memory usage accounting. This property takes
+      <code class="literal">yes</code> and <code class="literal">no</code> as arguments.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property user.slice MemoryAccounting=yes</code></pre></div></dd><dt id="id-1.8.6.3.4.7.4"><span class="term"><code class="literal">MemoryLow=</code><em class="replaceable">BYTES</em></span></dt><dd><p>
+      Unused memory from processes below this limit will not be
+      reclaimed for other use. Use suffixes K, M, G or T for
+      <em class="replaceable">BYTES</em>. This requires
+      <code class="literal">MemoryAccounting=yes</code>.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property nginx.service MemoryLow=512M</code></pre></div></dd><dt id="id-1.8.6.3.4.7.5"><span class="term"><code class="literal">MemoryHigh=</code><em class="replaceable">BYTES</em></span></dt><dd><p>
+      If more memory above this limit is used, memory is aggressively
+      taken away from the processes. Use suffixes K, M, G or T for
+      <em class="replaceable">BYTES</em>. This requires
+      <code class="literal">MemoryAccounting=yes</code>.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property nginx.service MemoryHigh=2G</code></pre></div></dd><dt id="id-1.8.6.3.4.7.6"><span class="term"><code class="literal">MemoryMax=</code><em class="replaceable">BYTES</em></span></dt><dd><p>
+      Sets a maximum limit for used memory. Processes will be killed if
+      they use more memory than allowed. Use suffixes K, M, G or T for
+      <em class="replaceable">BYTES</em>. This requires
+      <code class="literal">MemoryAccounting=yes</code>.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property nginx.service MemoryMax=4G</code></pre></div></dd><dt id="id-1.8.6.3.4.7.7"><span class="term"><code class="literal">DeviceAllow=</code></span></dt><dd><p>
+      Allows read (<code class="literal">r</code>), write (<code class="literal">w</code>)
+      and mknod (<code class="literal">m</code>) access. The command takes a
+      device node specifier and a list of <code class="literal">r</code>, <code class="literal">w</code> or
+      <code class="literal">m</code>, separated by a white space.
+     </p><p>
+      Example:
+     </p><div class="verbatim-wrap"><pre class="screen"><code class="prompt root">root # </code><code class="command">systemctl set-property system.slice DeviceAllow="/dev/sdb1 r"</code></pre></div></dd><dt id="id-1.8.6.3.4.7.8"><span class="term"><code class="literal">DevicePolicy=</code><code class="option">[auto|closed|strict]</code></span></dt><dd><p>
+      When set to <code class="literal">strict</code>, only access to devices
+      that are listed in <code class="literal">DeviceAllow</code> is allowed.
+      <code class="literal">closed</code> additionally allows access to standard
+      pseudo devices including <code class="filename">/dev/null</code>,
+      <code class="filename">/dev/zero</code>, <code class="filename">/dev/full</code>,
+      <code class="filename">/dev/random</code>, and
+      <code class="filename">/dev/urandom</code>.
+      <code class="literal">auto</code> allows access to all devices if no
+      specific rule is defined in <code class="literal">DeviceAllow</code>.
+      <code class="literal">auto</code> is the default setting.
+     </p></dd></dl></div><p>
+   For more details and a complete list of properties, see <code class="command">man
+   systemd.resource-control</code>.
+  </p></section><section class="sect1" id="sec-tuning-cgroups-info" data-id-title="For More Information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">9.3 </span><span class="title-name">For More Information</span></span> <a title="Permalink" class="permalink" href="cha-tuning-cgroups.html#sec-tuning-cgroups-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/tuning_cgroups.xml" title="Edit source document"> </a></div></div></div></div></div><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>
+     Kernel documentation (package <code class="systemitem">kernel-source</code>):
+     files in <code class="filename">/usr/src/linux/Documentation/cgroups</code>.
+    </p></li><li class="listitem"><p>
+     <a class="link" href="http://lwn.net/Articles/604609/" target="_blank">http://lwn.net/Articles/604609/</a>—Brown,
+     Neil: Control Groups Series (2014, 7 parts).
+    </p></li><li class="listitem"><p>
+     <a class="link" href="http://lwn.net/Articles/243795/" target="_blank">http://lwn.net/Articles/243795/</a>—Corbet,
+     Jonathan: Controlling memory use in containers (2007).
+    </p></li><li class="listitem"><p>
+     <a class="link" href="http://lwn.net/Articles/236038/" target="_blank">http://lwn.net/Articles/236038/</a>—Corbet,
+     Jonathan: Process containers (2007).
+    </p></li></ul></div></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-tuning-resources.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 8 </span>General System Resource Management</span></a> </div><div><a class="pagination-link next" href="cha-tuning-numactl.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 10 </span>Automatic Non-Uniform Memory Access (NUMA) Balancing</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-overview"><span class="title-number">9.1 </span><span class="title-name">Overview</span></a></span></li><li><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-usage"><span class="title-number">9.2 </span><span class="title-name">Setting Resource Limits</span></a></span></li><li><span class="sect1"><a href="cha-tuning-cgroups.html#sec-tuning-cgroups-info"><span class="title-number">9.3 </span><span class="title-name">For More Information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>

@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><title>SLES 12 SP4 | Security and Hardening Guide | Masquerading and Firewalls</title><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/><link rel="stylesheet" type="text/css" href="static/css/style.css"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/><link rel="schema.DCTERMS" href="http://purl.org/dc/terms/"/>
+<meta name="title" content="Masquerading and Firewalls | SLES 12 SP4"/>
+<meta name="description" content="Whenever Linux is used in a network environment, you c…"/>
+<meta name="product-name" content="SUSE Linux Enterprise Server"/>
+<meta name="product-number" content="12 SP4"/>
+<meta name="book-title" content="Security and Hardening Guide"/>
+<meta name="chapter-title" content="Chapter 15. Masquerading and Firewalls"/>
+<meta name="tracker-url" content="https://bugzilla.suse.com/enter_bug.cgi"/>
+<meta name="tracker-type" content="bsc"/>
+<meta name="tracker-bsc-assignee" content="fs@suse.com"/>
+<meta name="tracker-bsc-component" content="Documentation"/>
+<meta name="tracker-bsc-product" content="SUSE Linux Enterprise Server 12 SP4"/>
+<meta name="publisher" content="SUSE"/><meta property="og:title" content="Masquerading and Firewalls | SLES 12 SP4"/>
+<meta property="og:description" content="Whenever Linux is used in a network environment, you can use the kernel functions that allow the manipulation of network pac…"/>
+<meta property="og:type" content="article"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Masquerading and Firewalls | SLES 12 SP4"/>
+<meta name="twitter:description" content="Whenever Linux is used in a network environment, you can use the kernel functions that allow the manipulation of network pac…"/>
+<link rel="prev" href="cha-ssh.html" title="Chapter 14. SSH: Secure Network Operations"/><link rel="next" href="cha-security-vpnserver.html" title="Chapter 16. Configuring a VPN Server"/><script type="text/javascript">
+
+if ( window.location.protocol.toLowerCase() != 'file:' ) {
+  document.write('<link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"></link>');
+};
+
+</script><noscript><link rel="stylesheet" type="text/css" href="https://documentation.suse.com/docserv/res/fonts/poppins/poppins.css"/></noscript><script src="static/js/script-purejs.js" type="text/javascript"> </script><script src="static/js/highlight.min.js" type="text/javascript"> </script><script>
+
+$(document).ready(function() {
+  $('.verbatim-wrap.highlight').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+hljs.configure({
+  useBR: false
+});
+
+</script><meta name="edit-url" content="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml"/></head><body class="draft wide offline js-off" onload="$('#betawarn-button-wrap').toggle();if (document.cookie.length > 0) {if (document.cookie.indexOf('betawarn=closed') != -1){$('#betawarn').toggle()}};"><div id="betawarn" style="position:fixed;bottom:0;z-index:9025;background-color:#FDE8E8;padding:1em;margin-left:10%;margin-right:10%;display:block;border-top:.75em solid #E11;width:80%"><p style="color:#333;margin:1em 0;padding:0;">This is a draft document that was built and uploaded automatically. It may document beta software and be incomplete or even incorrect. <strong>Use this document at your own risk.</strong></p> <div id="betawarn-button-wrap" style="display:none;margin:0;padding:0;"><a href="#" onclick="$('#betawarn').toggle();var d=new Date();d.setTime(d.getTime()+(0.5*24*60*60*1000));document.cookie='betawarn=closed; expires='+d.toUTCString()+'; path=/'; return false;" style="color:#333;text-decoration:underline;float:left;margin-top:.5em;padding:1em;display:block;background-color:#FABEBE;">I understand this is a draft</a></div></div><div class="bypass-block"><a href="#_content">Jump to content</a><a href="#_bottom-pagination">Jump to page navigation: previous page [access key p]/next page [access key n]</a></div><header id="_mainnav"><div class="growth-inhibitor"><img src="static/images/logo.svg" alt="Logo" class="logo"/></div></header><div class="crumbs"><div class="growth-inhibitor"><a class="crumb" href="index.html">Security and Hardening Guide</a><span> / </span><a class="crumb" href="part-network-security.html">Network Security</a><span> / </span><a class="crumb" href="cha-security-firewall.html">Masquerading and Firewalls</a></div></div><main id="_content"><nav id="_side-toc-overall" class="side-toc"><div class="side-title">Security and Hardening Guide</div><ol><li><a href="preface-security.html" class=" "><span class="title-number"> </span><span class="title-name">About This Guide</span></a></li><li><a href="cha-security.html" class=" "><span class="title-number">1 </span><span class="title-name">Security and Confidentiality</span></a></li><li><a href="part-auth.html" class="has-children "><span class="title-number">I </span><span class="title-name">Authentication</span></a><ol><li><a href="cha-pam.html" class=" "><span class="title-number">2 </span><span class="title-name">Authentication with PAM</span></a></li><li><a href="cha-nis.html" class=" "><span class="title-number">3 </span><span class="title-name">Using NIS</span></a></li><li><a href="cha-security-auth.html" class=" "><span class="title-number">4 </span><span class="title-name">Setting Up Authentication Servers and Clients Using YaST</span></a></li><li><a href="cha-security-ldap.html" class=" "><span class="title-number">5 </span><span class="title-name">LDAP—A Directory Service</span></a></li><li><a href="cha-security-kerberos.html" class=" "><span class="title-number">6 </span><span class="title-name">Network Authentication with Kerberos</span></a></li><li><a href="cha-security-ad.html" class=" "><span class="title-number">7 </span><span class="title-name">Active Directory Support</span></a></li></ol></li><li><a href="part-local-security.html" class="has-children "><span class="title-number">II </span><span class="title-name">Local Security</span></a><ol><li><a href="cha-security-yast-security.html" class=" "><span class="title-number">8 </span><span class="title-name">Configuring Security Settings with YaST</span></a></li><li><a href="cha-security-policykit.html" class=" "><span class="title-number">9 </span><span class="title-name">Authorization with Polkit</span></a></li><li><a href="cha-security-acls.html" class=" "><span class="title-number">10 </span><span class="title-name">Access Control Lists in Linux</span></a></li><li><a href="cha-security-cryptofs.html" class=" "><span class="title-number">11 </span><span class="title-name">Encrypting Partitions and Files</span></a></li><li><a href="cha-certstore.html" class=" "><span class="title-number">12 </span><span class="title-name">Certificate Store</span></a></li><li><a href="cha-aide.html" class=" "><span class="title-number">13 </span><span class="title-name">Intrusion Detection with AIDE</span></a></li></ol></li><li class="active"><a href="part-network-security.html" class="has-children you-are-here"><span class="title-number">III </span><span class="title-name">Network Security</span></a><ol><li><a href="cha-ssh.html" class=" "><span class="title-number">14 </span><span class="title-name">SSH: Secure Network Operations</span></a></li><li><a href="cha-security-firewall.html" class=" you-are-here"><span class="title-number">15 </span><span class="title-name">Masquerading and Firewalls</span></a></li><li><a href="cha-security-vpnserver.html" class=" "><span class="title-number">16 </span><span class="title-name">Configuring a VPN Server</span></a></li><li><a href="cha-security-yast-ca.html" class=" "><span class="title-number">17 </span><span class="title-name">Managing X.509 Certification</span></a></li><li><a href="cha-security-fips.html" class=" "><span class="title-number">18 </span><span class="title-name">Enabling compliance with FIPS 140-2</span></a></li></ol></li><li><a href="part-apparmor.html" class="has-children "><span class="title-number">IV </span><span class="title-name">Confining Privileges with <span class="phrase">AppArmor</span></span></a><ol><li><a href="cha-apparmor-intro.html" class=" "><span class="title-number">19 </span><span class="title-name">Introducing <span class="phrase">AppArmor</span></span></a></li><li><a href="cha-apparmor-start.html" class=" "><span class="title-number">20 </span><span class="title-name">Getting Started</span></a></li><li><a href="cha-apparmor-concept.html" class=" "><span class="title-number">21 </span><span class="title-name">Immunizing Programs</span></a></li><li><a href="cha-apparmor-profiles.html" class=" "><span class="title-number">22 </span><span class="title-name">Profile Components and Syntax</span></a></li><li><a href="cha-apparmor-repos.html" class=" "><span class="title-number">23 </span><span class="title-name"><span class="phrase">AppArmor</span> Profile Repositories</span></a></li><li><a href="cha-apparmor-yast.html" class=" "><span class="title-number">24 </span><span class="title-name">Building and Managing Profiles with YaST</span></a></li><li><a href="cha-apparmor-commandline.html" class=" "><span class="title-number">25 </span><span class="title-name">Building Profiles from the Command Line</span></a></li><li><a href="cha-apparmor-hat.html" class=" "><span class="title-number">26 </span><span class="title-name">Profiling Your Web Applications Using ChangeHat</span></a></li><li><a href="cha-apparmor-pam.html" class=" "><span class="title-number">27 </span><span class="title-name">Confining Users with <code class="systemitem">pam_apparmor</code></span></a></li><li><a href="cha-apparmor-managing.html" class=" "><span class="title-number">28 </span><span class="title-name">Managing Profiled Applications</span></a></li><li><a href="cha-apparmor-support.html" class=" "><span class="title-number">29 </span><span class="title-name">Support</span></a></li><li><a href="cha-apparmor-glossary.html" class=" "><span class="title-number">30 </span><span class="title-name"><span class="phrase">AppArmor</span> Glossary</span></a></li></ol></li><li><a href="bk05pt05.html" class="has-children "><span class="title-number">V </span><span class="title-name">SELinux</span></a><ol><li><a href="cha-selinux.html" class=" "><span class="title-number">31 </span><span class="title-name">Configuring SELinux</span></a></li></ol></li><li><a href="part-audit.html" class="has-children "><span class="title-number">VI </span><span class="title-name">The Linux Audit Framework</span></a><ol><li><a href="cha-audit-comp.html" class=" "><span class="title-number">32 </span><span class="title-name">Understanding Linux Audit</span></a></li><li><a href="cha-audit-setup.html" class=" "><span class="title-number">33 </span><span class="title-name">Setting Up the Linux Audit Framework</span></a></li><li><a href="cha-audit-scenarios.html" class=" "><span class="title-number">34 </span><span class="title-name">Introducing an Audit Rule Set</span></a></li><li><a href="cha-audit-moreinfo.html" class=" "><span class="title-number">35 </span><span class="title-name">Useful Resources</span></a></li></ol></li><li><a href="app-pcidss.html" class=" "><span class="title-number">A </span><span class="title-name">Achieving PCI DSS Compliance</span></a></li><li><a href="app-security-docupdates.html" class=" "><span class="title-number">B </span><span class="title-name">Documentation Updates</span></a></li><li><a href="bk05apc.html" class=" "><span class="title-number">C </span><span class="title-name">GNU licenses</span></a></li> </ol> </nav><button id="_open-side-toc-overall" title="Contents"> </button><article class="documentation"><button id="_unfold-side-toc-page">On this page</button><section class="chapter" id="cha-security-firewall" data-id-title="Masquerading and Firewalls"><div class="titlepage"><div><div class="version-info">Applies to  <span class="productname"><span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span></span> <span class="productnumber"><span class="productnumber"><span class="phrase">12 SP4</span></span></span></div><div><div class="title-container"><h1 class="title"><span class="title-number-name"><span class="title-number">15 </span><span class="title-name">Masquerading and Firewalls</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#">#</a></h1><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+  Whenever Linux is used in a network environment, you can use the
+  kernel functions that allow the manipulation of network packets to
+  maintain a separation between internal and external network areas. The
+  Linux <code class="systemitem">netfilter</code> framework provides the means
+  to establish an effective firewall that keeps different networks
+  apart.  Using iptables—a generic table structure for the
+  definition of rule sets—precisely controls the packets allowed to
+  pass a network interface. Such a packet filter can be set up using
+  SuSEfirewall2 and the corresponding YaST module.
+ </p><section class="sect1" id="sec-security-firewall-iptables" data-id-title="Packet Filtering with iptables"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">15.1 </span><span class="title-name">Packet Filtering with iptables</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-iptables">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The components <code class="systemitem">netfilter</code> and
+   <code class="systemitem">iptables</code> are responsible for the filtering and
+   manipulation of network packets and for network address
+   translation (NAT). The filtering criteria and any actions associated with
+   them are stored in chains, which must be matched one after another by
+   individual network packets as they arrive. The chains to match are stored
+   in tables. The <code class="command">iptables</code> command allows you to alter
+   these tables and rule sets.
+  </p><p>
+   The Linux kernel maintains three tables, each for a particular category
+   of functions of the packet filter:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.6.4.4.4.1"><span class="term">filter</span></dt><dd><p>
+      This table holds the bulk of the filter rules, because it implements
+      the <span class="emphasis"><em>packet filtering</em></span> mechanism in the stricter
+      sense, which determines whether packets are let through
+      (<code class="literal">ACCEPT</code>) or discarded (<code class="literal">DROP</code>),
+      for example.
+     </p></dd><dt id="id-1.7.6.4.4.4.2"><span class="term">nat</span></dt><dd><p>
+      This table defines any changes to the source and target addresses of
+      packets. Using these functions also allows you to implement
+      <span class="emphasis"><em>masquerading</em></span>, which is a special case of NAT used
+      to link a private network with the Internet.
+     </p></dd><dt id="id-1.7.6.4.4.4.3"><span class="term">mangle</span></dt><dd><p>
+      The rules held in this table make it possible to manipulate values
+      stored in IP headers (such as the type of service).
+     </p></dd></dl></div><p>
+   These tables contain several predefined chains to match packets:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.6.4.4.6.1"><span class="term">PREROUTING</span></dt><dd><p>
+      This chain is applied to incoming packets.
+     </p></dd><dt id="id-1.7.6.4.4.6.2"><span class="term">INPUT</span></dt><dd><p>
+      This chain is applied to packets destined for the system's internal
+      processes.
+     </p></dd><dt id="id-1.7.6.4.4.6.3"><span class="term">FORWARD</span></dt><dd><p>
+      This chain is applied to packets that are only routed through the
+      system.
+     </p></dd><dt id="id-1.7.6.4.4.6.4"><span class="term">OUTPUT</span></dt><dd><p>
+      This chain is applied to packets originating from the system itself.
+     </p></dd><dt id="id-1.7.6.4.4.6.5"><span class="term">POSTROUTING</span></dt><dd><p>
+      This chain is applied to all outgoing packets.
+     </p></dd></dl></div><p>
+   <a class="xref" href="cha-security-firewall.html#fig-fire-table" title="iptables: A Packet's Possible Paths">Figure 15.1, “iptables: A Packet's Possible Paths”</a> illustrates the paths along which a
+   network packet may travel on a given system. For the sake of simplicity,
+   the figure lists tables as parts of chains, but in reality these chains
+   are held within the tables themselves.
+  </p><p>
+   In the simplest case, an incoming packet destined for the system itself
+   arrives at the <code class="literal">eth0</code> interface. The packet is first
+   referred to the <code class="literal">PREROUTING</code> chain of the
+   <code class="literal">mangle</code> table then to the <code class="literal">PREROUTING</code>
+   chain of the <code class="literal">nat</code> table. The following step, concerning
+   the routing of the packet, determines that the actual target of the
+   packet is a process of the system itself. After passing the
+   <code class="literal">INPUT</code> chains of the <code class="literal">mangle</code> and the
+   <code class="literal">filter</code> table, the packet finally reaches its target,
+   provided that the rules of the <code class="literal">filter</code> table are
+   actually matched.
+  </p><div class="figure" id="fig-fire-table"><div class="figure-contents"><div class="mediaobject"><a href="images/fire_tables.png"><img src="images/fire_tables.png" width="65%" alt="iptables: A Packet's Possible Paths" title="iptables: A Packet's Possible Paths"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 15.1: </span><span class="title-name">iptables: A Packet's Possible Paths </span></span><a title="Permalink" class="permalink" href="cha-security-firewall.html#fig-fire-table">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></section><section class="sect1" id="sec-security-firewall-masq" data-id-title="Masquerading Basics"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">15.2 </span><span class="title-name">Masquerading Basics</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-masq">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   Masquerading is the Linux-specific form of NAT (network address
+   translation) and can be used to connect a small LAN with the
+   Internet.  LAN hosts use IP
+   addresses from the private range (see
+   <span class="intraxref">Book “Administration Guide”, Chapter 16 “Basic Networking”, Section 16.1.2 “Netmasks and Routing”</span>) and on the Internet
+   official IP addresses are used. To be able to connect
+   to the Internet, a LAN host's private address is translated to an official
+   one. This is done on the router, which acts as the gateway between the
+   LAN and the Internet. The underlying principle is a simple one: The
+   router has more than one network interface, typically a network card and
+   a separate interface connecting with the Internet. While the latter links
+   the router with the outside world, one or several others link it with the
+   LAN hosts. With these hosts in the local network connected to the network
+   card (such as <code class="literal">eth0</code>) of the router, they can send any
+   packets not destined for the local network to their default gateway or
+   router.
+  </p><div id="id-1.7.6.4.5.3" data-id-title="Using the Correct Network Mask" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Using the Correct Network Mask</div><p>
+    When configuring your network, make sure both the broadcast address and
+    the netmask are the same for all local hosts. Failing to do so prevents
+    packets from being routed properly.
+   </p></div><p>
+   As mentioned, whenever one of the LAN hosts sends a packet destined for
+   an Internet address, it goes to the default router. However, the router
+   must be configured before it can forward such packets. For security
+   reasons, this is not enabled in a default installation. To enable it, set
+   the variable <code class="systemitem">IP_FORWARD</code> in the file
+   <code class="filename">/etc/sysconfig/sysctl</code> to
+   <code class="systemitem">IP_FORWARD=yes</code>.
+  </p><p>
+   The target host of the connection can see your router, but knows nothing
+   about the host in your internal network where the packets originated.
+   This is why the technique is called masquerading. Because of the address
+   translation, the router is the first destination of any reply packets.
+   The router must identify these incoming packets and translate their
+   target addresses, so packets can be forwarded to the correct host in the
+   local network.
+  </p><p>
+   With the routing of inbound traffic depending on the masquerading table,
+   there is no way to open a connection to an internal host from the
+   outside. For such a connection, there would be no entry in the table. In
+   addition, any connection already established has a status entry assigned
+   to it in the table, so the entry cannot be used by another connection.
+  </p><p>
+   As a consequence of all this, you might experience some problems with
+   several application protocols, such as ICQ, cucme, IRC (DCC, CTCP), and
+   FTP (in PORT mode). Web browsers, the standard FTP program, and many
+   other programs use the PASV mode. This passive mode is much less
+   problematic as far as packet filtering and masquerading are concerned.
+  </p></section><section class="sect1" id="sec-security-firewall-fw" data-id-title="Firewalling Basics"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">15.3 </span><span class="title-name">Firewalling Basics</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-fw">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   <span class="emphasis"><em>Firewall</em></span> is probably the term most widely used to
+   describe a mechanism that provides and manages a link between networks
+   while also controlling the data flow between them. Strictly speaking, the
+   mechanism described in this section is called a <span class="emphasis"><em>packet
+   filter</em></span>. A packet filter regulates the data flow according to
+   certain criteria, such as protocols, ports, and IP addresses. This allows
+   you to block packets that, according to their addresses, are not supposed
+   to reach your network. To allow public access to your Web server, for
+   example, explicitly open the corresponding port. However, a packet filter
+   does not scan the contents of packets with legitimate addresses, such as
+   those directed to your Web server. For example, if incoming packets were
+   intended to compromise a CGI program on your Web server, the packet
+   filter would still let them through.
+  </p><p>
+   A more effective but more complex mechanism is the combination of several
+   types of systems, such as a packet filter interacting with an application
+   gateway or proxy. In this case, the packet filter rejects any packets
+   destined for disabled ports. Only packets directed to the application
+   gateway are accepted. This gateway or proxy pretends to be the actual
+   client of the server. In a sense, such a proxy could be considered a
+   masquerading host on the protocol level used by the application. One
+   example for such a proxy is Squid, an HTTP and FTP proxy server. To use
+   Squid, the browser must be configured to communicate via the proxy. Any
+   HTTP pages or FTP files requested are served from the proxy cache and
+   objects not found in the cache are fetched from the Internet by the
+   proxy.
+  </p><p>
+   The following section focuses on the packet filter that comes with
+   <span class="productname"><span class="phrase">SUSE Linux Enterprise Server</span></span>. For further information about packet filtering and
+   firewalling, read the <a class="link" href="http://www.tldp.org/HOWTO/Firewall-HOWTO.html" target="_blank">Firewall
+   HOWTO</a>.
+  </p></section><section class="sect1" id="sec-security-firewall-SuSE" data-id-title="SuSEfirewall2"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">15.4 </span><span class="title-name">SuSEfirewall2</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-SuSE">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   SuSEfirewall2 is a script that reads the variables set in
+   <code class="filename">/etc/sysconfig/SuSEfirewall2</code> to generate a
+   set of iptables rules. It defines three security zones, although only the
+   first and the second one are considered in the following sample
+   configuration:
+  </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.6.4.7.3.1"><span class="term"><span class="guimenu">External Zone</span></span></dt><dd><p>
+      Given that there is no way to control what is happening on the
+      external network, the host needs to be protected from it. Usually,
+      the external network is the Internet, but it could be another
+      insecure network, such as a Wi-Fi.
+     </p></dd><dt id="id-1.7.6.4.7.3.2"><span class="term"><span class="guimenu">Internal Zone</span></span></dt><dd><p>
+      This refers to the private network, usually the LAN. If the
+      hosts on this network use IP addresses from the private range (see
+      <span class="intraxref">Book “Administration Guide”, Chapter 16 “Basic Networking”, Section 16.1.2 “Netmasks and Routing”</span>), enable network
+      address translation (NAT), so hosts on the internal network can access
+      the external one. All ports are open in the internal zone. The main
+      benefit of putting interfaces into the internal zone (rather than
+      stopping the firewall) is that the firewall still runs, so when you
+      add new interfaces, they will be put into the external zone by
+      default. That way an interface is not accidentally <span class="quote">“<span class="quote">open</span>”</span>
+      by default.
+     </p></dd><dt id="id-1.7.6.4.7.3.3"><span class="term"><span class="guimenu">Demilitarized Zone (DMZ)</span></span></dt><dd><p>
+      While hosts located in this zone can be reached both from the external
+      and the internal network, they cannot access the internal network
+      themselves. This setup can be used to put an additional line of
+      defense in front of the internal network, because the DMZ systems are
+      isolated from the internal network.
+     </p></dd></dl></div><div id="id-1.7.6.4.7.4" data-id-title="No Zone Assigned Behavior" class="admonition note normal"><img class="symbol" alt="Note" title="Note" src="static/images/icon-note.svg"/><div class="admon-title">Note: No Zone Assigned Behavior</div><p>
+      By default, all network interfaces are set to <code class="literal">no zone
+      assigned</code>. This mode behaves as the External Zone profile.
+     </p></div><p>
+   Any kind of network traffic not explicitly allowed by the filtering rule
+   set is suppressed by iptables. Therefore, each of the interfaces with
+   incoming traffic must be placed into one of the three zones. For each of
+   the zones, define the services or protocols allowed. The rule set is only
+   applied to packets originating from remote hosts. Locally generated
+   packets are not captured by the firewall.
+  </p><p>
+   The configuration can be performed with YaST (see
+   <a class="xref" href="cha-security-firewall.html#sec-security-firewall-SuSE-yast" title="15.4.1. Configuring the Firewall with YaST">Section 15.4.1, “Configuring the Firewall with YaST”</a>). It can also be made
+   manually in the file
+   <code class="filename">/etc/sysconfig/SuSEfirewall2</code>, which is well
+   commented. Additionally, several example scenarios are available in
+   <code class="filename">/usr/share/doc/packages/SuSEfirewall2/EXAMPLES</code>.
+  </p><section class="sect2" id="sec-security-firewall-SuSE-yast" data-id-title="Configuring the Firewall with YaST"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">15.4.1 </span><span class="title-name">Configuring the Firewall with YaST</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-SuSE-yast">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><section class="sect3" id="sec-security-firewall-SuSE-yast-ports" data-id-title="Opening Ports"><div class="titlepage"><div><div><div class="title-container"><h4 class="title"><span class="title-number-name"><span class="title-number">15.4.1.1 </span><span class="title-name">Opening Ports</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-SuSE-yast-ports">#</a></h4><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+     In case your network interfaces are located in a firewall zone
+     where network traffic is blocked on most ports, services that
+     manage their network traffic via a blocked port will not work.
+     For example, SSH is a popular service that uses port 22. By
+     default, this port is blocked on interfaces located in the
+     external or demilitarized zone. To make SSH work, you need to open
+     port 22 in the firewall configuration. This can be done with the
+     YaST module <span class="guimenu">Firewall</span>.
+     </p><div class="figure" id="id-1.7.6.4.7.7.2.3"><div class="figure-contents"><div class="mediaobject"><a href="images/y2_firewall_allowed_services.png"><img src="images/y2_firewall_allowed_services.png" width="75%" alt="Firewall Configuration: Allowed Services" title="Firewall Configuration: Allowed Services"/></a></div></div><div class="title-container"><div class="figure-title-wrap"><div class="figure-title"><span class="title-number-name"><span class="title-number">Figure 15.2: </span><span class="title-name">Firewall Configuration: Allowed Services </span></span><a title="Permalink" class="permalink" href="cha-security-firewall.html#id-1.7.6.4.7.7.2.3">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div><div id="id-1.7.6.4.7.7.2.4" data-id-title="Automatic Firewall Configuration" class="admonition important normal"><img class="symbol" alt="Important" title="Important" src="static/images/icon-important.svg"/><div class="admon-title">Important: Automatic Firewall Configuration</div><p>
+      After the installation, YaST automatically starts a firewall on
+      all configured interfaces. If a server is configured and
+      activated on the system, YaST can modify the automatically
+      generated firewall configuration with the options <span class="guimenu">Open
+      Ports on Selected Interface in Firewall</span> or
+      <span class="guimenu">Open Ports on Firewall</span> in the server
+      configuration modules. Some server module dialogs include a
+      <span class="guimenu">Firewall Details</span> button for activating
+      additional services and ports. The YaST firewall configuration
+      module can be used to activate, deactivate, or reconfigure the
+      firewall.
+     </p></div><div class="procedure" id="id-1.7.6.4.7.7.2.5" data-id-title="Manually Open Firewall Ports with YaST"><div class="title-container"><div class="procedure-title-wrap"><div class="procedure-title"><span class="title-number-name"><span class="title-number">Procedure 15.1: </span><span class="title-name">Manually Open Firewall Ports with YaST </span></span><a title="Permalink" class="permalink" href="cha-security-firewall.html#id-1.7.6.4.7.7.2.5">#</a></div></div><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div><div class="procedure-contents"><ol class="procedure" type="1"><li class="step"><p>
+       Open <span class="guimenu">YaST</span> › <span class="guimenu">Security and
+       Users</span> › <span class="guimenu">Firewall</span> and switch to
+       the <span class="guimenu">Allowed Services</span> tab.
+      </p></li><li class="step"><p>
+       Select a zone at <span class="guimenu">Allow Services for Selected Zone</span> in
+       which to open the port. It is not possible to open a port for several
+       zones at once.
+      </p></li><li class="step"><p>
+       Select a service from <span class="guimenu">Service to Allow</span> and choose
+       <span class="guimenu">Add</span> to add it to the list of <span class="guimenu">Allowed
+       Services</span>. The port this service uses will be unblocked.
+      </p><p>
+       In case your service is not listed, you need to manually specify the
+       port(s) to unblock. Choose <span class="guimenu">Advanced</span> to open a dialog
+       where you can specify TCP, UPD, RPC ports and IP
+       protocols. Refer to the help section in this dialog for details.
+      </p></li><li class="step"><p>
+       Choose <span class="guimenu">Next</span> to display a summary of your
+       changes. Modify them by choosing <span class="guimenu">Back</span> or apply them
+       by choosing <span class="guimenu">Finish</span>.
+      </p></li></ol></div></div></section></section><section class="sect2" id="sec-security-firewall-SuSE-man" data-id-title="Configuring Manually"><div class="titlepage"><div><div><div class="title-container"><h3 class="title"><span class="title-number-name"><span class="title-number">15.4.2 </span><span class="title-name">Configuring Manually</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-SuSE-man">#</a></h3><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+    The following paragraphs provide step-by-step instructions for a
+    successful configuration. Each configuration item is marked
+    whether it is relevant to firewalling or masquerading. Use port range
+    (for example, <code class="literal">500:510</code>) whenever appropriate. Aspects
+    related to the DMZ (demilitarized zone) as mentioned in the
+    configuration file are not covered here. They are applicable only to a
+    more complex network infrastructure found in larger organizations
+    (corporate networks), which require extensive configuration and in-depth
+    knowledge about the subject.
+   </p><p>
+    To enable SuSEfirewall2, use <code class="command">sudo systemctl enable
+    SuSEfirewall2</code> or use the YaST module
+    Services Manager.
+   </p><div class="variablelist"><dl class="variablelist"><dt id="id-1.7.6.4.7.8.4.1"><span class="term"><code class="systemitem">FW_DEV_EXT</code> (firewall, masquerading) </span></dt><dd><p>
+       The device linked to the Internet. For a modem connection, enter
+       <code class="literal">ppp0</code>. DSL connections use <code class="literal">dsl0</code>.
+       Specify <code class="literal">auto</code> to use the interface that corresponds
+       to the default route.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.2"><span class="term"><code class="systemitem">FW_DEV_INT</code> (firewall, masquerading) </span></dt><dd><p>
+       The device linked to the internal, private network (such as
+       <code class="literal">eth0</code>). Leave this blank if there is no internal
+       network and the firewall protects only the host on which it runs.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.3"><span class="term"><code class="systemitem">FW_ROUTE</code> (firewall, masquerading) </span></dt><dd><p>
+       If you need the masquerading function, set this to
+       <code class="literal">yes</code>. Your internal hosts will not be visible to
+       the outside, because their private network addresses (for example
+       <code class="literal">192.168.x.x</code>) are ignored by Internet routers.
+      </p><p>
+       For a firewall without masquerading, set this to
+       <code class="literal">yes</code> if you want to allow access to the internal
+       network. Your internal hosts need to use officially registered IP
+       addresses in this case. Normally, however, you should
+       <span class="emphasis"><em>not</em></span> allow access to your internal network from
+       the outside.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.4"><span class="term"><code class="systemitem">FW_MASQUERADE</code> (masquerading) </span></dt><dd><p>
+       Set this to <code class="literal">yes</code> if you need the masquerading
+       function. This provides a virtually direct connection to the Internet
+       for the internal hosts. It is more secure to have a proxy server
+       between the hosts of the internal network and the Internet.
+       Masquerading is not needed for services that a proxy server provides.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.5"><span class="term"><code class="systemitem">FW_MASQ_NETS</code> (masquerading) </span></dt><dd><p>
+       Specify the hosts or networks to masquerade, leaving a space between
+       the individual entries. For example:
+      </p><div class="verbatim-wrap"><pre class="screen">FW_MASQ_NETS="192.168.0.0/24 192.168.10.1"</pre></div></dd><dt id="id-1.7.6.4.7.8.4.6"><span class="term"><code class="systemitem">FW_PROTECT_FROM_INT</code> (firewall) </span></dt><dd><p>
+       Set this to <code class="literal">yes</code> to protect your firewall host from
+       attacks originating in your internal network. Services are only
+       available to the internal network if explicitly enabled. Also see
+       <code class="systemitem">FW_SERVICES_INT_TCP</code> and
+       <code class="systemitem">FW_SERVICES_INT_UDP</code>.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.7"><span class="term"><code class="systemitem">FW_SERVICES_EXT_TCP</code> (firewall) </span></dt><dd><p>
+       Enter the TCP ports that should be made available. Leave this blank
+       for a normal workstation at home that should not offer any services.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.8"><span class="term"><code class="systemitem">FW_SERVICES_EXT_UDP</code> (firewall) </span></dt><dd><p>
+       Leave this blank unless you run a UDP service and want to make it
+       available to the outside. The services that use UDP include DNS
+       servers, IPsec, TFTP, DHCP and others. In that case, enter the UDP
+       ports to use.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.9"><span class="term"><code class="systemitem">FW_SERVICES_ACCEPT_EXT</code> (firewall) </span></dt><dd><p>
+       List services to allow from the Internet. This is a more generic form
+       of the <code class="systemitem">FW_SERVICES_EXT_TCP</code> and
+       <code class="systemitem">FW_SERVICES_EXT_UDP</code> settings, and more
+       specific than <code class="systemitem">FW_TRUSTED_NETS</code>. The notation
+       is a space-separated list of
+       <code class="option"><em class="replaceable">NET</em>,<em class="replaceable">PROTOCOL</em>[,<em class="replaceable">DPORT</em>][,<em class="replaceable">SPORT</em>]</code>,
+       for example <code class="literal">0/0,tcp,22</code> or
+       <code class="literal">0/0,tcp,22,,hitcount=3,blockseconds=60,recentname=ssh</code>,
+       which means: allow a maximum of three SSH connects per minute from
+       one IP address.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.10"><span class="term"><code class="systemitem">FW_SERVICES_INT_TCP</code> (firewall) </span></dt><dd><p>
+       With this variable, define the services available for the internal
+       network. The notation is the same as for
+       <code class="systemitem">FW_SERVICES_EXT_TCP</code>, but the settings are
+       applied to the <span class="emphasis"><em>internal</em></span> network. The variable
+       only needs to be set if <code class="systemitem">FW_PROTECT_FROM_INT</code>
+       is set to <code class="literal">yes</code>.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.11"><span class="term"><code class="systemitem">FW_SERVICES_INT_UDP</code> (firewall) </span></dt><dd><p>
+       See <code class="systemitem">FW_SERVICES_INT_TCP</code>.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.12"><span class="term"><code class="systemitem">FW_SERVICES_ACCEPT_INT</code> (firewall) </span></dt><dd><p>
+       List services to allow from internal hosts. See
+       <code class="systemitem">FW_SERVICES_ACCEPT_EXT.</code>
+      </p></dd><dt id="id-1.7.6.4.7.8.4.13"><span class="term"><code class="systemitem">FW_SERVICES_ACCEPT_RELATED_*</code> (firewall) </span></dt><dd><p>
+       This is how the SuSEfirewall2 implementation considers packets
+       <code class="literal">RELATED</code> by netfilter.
+      </p><p>
+       For example, to allow finer grained filtering of Samba broadcast
+       packets, <code class="literal">RELATED</code> packets are not accepted
+       unconditionally. Variables starting with
+       <code class="systemitem">FW_SERVICES_ACCEPT_RELATED_</code> allow
+       restricting <code class="literal">RELATED</code> packets handling to certain
+       networks, protocols and ports.
+      </p><p>
+       This means that adding connection tracking modules (conntrack
+       modules) to <code class="systemitem">FW_LOAD_MODULES</code> does not
+       automatically result in accepting the packets tagged by those
+       modules. Additionally, you must set variables starting with
+       <code class="systemitem">FW_SERVICES_ACCEPT_RELATED_</code> to a suitable
+       value.
+      </p></dd><dt id="id-1.7.6.4.7.8.4.14"><span class="term"><code class="systemitem">FW_CUSTOMRULES</code> (firewall)</span></dt><dd><p>
+       Uncomment this variable to install custom rules. Find examples in
+       <code class="filename">/etc/sysconfig/scripts/SuSEfirewall2-custom</code>.
+      </p></dd></dl></div><p>
+    After configuring the firewall, test your setup. The
+    firewall rule sets are created by entering <code class="command">systemctl start
+    SuSEfirewall2</code> as
+    <code class="systemitem">root</code>. Then use
+    <code class="command">telnet</code>, for example, from an external host to see
+    whether the connection is actually denied. After that, review the output
+    of <code class="command">journalctl</code> (see <span class="intraxref">Book “Administration Guide”, Chapter 15 “<code class="command">journalctl</code>: Query the <code class="systemitem">systemd</code> Journal”</span>),
+    where you should see something like this:
+   </p><div class="verbatim-wrap"><pre class="screen">Mar 15 13:21:38 linux kernel: SFW2-INext-DROP-DEFLT IN=eth0
+OUT= MAC=00:80:c8:94:c3:e7:00:a0:c9:4d:27:56:08:00 SRC=192.168.10.0
+DST=192.168.10.1 LEN=60 TOS=0x10 PREC=0x00 TTL=64 ID=15330 DF PROTO=TCP
+SPT=48091 DPT=23 WINDOW=5840 RES=0x00 SYN URGP=0
+OPT (020405B40402080A061AFEBC0000000001030300)</pre></div><p>
+    Other packages to test your firewall setup are Nmap (portscanner) or
+    OpenVAS (Open Vulnerability Assessment System). The documentation of
+    Nmap is found at <code class="filename">/usr/share/doc/packages/nmap</code> after
+    installing the package and the documentation of openVAS resides at
+    <a class="link" href="http://www.openvas.org" target="_blank">http://www.openvas.org</a>.
+   </p></section></section><section class="sect1" id="sec-security-firewall-info" data-id-title="For More Information"><div class="titlepage"><div><div><div class="title-container"><h2 class="title"><span class="title-number-name"><span class="title-number">15.5 </span><span class="title-name">For More Information</span></span> <a title="Permalink" class="permalink" href="cha-security-firewall.html#sec-security-firewall-info">#</a></h2><div class="icons"><a target="_blank" class="icon-reportbug" title="Report an issue"> </a><a target="_blank" class="icon-editsource" href="https://github.com/SUSE/doc-sle/edit/maintenance/SLE12SP4/xml/security_firewall.xml" title="Edit source document"> </a></div></div></div></div></div><p>
+   The most up-to-date information and other documentation about the
+   <code class="systemitem">SuSEfirewall2</code> package is found in
+   <code class="filename">/usr/share/doc/packages/SuSEfirewall2</code>. The
+   home page of the netfilter and iptables project,
+   <a class="link" href="http://www.netfilter.org" target="_blank">http://www.netfilter.org</a>, provides a large
+   collection of documents in many languages.
+  </p></section></section><nav class="bottom-pagination"><div><a class="pagination-link prev" href="cha-ssh.html"><span class="pagination-relation">Previous</span><span class="pagination-label"><span class="title-number">Chapter 14 </span>SSH: Secure Network Operations</span></a> </div><div><a class="pagination-link next" href="cha-security-vpnserver.html"><span class="pagination-relation">Next</span><span class="pagination-label"><span class="title-number">Chapter 16 </span>Configuring a VPN Server</span></a> </div></nav></article><aside id="_side-toc-page" class="side-toc"><div class="side-title">On this page</div><div class="toc"><ul><li><span class="sect1"><a href="cha-security-firewall.html#sec-security-firewall-iptables"><span class="title-number">15.1 </span><span class="title-name">Packet Filtering with iptables</span></a></span></li><li><span class="sect1"><a href="cha-security-firewall.html#sec-security-firewall-masq"><span class="title-number">15.2 </span><span class="title-name">Masquerading Basics</span></a></span></li><li><span class="sect1"><a href="cha-security-firewall.html#sec-security-firewall-fw"><span class="title-number">15.3 </span><span class="title-name">Firewalling Basics</span></a></span></li><li><span class="sect1"><a href="cha-security-firewall.html#sec-security-firewall-SuSE"><span class="title-number">15.4 </span><span class="title-name">SuSEfirewall2</span></a></span></li><li><span class="sect1"><a href="cha-security-firewall.html#sec-security-firewall-info"><span class="title-number">15.5 </span><span class="title-name">For More Information</span></a></span></li></ul></div><div class="side-title">Share this page</div><ul class="share"><li><a id="_share-fb" href="#" title="Facebook"> </a></li><li><a id="_share-in" href="#" title="LinkedIn"> </a></li><li><a id="_share-tw" href="#" title="Twitter/X"> </a></li><li><a id="_share-mail" href="#" title="E-Mail"> </a></li><li><a id="_print-button" href="#" title="Print this page"> </a></li></ul> </aside></main><footer id="_footer"><div class="growth-inhibitor"><div class="copy"><span class="copy__rights">© SUSE
+                 2024</span></div></div></footer></body></html>
